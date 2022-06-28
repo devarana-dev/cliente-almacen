@@ -1,0 +1,150 @@
+@import './variables';
+
+.layout{
+    height: 100vh;
+    &__sider{
+        background-color: $white !important;
+        box-shadow: 0 0 5px rgba(0,0,0,.1);
+        overflow-y: auto;        
+        overflow-x: hidden;
+        color: $dark;
+    }
+
+    &__menu{
+        background-color: transparent !important;
+        color: $dark !important;
+        border: none !important;
+        padding: 10px !important;
+
+        .ant-menu{
+
+            &-item{
+                border-radius: 10px;
+            
+                &-selected{
+                    background-color: $secondary !important;
+                    color: $white !important;
+                    
+                    &::after{
+                        border: 0px !important;
+                    }
+
+                    .ant-menu-title-content{
+                        font-weight: 400;
+                    }
+                }
+                &-active{
+                    background-color: $white !important;
+                    color: $white !important;
+                }
+                &:hover{
+                    background-color: $info !important;
+                }
+                &-group{
+                    background-color: transparent !important;
+                }
+            }
+
+            &-title-content{
+                font-weight: 300;
+                font-size: 16px;
+            }
+
+            &-submenu{
+                &-active{
+                    .ant-menu-submenu-title{
+                        color: $white !important;
+                        background-color: $primary !important;
+                        border-radius: 10px;
+                    }
+                    
+                }
+
+                :hover{
+                    .ant-menu-submenu-arrow{
+                        color: $white !important;
+                    }
+                }
+
+                &-arrow{
+                    color: $dark !important;                   
+                }
+
+                &-selected{
+                    
+                    .ant-menu-submenu-title{
+                        color: $white !important;
+                        background-color: $primary !important;
+                        border-radius: 10px;
+                    }
+                    .ant-menu-submenu-arrow{
+                        color: $white !important;
+                    }
+                }
+                
+                &-title{
+                    font-weight: 300;
+                    font-size: 16px;
+                }
+                
+                .ant-menu{
+                    background-color: transparent !important;
+                    color: $dark !important;
+
+                    &-item-group-title{
+                        font-weight: 400;
+                        font-size: 16px;
+                        color: $light !important;
+                        letter-spacing: 2px;
+                    }
+
+                    
+                }
+                
+
+            }
+        }
+    }
+}
+
+//Popup menu hidden
+// .ant-menu-submenu-popup{
+//     background-color: transparent !important;
+//     color: $dark !important;
+//     .ant-menu-item{
+//         &:hover{
+//             background-color: $info !important;
+//             color: $white !important;
+//         }
+//         &-selected{
+//             background-color: $secondary !important;
+//             color: $white !important;
+//         }
+        
+//     }
+    
+//     .ant-menu-sub{
+//         color: $white !important;
+//         &-ant-menu-item{
+//             color: $white !important;
+            
+//             &:hover{
+
+//                 color: $white!important;
+//             }
+//         }
+//     }
+// }
+
+.layout-right{
+    &__header{
+        background-color: $white !important;
+        box-shadow: 0 0 5px rgba(0,0,0,.1);
+        padding: 0 30px!important;
+    }
+
+    &__content{
+        
+        padding: 20px;
+    }
+}
