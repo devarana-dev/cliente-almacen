@@ -3,18 +3,49 @@ import { types } from '../types'
 
 const initialState = {
     isAuthenticated: false,
-    user: null,
-    isLoading: false,
-    isError: false,
-    token: null,
+    userAuth: null,
+    isLoading: true,
+    errors: null
+    // token: null,
 }
 
 
 
 export default (state = initialState, action) => {
     switch(action.type) {
+        
+        case types.LOGIN_ERROR:
+        case types.LOGIN_VALIDATE_ERROR:
+            return {
+                ...state,
+                errors: action.payload,
+                isLoading: false,
+                isAuthenticated: false,
+                userAuth: null
+            }
+
+        case types.LOGIN_SUCCESS:
+            localStorage.setItem('refreshToken', action.payload.refreshToken)
+            localStorage.setItem('accessToken', action.payload.accessToken)
+            return {
+                ...state,
+                isAuthenticated: true,
+                isLoading: false,
+                errors: null,
+            }
+
+        case types.LOGIN_VALIDATE_SUCCESS:
+            return {
+                ...state,
+                userAuth: action.payload.userAuth,
+                isLoading: action.payload.isLoading,
+                isAuthenticated: action.payload.isAuthenticated,
+                errors: null,
+            }
         default:
             return state
+        
+
     }
     
 };

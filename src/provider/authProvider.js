@@ -1,38 +1,50 @@
-import { useEffect, useState } from "react";
-import jwtDecode from "jwt-decode";
-import {getAccessToken, getRefreshToken} from "../api/authApi";
+import { useEffect, useState } from "react"
+import { getAccessToken, refreshAccessToken, getRefreshToken } from "../api/authApi"
+import jwtDecode from 'jwt-decode';
+import { logoutAction } from "../actions/authActions";
 
-export default function AuthProvider() {
 
-    const [ auth, setAuth ] = useState({
-        isAuthenticated: false,
-        user: null,
-        token: null,
-        isLoading: true,
-    });
+export default function AuthProvider(){
+   
+    const [auth, setAuth] = useState(
+        {
+            // token: null,
+            isAuthenticated: false,
+            isLoading: true,
+            userAuth: null,
+        }
+    )
 
     useEffect(() => {
         checkUserLogin(setAuth)
     }, [])
-   
+    
+    return auth
 }
 
-function checkUserLogin(setAuth) {
-    const accessToken = getAccessToken();
-    
-    if(accessToken){
-        setAuth({
-            isAuthenticated: true,
-            user: jwtDecode(accessToken).user,
-            token: accessToken,
-            isLoading: false,
-        })
+function checkUserLogin( setAuth ) {
+    const accessToken = getAccessToken()
+    if(!accessToken){
+        const refreshToken = getRefreshToken()
+        if(!refreshToken){
+            logoutAction()
+            setAuth({
+                userAuth: null,
+                // token: null,
+                isAuthenticated: false,
+                isLoading: false,
+            })
+        }else{
+            refreshAccessToken(refreshToken)
+        }
     }else{
         setAuth({
-            isAuthenticated: false,
-            user: null,
-            token: null,
+            userAuth: jwtDecode(accessToken),
+            // token: accessToken,
+            isAuthenticated: true,
             isLoading: false,
         })
+
+        
     }
 }

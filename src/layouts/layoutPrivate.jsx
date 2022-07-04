@@ -13,6 +13,7 @@ import {
     VideoCameraOutlined,
   } from '@ant-design/icons';
 import Menu from "../components/layout/Menu";
+import { validateLoginAction } from "../actions/authActions";
 
 export default function LayoutPrivate({children}) {
     const dispatch = useDispatch()
@@ -23,11 +24,18 @@ export default function LayoutPrivate({children}) {
 
     const isAuth = authProvider()
     const { isAuthenticated } = useSelector( state => state.auth )
-    const { loading } = useSelector( state => state.auth )
+    const { isLoading } = useSelector( state => state.auth )
 
-    // useEffect(() => {
+    useEffect(() => {
+        dispatch(validateLoginAction(isAuth))
+    }, [isAuth])
 
-    // }, [])
+ 
+
+    if( (isAuthenticated || isAuth.isAuthenticated) === false && !isLoading ){
+        navigate("/login")
+    }
+
 
     return (
 
