@@ -22,7 +22,7 @@ const Usuarios = () => {
     }, [])
 
     useEffect(() => {
-        
+
 		setDataSource(
 			usuarios.map( (item, i) => (
 				{ key: i, acciones:item.id, rol: item.role.nombre, ...item }
@@ -156,6 +156,10 @@ const Usuarios = () => {
         }
         
     ];
+
+    if(isLoading) {
+        return <div>Cargando...</div>
+    }
 
     return ( 
     <>

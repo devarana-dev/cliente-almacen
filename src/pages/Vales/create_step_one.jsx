@@ -1,8 +1,29 @@
 import { Button, Form, Select } from 'antd';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { getAllActividadAction } from '../../actions/actividadActions';
+import { getAllCentroCostoAction } from '../../actions/centroCostoActions';
+import { getAllNivelesAction } from '../../actions/nivelActions';
+import { getAllZonaAction } from '../../actions/zonaActions';
 
 const CreateValesSalida1 = ({current, setCurrent}) => {
 
+    const dispatch = useDispatch()
+
+    const { zonas } = useSelector(state => state.zonas);
+    const { actividades } = useSelector(state => state.actividades);
+    const { niveles } = useSelector(state => state.niveles);
+    const { centroCosto } = useSelector(state => state.centroCosto);
     const {Option} = Select;
+
+
+    useEffect(() =>{
+        dispatch(getAllZonaAction())
+        dispatch(getAllActividadAction())
+        dispatch(getAllNivelesAction())
+        dispatch(getAllCentroCostoAction())
+    }, [])
+
     return ( 
         <>
             {/* <h1>Información General</h1> */}
@@ -22,9 +43,6 @@ const CreateValesSalida1 = ({current, setCurrent}) => {
                     size='large'
                     defaultValue={"4"}
                 >
-                    <Option value="1">Almacén 1</Option>
-                    <Option value="2">Almacén 2</Option>
-                    <Option value="3">Almacén 3</Option>
                     <Option value="4">Almacén 4</Option>
                     
                 </Select>
@@ -44,9 +62,12 @@ const CreateValesSalida1 = ({current, setCurrent}) => {
                     size='large'
                 >
                     <Option value="1">Centro de costo 1</Option>
-                    <Option value="2">Centro de costo 2</Option>
-                    <Option value="3">Centro de costo 3</Option>
-                    <Option value="4">Centro de costo 4</Option>
+                    
+                    {
+                        centroCosto.map(item => (
+                            <Option key={item.id} value={item.id}>{item.nombre}</Option>
+                        ))
+                    }
                     
                 </Select>
             </Form.Item>
@@ -64,10 +85,11 @@ const CreateValesSalida1 = ({current, setCurrent}) => {
                     showSearch
                     size='large'
                 >
-                    <Option value="1">Seccion 1</Option>
-                    <Option value="2">Seccion 2</Option>
-                    <Option value="3">Seccion 3</Option>
-                    <Option value="4">Seccion 4</Option>
+                    {
+                        niveles.map(item => (
+                            <Option key={item.id} value={item.id}>{item.nombre}</Option>
+                        ))
+                    }
                     
                 </Select>
             </Form.Item>
@@ -85,10 +107,11 @@ const CreateValesSalida1 = ({current, setCurrent}) => {
                     showSearch
                     size='large'
                     >
-                    <Option value="1">Zona 1</Option>
-                    <Option value="2">Zona 2</Option>
-                    <Option value="3">Zona 3</Option>
-                    <Option value="4">Zona 4</Option>
+                    {
+                        zonas.map(item => (
+                            <Option key={item.id} value={item.id}>{item.nombre}</Option>
+                        ))
+                    }
                     
                 </Select>
             </Form.Item>
@@ -106,10 +129,11 @@ const CreateValesSalida1 = ({current, setCurrent}) => {
                     showSearch
                     size='large'
                     >
-                    <Option value="1">Albañilerias estacionamientos</Option>
-                    <Option value="2">33 - Accesorios de iluminacion estacionamientos</Option>
-                    <Option value="3">32 - Acabados estacionamientos</Option>
-                    <Option value="4">34 - Herrería estacionamientos</Option>
+                    {
+                        actividades.map(item => (
+                            <Option key={item.id} value={item.id}>{item.nombre}</Option>
+                        ))
+                    }
                     
                 </Select>
             </Form.Item>
@@ -126,10 +150,7 @@ const CreateValesSalida1 = ({current, setCurrent}) => {
                     showSearch
                     size='large'
                     >
-                    <Option value="1">Almacén 1</Option>
-                    <Option value="2">Almacén 2</Option>
-                    <Option value="3">Almacén 3</Option>
-                    <Option value="4">Almacén 4</Option>
+                    <Option value="1">Sin resultados</Option>
                     
                 </Select>
             </Form.Item>
