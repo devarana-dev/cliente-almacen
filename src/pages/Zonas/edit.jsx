@@ -1,53 +1,65 @@
 import { Form, Input, Select, Button, notification, TextArea } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { createRoleAction } from "../../actions/roleActions";
+import { useNavigate, useParams} from "react-router-dom";
+import { getZonaAction, updateZonaAction } from "../../actions/zonaActions";
 
-const CreateRoles = () => {
+const EditZonas = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const {id} = useParams()
+    const [form] = Form.useForm();
     const { Option } = Select;
     const { TextArea } = Input;
 
-    const { errors } = useSelector(state => state.roles);
+    const { errors, editedZona, isLoading } = useSelector(state => state.zonas);
 
-    const [role, setRole] = useState({
+    const [zona, setZona] = useState({
         nombre: "",
-        descripcion: "",
-        status: true,
+        status: "",
     });
-    const {nombre, descripcion, status} = role
+
+    useEffect(() =>{
+        if(!editedZona){
+            dispatch(getZonaAction(id))
+        }
+        setZona({...editedZona})
+        form.setFieldsValue({...editedZona})
+    },[editedZona])
 
     const handleChange = (e) => {
-        setRole({
-            ...role,
+        setZona({
+            ...zona,
             [e.target.name]: e.target.value,
         });
     }
 
     const handleSubmit = () => {
-        dispatch(createRoleAction(role));
+        console.log(zona);
+        dispatch(updateZonaAction(zona));
 
-        if(!errors){                
-            notification.success({
-                message: "Rol creado",
-                description: "El rol ha sido creado correctamente",
-                duration: 2,
-            });
-            navigate("/roles");
-        }
+        if(!errors){
+                notification.success({
+                    message: "Zona actualizada",
+                    description: "La zona se ha sido actualizado correctamente",
+                    duration: 2,
+                });
+            }
+        navigate("/zonas");
     }
     
+    if(isLoading) return <div>Cargando...</div>
+    if(!editedZona) return <div>No se encontro la Zona</div>
     return ( 
         <Form
             className="max-w-screen-md mx-auto"
             onFinish={() => handleSubmit()}
             layout="vertical"
             onChange={handleChange}
+            form={form}
         >
-            <h1 className="text-center text-2xl font-bold text-dark"> Nuevo Rol </h1>
+            <h1 className="text-center text-2xl font-bold text-dark"> Editar Zona </h1>
 
             <Form.Item
                 label="Nombre"
@@ -57,28 +69,16 @@ const CreateRoles = () => {
                 ]}
                 hasFeedback
             >
-                <Input value={nombre} name="nombre" />
+                <Input name="nombre" />
             </Form.Item>
-
-            <Form.Item
-                label="Descripción"
-                name="descripcion"
-                rules={[
-                    { required: true, message: "Debes ingresar una descripción" },
-                ]}
-                hasFeedback
-            >
-                <TextArea value={descripcion} name="descripcion"/>
-            </Form.Item>
-
             <Form.Item
                 name="status"
                 rules={[
                     { required: true, message: "Debes seleccionar un estatus" },
                 ]}
-                initialValue={status}
+                
             >
-                <Select value={status} placeholder="Selecciona un estatus" name="status" onChange={ (value) => { setRole({...role, status:value})} }>
+                <Select placeholder="Selecciona un estatus" name="status" onChange={ (value) => { setZona({...zona, status:value})} }>
                     <Option value={true}>Activo</Option>
                     <Option value={false}>Inactivo</Option> 
                 </Select>
@@ -99,4 +99,4 @@ const CreateRoles = () => {
      );
 }
  
-export default CreateRoles;
+export default EditZonas;

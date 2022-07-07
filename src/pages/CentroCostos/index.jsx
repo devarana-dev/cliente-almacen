@@ -5,22 +5,22 @@ import { Button, Input, Space, Table } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { getAllNivelesAction } from '../../actions/nivelActions';
+import { getAllCentroCostoAction } from '../../actions/centroCostoActions';
 
-const Niveles = () => {
+const CentroCosto = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const [ dataSource, setDataSource ] = useState([]);
-    const {niveles} = useSelector(state => state.niveles);
-    const {isLoading} = useSelector(state => state.niveles);
+    const {centroCosto} = useSelector(state => state.centroCosto);
+    const {isLoading} = useSelector(state => state.centroCosto);
 
     useEffect(() => {
-        dispatch(getAllNivelesAction())
+        dispatch(getAllCentroCostoAction())
 
         setDataSource(
-            niveles.map( (item, i) => (
+            centroCosto.map( (item, i) => (
 				{ key: i, acciones:item.id, ...item}
             )
         ))
@@ -30,11 +30,11 @@ const Niveles = () => {
     useEffect(() => {
         
             setDataSource(
-                niveles.map( (item, i) => (
+                centroCosto.map( (item, i) => (
 					{ key: i, acciones:item.id, ...item }
                 ))
 		)
-    },[niveles])
+    },[centroCosto])
 
 
     /// Table
@@ -119,10 +119,9 @@ const Niveles = () => {
         },
         {
           title: 'Estatus',
-          dataIndex: 'status',
-          key: 'status',
+          dataIndex: 'estatus',
+          key: 'estatus',
           sorter: (a, b) => a.nombre.localeCompare(b.nombre),
-          ...getColumnSearchProps('status'),
           render: (text, record) => ( record.status ? 'Activo' : 'Inactivo' ),
         },
         
@@ -139,7 +138,7 @@ const Niveles = () => {
     return ( 
     <>
         <div className='py-10 flex justify-between'>
-            <h1 className='text-dark text-2xl'> Niveles </h1>
+            <h1 className='text-dark text-2xl'> Centro Costos </h1>
             <Button type='primary' onClick={() => navigate('create')} className='block ml-auto'>Agregar Nuevo Usuario</Button>
         </div>
         <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>
@@ -147,4 +146,4 @@ const Niveles = () => {
     );
 }
  
-export default Niveles;
+export default CentroCosto;

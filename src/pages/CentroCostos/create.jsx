@@ -2,41 +2,41 @@ import { Form, Input, Select, Button, notification, TextArea } from "antd";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { createRoleAction } from "../../actions/roleActions";
+import { createCentroCostoAction } from "../../actions/centroCostoActions";
 
-const CreateRoles = () => {
+const CreateCentroCosto = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { Option } = Select;
     const { TextArea } = Input;
 
-    const { errors } = useSelector(state => state.roles);
+    const { errors } = useSelector(state => state.centroCosto);
 
-    const [role, setRole] = useState({
+    const [centroCosto, setCentroCosto] = useState({
         nombre: "",
-        descripcion: "",
         status: true,
+        nombreCorto: "",
     });
-    const {nombre, descripcion, status} = role
+    const {nombre, nombreCorto, status} = centroCosto
 
     const handleChange = (e) => {
-        setRole({
-            ...role,
+        setCentroCosto({
+            ...centroCosto,
             [e.target.name]: e.target.value,
         });
     }
 
     const handleSubmit = () => {
-        dispatch(createRoleAction(role));
+        dispatch(createCentroCostoAction(centroCosto));
 
         if(!errors){                
             notification.success({
-                message: "Rol creado",
-                description: "El rol ha sido creado correctamente",
+                message: "CentroCosto creada",
+                description: "La centroCosto o prototipo han sido creados correctamente",
                 duration: 2,
             });
-            navigate("/roles");
+            navigate("/centros-costo");
         }
     }
     
@@ -47,7 +47,7 @@ const CreateRoles = () => {
             layout="vertical"
             onChange={handleChange}
         >
-            <h1 className="text-center text-2xl font-bold text-dark"> Nuevo Rol </h1>
+            <h1 className="text-center text-2xl font-bold text-dark"> Nueva CentroCosto / Prototipo </h1>
 
             <Form.Item
                 label="Nombre"
@@ -59,16 +59,15 @@ const CreateRoles = () => {
             >
                 <Input value={nombre} name="nombre" />
             </Form.Item>
-
             <Form.Item
-                label="Descripción"
-                name="descripcion"
+                label="Nombre Corto"
+                name="nombreCorto"
                 rules={[
                     { required: true, message: "Debes ingresar una descripción" },
                 ]}
                 hasFeedback
             >
-                <TextArea value={descripcion} name="descripcion"/>
+                <TextArea value={nombreCorto} name="nombreCorto"/>
             </Form.Item>
 
             <Form.Item
@@ -76,9 +75,10 @@ const CreateRoles = () => {
                 rules={[
                     { required: true, message: "Debes seleccionar un estatus" },
                 ]}
+                
                 initialValue={status}
             >
-                <Select value={status} placeholder="Selecciona un estatus" name="status" onChange={ (value) => { setRole({...role, status:value})} }>
+                <Select value={status} placeholder="Selecciona un estatus" name="status" onChange={ (value) => { setCentroCosto({...centroCosto, status:value})} }>
                     <Option value={true}>Activo</Option>
                     <Option value={false}>Inactivo</Option> 
                 </Select>
@@ -99,4 +99,4 @@ const CreateRoles = () => {
      );
 }
  
-export default CreateRoles;
+export default CreateCentroCosto;

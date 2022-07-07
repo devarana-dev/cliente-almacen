@@ -1,53 +1,66 @@
 import { Form, Input, Select, Button, notification, TextArea } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { createRoleAction } from "../../actions/roleActions";
+import { useNavigate, useParams} from "react-router-dom";
+import { getCentroCostoAction, updateCentroCostoAction } from "../../actions/centroCostoActions";
 
-const CreateRoles = () => {
+const EditCentroCosto = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const {id} = useParams()
+    const [form] = Form.useForm();
     const { Option } = Select;
     const { TextArea } = Input;
 
-    const { errors } = useSelector(state => state.roles);
+    const { errors, editedCentroCosto, isLoading } = useSelector(state => state.centroCosto);
 
-    const [role, setRole] = useState({
+    const [centroCosto, setCentroCosto] = useState({
         nombre: "",
         descripcion: "",
-        status: true,
+        status: "",
     });
-    const {nombre, descripcion, status} = role
+
+    useEffect(() =>{
+        if(!editedCentroCosto){
+            dispatch(getCentroCostoAction(id))
+        }
+        setCentroCosto({...editedCentroCosto})
+        form.setFieldsValue({...editedCentroCosto})
+    },[editedCentroCosto])
 
     const handleChange = (e) => {
-        setRole({
-            ...role,
+        setCentroCosto({
+            ...centroCosto,
             [e.target.name]: e.target.value,
         });
     }
 
     const handleSubmit = () => {
-        dispatch(createRoleAction(role));
+        console.log(centroCosto);
+        dispatch(updateCentroCostoAction(centroCosto));
 
-        if(!errors){                
-            notification.success({
-                message: "Rol creado",
-                description: "El rol ha sido creado correctamente",
-                duration: 2,
-            });
-            navigate("/roles");
-        }
+        if(!errors){
+                notification.success({
+                    message: "Centro de costo actualizado",
+                    description: "El centro de costo ha sido actualizado correctamente",
+                    duration: 2,
+                });
+            }
+        navigate("/centros-costo");
     }
     
+    if(isLoading) return <div>Cargando...</div>
+    if(!editedCentroCosto) return <div>No se encontro el centro de costo</div>
     return ( 
         <Form
             className="max-w-screen-md mx-auto"
             onFinish={() => handleSubmit()}
             layout="vertical"
             onChange={handleChange}
+            form={form}
         >
-            <h1 className="text-center text-2xl font-bold text-dark"> Nuevo Rol </h1>
+            <h1 className="text-center text-2xl font-bold text-dark"> Editar Centro de Costo </h1>
 
             <Form.Item
                 label="Nombre"
@@ -57,28 +70,25 @@ const CreateRoles = () => {
                 ]}
                 hasFeedback
             >
-                <Input value={nombre} name="nombre" />
+                <Input name="nombre" />
             </Form.Item>
-
             <Form.Item
-                label="Descripción"
-                name="descripcion"
+                label="Nombre Corto"
+                name="nombreCorto"
                 rules={[
                     { required: true, message: "Debes ingresar una descripción" },
                 ]}
                 hasFeedback
             >
-                <TextArea value={descripcion} name="descripcion"/>
+                <Input name="nombreCorto"/>
             </Form.Item>
-
             <Form.Item
                 name="status"
                 rules={[
                     { required: true, message: "Debes seleccionar un estatus" },
                 ]}
-                initialValue={status}
             >
-                <Select value={status} placeholder="Selecciona un estatus" name="status" onChange={ (value) => { setRole({...role, status:value})} }>
+                <Select placeholder="Selecciona un estatus" name="status" onChange={ (value) => { setCentroCosto({...centroCosto, status:value})} }>
                     <Option value={true}>Activo</Option>
                     <Option value={false}>Inactivo</Option> 
                 </Select>
@@ -99,4 +109,4 @@ const CreateRoles = () => {
      );
 }
  
-export default CreateRoles;
+export default EditCentroCosto;

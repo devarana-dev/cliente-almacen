@@ -34,7 +34,8 @@ export default function LayoutMenu () {
 			getItem('U. de medida', '/unidades-medida'),
 			getItem('Niveles', '/niveles'),
 			getItem('Zonas', '/zonas'),
-			getItem('Actividades', '/trabajos'),
+			getItem('Actividades', '/actividades'),
+			getItem('Centro Costos', '/centros-costo'),
       	], 'group'),		
 	]),
       ];

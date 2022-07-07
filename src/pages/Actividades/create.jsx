@@ -2,41 +2,41 @@ import { Form, Input, Select, Button, notification, TextArea } from "antd";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { createRoleAction } from "../../actions/roleActions";
+import { createActividadAction } from "../../actions/actividadActions";
 
-const CreateRoles = () => {
+const CreateActividades = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { Option } = Select;
     const { TextArea } = Input;
 
-    const { errors } = useSelector(state => state.roles);
+    const { errors } = useSelector(state => state.actividades);
 
-    const [role, setRole] = useState({
+    const [actividad, setActividad] = useState({
         nombre: "",
+        status: "",
         descripcion: "",
-        status: true,
     });
-    const {nombre, descripcion, status} = role
+    const {nombre, descripcion, status} = actividad
 
     const handleChange = (e) => {
-        setRole({
-            ...role,
+        setActividad({
+            ...actividad,
             [e.target.name]: e.target.value,
         });
     }
 
     const handleSubmit = () => {
-        dispatch(createRoleAction(role));
+        dispatch(createActividadAction(actividad));
 
         if(!errors){                
             notification.success({
-                message: "Rol creado",
-                description: "El rol ha sido creado correctamente",
+                message: "Actividad creada",
+                description: "La actividad o prototipo han sido creados correctamente",
                 duration: 2,
             });
-            navigate("/roles");
+            navigate("/actividades");
         }
     }
     
@@ -47,7 +47,7 @@ const CreateRoles = () => {
             layout="vertical"
             onChange={handleChange}
         >
-            <h1 className="text-center text-2xl font-bold text-dark"> Nuevo Rol </h1>
+            <h1 className="text-center text-2xl font-bold text-dark"> Nueva Actividad / Prototipo </h1>
 
             <Form.Item
                 label="Nombre"
@@ -59,7 +59,6 @@ const CreateRoles = () => {
             >
                 <Input value={nombre} name="nombre" />
             </Form.Item>
-
             <Form.Item
                 label="Descripción"
                 name="descripcion"
@@ -76,9 +75,9 @@ const CreateRoles = () => {
                 rules={[
                     { required: true, message: "Debes seleccionar un estatus" },
                 ]}
-                initialValue={status}
+                hasFeedback
             >
-                <Select value={status} placeholder="Selecciona un estatus" name="status" onChange={ (value) => { setRole({...role, status:value})} }>
+                <Select value={status} placeholder="Selecciona un estatus" name="status" onChange={ (value) => { setActividad({...actividad, status:value})} }>
                     <Option value={true}>Activo</Option>
                     <Option value={false}>Inactivo</Option> 
                 </Select>
@@ -99,4 +98,4 @@ const CreateRoles = () => {
      );
 }
  
-export default CreateRoles;
+export default CreateActividades;

@@ -2,9 +2,9 @@ import { Form, Input, Select, Button, notification, TextArea } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams} from "react-router-dom";
-import { createNivelAction, getNivelAction, updateNivelAction } from "../../actions/nivelActions";
+import { getNivelAction, updateNivelAction } from "../../actions/nivelActions";
 
-const EditNivels = () => {
+const EditNiveles = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -15,6 +15,7 @@ const EditNivels = () => {
 
     const { errors, editedNivel, isLoading } = useSelector(state => state.niveles);
 
+    console.log(editedNivel)
     const [nivel, setNivel] = useState({
         nombre: "",
         status: "",
@@ -41,8 +42,8 @@ const EditNivels = () => {
 
         if(!errors){
                 notification.success({
-                    message: "Rol actualizado",
-                    description: "El rol ha sido actualizado correctamente",
+                    message: "Nivel actualizado",
+                    description: "El nivel ha sido actualizado correctamente",
                     duration: 2,
                 });
             }
@@ -50,7 +51,7 @@ const EditNivels = () => {
     }
     
     if(isLoading) return <div>Cargando...</div>
-    if(!editedNivel) return <div>No se encontro el rol</div>
+    if(!editedNivel) return <div>No se encontro el nivel</div>
     return ( 
         <Form
             className="max-w-screen-md mx-auto"
@@ -59,7 +60,7 @@ const EditNivels = () => {
             onChange={handleChange}
             form={form}
         >
-            <h1 className="text-center text-2xl font-bold text-dark"> Editar Rol </h1>
+            <h1 className="text-center text-2xl font-bold text-dark"> Editar Nivel </h1>
 
             <Form.Item
                 label="Nombre"
@@ -76,11 +77,11 @@ const EditNivels = () => {
                 rules={[
                     { required: true, message: "Debes seleccionar un estatus" },
                 ]}
-                hasFeedback
+                
             >
                 <Select placeholder="Selecciona un estatus" name="status" onChange={ (value) => { setNivel({...nivel, status:value})} }>
-                    <Option value={1}>Activo</Option>
-                    <Option value={0}>Inactivo</Option> 
+                    <Option value={true}>Activo</Option>
+                    <Option value={false}>Inactivo</Option> 
                 </Select>
             </Form.Item>
 
@@ -99,4 +100,4 @@ const EditNivels = () => {
      );
 }
  
-export default EditNivels;
+export default EditNiveles;

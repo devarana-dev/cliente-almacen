@@ -1,53 +1,66 @@
 import { Form, Input, Select, Button, notification, TextArea } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { createRoleAction } from "../../actions/roleActions";
+import { useNavigate, useParams} from "react-router-dom";
+import { getActividadAction, updateActividadAction } from "../../actions/actividadActions";
 
-const CreateRoles = () => {
+const EditActividades = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const {id} = useParams()
+    const [form] = Form.useForm();
     const { Option } = Select;
     const { TextArea } = Input;
 
-    const { errors } = useSelector(state => state.roles);
+    const { errors, editedActividad, isLoading } = useSelector(state => state.actividades);
 
-    const [role, setRole] = useState({
+    const [actividad, setActividad] = useState({
         nombre: "",
         descripcion: "",
-        status: true,
+        status: "",
     });
-    const {nombre, descripcion, status} = role
+
+    useEffect(() =>{
+        if(!editedActividad){
+            dispatch(getActividadAction(id))
+        }
+        setActividad({...editedActividad})
+        form.setFieldsValue({...editedActividad})
+    },[editedActividad])
 
     const handleChange = (e) => {
-        setRole({
-            ...role,
+        setActividad({
+            ...actividad,
             [e.target.name]: e.target.value,
         });
     }
 
     const handleSubmit = () => {
-        dispatch(createRoleAction(role));
+        console.log(actividad);
+        dispatch(updateActividadAction(actividad));
 
-        if(!errors){                
-            notification.success({
-                message: "Rol creado",
-                description: "El rol ha sido creado correctamente",
-                duration: 2,
-            });
-            navigate("/roles");
-        }
+        if(!errors){
+                notification.success({
+                    message: "Actividad actualizado",
+                    description: "La actividad ha sido actualizado correctamente",
+                    duration: 2,
+                });
+            }
+        navigate("/actividades");
     }
     
+    if(isLoading) return <div>Cargando...</div>
+    if(!editedActividad) return <div>No se encontro la actividad</div>
     return ( 
         <Form
             className="max-w-screen-md mx-auto"
             onFinish={() => handleSubmit()}
             layout="vertical"
             onChange={handleChange}
+            form={form}
         >
-            <h1 className="text-center text-2xl font-bold text-dark"> Nuevo Rol </h1>
+            <h1 className="text-center text-2xl font-bold text-dark"> Editar Actividad </h1>
 
             <Form.Item
                 label="Nombre"
@@ -57,9 +70,8 @@ const CreateRoles = () => {
                 ]}
                 hasFeedback
             >
-                <Input value={nombre} name="nombre" />
+                <Input name="nombre" />
             </Form.Item>
-
             <Form.Item
                 label="Descripción"
                 name="descripcion"
@@ -68,17 +80,16 @@ const CreateRoles = () => {
                 ]}
                 hasFeedback
             >
-                <TextArea value={descripcion} name="descripcion"/>
+                <TextArea name="descripcion"/>
             </Form.Item>
-
             <Form.Item
                 name="status"
                 rules={[
                     { required: true, message: "Debes seleccionar un estatus" },
                 ]}
-                initialValue={status}
+                hasFeedback
             >
-                <Select value={status} placeholder="Selecciona un estatus" name="status" onChange={ (value) => { setRole({...role, status:value})} }>
+                <Select placeholder="Selecciona un estatus" name="status" onChange={ (value) => { setActividad({...actividad, status:value})} }>
                     <Option value={true}>Activo</Option>
                     <Option value={false}>Inactivo</Option> 
                 </Select>
@@ -99,4 +110,4 @@ const CreateRoles = () => {
      );
 }
  
-export default CreateRoles;
+export default EditActividades;

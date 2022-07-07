@@ -2,41 +2,40 @@ import { Form, Input, Select, Button, notification, TextArea } from "antd";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { createRoleAction } from "../../actions/roleActions";
+import { createZonaAction } from "../../actions/zonaActions";
 
-const CreateRoles = () => {
+const CreateZonas = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { Option } = Select;
     const { TextArea } = Input;
 
-    const { errors } = useSelector(state => state.roles);
+    const { errors } = useSelector(state => state.zonas);
 
-    const [role, setRole] = useState({
+    const [zona, setZona] = useState({
         nombre: "",
-        descripcion: "",
         status: true,
     });
-    const {nombre, descripcion, status} = role
+    const {nombre, status} = zona
 
     const handleChange = (e) => {
-        setRole({
-            ...role,
+        setZona({
+            ...zona,
             [e.target.name]: e.target.value,
         });
     }
 
     const handleSubmit = () => {
-        dispatch(createRoleAction(role));
+        dispatch(createZonaAction(zona));
 
         if(!errors){                
             notification.success({
-                message: "Rol creado",
-                description: "El rol ha sido creado correctamente",
+                message: "Zona creada",
+                description: "La zona o prototipo han sido creados correctamente",
                 duration: 2,
             });
-            navigate("/roles");
+            navigate("/zonas");
         }
     }
     
@@ -47,7 +46,7 @@ const CreateRoles = () => {
             layout="vertical"
             onChange={handleChange}
         >
-            <h1 className="text-center text-2xl font-bold text-dark"> Nuevo Rol </h1>
+            <h1 className="text-center text-2xl font-bold text-dark"> Nueva Zona / Prototipo </h1>
 
             <Form.Item
                 label="Nombre"
@@ -61,24 +60,13 @@ const CreateRoles = () => {
             </Form.Item>
 
             <Form.Item
-                label="Descripción"
-                name="descripcion"
-                rules={[
-                    { required: true, message: "Debes ingresar una descripción" },
-                ]}
-                hasFeedback
-            >
-                <TextArea value={descripcion} name="descripcion"/>
-            </Form.Item>
-
-            <Form.Item
                 name="status"
                 rules={[
                     { required: true, message: "Debes seleccionar un estatus" },
                 ]}
                 initialValue={status}
             >
-                <Select value={status} placeholder="Selecciona un estatus" name="status" onChange={ (value) => { setRole({...role, status:value})} }>
+                <Select value={status} placeholder="Selecciona un estatus" name="status" onChange={ (value) => { setZona({...zona, status:value})} }>
                     <Option value={true}>Activo</Option>
                     <Option value={false}>Inactivo</Option> 
                 </Select>
@@ -99,4 +87,4 @@ const CreateRoles = () => {
      );
 }
  
-export default CreateRoles;
+export default CreateZonas;

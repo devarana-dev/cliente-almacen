@@ -15,7 +15,7 @@ const CreateNiveles = () => {
 
     const [nivel, setNivel] = useState({
         nombre: "",
-        status: "",
+        status: true,
     });
     const {nombre, status} = nivel
 
@@ -31,8 +31,8 @@ const CreateNiveles = () => {
 
         if(!errors){                
             notification.success({
-                message: "Rol creado",
-                description: "El rol ha sido creado correctamente",
+                message: "Nivel creado",
+                description: "El nivel ha sido creado correctamente",
                 duration: 2,
             });
             navigate("/niveles");
@@ -46,7 +46,7 @@ const CreateNiveles = () => {
             layout="vertical"
             onChange={handleChange}
         >
-            <h1 className="text-center text-2xl font-bold text-dark"> Nuevo Rol </h1>
+            <h1 className="text-center text-2xl font-bold text-dark"> Nuevo Nivel </h1>
 
             <Form.Item
                 label="Nombre"
@@ -64,11 +64,11 @@ const CreateNiveles = () => {
                 rules={[
                     { required: true, message: "Debes seleccionar un estatus" },
                 ]}
-                hasFeedback
+                initialValue={status}
             >
                 <Select value={status} placeholder="Selecciona un estatus" name="status" onChange={ (value) => { setNivel({...nivel, status:value})} }>
-                    <Option value={1}>Activo</Option>
-                    <Option value={0}>Inactivo</Option> 
+                    <Option value={true}>Activo</Option>
+                    <Option value={false}>Inactivo</Option> 
                 </Select>
             </Form.Item>
 

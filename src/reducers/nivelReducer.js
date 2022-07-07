@@ -13,6 +13,8 @@ export default (state = initialState, action) => {
     switch (action.type) {
         case types.GET_ALL_NIVEL:
         case types.CREATE_NIVEL:
+        case types.UPDATE_NIVEL:
+        case types.GET_NIVEL:
             return {
                 ...state,
                 isLoading: true,
@@ -27,6 +29,29 @@ export default (state = initialState, action) => {
                 errors: null,
                 niveles: action.payload
             }
+        case types.CREATE_NIVEL_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                errors: null,
+                niveles: [...state.niveles, action.payload]
+            }
+        case types.UPDATE_NIVEL_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                errors: null,
+                niveles: state.niveles.map(nivel => nivel.id === action.payload.id ? action.payload : nivel)
+            }
+        case types.GET_NIVEL_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                errors: null,
+                editedNivel: action.payload
+            }
+        case types.UPDATE_NIVEL_ERROR:
+        case types.GET_NIVEL_ERROR:
         case types.GET_ALL_NIVEL_ERROR:
         case types.CREATE_NIVEL_ERROR:
             return {
@@ -35,13 +60,7 @@ export default (state = initialState, action) => {
                 errors: action.payload
             }
 
-        case types.CREATE_NIVEL_SUCCESS:
-            return {
-                ...state,
-                isLoading: false,
-                errors: null,
-                niveles: [...state.niveles, action.payload]
-            }
+        
         
         default:
             return state

@@ -19,6 +19,19 @@ import CreateRoles from "../pages/Roles/create"
 import EditRoles from "../pages/Roles/edit"
 import Niveles from "../pages/Niveles"
 import CreateNiveles from "../pages/Niveles/create"
+import Zonas from "../pages/Zonas"
+import CreateZonaes from "../pages/Zonas/create"
+import CreateZonas from "../pages/Zonas/create"
+import EditZonas from "../pages/Zonas/edit"
+import Actividades from "../pages/Actividades"
+import CreateActividades from "../pages/Actividades/create"
+import EditActividades from "../pages/Actividades/edit"
+import EditNivels from "../pages/Niveles/edit"
+import EditNiveles from "../pages/Niveles/edit"
+import CentroCostos from "../pages/CentroCostos"
+import CreateCentroCosto from "../pages/CentroCostos/create"
+import EditCentroCosto from "../pages/CentroCostos/edit"
+import CentroCosto from "../pages/CentroCostos"
 
 const routesPublic = [
     {
@@ -92,7 +105,52 @@ const routesPrivate = [
     {
         path: '/niveles/:id',
         layout: Private,
-        component: EditRoles
+        component: EditNiveles
+    },
+    {
+        path: '/centros-costo',
+        layout: Private,
+        component: CentroCosto
+    },
+    {
+        path: '/centros-costo/create',
+        layout: Private,
+        component: CreateCentroCosto
+    },
+    {
+        path: '/centros-costo/:id',
+        layout: Private,
+        component: EditCentroCosto
+    },
+    {
+        path: '/zonas',
+        layout: Private,
+        component: Zonas
+    },
+    {
+        path: '/zonas/create',
+        layout: Private,
+        component: CreateZonas
+    },
+    {
+        path: '/zonas/:id',
+        layout: Private,
+        component: EditZonas
+    },
+    {
+        path: '/actividades',
+        layout: Private,
+        component: Actividades
+    },
+    {
+        path: '/actividades/create',
+        layout: Private,
+        component: CreateActividades
+    },
+    {
+        path: '/actividades/:id',
+        layout: Private,
+        component: EditActividades
     },
     {
         path: '/vales-salida',

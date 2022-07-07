@@ -31,10 +31,10 @@ const getAllNivelesError = error => {
     }
 }
 
-export function createNivelAction(){
+export function createNivelAction(nivel){
     return async (dispatch) => {
         dispatch(createNivelRequest())
-        await clientAxios.post('/niveles')
+        await clientAxios.post('/niveles', nivel)
             .then ( res => {
                 dispatch(createNivelSuccess(res.data.nivel))
             }).catch( err => {
@@ -58,6 +58,68 @@ const createNivelSuccess = payload => {
 const createNivelError = error => {
     return {
         type: types.CREATE_NIVEL_ERROR,
+        payload: error
+    }
+}
+
+export function getNivelAction(id){
+    return async (dispatch) => {
+        dispatch(getNivelRequest())
+        await clientAxios.get(`/niveles/${id}`)
+            .then ( res => {
+                dispatch(getNivelSuccess(res.data.nivel))
+            }).catch( err => {
+                console.log('Error getNivelAction', err.response);
+                dispatch(getNivelError(err.response.data.message))
+            } )
+    }
+}
+
+const getNivelRequest = () => {
+    return {
+        type: types.GET_NIVEL
+    }
+}
+const getNivelSuccess = payload => {
+    return {
+        type: types.GET_NIVEL_SUCCESS,
+        payload
+    }
+}
+const getNivelError = error => {
+    return {
+        type: types.GET_NIVEL_ERROR,
+        payload: error
+    }
+}
+
+export function updateNivelAction(nivel){
+    return async (dispatch) => {
+        dispatch(updateNivelRequest())
+        await clientAxios.put(`/niveles/${nivel.id}`, nivel)
+            .then ( res => {
+                dispatch(updateNivelSuccess(res.data.nivel))
+            }).catch( err => {
+                console.log('Error updateNivelAction', err.response);
+                dispatch(updateNivelError(err.response.data.message))
+            } )
+    }
+}
+
+const updateNivelRequest = () => {
+    return {
+        type: types.UPDATE_NIVEL
+    }
+}
+const updateNivelSuccess = payload => {
+    return {
+        type: types.UPDATE_NIVEL_SUCCESS,
+        payload
+    }
+}
+const updateNivelError = error => {
+    return {
+        type: types.UPDATE_NIVEL_ERROR,
         payload: error
     }
 }

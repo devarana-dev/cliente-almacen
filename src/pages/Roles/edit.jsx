@@ -89,11 +89,11 @@ const EditRoles = () => {
                 rules={[
                     { required: true, message: "Debes seleccionar un estatus" },
                 ]}
-                hasFeedback
+                
             >
                 <Select placeholder="Selecciona un estatus" name="status" onChange={ (value) => { setRole({...role, status:value})} }>
-                    <Option value={1}>Activo</Option>
-                    <Option value={0}>Inactivo</Option> 
+                    <Option value={true}>Activo</Option>
+                    <Option value={false}>Inactivo</Option> 
                 </Select>
             </Form.Item>
 
