@@ -8,7 +8,7 @@ export default function AuthProvider(){
    
     const [auth, setAuth] = useState(
         {
-            // token: null,
+            token: null,
             isAuthenticated: false,
             isLoading: true,
             userAuth: null,
@@ -30,7 +30,7 @@ function checkUserLogin( setAuth ) {
             logoutAction()
             setAuth({
                 userAuth: null,
-                // token: null,
+                token: null,
                 isAuthenticated: false,
                 isLoading: false,
             })
@@ -40,7 +40,7 @@ function checkUserLogin( setAuth ) {
     }else{
         setAuth({
             userAuth: jwtDecode(accessToken),
-            // token: accessToken,
+            token: accessToken,
             isAuthenticated: true,
             isLoading: false,
         })

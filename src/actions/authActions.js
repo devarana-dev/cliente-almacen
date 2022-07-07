@@ -9,8 +9,8 @@ export function getUserAction () {
                 dispatch(loginSuccess(res.data))
             })
             .catch( err => {
-                console.log('Error getUserAction', err);
-                dispatch(loginError(err))
+                // console.log('Error getUserAction', err.response.data.message);
+                dispatch(loginError(err.response.data.message))
             })
     }
 }
@@ -43,6 +43,7 @@ export function validateLoginAction (auth){
                 type: types.LOGIN_VALIDATE_ERROR,
                 payload: null
             })
+            logoutAction()
         }
     }
 }

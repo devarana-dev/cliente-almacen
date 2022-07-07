@@ -8,9 +8,6 @@ import "../assets/scss/layout.scss"
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
-    UploadOutlined,
-    UserOutlined,
-    VideoCameraOutlined,
   } from '@ant-design/icons';
 import Menu from "../components/layout/Menu";
 import { validateLoginAction } from "../actions/authActions";
@@ -26,16 +23,19 @@ export default function LayoutPrivate({children}) {
     const { isAuthenticated } = useSelector( state => state.auth )
     const { isLoading } = useSelector( state => state.auth )
 
+   
+
     useEffect(() => {
         dispatch(validateLoginAction(isAuth))
+        // eslint-disable-next-line
     }, [isAuth])
 
- 
 
     if( (isAuthenticated || isAuth.isAuthenticated) === false && !isLoading ){
         navigate("/login")
     }
 
+    
 
     return (
 
@@ -47,6 +47,9 @@ export default function LayoutPrivate({children}) {
                 collapsed={collapsed}
                 breakpoint="lg"
                 collapsedWidth="0"
+                onBreakpoint={(broken) => {
+                    setCollapsed(broken)
+                }}
             >
             <div className="h-14 p-2 text-center">
                 Logotipo

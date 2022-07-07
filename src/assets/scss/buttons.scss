@@ -1,0 +1,107 @@
+@import './variables';
+
+
+
+.ant-btn-primary{
+    background: #8c52ff;
+    background: -webkit-linear-gradient(45deg, #8c52ff 0%, rgba(140, 82, 255, 0.7) 100%);
+    background: linear-gradient(45deg, #8c52ff 0%, rgba(140, 82, 255, 0.7) 100%);
+    transition: .3s all ease-in-out;
+    border:1px solid #8c52ff;
+    font-weight: 400;
+
+    &:hover, &:focus{
+        border:1px solid #8c52ff;
+        color:#8c52ff;
+        background: none;
+        transition: .5s all ease-in-out;
+    }
+}
+
+.ant-btn-default{
+    background: #5271ff;
+    background: -webkit-linear-gradient(45deg, #5271ff 0%, rgba(82, 113, 255, 0.7) 100%);
+    background: linear-gradient(45deg, #5271ff 0%, rgba(82, 113, 255, 0.7) 100%);
+    transition: .3s all ease-in-out;
+    border:1px solid #5271ff;
+    font-weight: 400;
+    color: white;
+
+    &:hover, &:focus{
+        border:1px solid #5271ff;
+        color:#5271ff;
+        background: none;
+        transition: .5s all ease-in-out;
+    }
+}
+
+.ant-btn-ghost{
+    background: #00c2cb;
+    background: -webkit-linear-gradient(45deg, #00c2cb 0%, rgba(0, 194, 203, 0.7) 100%);
+    background: linear-gradient(45deg, #00c2cb 0%, rgba(0, 194, 203, 0.7) 100%);
+    transition: .3s all ease-in-out;
+    border:1px solid #00c2cb;
+    font-weight: 400;
+    color: white;
+
+    &:hover, &:focus{
+        border:1px solid #00c2cb;
+        color:#00c2cb;
+        background: none;
+        transition: .5s all ease-in-out;
+    }
+}
+
+.ant-btn-danger{
+    background: #f72500;
+    background: -webkit-linear-gradient(45deg, #f72500 0%, rgba(247, 37, 0, 0.7) 100%);
+    background: linear-gradient(45deg, #f72500 0%, rgba(247, 37, 0, 0.7) 100%);
+    transition: .3s all ease-in-out;
+    border:1px solid #f72500;
+    font-weight: 400;
+    color: white;
+    padding: 2px 5px;
+
+    &:hover, &:focus{
+        border:1px solid #f72500;
+        color:#f72500;
+        background: none;
+        transition: .5s all ease-in-out;
+    }
+}
+
+
+.ant-btn-warning{
+    background: #e5d100;
+    background: -webkit-linear-gradient(45deg, #e5d100 0%, rgba(229, 209, 0, 0.7) 100%);
+    background: linear-gradient(45deg, #e5d100 0%, rgba(229, 209, 0, 0.7) 100%);
+    transition: .3s all ease-in-out;
+    border:1px solid #e5d100;
+    font-weight: 400;
+    color: white;
+    padding: 2px 5px;
+    &:hover, &:focus{
+        border:1px solid #e5d100;
+        color:#e5d100;
+        background: none;
+        transition: .5s all ease-in-out;
+    }
+}
+
+.ant-btn-dark{
+    border:1px solid #646375;
+    color:#646375;
+    background: none;
+    transition: .5s all ease-in-out;
+
+    &:hover, &:focus{
+        
+        background: #646375;
+        background: -webkit-linear-gradient(45deg, #646375 0%, rgba(100, 99, 117, 0.7) 100%);
+        background: linear-gradient(45deg, #646375 0%, rgba(100, 99, 117, 0.7) 100%);
+        transition: .3s all ease-in-out;
+        border:1px solid #646375;
+        font-weight: 400;
+        color: white;
+    }
+}

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserAction } from '../../actions/authActions';
 import Box from "../../components/Elements/Box";
@@ -26,9 +25,10 @@ export default function Login() {
             }, 500)
         }
     }
+
     return (
         <>
-        {errors ?  <AntdNotification /> : null }
+        {errors ?  <AntdNotification type='error' description={errors} /> : null }
         <h1 className="text-center text-3xl font-bold text-white m-auto">App</h1>
         <Box className="w-full max-w-screen-sm bg-transparent mb-10 mx-auto text-center">
             <Button className="bg-white text-dark block mx-auto" fn={redirectToGoogleSSO}> Entrar con Google </Button>

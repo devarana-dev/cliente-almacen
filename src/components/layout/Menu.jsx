@@ -1,5 +1,6 @@
 import { Menu } from "antd";
-import { MailOutlined, SettingOutlined, AppstoreOutlined  } from '@ant-design/icons';
+import { SettingOutlined, AppstoreOutlined, LogoutOutlined,UserOutlined  } from '@ant-design/icons';
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function LayoutMenu () {
 
@@ -12,30 +13,39 @@ export default function LayoutMenu () {
           type,
         };
     }
+	const location = useLocation()
+	const navigate = useNavigate()
+    const url = location.pathname
 
 
     const items = [
-        getItem('Dashboard', 'sub1', <AppstoreOutlined />),
-        getItem('Navigation', 'sub2', <MailOutlined />, [
-            getItem('Option 9', '1'),
-            getItem('Option 10', '2'),
-            getItem('Option 11', '3'),
-            getItem('Option 12', '4'),
-          ]),
-        getItem('Navigation', 'sub4', <SettingOutlined />, [
-          getItem('Option 9', '9'),
-          getItem('Option 10', '10'),
-          getItem('Option 11', '11'),
-          getItem('Option 12', '12'),
-        ]),
+	getItem('Inicio', '/', <AppstoreOutlined />),
+	getItem('Vales', 'sub1', <LogoutOutlined />, [
+		getItem('Vale Salida', '/vales-salida/nuevo'),
+		getItem('Consultar Vales', '/vales-salida'),
+	]),
+	getItem('Gestión', 'sub3', <SettingOutlined />, [
+		getItem('Usuarios', 'subsub1', <UserOutlined />, [
+			getItem('Roles', '/roles'),
+			getItem('Usuario', '/usuarios'),
+     	], 'group'),
+		getItem('Vales', 'subsub2', <UserOutlined />, [
+			getItem('Carga Insumos', '/carga-insumos'),
+			getItem('U. de medida', '/unidades-medida'),
+			getItem('Niveles', '/niveles'),
+			getItem('Zonas', '/zonas'),
+			getItem('Actividades', '/trabajos'),
+      	], 'group'),		
+	]),
       ];
 
     return (
         <Menu
-                className="layout__menu"
-                mode="inline"
-                defaultSelectedKeys={['1']}
-                items={items}
+			className="layout__menu"
+			mode="inline"
+			items={items}
+			onClick={ (item) => (navigate(item.key) )}
+			defaultSelectedKeys={[`${url}`]}
         />
     )
     
