@@ -7,6 +7,7 @@ import actividadReducer from "./actividadReducer";
 import nivelReducer from "./nivelReducer";
 import zonaReducer from "./zonaReducer";
 import centroCostoReducer from "./centroCostoReducer";
+import unidadReducer from "./unidadReducer";
 
 
 export default combineReducers({
@@ -17,5 +18,6 @@ export default combineReducers({
     actividades: actividadReducer,
     niveles: nivelReducer,
     zonas: zonaReducer,
-    centroCosto: centroCostoReducer
+    centroCosto: centroCostoReducer,
+    unidades: unidadReducer,
 })

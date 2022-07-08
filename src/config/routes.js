@@ -32,6 +32,9 @@ import CentroCostos from "../pages/CentroCostos"
 import CreateCentroCosto from "../pages/CentroCostos/create"
 import EditCentroCosto from "../pages/CentroCostos/edit"
 import CentroCosto from "../pages/CentroCostos"
+import Unidades from "../pages/Unidades"
+import CreateUnidades from "../pages/Unidades/create"
+import EditUnidades from "../pages/Unidades/edit"
 
 const routesPublic = [
     {
@@ -106,6 +109,21 @@ const routesPrivate = [
         path: '/niveles/:id',
         layout: Private,
         component: EditNiveles
+    },
+    {
+        path: '/unidades',
+        layout: Private,
+        component: Unidades
+    },
+    {
+        path: '/unidades/create',
+        layout: Private,
+        component: CreateUnidades
+    },
+    {
+        path: '/unidades/:id',
+        layout: Private,
+        component: EditUnidades
     },
     {
         path: '/centros-costo',
