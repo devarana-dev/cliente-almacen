@@ -28,7 +28,6 @@ const CreateUnidades = () => {
     }
 
     const handleSubmit = () => {
-        console.log(unidad);
         dispatch(createUnidadAction(unidad));
 
         if(!errors){                

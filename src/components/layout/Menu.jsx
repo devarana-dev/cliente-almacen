@@ -31,7 +31,7 @@ export default function LayoutMenu () {
      	], 'group'),
 		getItem('Vales', 'subsub2', <UserOutlined />, [
 			getItem('Carga Insumos', '/carga-insumos'),
-			getItem('U. de medida', '/unidades'),
+			// getItem('U. de medida', '/unidades'),
 			getItem('Niveles', '/niveles'),
 			getItem('Zonas', '/zonas'),
 			getItem('Actividades', '/actividades'),
