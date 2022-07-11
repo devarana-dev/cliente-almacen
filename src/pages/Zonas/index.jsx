@@ -121,8 +121,18 @@ const Zonas = () => {
           title: 'Estatus',
           dataIndex: 'estatus',
           key: 'estatus',
-          sorter: (a, b) => a.nombre.localeCompare(b.nombre),
           render: (text, record) => ( record.status ? 'Activo' : 'Inactivo' ),
+          filters: [
+            { 
+              text: 'Activo',
+              value: true
+            },
+                  { 
+              text: 'Inactivo',
+              value: false
+            },
+          ],
+		  onFilter: (value, record) => record.status === value,
         },
         
         {

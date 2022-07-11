@@ -2,7 +2,7 @@ import { Button, Form, Select } from 'antd';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllActividadAction } from '../../actions/actividadActions';
-import { getAllCentroCostoAction } from '../../actions/centroCostoActions';
+import { getAllObraAction } from '../../actions/obraActions';
 import { getAllNivelesAction } from '../../actions/nivelActions';
 import { getAllZonaAction } from '../../actions/zonaActions';
 
@@ -13,21 +13,16 @@ const CreateValesSalida1 = ({current, setCurrent}) => {
     const { zonas } = useSelector(state => state.zonas);
     const { actividades } = useSelector(state => state.actividades);
     const { niveles } = useSelector(state => state.niveles);
-    const { centroCosto } = useSelector(state => state.centroCosto);
-    const {Option} = Select;
+    const { obra } = useSelector(state => state.obras);
+    const { Option } = Select;
 
 
     useEffect(() =>{
-        dispatch(getAllZonaAction())
-        dispatch(getAllActividadAction())
-        dispatch(getAllNivelesAction())
-        dispatch(getAllCentroCostoAction())
+        dispatch(getAllObraAction())
     }, [])
 
     return ( 
         <>
-            {/* <h1>Información General</h1> */}
-            {/* <h1> Añadir Materiales </h1> */}
             <Form.Item
                 rules={[
                     { required: true, message: 'Debes seleccionar un Almacén' },
@@ -43,7 +38,7 @@ const CreateValesSalida1 = ({current, setCurrent}) => {
                     size='large'
                     defaultValue={"4"}
                 >
-                    <Option value="4">Almacén 4</Option>
+                    <Option key={1} value="4">Almacén 4</Option>
                     
                 </Select>
             </Form.Item>
@@ -52,23 +47,20 @@ const CreateValesSalida1 = ({current, setCurrent}) => {
                 rules={[
                     { required: true, message: 'Debes seleccionar un centro de costo' },
                 ]}
-                name="centroCosto_id"
+                name="obra_id"
+                label="Selecciona una obra / centro de costo"
                 hasFeedback
             >
                 <Select 
-                    placeholder="Obra / Centro de Costo"
                     filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                     showSearch
                     size='large'
                 >
-                    <Option value="1">Centro de costo 1</Option>
-                    
                     {
-                        centroCosto.map(item => (
+                        obra.map(item => (
                             <Option key={item.id} value={item.id}>{item.nombre}</Option>
                         ))
                     }
-                    
                 </Select>
             </Form.Item>
 
@@ -78,9 +70,9 @@ const CreateValesSalida1 = ({current, setCurrent}) => {
                 ]}
                 name="seccion_id"
                 hasFeedback
+                label="Selecciona un nivel"
             >
-                <Select 
-                    placeholder="Nivel"
+                <Select
                     filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                     showSearch
                     size='large'
@@ -100,9 +92,10 @@ const CreateValesSalida1 = ({current, setCurrent}) => {
                 ]}
                 name="zona_id"
                 hasFeedback
+                label="Selecciona una zona o prototipo"
             >
                 <Select 
-                    mode="multiple" placeholder="Selecciona un Prototipo / Zona"
+                    mode="multiple"
                     filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                     showSearch
                     size='large'
@@ -122,6 +115,7 @@ const CreateValesSalida1 = ({current, setCurrent}) => {
                 ]}
                 name="tipoTrabajo_id"
                 hasFeedback
+                label="Selecciona una actividad a realizar"
             >
                 <Select 
                     placeholder="Trabajo a realizar"
@@ -137,12 +131,14 @@ const CreateValesSalida1 = ({current, setCurrent}) => {
                     
                 </Select>
             </Form.Item>
+
             <Form.Item
                 rules={[
                     { required: true, message: 'Debes seleccionar a un jefe de cuadrilla' },
                 ]}
                 name="jefeCuadrilla_id"
                 hasFeedback
+                label="Selecciona un jefe de cuadrilla"
             >
                 <Select 
                     placeholder="Entregar a"

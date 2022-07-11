@@ -20,18 +20,15 @@ import EditRoles from "../pages/Roles/edit"
 import Niveles from "../pages/Niveles"
 import CreateNiveles from "../pages/Niveles/create"
 import Zonas from "../pages/Zonas"
-import CreateZonaes from "../pages/Zonas/create"
 import CreateZonas from "../pages/Zonas/create"
 import EditZonas from "../pages/Zonas/edit"
 import Actividades from "../pages/Actividades"
 import CreateActividades from "../pages/Actividades/create"
 import EditActividades from "../pages/Actividades/edit"
-import EditNivels from "../pages/Niveles/edit"
 import EditNiveles from "../pages/Niveles/edit"
-import CentroCostos from "../pages/CentroCostos"
-import CreateCentroCosto from "../pages/CentroCostos/create"
-import EditCentroCosto from "../pages/CentroCostos/edit"
-import CentroCosto from "../pages/CentroCostos"
+import Obras from "../pages/Obras"
+import CreateObra from "../pages/Obras/create"
+import EditObra from "../pages/Obras/edit"
 import Unidades from "../pages/Unidades"
 import CreateUnidades from "../pages/Unidades/create"
 import EditUnidades from "../pages/Unidades/edit"
@@ -126,19 +123,19 @@ const routesPrivate = [
         component: EditUnidades
     },
     {
-        path: '/centros-costo',
+        path: '/obra',
         layout: Private,
-        component: CentroCosto
+        component: Obras
     },
     {
-        path: '/centros-costo/create',
+        path: '/obra/create',
         layout: Private,
-        component: CreateCentroCosto
+        component: CreateObra
     },
     {
-        path: '/centros-costo/:id',
+        path: '/obra/:id',
         layout: Private,
-        component: EditCentroCosto
+        component: EditObra
     },
     {
         path: '/zonas',

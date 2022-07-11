@@ -1,26 +1,25 @@
 
 import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table } from 'antd';
+import { Button, Input, Space, Table, Popconfirm, notification } from 'antd';
 
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { getAllCentroCostoAction } from '../../actions/centroCostoActions';
+import { deleteObraAction, getAllObraAction } from '../../actions/obraActions';
 
-const CentroCosto = () => {
+const Obras = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const [ dataSource, setDataSource ] = useState([]);
-    const {centroCosto} = useSelector(state => state.centroCosto);
-    const {isLoading} = useSelector(state => state.centroCosto);
+    const { obra, isLoading, errors } = useSelector(state => state.obras);
 
     useEffect(() => {
-        dispatch(getAllCentroCostoAction())
+        dispatch(getAllObraAction())
 
         setDataSource(
-            centroCosto.map( (item, i) => (
+            obra.map( (item, i) => (
 				{ key: i, acciones:item.id, ...item}
             )
         ))
@@ -28,17 +27,15 @@ const CentroCosto = () => {
     }, [])
 
     useEffect(() => {
-        
             setDataSource(
-                centroCosto.map( (item, i) => (
+                obra.map( (item, i) => (
 					{ key: i, acciones:item.id, ...item }
                 ))
 		)
-    },[centroCosto])
+    },[obra])
 
 
-    /// Table
-    
+    /// Table    
     // eslint-disable-next-line no-unused-vars
     const [searchText, setSearchText] = useState('');
     // eslint-disable-next-line no-unused-vars
@@ -118,32 +115,68 @@ const CentroCosto = () => {
           ...getColumnSearchProps('nombre'),
         },
         {
+          title: 'Clave',
+          dataIndex: 'clave',
+          key: 'obra',
+          ...getColumnSearchProps('clave'),
+        },
+        {
           title: 'Estatus',
           dataIndex: 'estatus',
           key: 'estatus',
-          sorter: (a, b) => a.nombre.localeCompare(b.nombre),
           render: (text, record) => ( record.status ? 'Activo' : 'Inactivo' ),
-        },
-        
+          filters: [
+            { 
+              text: 'Activo',
+              value: true
+            },
+                  { 
+              text: 'Inactivo',
+              value: false
+            },
+          ],
+		  onFilter: (value, record) => record.status === value,
+        },   
         {
             title: 'Acciones',
             dataIndex: 'acciones',
             key: 'acciones',
-            render: (id) => <div><Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button> <Button type='danger' onClick={ () => navigate(`${id}`) }> <DeleteOutlined className='font-bold text-lg'/> </Button> </div>,
-            width: 200,
+            render: (id) => 
+			<div className='flex justify-around'> 
+                <Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button> 
+				<Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
+					<Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
+				</Popconfirm>
+			</div>,
+            width: 150,
         }
         
     ];
 
+	const handleDelete = (id) => {
+		dispatch(deleteObraAction(id))
+		if (errors){
+			notification['error']({
+				message: 'Error al eliminar',
+				description: errors
+			})
+		}else{
+			notification['success']({
+				message: 'Correcto!',
+				description: 'Se ha eliminado correctamente'
+			})
+		}
+	}
+
     return ( 
     <>
         <div className='py-10 flex justify-between'>
-            <h1 className='text-dark text-2xl'> Centro Costos </h1>
-            <Button type='primary' onClick={() => navigate('create')} className='block ml-auto'>Agregar Nuevo Usuario</Button>
+            <h1 className='text-dark text-2xl'> Obras / CC </h1>
+            <Button type='primary' onClick={() => navigate('create')} className='block ml-auto'>Agregar Nueva Obra</Button>
         </div>
         <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>
     </>
     );
 }
  
-export default CentroCosto;
+export default Obras;

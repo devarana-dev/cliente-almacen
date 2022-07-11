@@ -123,3 +123,36 @@ const updateNivelError = error => {
         payload: error
     }
 }
+
+
+export function deleteNivelAction(id){
+    return async (dispatch) => {
+        dispatch(deleteNivelRequest())
+        await clientAxios.delete(`/niveles/${id}`)
+            .then ( res => {
+                console.log(res.data);
+                dispatch(deleteNivelSuccess(res.data.nivel))
+            }).catch( err => {
+                console.log('Error deleteNivelAction', err.response);
+                dispatch(deleteNivelError(err.response.data.message))
+            } )
+    }
+}
+
+const deleteNivelRequest = () => {
+    return {
+        type: types.DELETE_NIVEL
+    }
+}
+const deleteNivelSuccess = payload => {
+    return {
+        type: types.DELETE_NIVEL_SUCCESS,
+        payload
+    }
+}
+const deleteNivelError = error => {
+    return {
+        type: types.DELETE_NIVEL_ERROR,
+        payload: error
+    }
+}

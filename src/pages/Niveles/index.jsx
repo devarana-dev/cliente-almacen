@@ -1,11 +1,11 @@
 
 import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table } from 'antd';
+import { Button, Input, Space, Table, Popconfirm, notification } from 'antd';
 
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { getAllNivelesAction } from '../../actions/nivelActions';
+import { deleteNivelAction, getAllNivelesAction } from '../../actions/nivelActions';
 
 const Niveles = () => {
 
@@ -13,8 +13,7 @@ const Niveles = () => {
     const navigate = useNavigate();
 
     const [ dataSource, setDataSource ] = useState([]);
-    const {niveles} = useSelector(state => state.niveles);
-    const {isLoading} = useSelector(state => state.niveles);
+    const { niveles, isLoading, errors } = useSelector(state => state.niveles);
 
     useEffect(() => {
         dispatch(getAllNivelesAction())
@@ -121,8 +120,17 @@ const Niveles = () => {
           title: 'Estatus',
           dataIndex: 'status',
           key: 'status',
-          sorter: (a, b) => a.nombre.localeCompare(b.nombre),
-          ...getColumnSearchProps('status'),
+          filters: [
+            { 
+				text: 'Activo',
+				value: true
+			},
+            { 
+				text: 'Inactivo',
+				value: false
+			},
+          ],
+		  onFilter: (value, record) => record.status === value,
           render: (text, record) => ( record.status ? 'Activo' : 'Inactivo' ),
         },
         
@@ -130,11 +138,32 @@ const Niveles = () => {
             title: 'Acciones',
             dataIndex: 'acciones',
             key: 'acciones',
-            render: (id) => <div><Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button> <Button type='danger' onClick={ () => navigate(`${id}`) }> <DeleteOutlined className='font-bold text-lg'/> </Button> </div>,
+            render: (id) => 
+            <div className='flex justify-around'> 
+			<Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button> 
+				<Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
+					<Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
+				</Popconfirm>
+            </div>,
             width: 200,
         }
         
     ];
+
+	const handleDelete = (id) => {
+		dispatch(deleteNivelAction(id))
+		if (errors){
+			notification['error']({
+				message: 'Error al eliminar',
+				description: errors
+			})
+		}else{
+			notification['success']({
+				message: 'Correcto!',
+				description: 'Se ha eliminado correctamente'
+			})
+		}
+	}
 
     return ( 
     <>

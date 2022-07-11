@@ -2,77 +2,78 @@ import { types } from '../types'
 
 
 const initialState = {
-    niveles: [],
+    obra: [],
     isLoading: true,
     errors: null,
-    editedNivel: null
+    editedObra: null
 }
+
+// GET_OBRA_SUCCESS
+// CREATE_OBRA_SUCCESS
+// UPDATE_OBRA_SUCCESS
+// DELETE_OBRA_SUCCESS
 
 // eslint-disable-next-line
 export default (state = initialState, action) => {
     switch (action.type) {
-        case types.GET_ALL_NIVEL:
-        case types.CREATE_NIVEL:
-        case types.UPDATE_NIVEL:
-        case types.GET_NIVEL:
-        case types.DELETE_NIVEL:
+        case types.GET_ALL_OBRA:
+        case types.GET_OBRA:
+        case types.CREATE_OBRA:
+        case types.UPDATE_OBRA:
+        case types.DELETE_OBRA:
             return {
                 ...state,
                 isLoading: true,
                 errors: null,
-                editedNivel: null
+                editedObra: null
 
             }
-        case types.GET_ALL_NIVEL_SUCCESS:
+        case types.GET_ALL_OBRA_SUCCESS:
             return {
                 ...state,
                 isLoading: false,
                 errors: null,
-                niveles: action.payload
+                obra: action.payload
             }
-        case types.CREATE_NIVEL_SUCCESS:
+        case types.GET_OBRA_SUCCESS:
             return {
                 ...state,
                 isLoading: false,
                 errors: null,
-                niveles: [...state.niveles, action.payload]
+                editedObra: action.payload
             }
-        case types.UPDATE_NIVEL_SUCCESS:
+        case types.CREATE_OBRA_SUCCESS:
             return {
                 ...state,
                 isLoading: false,
                 errors: null,
-                niveles: state.niveles.map(nivel => nivel.id === action.payload.id ? action.payload : nivel)
+                obra: [...state.obra, action.payload]
             }
-        case types.GET_NIVEL_SUCCESS:
+        case types.UPDATE_OBRA_SUCCESS:
             return {
                 ...state,
                 isLoading: false,
                 errors: null,
-                editedNivel: action.payload
+                obra: state.obra.map(obra => ( obra._id === action.payload._id ? action.payload : obra ))
             }
+        case types.DELETE_OBRA_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                errors: null,
+                obra: state.obra.filter(obra => obra.id !== action.payload.id)
+            }
+        case types.GET_ALL_OBRA_ERROR:
+        case types.GET_OBRA_ERROR:
+        case types.CREATE_OBRA_ERROR:
+        case types.UPDATE_OBRA_ERROR:
+        case types.DELETE_OBRA_ERROR:
 
-        case types.DELETE_NIVEL_SUCCESS:
-            return {
-                ...state,
-                isLoading: false,
-                errors: null,
-                niveles: state.niveles.filter(nivel => nivel.id !== action.payload.id)
-            }
-
-        case types.GET_ALL_NIVEL_ERROR:
-        case types.UPDATE_NIVEL_ERROR:
-        case types.GET_NIVEL_ERROR:
-        case types.GET_ALL_NIVEL_ERROR:
-        case types.CREATE_NIVEL_ERROR:
             return {
                 ...state,
                 isLoading: false,
                 errors: action.payload
             }
-
-        
-        
         default:
             return state
     }

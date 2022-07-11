@@ -1,8 +1,10 @@
-import { Form, Input, Select, Button, notification, TextArea } from "antd";
+import { Form, Input, Select, Button, notification, Divider, Checkbox } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams} from "react-router-dom";
+import { getAllActividadAction } from "../../actions/actividadActions";
 import { getNivelAction, updateNivelAction } from "../../actions/nivelActions";
+import { getAllZonaAction } from "../../actions/zonaActions";
 
 const EditNiveles = () => {
 
@@ -11,22 +13,39 @@ const EditNiveles = () => {
     const {id} = useParams()
     const [form] = Form.useForm();
     const { Option } = Select;
-    const { TextArea } = Input;
+    
+    const { errors, editedNivel, isLoading } = useSelector( state => state.niveles );
+    const { zonas } = useSelector( state => state.zonas )
+    const { actividades } = useSelector( state => state.actividades )
 
-    const { errors, editedNivel, isLoading } = useSelector(state => state.niveles);
-
-    console.log(editedNivel)
     const [nivel, setNivel] = useState({
         nombre: "",
         status: "",
     });
+    
+
+    
 
     useEffect(() =>{
         if(!editedNivel){
             dispatch(getNivelAction(id))
         }
-        setNivel({...editedNivel})
-        form.setFieldsValue({...editedNivel})
+
+        dispatch(getAllZonaAction())
+        dispatch(getAllActividadAction())
+
+        setNivel({
+            ...editedNivel,
+            zonas: editedNivel? editedNivel.zonas.map(item => item.id) : null,
+            actividades: editedNivel? editedNivel.actividades.map(item => item.id) : null
+        })
+
+        form.setFieldsValue({
+            ...editedNivel,
+            zonas: editedNivel? editedNivel.zonas.map(item => item.id) : null,
+            actividades: editedNivel? editedNivel.actividades.map(item => item.id) : null
+        })
+
     },[editedNivel])
 
     const handleChange = (e) => {
@@ -36,14 +55,46 @@ const EditNiveles = () => {
         });
     }
 
+    const handleCheckZona = (e) => {
+        
+        const { value, checked } = e.target
+        if ( checked ) {
+            setNivel({
+                ...nivel,
+                zonas: [...nivel.zonas, value]
+            })         
+        }
+        else {
+            setNivel({
+                ...nivel,
+                zonas: nivel.zonas.filter((e) => e !== Number(value))
+            })
+        }
+
+    }
+    const handleCheckActividad = (e) => {
+        const { value, checked } = e.target
+        if ( checked ) {
+            setNivel({
+                ...nivel,
+                actividades: [...nivel.actividades, value]
+            })         
+        }
+        else {
+            setNivel({
+                ...nivel,
+                actividades: nivel.actividades.filter((e) => e !== Number(value))
+            })
+        }
+    }
+
     const handleSubmit = () => {
-        console.log(nivel);
         dispatch(updateNivelAction(nivel));
 
         if(!errors){
                 notification.success({
-                    message: "Nivel actualizado",
-                    description: "El nivel ha sido actualizado correctamente",
+                    message: "Correcto",
+                    description: "El nivel ha sido actualizado",
                     duration: 2,
                 });
             }
@@ -57,7 +108,6 @@ const EditNiveles = () => {
             className="max-w-screen-md mx-auto"
             onFinish={() => handleSubmit()}
             layout="vertical"
-            onChange={handleChange}
             form={form}
         >
             <h1 className="text-center text-2xl font-bold text-dark"> Editar Nivel </h1>
@@ -70,7 +120,7 @@ const EditNiveles = () => {
                 ]}
                 hasFeedback
             >
-                <Input name="nombre" />
+                <Input name="nombre" onChange={handleChange}/>
             </Form.Item>
             <Form.Item
                 name="status"
@@ -83,6 +133,57 @@ const EditNiveles = () => {
                     <Option value={true}>Activo</Option>
                     <Option value={false}>Inactivo</Option> 
                 </Select>
+            </Form.Item>
+
+            <Divider />
+
+            <Form.Item
+                label="Selecciona zonas relacionados"
+                name="zonas"
+            > 
+                {zonas && zonas.length > 0 && nivel.zonas ?
+                <Checkbox.Group defaultValue={nivel.zonas} className="w-full">
+                <div className="grid grid-cols-2">
+                {
+                    zonas && zonas.length > 0 ?
+                    zonas.map( (item, i) => (
+                        <div key={i} className="col-span-1">
+                            <Checkbox name="zonas" value={item.id} onChange={ (e) => handleCheckZona(e) }> {item.nombre}  </Checkbox>
+                        </div>
+                    ))
+                    :
+                    null
+                }
+                </div>
+            </Checkbox.Group>
+            :
+                null    
+            } 
+            </Form.Item>
+
+            <Form.Item
+                label="Selecciona actividades relacionados"
+                name="actividades"
+                style={{ fontSize : "20px !important" }}
+            > 
+                {actividades && actividades.length > 0 && nivel.actividades ?
+                <Checkbox.Group defaultValue={nivel.actividades} className="w-full">
+                <div className="grid grid-cols-2">
+                {
+                    actividades && actividades.length > 0 ?
+                    actividades.map( (item, i) => (
+                        <div key={i} className="col-span-1">
+                            <Checkbox name="actividades" value={item.id} onChange={ (e) => handleCheckActividad(e) }> {item.nombre}  </Checkbox>
+                        </div>
+                    ))
+                    :
+                    null
+                }
+                </div>
+            </Checkbox.Group>
+            :
+                null    
+            } 
             </Form.Item>
 
             <Form.Item className="py-5">
