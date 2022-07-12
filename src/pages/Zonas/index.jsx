@@ -149,7 +149,7 @@ const Zonas = () => {
     <>
         <div className='py-10 flex justify-between'>
             <h1 className='text-dark text-2xl'> Zonas </h1>
-            <Button type='primary' onClick={() => navigate('create')} className='block ml-auto'>Agregar Nuevo Usuario</Button>
+            <Button type='primary' onClick={() => navigate('create')} className='block ml-auto'>Agregar Nueva Zona</Button>
         </div>
         <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>
     </>

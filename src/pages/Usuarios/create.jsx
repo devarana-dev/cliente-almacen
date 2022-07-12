@@ -18,9 +18,9 @@ const CreateUsuario = () => {
         apellidoMaterno: "",
         email: "",
         tipoUsuario_id: "",
-        puesto_id:  "",
+        puesto:  "",
     });
-    const {nombre, apellidoPaterno, apellidoMaterno, email, telefono, tipoUsuario_id, puesto_id} = usuario
+    const {nombre, apellidoPaterno, apellidoMaterno, email, telefono, tipoUsuario_id, puesto} = usuario
 
 
     useEffect(() => {
@@ -104,11 +104,22 @@ const CreateUsuario = () => {
                 label="Telefono" 
                 name="telefono" 
                 rules={[
-                    { required: true, message: 'Debes ingresar un telefono', type: 'telefono' },
+                    { required: true, message: 'Debes ingresar un telefono', type: 'tel' },
                 ]} 
                 hasFeedback> 
 
                <Input name="telefono" type="telefono" value={telefono}/>                   
+            </Form.Item>
+
+            <Form.Item 
+                label="Puesto" 
+                name="puesto" 
+                rules={[
+                    { required: true, message: 'Debes seleccionar un puesto' },
+                ]}
+                hasFeedback
+                >
+                <Input name="puesto" value={puesto}/>
             </Form.Item>
 
             <Form.Item 
@@ -135,30 +146,7 @@ const CreateUsuario = () => {
                 </Select>
             </Form.Item>
                 
-            <Form.Item 
-                label="Puesto" 
-                name="puesto_id" 
-                rules={[
-                    { required: true, message: 'Debes seleccionar un puesto' },
-                ]}
-                hasFeedback
-                >
-                <Select 
-                    placeholder="Selecciona un puesto"
-                    filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
-                    showSearch
-                    size='large'
-                    name="puesto_id"
-                    value={puesto_id}
-                    onChange={ (value) => { setUsuario({...usuario, puesto_id:value})} }
-                >
-                    <Option value="1">Almacén 1</Option>
-                    <Option value="2">Almacén 2</Option>
-                    <Option value="3">Almacén 3</Option>
-                    <Option value="4">Almacén 4</Option>
-                    
-                </Select>
-            </Form.Item>
+
 
             <Form.Item className="py-5">
                 <div className="flex justify-between">

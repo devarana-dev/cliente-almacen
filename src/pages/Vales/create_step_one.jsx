@@ -1,10 +1,8 @@
 import { Button, Form, Select } from 'antd';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getAllActividadAction } from '../../actions/actividadActions';
 import { getAllObraAction } from '../../actions/obraActions';
 import { getAllNivelesAction } from '../../actions/nivelActions';
-import { getAllZonaAction } from '../../actions/zonaActions';
 
 const CreateValesSalida1 = ({current, setCurrent}) => {
 
@@ -17,8 +15,14 @@ const CreateValesSalida1 = ({current, setCurrent}) => {
     const { Option } = Select;
 
 
+    const handleChangeObra = (e) => {
+       console.log(e);
+    }
+
+
     useEffect(() =>{
         dispatch(getAllObraAction())
+        dispatch(getAllNivelesAction())
     }, [])
 
     return ( 
@@ -36,9 +40,8 @@ const CreateValesSalida1 = ({current, setCurrent}) => {
                     filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                     showSearch
                     size='large'
-                    defaultValue={"4"}
                 >
-                    <Option key={1} value="4">Almacén 4</Option>
+                    <Option key={1} value={4}>Almacén 4</Option>
                     
                 </Select>
             </Form.Item>
@@ -50,11 +53,14 @@ const CreateValesSalida1 = ({current, setCurrent}) => {
                 name="obra_id"
                 label="Selecciona una obra / centro de costo"
                 hasFeedback
+                
             >
                 <Select 
                     filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                     showSearch
                     size='large'
+                    onChange={handleChangeObra}
+                    name="obra_id"                
                 >
                     {
                         obra.map(item => (

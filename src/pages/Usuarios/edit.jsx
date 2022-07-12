@@ -34,7 +34,7 @@ const EditUsuario = () => {
         apellidoMaterno: "",
         email: "",
         tipoUsuario_id: "",
-        puesto_id:  "",
+        puesto:  "",
     });
 
 
@@ -119,11 +119,22 @@ const EditUsuario = () => {
                 label="Telefono" 
                 name="email" 
                 rules={[
-                    { required: true, message: 'Debes ingresar un email', type: 'email' },
+                    { required: true, message: 'Debes ingresar un teléfono', },
                 ]} 
                 hasFeedback> 
 
-               <Input name="email" type="email" />                   
+               <Input name="telefono" type="tel" />                   
+            </Form.Item>
+
+            <Form.Item 
+                label="Puesto" 
+                name="puesto" 
+                rules={[
+                    { required: true, message: 'Debes seleccionar un puesto' },
+                ]}
+                hasFeedback
+                >
+                <Input name="puesto" />
             </Form.Item>
 
             <Form.Item 
@@ -148,29 +159,7 @@ const EditUsuario = () => {
                 </Select>
             </Form.Item>
                 
-            <Form.Item 
-                label="Puesto" 
-                name="puesto_id" 
-                rules={[
-                    { required: true, message: 'Debes seleccionar un puesto' },
-                ]}
-                hasFeedback
-                >
-                <Select 
-                    placeholder="Selecciona un puesto"
-                    filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
-                    showSearch
-                    size='large'
-                    name="puesto_id"
-                    onChange={ (value) => { setUsuario({...usuario, puesto_id:value})} }
-                >
-                    <Option value={1}>Almacén 1</Option>
-                    <Option value={2}>Almacén 2</Option>
-                    <Option value={3}>Almacén 3</Option>
-                    <Option value={4}>Almacén 4</Option>
-                    
-                </Select>
-            </Form.Item>
+            
 
             <Form.Item className="py-5">
                 <div className="flex justify-between">

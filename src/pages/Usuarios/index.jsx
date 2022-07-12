@@ -142,10 +142,10 @@ const Usuarios = () => {
         },
         {
             title: 'Puesto',
-            dataIndex: 'puesto_id',
-            key: 'puesto_id',
+            dataIndex: 'puesto',
+            key: 'puesto',
             sorter: (a, b) => a.nombre.localeCompare(b.nombre),
-            ...getColumnSearchProps('puesto_id'),
+            ...getColumnSearchProps('puesto'),
         },
         {
             title: 'Acciones',

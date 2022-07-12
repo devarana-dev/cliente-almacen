@@ -26,6 +26,11 @@ const CreateValesSalida = () => {
                 autoComplete='off' 
                 onFinish={handleSubmit}
                 layout="vertical"
+                scrollToFirstError={true}
+                validateTrigger="onSubmit"
+                initialValues={{
+                    almacen: 4,
+                }}
             >
                 {
                     current === 0 ?
