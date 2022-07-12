@@ -1,11 +1,11 @@
 
 import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table } from 'antd';
+import { Button, Input, notification, Popconfirm, Space, Table } from 'antd';
 
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { getAllPersonalAction } from '../../actions/personalActions';
+import { deletePersonalAction, getAllPersonalAction } from '../../actions/personalActions';
 import moment from 'moment';
 
 const Personal = () => {
@@ -14,8 +14,7 @@ const Personal = () => {
     const navigate = useNavigate();
 
     const [ dataSource, setDataSource ] = useState([]);
-    const {personal} = useSelector(state => state.personal);
-    const {isLoading} = useSelector(state => state.personal);
+    const {personal, isLoading, errors} = useSelector(state => state.personal);
 
     useEffect(() => {
         dispatch(getAllPersonalAction())
@@ -144,11 +143,32 @@ const Personal = () => {
             title: 'Acciones',
             dataIndex: 'acciones',
             key: 'acciones',
-            render: (id) => <div><Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button> <Button type='danger' onClick={ () => navigate(`${id}`) }> <DeleteOutlined className='font-bold text-lg'/> </Button> </div>,
-            width: 200,
+            render: (id) => 
+            <div className='flex justify-around'> 
+            <Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button> 
+            <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
+              <Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
+            </Popconfirm>
+                </div>,
+            width: 150,
         }
         
     ];
+
+	const handleDelete = (id) => {
+		dispatch(deletePersonalAction(id))
+		if (errors){
+			notification['error']({
+				message: 'Error al eliminar',
+				description: errors
+			})
+		}else{
+			notification['success']({
+				message: 'Correcto!',
+				description: 'Se ha eliminado correctamente'
+			})
+		}
+	}
 
     if(isLoading) {
         return <div>Cargando...</div>

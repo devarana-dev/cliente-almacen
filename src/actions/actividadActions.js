@@ -124,3 +124,34 @@ const updateActividadError = error => {
         payload: error
     }
 }
+
+export function deleteActividadAction(id){
+    return async (dispatch) => {
+        dispatch(deleteActividadRequest())
+        await clientAxios.delete(`/actividades/${id}`)
+            .then ( res => {
+                dispatch(deleteActividadSuccess(res.data.actividad))
+            }).catch( err => {
+                console.log('Error deleteActividadAction', err.response);
+                dispatch(deleteActividadError(err.response.data.message))
+            } )
+    }
+}
+const deleteActividadRequest = () => {
+    return {
+        type: types.DELETE_ACTIVIDAD
+    }
+}
+const deleteActividadSuccess = payload => {
+    return {
+        type: types.DELETE_ACTIVIDAD_SUCCESS,
+        payload
+    }
+}
+const deleteActividadError = error => {
+    return {
+        type: types.DELETE_ACTIVIDAD_ERROR,
+        payload: error
+    }
+}
+

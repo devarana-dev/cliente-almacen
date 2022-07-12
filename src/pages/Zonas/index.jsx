@@ -1,11 +1,11 @@
 
 import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table } from 'antd';
+import { Button, Input, notification, Popconfirm, Space, Table } from 'antd';
 
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { getAllZonaAction } from '../../actions/zonaActions';
+import { deleteZonaAction, getAllZonaAction } from '../../actions/zonaActions';
 
 const Zonas = () => {
 
@@ -13,8 +13,8 @@ const Zonas = () => {
     const navigate = useNavigate();
 
     const [ dataSource, setDataSource ] = useState([]);
-    const {zonas} = useSelector(state => state.zonas);
-    const {isLoading} = useSelector(state => state.zonas);
+    const { zonas, isLoading, errors } = useSelector(state => state.zonas);
+    
 
     useEffect(() => {
         dispatch(getAllZonaAction())
@@ -139,11 +139,32 @@ const Zonas = () => {
             title: 'Acciones',
             dataIndex: 'acciones',
             key: 'acciones',
-            render: (id) => <div><Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button> <Button type='danger' onClick={ () => navigate(`${id}`) }> <DeleteOutlined className='font-bold text-lg'/> </Button> </div>,
-            width: 200,
+            render: (id) => 
+            <div className='flex justify-around'> 
+            <Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button> 
+            <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
+              <Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
+            </Popconfirm>
+                </div>,
+            width: 150,
         }
         
     ];
+
+    const handleDelete = (id) => {
+      dispatch(deleteZonaAction(id))
+      if (errors){
+        notification['error']({
+          message: 'Error al eliminar',
+          description: errors
+        })
+      }else{
+        notification['success']({
+          message: 'Correcto!',
+          description: 'Se ha eliminado correctamente'
+        })
+      }
+    }
 
     return ( 
     <>

@@ -140,12 +140,12 @@ const Niveles = () => {
             key: 'acciones',
             render: (id) => 
             <div className='flex justify-around'> 
-			<Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button> 
+            <Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button> 
 				<Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
 					<Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
 				</Popconfirm>
             </div>,
-            width: 200,
+            width: 150,
         }
         
     ];

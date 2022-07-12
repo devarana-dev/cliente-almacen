@@ -129,3 +129,35 @@ const updatePersonalError = error => {
         payload: error
     }
 }
+
+
+export function deletePersonalAction(id){
+    return async (dispatch) => {
+        dispatch(deletePersonalRequest())
+        await clientAxios.delete(`/personal/${id}`)
+            .then ( res => {
+                dispatch(deletePersonalSuccess(res.data.personal))
+            })
+            .catch( err => {
+                console.log('Error deletePersonalAction', err.response);
+                dispatch(deletePersonalError(err.response.data.message))
+            })
+    }
+}
+const deletePersonalRequest = () => {
+    return {
+        type: types.DELETE_PERSONAL
+    }
+}
+const deletePersonalSuccess = payload => {
+    return {
+        type: types.DELETE_PERSONAL_SUCCESS,
+        payload
+    }
+}
+const deletePersonalError = error => {
+    return {
+        type: types.DELETE_PERSONAL_ERROR,
+        payload: error
+    }
+}

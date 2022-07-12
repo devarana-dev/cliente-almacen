@@ -15,6 +15,7 @@ export default (state = initialState, action) => {
         case types.CREATE_ZONA:
         case types.GET_ZONA:
         case types.UPDATE_ZONA:
+        case types.DELETE_ZONA:
             return {
                 ...state,
                 isLoading: true,
@@ -46,7 +47,15 @@ export default (state = initialState, action) => {
                 zonas: state.zonas.map(zona => zona.id === action.payload.id ? action.payload : zona),
                 editedZona: null
             }
+        case types.DELETE_ZONA_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                errors: null,
+                zonas: state.zonas.filter(zona => zona.id !== action.payload.id)
+            }
 
+        case types.DELETE_ZONA_ERROR:
         case types.GET_ALL_ZONA_ERROR:
         case types.CREATE_ZONA_ERROR:
         case types.GET_ZONA_ERROR:

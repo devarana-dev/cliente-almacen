@@ -15,6 +15,7 @@ export default (state = initialState, action) => {
         case types.GET_ACTIVIDAD:
         case types.CREATE_ACTIVIDAD:
         case types.UPDATE_ACTIVIDAD:
+        case types.DELETE_ACTIVIDAD:
             return {
                 ...state,
                 isLoading: true,
@@ -53,7 +54,16 @@ export default (state = initialState, action) => {
                 errors: null,
                 actividades: state.actividades.map(actividad => actividad.id === action.payload.id ? action.payload : actividad)
             }
+        
+        case types.DELETE_ACTIVIDAD_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                errors: null,
+                actividades: state.actividades.filter(actividad => actividad.id !== action.payload.id)
+            }
 
+        case types.DELETE_ACTIVIDAD_ERROR:
         case types.UPDATE_ACTIVIDAD_ERROR:    
         case types.CREATE_ACTIVIDAD_ERROR:
         case types.GET_ACTIVIDAD_ERROR:

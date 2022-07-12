@@ -123,3 +123,35 @@ const updateZonaError = error => {
         payload: error
     }
 }
+
+
+export function deleteZonaAction(id){
+    return async (dispatch) => {
+        dispatch(deleteZonaRequest())
+        await clientAxios.delete(`/zonas/${id}`)
+            .then ( res => {
+                console.log(res.data.zona);
+                dispatch(deleteZonaSuccess(res.data.zona))
+            }).catch( err => {
+                console.log('Error deleteZonaAction', err.response);
+                dispatch(deleteZonaError(err.response.data.message))
+            } )
+    }
+}
+const deleteZonaRequest = () => {
+    return {
+        type: types.DELETE_ZONA
+    }
+}
+const deleteZonaSuccess = payload => {
+    return {
+        type: types.DELETE_ZONA_SUCCESS,
+        payload
+    }
+}
+const deleteZonaError = error => {
+    return {
+        type: types.DELETE_ZONA_ERROR,
+        payload: error
+    }
+}
