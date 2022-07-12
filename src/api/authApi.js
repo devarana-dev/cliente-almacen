@@ -1,5 +1,4 @@
 import jwtDecode from 'jwt-decode';
-import { logoutAction } from '../actions/authActions';
 import clientAxios from '../config/axios'
 
 
@@ -25,7 +24,7 @@ export function getRefreshToken(){
 export async function refreshAccessToken(){
 	const refreshToken = localStorage.getItem('refreshToken')
 	try {
-		await clientAxios.post('/auth/refresh-access-token', {refreshToken})
+		await clientAxios.post('/auth/refresh-access-token', refreshToken)
 		.then( response => {
 			const { accessToken, refreshToken } = response
 			localStorage.setItem('accessToken', accessToken)
@@ -33,7 +32,9 @@ export async function refreshAccessToken(){
 		})
 		
 	} catch (error) {
-		logoutAction()
+    console.log(error);
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
 	}
 }
 

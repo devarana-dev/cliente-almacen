@@ -32,6 +32,9 @@ import EditObra from "../pages/Obras/edit"
 import Unidades from "../pages/Unidades"
 import CreateUnidades from "../pages/Unidades/create"
 import EditUnidades from "../pages/Unidades/edit"
+import Personal from "../pages/Personal"
+import CreatePersonal from "../pages/Personal/create"
+import EditPersonal from "../pages/Personal/edit"
 
 const routesPublic = [
     {
@@ -176,6 +179,21 @@ const routesPrivate = [
         path: '/vales-salida/nuevo',
         layout: Private,
         component: CreateValesSalida
+    },
+    {
+        path: '/personal',
+        layout: Private,
+        component: Personal
+    },
+    {
+        path: '/personal/create',
+        layout: Private,
+        component: CreatePersonal
+    },
+    {
+        path: '/personal/:id',
+        layout: Private,
+        component: EditPersonal
     },
 
 

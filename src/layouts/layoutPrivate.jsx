@@ -54,7 +54,7 @@ export default function LayoutPrivate({children}) {
             <div className="h-14 p-2 text-center">
                 Logotipo
             </div>
-            <Menu />
+            <Menu collapsed={collapsed} setCollapsed={setCollapsed}/>
             
             </Sider>
             <Layout className="layout-right">

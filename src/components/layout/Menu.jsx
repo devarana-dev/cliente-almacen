@@ -2,7 +2,7 @@ import { Menu } from "antd";
 import { SettingOutlined, AppstoreOutlined, LogoutOutlined,UserOutlined  } from '@ant-design/icons';
 import { useNavigate, useLocation } from "react-router-dom";
 
-export default function LayoutMenu () {
+export default function LayoutMenu ({collapsed, setCollapsed}) {
 
     function getItem(label, key, icon, children, type) {
         return {
@@ -18,11 +18,19 @@ export default function LayoutMenu () {
     const url = location.pathname
 
 
+	const validateCollapsed = () => {
+		if(window.innerWidth < 768){
+			setCollapsed(!collapsed)
+		}
+	}
+
+
     const items = [
 	getItem('Inicio', '/', <AppstoreOutlined />),
 	getItem('Vales', 'sub1', <LogoutOutlined />, [
 		getItem('Vale Salida', '/vales-salida/nuevo'),
 		getItem('Consultar Vales', '/vales-salida'),
+		
 	]),
 	getItem('Gestión', 'sub3', <SettingOutlined />, [
 		getItem('Usuarios', 'subsub1', <UserOutlined />, [
@@ -35,6 +43,7 @@ export default function LayoutMenu () {
 			getItem('Niveles', '/niveles'),
 			getItem('Zonas', '/zonas'),
 			getItem('Actividades', '/actividades'),
+			getItem('Lider Cuadrilla', '/personal'),
       	], 'group'),		
 	]),
       ];
@@ -44,7 +53,8 @@ export default function LayoutMenu () {
 			className="layout__menu"
 			mode="inline"
 			items={items}
-			onClick={ (item) => (navigate(item.key) )}
+			onClick={ (item) =>  { navigate(item.key);  }}
+			onSelect={ () =>  validateCollapsed()}
 			defaultSelectedKeys={[`${url}`]}
         />
     )

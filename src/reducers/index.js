@@ -8,6 +8,7 @@ import nivelReducer from "./nivelReducer";
 import zonaReducer from "./zonaReducer";
 import obraReducer from "./obraReducer";
 import unidadReducer from "./unidadReducer";
+import personalReducer from "./personalReducer";
 
 
 export default combineReducers({
@@ -20,4 +21,5 @@ export default combineReducers({
     zonas: zonaReducer,
     obras: obraReducer,
     unidades: unidadReducer,
+    personal: personalReducer,
 })
