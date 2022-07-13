@@ -1,7 +1,7 @@
 @import './variables';
 
 .layout{
-    min-height: 100vh!important;
+    height: 100vh!important;
     &__sider{
         background-color: $white !important;
         box-shadow: 0 0 5px rgba(0,0,0,.1);

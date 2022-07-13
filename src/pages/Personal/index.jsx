@@ -176,9 +176,10 @@ const Personal = () => {
 
     return ( 
     <>
-        <div className='py-10 flex justify-between'>
-          <h1 className='text-dark text-2xl'>Personal</h1>
-            <Button type='primary' onClick={() => navigate('create')} className='block ml-auto'>Agregar Nuevo Lider de Cuadrilla</Button>
+        <h1 className='text-dark text-xl text-center font-medium'>Lideres de Cuadrilla</h1>
+        <div className='py-2 flex justify-between'>
+            <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Volver</Button>
+            <Button type='primary' onClick={() => navigate('create')}>Agregar Nuevo Lider de Cuadrilla</Button>
         </div>
         <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>
     </>

@@ -137,10 +137,11 @@ const Roles = () => {
 
     return ( 
     <>
-        <div className='py-10 flex justify-between'>
-            <h1 className='text-dark text-2xl'> Roles </h1>
-            <Button type='primary' onClick={() => navigate('create')} className='block ml-auto'>Agregar Nuevo Usuario</Button>
-        </div>
+        <h1 className='text-dark text-xl text-center font-medium'>Roles</h1>
+            <div className='py-2 flex justify-between'>
+                <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Volver</Button>
+                <Button type='primary' onClick={() => navigate('create')}>Agregar Nuevo Rol</Button>
+            </div>
         <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>
     </>
     );

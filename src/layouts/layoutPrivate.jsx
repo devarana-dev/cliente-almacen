@@ -41,7 +41,7 @@ export default function LayoutPrivate({children}) {
 
         <Layout className="layout">
             <Sider 
-                className="layout__sider" 
+                className="layout__sider hidden sm:block" 
                 trigger={null} 
                 collapsible 
                 collapsed={collapsed}
@@ -58,7 +58,7 @@ export default function LayoutPrivate({children}) {
             
             </Sider>
             <Layout className="layout-right">
-                <Header className="layout-right__header"> 
+                <Header className="layout-right__header hidden sm:block"> 
                     <button onClick={() => setCollapsed(!collapsed)}> {collapsed ? <MenuUnfoldOutlined className="text-2xl sm:text-dark sm:bg-transparent bg-primary text-white pb-1 px-2 rounded "/> : <MenuFoldOutlined className="text-2xl sm:text-dark sm:bg-transparent bg-primary text-white pb-1 px-2 rounded "/>} </button>
                 </Header>
                 <Content className="layout-right__content"> 

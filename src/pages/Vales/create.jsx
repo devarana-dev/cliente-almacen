@@ -16,14 +16,7 @@ const CreateValesSalida = () => {
 
     return ( 
         <div className="max-w-2xl w-full mx-auto">
-            <h1 className="text-center text-2xl font-bold text-dark pb-10">Vale de salida</h1>
-
-            <Steps current={current} className="pb-10 text-base" responsive={false} >
-                <Step title="Información General" />
-                <Step title="Añadir Materiales"  />
-                <Step title="Finalizar"  />
-            </Steps>
-
+            <h1 className="text-center text-2xl font-bold text-dark pb-3">Vale de salida</h1>
             
                 
             <div className={`${current !== 0 ? 'hidden' : 'block '}`}>
@@ -32,11 +25,6 @@ const CreateValesSalida = () => {
             <div className={`${current !== 1 ? 'hidden' : 'block '}`}>
                 <ListaInsumos current={current} setCurrent={setCurrent} setVale={setVale} vale={vale} />
             </div>
-                
-                
-            
-
-            
         </div>
     );
 }

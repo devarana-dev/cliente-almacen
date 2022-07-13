@@ -6,11 +6,14 @@ import { getAllNivelesAction } from '../../actions/nivelActions';
 import { getAllPersonalAction } from '../../actions/personalActions';
 
 import "../../assets/scss/steps.scss"
+import { ArrowLeftOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 
 
 const InformacionGral = ({current, setCurrent, setVale, vale}) => {
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const { niveles } = useSelector(state => state.niveles);
     const { obra } = useSelector(state => state.obras);
@@ -193,9 +196,14 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                     </Select>
                 </Form.Item>
                         
-                <Button type='ghost' htmlType='submit' className='block ml-auto'>
+                <div className='flex justify-between'>
+                <Button type='dark' htmlType='button' onClick={() => navigate(-1)}>
+                    Regresar
+                </Button>
+                <Button type='ghost' htmlType='submit'>
                     Continuar
                 </Button>
+                </div>
             </Form>
     );
 }

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllInsumosAction } from "../../actions/insumoActions";
 import {nanoid} from 'nanoid'
-import { DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
+import {  DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { createValeAction } from "../../actions/valeActions";
 
 const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
@@ -111,6 +111,10 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
                 content = "¿Estás seguro que deseas cancelar? Esto borrará lo que has registrado"
                 fn = () => navigate('/acciones')
             break;
+            case 4:
+                content = "¿Estás seguro que deseas cancelar? Esto borrará lo que has registrado"
+                fn = () => navigate('/vales-salida')
+            break;
                 
             default:
                 break;
@@ -144,7 +148,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
     return ( 
     <>
 
-    <Table columns={columns} dataSource={dataSource} />
+    <Table columns={columns} dataSource={dataSource} scroll={{ y: 180 }} style={{height: 250}}/>
 
     <Form
         layout="horizontal"
@@ -189,7 +193,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
                 ]}
                 
             >
-                <Input min={ 0 } type="number" name="cantidad" onChange={ handleChange }/>
+                <Input min={ 0 } name="cantidad" onChange={ handleChange }/>
             </Form.Item>
             <Form.Item 
                 className=" w-full col-span-1"
@@ -207,20 +211,20 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
     <Divider />
 
     <div className="flex justify-between w-full">
-        <Button type='danger' htmlType='button' onClick={ () => confirm(3) }>
-                Cancelar
+        <Button type='dark' htmlType='button' onClick={ () => setCurrent(0) }>
+            Regresar
         </Button>
-
-        <Button type='default' htmlType='button' onClick={ () => setCurrent(0) }>
-                Volver
-        </Button>
-        
         <Button type='warning' htmlType='button' onClick={ async () => { const statusValue = 2; await setVale({ ...vale, statusVale: statusValue }); confirm(2)} }>
-                Borrador
-        </Button>
-        
+            Borrador
+        </Button>        
         <Button type='primary' htmlType='button' onClick={ async () => { const statusValue = 1; await setVale({ ...vale, statusVale: statusValue }); confirm(1)  }} >
-                Crear
+            Crear
+        </Button>
+        <Button type='danger' htmlType='button' onClick={ () => confirm(3) } className="block sm:hidden">
+            Salir
+        </Button>
+        <Button type='danger' htmlType='button' onClick={ () => confirm(4) } className="hidden sm:block">
+            Salir
         </Button>
     </div>
 
