@@ -38,7 +38,7 @@ export default function LayoutMenu ({collapsed, setCollapsed}) {
 			getItem('Usuario', '/usuarios'),
      	], 'group'),
 		getItem('Vales', 'subsub2', <UserOutlined />, [
-			getItem('Carga Insumos', '/carga-insumos'),
+			getItem('Insumos', '/insumos'),
 			getItem('Obra / CC ', '/obra'),
 			getItem('Niveles', '/niveles'),
 			getItem('Zonas', '/zonas'),

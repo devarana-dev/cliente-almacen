@@ -17,12 +17,6 @@ const Niveles = () => {
 
     useEffect(() => {
         dispatch(getAllNivelesAction())
-
-        setDataSource(
-            niveles.map( (item, i) => (
-				{ key: i, acciones:item.id, ...item}
-            )
-        ))
     // eslint-disable-next-line
     }, [])
 

@@ -1,14 +1,28 @@
-import { Space, Table, Tag } from 'antd';
+import { Table } from 'antd';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
+import { getAllValesAction } from '../../actions/valeActions';
 
 const ValesSalida = () => {
 
-    const columns = []
-    const dataSource = []
+    const dispatch = useDispatch()
+    const { vales } = useSelector( state => state.vales )
+    const [ dataSource, setDataSource ] = useState([]);
+    
+
+    useEffect(() => {
+        dispatch(getAllValesAction())
+    }, [])
+
+    const columns = [
+        {
+            
+        }
+    ]
+
     return ( 
         <>
-         <Table columns={columns} dataSource={dataSource}>
-
-         </Table>
+            <Table columns={columns} dataSource={dataSource} />
         </>    
     );
 }

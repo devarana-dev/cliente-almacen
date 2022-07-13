@@ -35,6 +35,9 @@ import EditUnidades from "../pages/Unidades/edit"
 import Personal from "../pages/Personal"
 import CreatePersonal from "../pages/Personal/create"
 import EditPersonal from "../pages/Personal/edit"
+import Insumos from "../pages/Insumos"
+import EditInsumos from "../pages/Insumos/edit"
+import CreateInsumos from "../pages/Insumos/create"
 
 const routesPublic = [
     {
@@ -194,6 +197,22 @@ const routesPrivate = [
         path: '/personal/:id',
         layout: Private,
         component: EditPersonal
+    },
+
+    {
+        path: '/insumos',
+        layout: Private,
+        component: Insumos
+    },
+    {
+        path: '/insumos/create',
+        layout: Private,
+        component: CreateInsumos
+    },
+    {
+        path: '/insumos/:id',
+        layout: Private,
+        component: EditInsumos
     },
 
 

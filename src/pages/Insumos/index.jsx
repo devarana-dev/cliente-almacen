@@ -1,35 +1,33 @@
-
+ 
 import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table } from 'antd';
+import { Button, Input, Space, Table, Popconfirm, notification, Modal } from 'antd';
 
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { getAllUnidadesAction } from '../../actions/unidadActions';
+import { deleteInsumoAction, getAllInsumosAction } from '../../actions/insumoActions';
 
-const Unidades = () => {
+const Insumos = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const [ dataSource, setDataSource ] = useState([]);
-    const {unidades} = useSelector(state => state.unidades);
-    const {isLoading} = useSelector(state => state.unidades);
+    const { insumos, isLoading, errors } = useSelector(state => state.insumos);
 
     useEffect(() => {
-        dispatch(getAllUnidadesAction())
-
+        dispatch(getAllInsumosAction())
     // eslint-disable-next-line
     }, [])
 
     useEffect(() => {
         
             setDataSource(
-                unidades.map( (item, i) => (
+                insumos.map( (item, i) => (
 					{ key: i, acciones:item.id, ...item }
                 ))
 		)
-    },[unidades])
+    },[insumos])
 
 
     /// Table
@@ -105,6 +103,14 @@ const Unidades = () => {
     });
 
     const columns = [
+		{
+			title: 'ID Enkontrol',
+			dataIndex: 'claveEnk',
+			key: 'claveEnk',
+			sorter: (a, b) => a.claveEnk.localeCompare(b.claveEnk),
+			...getColumnSearchProps('claveEnk'),
+			width: 150
+		},
         {
           title: 'Nombre',
           dataIndex: 'nombre',
@@ -113,18 +119,36 @@ const Unidades = () => {
           ...getColumnSearchProps('nombre'),
         },
         {
-          title: 'Nombre Corto',
-          dataIndex: 'nombreCorto',
-          key: 'nombreCorto',
-          sorter: (a, b) => a.nombre.localeCompare(b.nombre),
-          ...getColumnSearchProps('nombreCorto'),
+          title: 'Centro Costo',
+          dataIndex: 'centroCosto',
+          key: 'centroCosto',
+          sorter: (a, b) => a.centroCosto.localeCompare(b.centroCosto),
+          ...getColumnSearchProps('centroCosto'),
+		  width: 200
+        },
+        {
+          title: 'Unidad de Medida',
+          dataIndex: 'unidadMedida',
+          key: 'unidadMedida',
+          sorter: (a, b) => a.unidadMedida.localeCompare(b.unidadMedida),
+          ...getColumnSearchProps('unidadMedida'),
+		  width: 200
         },
         {
           title: 'Estatus',
           dataIndex: 'status',
           key: 'status',
-          sorter: (a, b) => a.nombre.localeCompare(b.nombre),
-          ...getColumnSearchProps('status'),
+          filters: [
+            { 
+				text: 'Activo',
+				value: true
+			},
+            { 
+				text: 'Inactivo',
+				value: false
+			},
+          ],
+		  onFilter: (value, record) => record.status === value,
           render: (text, record) => ( record.status ? 'Activo' : 'Inactivo' ),
         },
         
@@ -132,21 +156,43 @@ const Unidades = () => {
             title: 'Acciones',
             dataIndex: 'acciones',
             key: 'acciones',
-            render: (id) => <div><Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button> <Button type='danger' onClick={ () => navigate(`${id}`) }> <DeleteOutlined className='font-bold text-lg'/> </Button> </div>,
-            width: 200,
+            render: (id) => 
+            <div className='flex justify-around'> 
+            <Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button> 
+				<Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
+					<Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
+				</Popconfirm>
+            </div>,
+            width: 150,
         }
         
     ];
 
+	const handleDelete = (id) => {
+		dispatch(deleteInsumoAction(id))
+		if (errors){
+			notification['error']({
+				message: 'Error al eliminar',
+				description: errors
+			})
+		}else{
+			notification['success']({
+				message: 'Correcto!',
+				description: 'Se ha eliminado correctamente'
+			})
+		}
+	}
+
+
     return ( 
     <>
         <div className='py-10 flex justify-between'>
-            <h1 className='text-dark text-2xl'> Unidades </h1>
-            <Button type='primary' onClick={() => navigate('create')} className='block ml-auto'>Agregar Nuevo Usuario</Button>
+            <h1 className='text-dark text-2xl'> Insumos </h1>
+            <Button type='primary' onClick={() => navigate('create')} className='block ml-auto'>Agregar Nuevo Insumo</Button>
         </div>
         <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>
     </>
     );
 }
  
-export default Unidades;
+export default Insumos;
