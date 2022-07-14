@@ -19,6 +19,7 @@ export default (state = initialState, action) => {
         case types.CREATE_ROLE:
         case types.GET_ROLE:
         case types.UPDATE_ROLE:
+        case types.DELETE_ROLE:
             return {
                 ...state,
                 isLoading: true,
@@ -50,7 +51,15 @@ export default (state = initialState, action) => {
                 editedRole: null
             }
 
+        case types.DELETE_ROLE_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                errors: null,
+                roles: state.roles.filter(role => role.id !== action.payload.id)
+            }
 
+        case types.DELETE_ROLE_ERROR:
         case types.GET_ALL_ROLE_ERROR:
         case types.CREATE_ROLE_ERROR:
         case types.GET_ROLE_ERROR:

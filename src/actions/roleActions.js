@@ -127,3 +127,34 @@ const updateRoleError = error => {
         payload: error
     }
 }
+
+export function deleteRoleAction(id){
+    return async (dispatch) => {
+        dispatch(deleteRoleRequest())
+        await clientAxios.delete(`/roles/${id}`)
+            .then ( res => {
+                console.log(res.data);
+                dispatch(deleteRoleSuccess(res.data.role))
+            }).catch( err => {
+                console.log('Error deleteRoleAction', err.response);
+                dispatch(deleteRoleError(err.response.data.message))
+            } )
+    }
+}
+const deleteRoleRequest = () => {
+    return {
+        type: types.DELETE_ROLE
+    }
+}
+const deleteRoleSuccess = payload => {
+    return {
+        type: types.DELETE_ROLE_SUCCESS,
+        payload
+    }
+}
+const deleteRoleError = error => {
+    return {
+        type: types.DELETE_ROLE_ERROR,
+        payload: error
+    }
+}

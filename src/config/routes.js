@@ -29,9 +29,6 @@ import EditNiveles from "../pages/Niveles/edit"
 import Obras from "../pages/Obras"
 import CreateObra from "../pages/Obras/create"
 import EditObra from "../pages/Obras/edit"
-import Unidades from "../pages/Unidades"
-import CreateUnidades from "../pages/Unidades/create"
-import EditUnidades from "../pages/Unidades/edit"
 import Personal from "../pages/Personal"
 import CreatePersonal from "../pages/Personal/create"
 import EditPersonal from "../pages/Personal/edit"
@@ -112,21 +109,6 @@ const routesPrivate = [
         path: '/niveles/:id',
         layout: Private,
         component: EditNiveles
-    },
-    {
-        path: '/unidades',
-        layout: Private,
-        component: Unidades
-    },
-    {
-        path: '/unidades/create',
-        layout: Private,
-        component: CreateUnidades
-    },
-    {
-        path: '/unidades/:id',
-        layout: Private,
-        component: EditUnidades
     },
     {
         path: '/obra',

@@ -1,11 +1,12 @@
  
 import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, Popconfirm, notification, Modal } from 'antd';
+import { Button, Input, Space, Table, Popconfirm, notification } from 'antd';
 
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { deleteInsumoAction, getAllInsumosAction } from '../../actions/insumoActions';
+
 
 const Insumos = () => {
 
@@ -21,11 +22,10 @@ const Insumos = () => {
     }, [])
 
     useEffect(() => {
-        
-            setDataSource(
-                insumos.map( (item, i) => (
-					{ key: i, acciones:item.id, ...item }
-                ))
+        setDataSource(
+            insumos.map( (item, i) => (
+                { key: i, acciones:item.id, ...item }
+            ))
 		)
     },[insumos])
 
@@ -61,8 +61,8 @@ const Insumos = () => {
               ref={searchInput}
               placeholder={`Buscar ${dataIndex}`}
               value={selectedKeys[0]}
-              onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-              onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+              onChange={(e) => {setSelectedKeys(e.target.value ? [e.target.value] : []); handleSearch(selectedKeys, confirm({closeDropdown:false}), dataIndex)}  }
+              onPressEnter={() => handleSearch(selectedKeys, confirm(), dataIndex)}
               style={{
                 marginBottom: 8,
                 display: 'block',
@@ -70,22 +70,8 @@ const Insumos = () => {
             />
             <Space>
               <Button
-                type="primary"
-                onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                icon={<SearchOutlined />}
-                size="small"
-                style={{
-                  width: 90,
-                }}
-              >
-                Buscar
-              </Button>
-              <Button
                 onClick={() => clearFilters && handleReset(clearFilters, confirm)}
                 size="small"
-                style={{
-                  width: 90,
-                }}
               >
                 Limpiar
               </Button>
@@ -186,9 +172,9 @@ const Insumos = () => {
 
     return ( 
     <>
-        <h1 className='text-dark text-xl text-center font-medium'>Insumos</h1>
+    <h1 className='text-dark text-xl text-center font-medium'>Insumos</h1>
 		<div className='py-2 flex justify-between'>
-			<Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Volver</Button>
+			<Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Regresar</Button>
 			<Button type='primary' onClick={() => navigate('create')}>Agregar Nuevo Insumo</Button>
 		</div>
         <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>

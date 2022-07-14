@@ -1,4 +1,4 @@
-import { Button, Divider, Form, Input, Popconfirm, Select, Spin, Table, Modal, notification} from "antd";
+import { Button, Divider, Form, Input, Popconfirm, Select, Spin, Table, Modal, notification, message} from "antd";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,6 +28,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
 
     useEffect(() => {
         dispatch(getAllInsumosAction())
+        // eslint-disable-next-line
     }, [])
 
     useEffect(() => {
@@ -39,7 +40,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
     }, [listaInsumos])
 
     const searchUnidad = (id) => {
-        const [result] = insumos.filter( item => item.id !== id )
+        const [result] = insumos.filter( item => item.id === id )
         setUnidad(result.unidadMedida);
     }
     
@@ -76,13 +77,18 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
     }
 
     const handleSubmit = () => {
-        const [result] = insumos.filter( item => item.id !== insumo.id )
+        if(insumo.cantidad > 0 && insumo.cantidad !== ''){
+            const [result] = insumos.filter( item => item.id === insumo.id )
 
-        setVale({
-            ...vale,
-            listaInsumos: [...listaInsumos, {...insumo, ...result, ...{uuid: nanoid(6)} }],
-        })
-        form.resetFields()
+            setVale({
+                ...vale,
+                listaInsumos: [...listaInsumos, {...insumo, ...result, ...{uuid: nanoid(6)} }],
+            })
+            form.resetFields()
+            setUnidad('')
+        }else {
+            message.error('El insumo debe ser mayor a 0');
+        }
     }
 
     const handleDelete = (uuid) => {
@@ -91,8 +97,6 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
             listaInsumos: listaInsumos.filter(item => item.uuid !== uuid)
         })
     }
-
-
 
     const confirm = (opt) => {
         let content = ''
@@ -131,7 +135,6 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
         });
     };
     
-    
     const handleSubmitVale = () => {
 
         dispatch(createValeAction(vale))
@@ -148,7 +151,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
     return ( 
     <>
 
-    <Table columns={columns} dataSource={dataSource} scroll={{ y: 180 }} style={{height: 250}}/>
+    <Table columns={columns} dataSource={dataSource} scroll={{ y: 200 }} style={{height: 300}}/>
 
     <Form
         layout="horizontal"
@@ -171,7 +174,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
                 notFoundContent={isLoading ? <Spin size="small" /> : null}
                 filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                 showSearch
-                onChange={ (e) => {searchUnidad(e); setInsumo({  id: e})} }
+                onChange={ (e) => {searchUnidad(e); setInsumo({  id: e }); console.log(e) } }
             > 
                 {
                     insumos.map(item => (

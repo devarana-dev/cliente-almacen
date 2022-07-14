@@ -129,3 +129,35 @@ const updateUsuarioError = error => {
         payload: error
     }
 }
+
+
+export function deleteUsuarioAction(id){
+    return async (dispatch) => {
+        dispatch(deleteUsuarioRequest())
+        await clientAxios.delete(`/usuarios/${id}`)
+            .then ( res => {
+                dispatch(deleteUsuarioSuccess(res.data.usuario))
+            })
+            .catch( err => {
+                console.log('Error deleteUsuarioAction', err.response);
+                dispatch(deleteUsuarioError(err.response.data.message))
+            })
+    }
+}
+const deleteUsuarioRequest = () => {
+    return {
+        type: types.DELETE_USER
+    }
+}
+const deleteUsuarioSuccess = payload => {
+    return {
+        type: types.DELETE_USER_SUCCESS,
+        payload
+    }
+}
+const deleteUsuarioError = error => {
+    return {
+        type: types.DELETE_USER_ERROR,
+        payload: error
+    }
+}

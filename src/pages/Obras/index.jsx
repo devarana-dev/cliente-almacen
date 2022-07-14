@@ -65,7 +65,7 @@ const Obras = () => {
               ref={searchInput}
               placeholder={`Buscar ${dataIndex}`}
               value={selectedKeys[0]}
-              onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+              onChange={(e) => {setSelectedKeys(e.target.value ? [e.target.value] : []); handleSearch(selectedKeys, confirm({closeDropdown:false}), dataIndex)}  }
               onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
               style={{
                 marginBottom: 8,
@@ -73,17 +73,6 @@ const Obras = () => {
               }}
             />
             <Space>
-              <Button
-                type="primary"
-                onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                icon={<SearchOutlined />}
-                size="small"
-                style={{
-                  width: 90,
-                }}
-              >
-                Buscar
-              </Button>
               <Button
                 onClick={() => clearFilters && handleReset(clearFilters, confirm)}
                 size="small"
@@ -172,7 +161,7 @@ const Obras = () => {
     <>
         <h1 className='text-dark text-xl text-center font-medium'>Obra / CC</h1>
 		<div className='py-2 flex justify-between'>
-			<Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Volver</Button>
+			<Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Regresar</Button>
 			<Button type='primary' onClick={() => navigate('create')}>Agregar Nueva Obra/CC</Button>
 		</div>
         <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>

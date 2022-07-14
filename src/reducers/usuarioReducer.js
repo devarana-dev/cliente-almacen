@@ -15,18 +15,13 @@ export default (state = initialState, action) => {
         case types.GET_ALL_USER:
         case types.GET_USER:
         case types.CREATE_USER:
+        case types.UPDATE_USER:
+        case types.DELETE_USER:
             return {
                 ...state,
                 isLoading: true,
                 errors: null,
                 editedUsuario: null
-            }
-        
-        case types.UPDATE_USER:
-            return {
-                ...state,
-                isLoading: true,
-                errors: null,
             }
 
         case types.GET_ALL_USER_SUCCESS:
@@ -61,8 +56,16 @@ export default (state = initialState, action) => {
                 editedUsuario: null,
                 usuarios: state.usuarios.map(usuario => ( usuario.id === action.payload.id ? action.payload : usuario ))
             }
-            
+        
+        case types.DELETE_USER_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                errors: null,
+                usuarios: state.usuarios.filter(usuario => usuario.id !== action.payload.id)
+            }
 
+        case types.DELETE_USER_ERROR:
         case types.GET_ALL_USER_ERROR:
         case types.GET_USER_ERROR:
         case types.CREATE_USER_ERROR:

@@ -1,11 +1,11 @@
 
 import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table } from 'antd';
+import { Button, Input, notification, Popconfirm, Space, Table } from 'antd';
 
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { getAllRolesAction } from '../../actions/roleActions';
+import { deleteRoleAction, getAllRolesAction } from '../../actions/roleActions';
 
 const Roles = () => {
 
@@ -13,8 +13,7 @@ const Roles = () => {
     const navigate = useNavigate();
 
     const [ dataSource, setDataSource ] = useState([]);
-    const {roles} = useSelector(state => state.roles);
-    const {isLoading} = useSelector(state => state.roles);
+    const {roles, isLoading, errors} = useSelector(state => state.roles);
 
     useEffect(() => {
         dispatch(getAllRolesAction())
@@ -68,7 +67,7 @@ const Roles = () => {
               ref={searchInput}
               placeholder={`Buscar ${dataIndex}`}
               value={selectedKeys[0]}
-              onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+              onChange={(e) => {setSelectedKeys(e.target.value ? [e.target.value] : []); handleSearch(selectedKeys, confirm({closeDropdown:false}), dataIndex)}  }
               onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
               style={{
                 marginBottom: 8,
@@ -76,17 +75,6 @@ const Roles = () => {
               }}
             />
             <Space>
-              <Button
-                type="primary"
-                onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                icon={<SearchOutlined />}
-                size="small"
-                style={{
-                  width: 90,
-                }}
-              >
-                Buscar
-              </Button>
               <Button
                 onClick={() => clearFilters && handleReset(clearFilters, confirm)}
                 size="small"
@@ -129,17 +117,38 @@ const Roles = () => {
             title: 'Acciones',
             dataIndex: 'acciones',
             key: 'acciones',
-            render: (id) => <div><Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button> <Button type='danger' onClick={ () => navigate(`${id}`) }> <DeleteOutlined className='font-bold text-lg'/> </Button> </div>,
+            render: (id) => 
+            <div className='flex justify-around'> 
+                <Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button> 
+                <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
+                  <Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
+                </Popconfirm>
+            </div>,
             width: 200,
         }
         
     ];
 
+	const handleDelete = (id) => {
+		dispatch(deleteRoleAction(id))
+		if (errors){
+			notification['error']({
+				message: 'Error al eliminar',
+				description: errors
+			})
+		}else{
+			notification['success']({
+				message: 'Correcto!',
+				description: 'Se ha eliminado correctamente'
+			})
+		}
+	}
+
     return ( 
     <>
         <h1 className='text-dark text-xl text-center font-medium'>Roles</h1>
             <div className='py-2 flex justify-between'>
-                <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Volver</Button>
+                <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Regresar</Button>
                 <Button type='primary' onClick={() => navigate('create')}>Agregar Nuevo Rol</Button>
             </div>
         <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>

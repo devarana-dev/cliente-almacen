@@ -7,7 +7,6 @@ import actividadReducer from "./actividadReducer";
 import nivelReducer from "./nivelReducer";
 import zonaReducer from "./zonaReducer";
 import obraReducer from "./obraReducer";
-import unidadReducer from "./unidadReducer";
 import personalReducer from "./personalReducer";
 import insumoReducer from "./insumoReducer";
 import valesReducer from "./valesReducer";
@@ -17,12 +16,10 @@ export default combineReducers({
     auth: authReducer,
     usuarios: usuarioReducer,
     roles: roleReducer,
-
     actividades: actividadReducer,
     niveles: nivelReducer,
     zonas: zonaReducer,
     obras: obraReducer,
-    unidades: unidadReducer,
     personal: personalReducer,
     insumos: insumoReducer,
     vales: valesReducer

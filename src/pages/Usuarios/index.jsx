@@ -1,11 +1,11 @@
 
 import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table } from 'antd';
+import { Button, Input, notification, Popconfirm, Space, Table } from 'antd';
 
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { getAllUsuariosAction } from '../../actions/usuarioActions';
+import { deleteUsuarioAction, getAllUsuariosAction } from '../../actions/usuarioActions';
 
 const Usuarios = () => {
 
@@ -13,8 +13,7 @@ const Usuarios = () => {
     const navigate = useNavigate();
 
     const [ dataSource, setDataSource ] = useState([]);
-    const {usuarios} = useSelector(state => state.usuarios);
-    const {isLoading} = useSelector(state => state.usuarios);
+    const {usuarios, isLoading, errors} = useSelector(state => state.usuarios);
 
     useEffect(() => {
         dispatch(getAllUsuariosAction())
@@ -22,7 +21,6 @@ const Usuarios = () => {
     }, [])
 
     useEffect(() => {
-
 		setDataSource(
 			usuarios.map( (item, i) => (
 				{ key: i, acciones:item.id, rol: item.role.nombre, ...item }
@@ -50,6 +48,21 @@ const Usuarios = () => {
         confirm();
     };
 
+	const handleDelete = (id) => {
+		dispatch(deleteUsuarioAction(id))
+		if (errors){
+			notification['error']({
+				message: 'Error al eliminar',
+				description: errors
+			})
+		}else{
+			notification['success']({
+				message: 'Correcto!',
+				description: 'Se ha eliminado correctamente'
+			})
+		}
+	}
+
     const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
           <div
@@ -61,7 +74,7 @@ const Usuarios = () => {
               ref={searchInput}
               placeholder={`Buscar ${dataIndex}`}
               value={selectedKeys[0]}
-              onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+              onChange={(e) => {setSelectedKeys(e.target.value ? [e.target.value] : []); handleSearch(selectedKeys, confirm({closeDropdown:false}), dataIndex)}  }
               onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
               style={{
                 marginBottom: 8,
@@ -69,17 +82,6 @@ const Usuarios = () => {
               }}
             />
             <Space>
-              <Button
-                type="primary"
-                onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                icon={<SearchOutlined />}
-                size="small"
-                style={{
-                  width: 90,
-                }}
-              >
-                Buscar
-              </Button>
               <Button
                 onClick={() => clearFilters && handleReset(clearFilters, confirm)}
                 size="small"
@@ -151,7 +153,13 @@ const Usuarios = () => {
             title: 'Acciones',
             dataIndex: 'acciones',
             key: 'acciones',
-            render: (id) => <div><Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button> <Button type='danger' onClick={ () => navigate(`${id}`) }> <DeleteOutlined className='font-bold text-lg'/> </Button> </div>,
+            render: (id) => 
+            <div className='flex justify-around'> 
+				<Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button> 
+				<Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
+					<Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
+				</Popconfirm>
+            </div>,
             width: 200,
         }
         
