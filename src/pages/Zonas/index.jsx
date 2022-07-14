@@ -1,5 +1,5 @@
 
-import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Input, notification, Popconfirm, Space, Table } from 'antd';
 
 import { useEffect, useRef, useState } from 'react';

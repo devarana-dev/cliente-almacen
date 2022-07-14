@@ -17,6 +17,7 @@ export default function LayoutPublic({children}) {
         if(isAuth.isAuthenticated){
             dispatch(validateLoginAction(isAuth))
         }
+         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isAuth]);
 
     if((isAuthenticated || isAuth.isAuthenticated) && !isLoading ){

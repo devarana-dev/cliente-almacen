@@ -1,4 +1,4 @@
-import { Form, Input, Select, Button, notification, DatePicker } from "antd";
+import { Form, Input, Button, notification, DatePicker } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -8,10 +8,8 @@ import { createPersonalAction } from "../../actions/personalActions";
 const CreatePersonal = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { Option } = Select;
 
     const { errors } = useSelector(state => state.personal);
-    const { roles } = useSelector(state => state.roles);
     const [personal, setPersonal] = useState({
         nombre: "",
         apellidoPaterno: "",
