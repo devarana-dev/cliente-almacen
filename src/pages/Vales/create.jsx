@@ -1,4 +1,3 @@
-import { Steps } from 'antd';
 import { useState } from 'react';
 import InformacionGral from './create_step_one';
 import ListaInsumos from './create_step_two';
@@ -6,12 +5,11 @@ import ListaInsumos from './create_step_two';
 
 const CreateValesSalida = () => {
 
-    const { Step } = Steps;
     const [current, setCurrent] = useState(0);
     const [vale, setVale] = useState({
         almacenId: 4,
         listaInsumos: [],
-        statusVale: 1
+        statusVale: 1,
     });
 
     return ( 

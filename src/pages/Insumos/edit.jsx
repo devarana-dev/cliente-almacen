@@ -1,10 +1,11 @@
-import { Form, Input, Select, Button, notification, Divider, Checkbox } from "antd";
+import { Form, Input, Select, Button, notification } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams} from "react-router-dom";
 import { getAllActividadAction } from "../../actions/actividadActions";
 import { getInsumoAction, updateInsumoAction } from "../../actions/insumoActions";
 import { getAllZonaAction } from "../../actions/zonaActions";
+
 
 const EditInsumos = () => {
 
@@ -15,15 +16,11 @@ const EditInsumos = () => {
     const { Option } = Select;
     
     const { errors, editedInsumo, isLoading } = useSelector( state => state.insumos );
-    const { zonas } = useSelector( state => state.zonas )
-    const { actividades } = useSelector( state => state.actividades )
 
     const [insumo, setInsumo] = useState({
         nombre: "",
         status: "",
     });
-    
-
     
 
     useEffect(() =>{

@@ -1,12 +1,13 @@
 
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Input, notification, Popconfirm, Space, Table } from 'antd';
+import { Button, notification, Popconfirm, Table } from 'antd';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { deletePersonalAction, getAllPersonalAction } from '../../actions/personalActions';
 import moment from 'moment';
+import { getColumnSearchProps } from '../../hooks/useFilter'
 
 const Personal = () => {
 
@@ -30,66 +31,6 @@ const Personal = () => {
 		)
     },[personal])
 
-    /// Table
-    
-    // eslint-disable-next-line no-unused-vars
-    const [searchText, setSearchText] = useState('');
-    // eslint-disable-next-line no-unused-vars
-    const [searchedColumn, setSearchedColumn] = useState('');
-    const searchInput = useRef(null);
-
-    const handleSearch = (selectedKeys, confirm, dataIndex) => {
-        confirm();
-        setSearchText(selectedKeys[0]);
-        setSearchedColumn(dataIndex);
-    };
-    
-    const handleReset = (clearFilters, confirm) => {
-        clearFilters();
-        setSearchText('');
-        confirm();
-    };
-
-    const getColumnSearchProps = (dataIndex) => ({
-        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-          <div
-            style={{
-              padding: 8,
-            }}
-          >
-            <Input
-              ref={searchInput}
-              placeholder={`Buscar ${dataIndex}`}
-              value={selectedKeys[0]}
-              onChange={(e) => {setSelectedKeys(e.target.value ? [e.target.value] : []); handleSearch(selectedKeys, confirm({closeDropdown:false}), dataIndex)}  }
-              onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-              style={{
-                marginBottom: 8,
-                display: 'block',
-              }}
-            />
-            <Space>
-              <Button
-                onClick={() => clearFilters && handleReset(clearFilters, confirm)}
-                size="small"
-                style={{
-                  width: 90,
-                }}
-              >
-                Limpiar
-              </Button>
-            </Space>
-          </div>
-        ),
-        onFilter: (value, record) =>
-          record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-        onFilterDropdownVisibleChange: (visible) => {
-          if (visible) {
-            setTimeout(() => searchInput.current?.select(), 100);
-          }
-        }
-        
-    });
 
     const columns = [
         {

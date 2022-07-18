@@ -1,10 +1,16 @@
 @import './variables';
 
+
+
 .layout{
     height: 100vh!important;
+    max-height: 100vh!important;
+    background-color: $background !important;
     &__sider{
         background-color: $white !important;
         box-shadow: 0 0 5px rgba(0,0,0,.1);
+        margin: 10px;
+        border-radius: 10px;
         overflow-y: auto;        
         overflow-x: hidden;
         color: $dark;
@@ -33,7 +39,7 @@
                         font-weight: 400;
                     }
                 }
-                &-active{
+                &-active:not(.ant-menu-item-selected){
                     background-color: $white !important;
                     color: $white !important;
                 }
@@ -111,15 +117,24 @@
     display: none !important ;
 }
 
+
+
 .layout-right{
+    background-color: $background !important;
     &__header{
         background-color: $white !important;
         box-shadow: 0 0 5px rgba(0,0,0,.1);
         padding: 0 30px!important;
+        justify-content: space-between;
+        margin: 10px;
+        border-radius: 10px;
     }
 
     &__content{
-        
+        box-shadow: 0 0 5px rgba(0,0,0,.1);
+        margin: 10px;
+        border-radius: 10px;
         padding: 20px;
+        background-color: $white!important;
     }
 }

@@ -1,10 +1,13 @@
 
-import { EyeOutlined, SendOutlined } from '@ant-design/icons';
-import { Button, Input, notification, Popconfirm, Space, Table, Tag } from 'antd';
-import { useEffect, useRef, useState } from 'react';
+import { CheckCircleOutlined, EyeOutlined, FrownOutlined, SendOutlined, StopOutlined } from '@ant-design/icons';
+import { Button, Modal, notification, Popconfirm, Table, Tag } from 'antd';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import { getAllValesAction } from '../../actions/valeActions';
+import { getColumnSearchProps } from '../../hooks/useFilter'
+import {nanoid} from 'nanoid'
+import '../../assets/scss/showVale.scss'
 
 const ValesSalida = () => {
 
@@ -12,12 +15,25 @@ const ValesSalida = () => {
     const navigate = useNavigate()
     const { vales } = useSelector( state => state.vales )
     const [ dataSource, setDataSource ] = useState([]);
-    
+    const [ dataNestedSource, setDataNestedSource ] = useState([])
+	const [isModalVisible, setIsModalVisible] = useState(false);
+
+	const showModal = () => {
+		setIsModalVisible(true);
+	};    
+	const handleOk = () => {
+		setIsModalVisible(false);
+	};
+	
+	const handleCancel = () => {
+		setIsModalVisible(false);
+	};
 
     useEffect(() => {
         dispatch(getAllValesAction())
         // eslint-disable-next-line
     }, [])
+    
 
     useEffect(() => {
 		setDataSource(
@@ -34,106 +50,44 @@ const ValesSalida = () => {
 		)
     }, [vales])
 
-
-
-    // eslint-disable-next-line no-unused-vars
-    const [searchText, setSearchText] = useState('');
-    // eslint-disable-next-line no-unused-vars
-    const [searchedColumn, setSearchedColumn] = useState('');
-    const searchInput = useRef(null);
-
-    
-    const handleSearch = (selectedKeys, confirm, dataIndex) => {
-        confirm();
-        setSearchText(selectedKeys[0]);
-        setSearchedColumn(dataIndex);
-    };
-    
-    const handleReset = (clearFilters, confirm) => {
-        clearFilters();
-        setSearchText('');
-        confirm();
-    };
-
-    const getColumnSearchProps = (dataIndex) => ({
-        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-          <div
-            style={{
-              padding: 8,
-            }}
-          >
-            <Input
-              ref={searchInput}
-              placeholder={`Buscar ${dataIndex}`}
-              value={selectedKeys[0]}
-              onChange={(e) => {setSelectedKeys(e.target.value ? [e.target.value] : []); handleSearch(selectedKeys, confirm({closeDropdown:false}), dataIndex)}  }
-              onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-              style={{
-                marginBottom: 8,
-                display: 'block',
-              }}
-            />
-            <Space>
-              <Button
-                onClick={() => clearFilters && handleReset(clearFilters, confirm)}
-                size="small"
-                style={{
-                  width: 90,
-                }}
-              >
-                Limpiar
-              </Button>
-            </Space>
-          </div>
-        ),
-        onFilter: (value, record) =>
-          record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-        onFilterDropdownVisibleChange: (visible) => {
-          if (visible) {
-            setTimeout(() => searchInput.current?.select(), 100);
-          }
-        }
-        
-    });
-
     const columns = [
         {
             title: 'Folio',
             dataIndex: 'id',
             key: 'id',
-            sorter: (a, b) => a.id.localCompare(b.id),
+            sorter: (a, b) => a.id - b.id,
             ...getColumnSearchProps('id'),
             width: 100
         },
         {
             title: 'Elaborado Por',
             dataIndex: 'residente',
-            key: 'residente',
-            sorter: (a, b) => a.residente.localCompare(b.residente),
+            key: `residente-${nanoid(4)}`,
+            sorter: (a, b) => a.residente.localeCompare(b.residente),
             ...getColumnSearchProps('residente'),
         },
         {
             title: 'Entregar A',
             dataIndex: 'personalInfo',
-            key: 'personalInfo',
-            sorter: (a, b) => a.personalInfo.localCompare(b.personalInfo),
+            key: `personalInfo-${nanoid(4)}`,
+            sorter: (a, b) => a.personalInfo.localeCompare(b.personalInfo),
             ...getColumnSearchProps('personalInfo'),
         },
         {
             title: 'Actividad',
             dataIndex: 'actividadInfo',
-            key: 'actividadInfo',
-            sorter: (a, b) => a.actividadInfo.localCompare(b.actividadInfo),
+            key: `actividadInfo-${nanoid(4)}`,
+            sorter: (a, b) => a.actividadInfo.localeCompare(b.actividadInfo),
             ...getColumnSearchProps('actividadInfo'),
         },
         {
             title: 'Estatus',
             dataIndex: 'statusVale',
             key: 'statusVale',
-            render: (text, record) => ( 
-                record.statusVale === 1 ? <Tag color="green">Por Entregar</Tag>:
-                record.statusVale === 2 ? <Tag color="lime">Borrador</Tag> :
-                record.statusVale === 3 ? <Tag color="geekblue">Entregado</Tag> : ''
+            render: (text, record, index) => ( 
+                record.statusVale === 1 ? <Tag key={nanoid(4)} color="green">Por Entregar</Tag>:
+                record.statusVale === 2 ? <Tag key={nanoid(4)} color="lime">Borrador</Tag> :
+                record.statusVale === 3 ? <Tag key={nanoid(4)} color="geekblue">Entregado</Tag> : ''
              ),
             filters: [
                 { 
@@ -151,31 +105,92 @@ const ValesSalida = () => {
             ],
             onFilter: (value, record) => record.statusVale === value,
             width: 100
-        },   
-        {
-            title: 'Acciones',
-            dataIndex: 'acciones',
-            key: 'acciones',
-            render: (id) => 
-            <div className='flex justify-around'> 
-				<Button type='default'> <EyeOutlined className='font-medium'/> </Button> 
-				<Button type='ghost'> <SendOutlined className='font-medium'/> </Button> 
-            </div>,
-            width: 200,
         }
     ]
 
 
+    const expandedRowRender = (record, index, indent, expanded) => {
+
+        if(expanded){
+            setDataNestedSource(record.detalle_salidas)
+        }
+    
+        const columns = [
+            {
+                title: 'ID Enkontrol',
+                dataIndex: 'insumo',
+                key: `insumo-${nanoid(3)}`,
+                render: item =>  item.claveEnk
+            },
+            {
+                title: 'Nombre',
+                dataIndex: 'insumo',
+                key: `insumo-${nanoid(4)}`,
+                render: item => item.nombre
+            },
+            {
+                title: 'Unidad de Medida',
+                dataIndex: 'insumo',
+                key: `insumo-${nanoid(5)}`,
+                render: item => item.unidadMedida
+            },
+            {
+                title: 'Cantidad',
+                dataIndex: 'cantidad',
+                key: `cantidad-${nanoid(5)}`,
+                render: item => Number(item)
+            },
+            {
+                title: 'Entregado',
+                dataIndex: 'cantidadEntregada',
+                key: `cantidadEntregada-${nanoid(5)}`,
+                render: item => Number(item)
+            },
+            {
+                title: 'Pendiente',
+                dataIndex: 'detalle_salidas',
+                key: `detalle_salidas-${nanoid(5)}`,
+                render: (text, record) => (record.cantidad - record.cantidadEntregada )
+            },
+            {
+                title: 'Acciones',
+                dataIndex: 'acciones',
+                key: `acciones`,
+                render: (text, record, index) => (
+                    <div key={index} className="flex justify-between">
+                        <Button onClick={ () => handleEntrega(record, 1) } type='primary'> <CheckCircleOutlined /> </Button>
+                        <Button onClick={ () => handleEntrega(record, 2) } type='warning'> <FrownOutlined /> </Button>
+                        <Button onClick={ () => handleEntrega(record, 3) } type='danger'> <StopOutlined /> </Button>
+                    </div>
+                )
+            }
+        ]
+        return <Table columns={columns} dataSource={dataNestedSource} pagination={false} rowKey={nanoid(4)} className="nestedTable"/>
+    }
 
 
+    const handleEntrega = (record, type) => {
+
+        // 1 - Completa
+        // 2 - Parcial
+        // 3 - Denegar
+        console.log('Detalle Salida ID', record.id)
+        console.log('valeSalidaId', record.valeSalidaId)
+        console.log('insumoId', record.insumoId)
+    }
+    
     return ( 
         <>
             <h1 className='text-dark text-xl text-center font-medium'>Vales</h1>
             <div className='py-2 flex justify-between'>
                 <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Volver</Button>
-                <Button type='primary' onClick={() => navigate('create')}>Agregar Nuevo Vale</Button>
+                <Button type='primary' onClick={() => navigate('nuevo')}>Agregar Nuevo Vale</Button>
             </div>
-            <Table columns={columns} dataSource={dataSource} />
+            <Table columns={columns} dataSource={dataSource} expandable={{expandedRowRender, defaultExpandedRowKeys: ['0']}}/>
+
+			<Modal title="Basic Modal" visible={isModalVisible} footer={null} width={1000} onCancel={handleCancel}>
+				<Table />
+			</Modal>
         </>    
     );
 }

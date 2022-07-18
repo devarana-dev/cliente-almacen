@@ -28,22 +28,22 @@ export default function LayoutMenu ({collapsed, setCollapsed}) {
     const items = [
 	getItem('Inicio', '/', <AppstoreOutlined />),
 	getItem('Vales', 'sub1', <LogoutOutlined />, [
-		getItem('Vale Salida', '/vales-salida/nuevo'),
-		getItem('Consultar Vales', '/vales-salida'),
+		getItem('Generar', '/vales-salida/nuevo'),
+		getItem('Consultar', '/vales-salida'),
 		
 	]),
 	getItem('Gestión', 'sub3', <SettingOutlined />, [
 		getItem('Usuarios', 'subsub1', <UserOutlined />, [
-			getItem('Roles', '/roles'),
 			getItem('Usuario', '/usuarios'),
+			getItem('Roles', '/roles'),
      	], 'group'),
-		getItem('Vales', 'subsub2', <UserOutlined />, [
+		getItem('Generales', 'subsub2', <UserOutlined />, [
 			getItem('Insumos', '/insumos'),
-			getItem('Obra / CC ', '/obra'),
+			getItem('Obras', '/obra'),
 			getItem('Niveles', '/niveles'),
 			getItem('Zonas', '/zonas'),
 			getItem('Actividades', '/actividades'),
-			getItem('Lider Cuadrilla', '/personal'),
+			getItem('Trabajadores', '/personal'),
       	], 'group'),		
 	]),
       ];

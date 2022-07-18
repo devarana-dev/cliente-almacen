@@ -8,9 +8,9 @@ module.exports = {
 		colors: {
 			"light" : "#dbdbea",
 			"dark" : "#646375",
-			"primary" : "#8c52ff",
-			"secondary" : "#0abab5",
-			"info" : "#5271ff",
+			"primary" : "#56739B",
+			"secondary" : "#d64767",
+			"info" : "#a9c0e4",
 			"success" : "#00b76d",
 			"warning" : "#e5d100",
 			"danger" : "#f72500",

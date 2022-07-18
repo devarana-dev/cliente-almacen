@@ -4,9 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getAllObraAction } from '../../actions/obraActions';
 import { getAllNivelesAction } from '../../actions/nivelActions';
 import { getAllPersonalAction } from '../../actions/personalActions';
-
 import "../../assets/scss/steps.scss"
-import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -26,12 +24,19 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
     const [ selectedZona, setSelectedZona ] = useState([]);
 
 
-    const handleChangeObra = (id) => {
-       const [result] = obra.filter( item => item.id === id)
-       setSelectedNivel(result.niveles);
+
+
+    const handleChangeObra =  (id) => {
+        const [result] = obra.filter( item => item.id === id)
+        const centroCosto = result.clave.split('-')[1].trim();
+        setVale({...vale, obraId: id, centroCosto})
+        setSelectedNivel(result.niveles)
     }
+    
+
     const handleChangeNivel = (id) => {
         const [result] = niveles.filter( item => item.id === id)
+        setVale({...vale, nivelId: id})
         setSelectedActividad(result.actividades);
         setSelectedZona(result.zonas);
     }
@@ -40,6 +45,7 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
         dispatch(getAllObraAction())
         dispatch(getAllNivelesAction())
         dispatch(getAllPersonalAction())
+        // eslint-disable-next-line
     }, [])
 
 
@@ -88,12 +94,12 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                         filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                         showSearch
                         size='large'
-                        onChange= { (e) => { handleChangeObra(e); setVale({...vale, obraId: e})} }
+                        onChange= { (e) => { handleChangeObra(e);  } }
                         name="obraId"         
                     >
                         {
                             obra.map(item => (
-                                <Option key={item.id} value={item.id}>{item.nombre}</Option>
+                                <Option key={item.id} value={item.id}>{item.nombre} | { item.clave }</Option>
                             ))
                         }
                     </Select>
@@ -112,7 +118,7 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                         disabled={selectedNivel.length === 0}
                         showSearch
                         size='large'
-                        onChange={ (e) => { handleChangeNivel(e); setVale({...vale, nivelId: e})}}
+                        onChange={ (e) => { handleChangeNivel(e) }}
                         name="nivelId"
                     >
                         {

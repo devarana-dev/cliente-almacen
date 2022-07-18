@@ -6,6 +6,7 @@ import { getAllInsumosAction } from "../../actions/insumoActions";
 import {nanoid} from 'nanoid'
 import {  DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { createValeAction } from "../../actions/valeActions";
+import '../../assets/scss/createVale.scss'
 
 const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
 
@@ -32,6 +33,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
     }, [])
 
     useEffect(() => {
+        
         setDataSource(
             listaInsumos.map( (item, i) => (
                 { key: i, acciones:item.uuid, ...item }
@@ -49,7 +51,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
         {
             title: 'Insumo',
             dataIndex: 'nombre',
-            key: 'nombre'
+            key: 'nombre',
         },
         {
             title: 'Cantidad',
@@ -151,12 +153,10 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
     return ( 
     <>
 
-    <Table columns={columns} dataSource={dataSource} scroll={{ y: 200 }} style={{height: 300}}/>
+    <Table columns={columns} dataSource={dataSource} scroll={{ y: 150 }} style={{height: 250}} className="create-vale"/>
 
     <Form
         layout="horizontal"
-        className="pt-5"
-        size="large"
         onFinish={handleSubmit}
         form={form}
     >
@@ -174,10 +174,10 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
                 notFoundContent={isLoading ? <Spin size="small" /> : null}
                 filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                 showSearch
-                onChange={ (e) => {searchUnidad(e); setInsumo({  id: e }); console.log(e) } }
+                onChange={ (e) => {searchUnidad(e); setInsumo({  id: e }); } }
             > 
                 {
-                    insumos.map(item => (
+                    insumos.filter( item => item.centroCosto === vale.centroCosto ).map( item => (
                         <Option key={item.id} value={item.id}>{`${item.nombre}`}</Option>
                     ))
                 }

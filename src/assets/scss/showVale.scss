@@ -1,0 +1,9 @@
+@import './variables';
+
+
+.nestedTable{
+    .ant-table-thead > tr > th{
+        background-color: $light!important;
+        color: $dark!important;
+    }
+}

@@ -3,14 +3,18 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom'
 import authProvider from "../provider/authProvider";
+
 import "../assets/scss/layout.scss"
 
 import {
+    LogoutOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
   } from '@ant-design/icons';
 import Menu from "../components/layout/Menu";
 import { validateLoginAction } from "../actions/authActions";
+import Socket from "../components/socket";
+import Logout from "../components/layout/Logout";
 
 export default function LayoutPrivate({children}) {
     const dispatch = useDispatch()
@@ -30,16 +34,16 @@ export default function LayoutPrivate({children}) {
         // eslint-disable-next-line
     }, [isAuth])
 
+ 
+
 
     if( (isAuthenticated || isAuth.isAuthenticated) === false && !isLoading ){
         navigate("/login")
     }
 
-    
-
-    return (
-
+    return (        
         <Layout className="layout">
+            
             <Sider 
                 className="layout__sider hidden sm:block" 
                 trigger={null} 
@@ -58,8 +62,13 @@ export default function LayoutPrivate({children}) {
             
             </Sider>
             <Layout className="layout-right">
-                <Header className="layout-right__header hidden sm:block"> 
+                <Header className="layout-right__header hidden sm:flex"> 
                     <button onClick={() => setCollapsed(!collapsed)}> {collapsed ? <MenuUnfoldOutlined className="text-2xl sm:text-dark sm:bg-transparent bg-primary text-white pb-1 px-2 rounded "/> : <MenuFoldOutlined className="text-2xl sm:text-dark sm:bg-transparent bg-primary text-white pb-1 px-2 rounded "/>} </button>
+                    <div>
+                        <Socket/>
+                        <Logout/>
+                    </div>
+                    
                 </Header>
                 <Content className="layout-right__content"> 
                     {children} 

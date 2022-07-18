@@ -11,9 +11,17 @@
 }
 
 html{
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
+    --antd-wave-shadow-color: $secondary !important;
+}
+.ant-input-affix-wrapper:focus, .ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover{
+    border-color: $secondary !important;
 }
 
+.ant-input-affix-wrapper:focus, .ant-input-affix-wrapper-focused{
+    box-shadow: 0 0 0 2px rgba(214 71 103 / 20%) !important;
+
+}
 *{
   font-family: 'Roboto', sans-serif!important;
 }

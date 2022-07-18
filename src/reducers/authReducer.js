@@ -16,6 +16,7 @@ export default (state = initialState, action) => {
         
         case types.LOGIN_ERROR:
         case types.LOGIN_VALIDATE_ERROR:
+        case types.LOGOUT_ERROR:
             return {
                 ...state,
                 errors: action.payload,
@@ -34,6 +35,16 @@ export default (state = initialState, action) => {
                 errors: null,
             }
 
+        case types.LOGOUT_SUCCESS:
+            localStorage.removeItem('refreshToken')
+            localStorage.removeItem('accessToken')
+            return {
+                ...state,
+                isAuthenticated: false,
+                isLoading: false,
+                errors: null,
+                userAuth: null
+            }        
         case types.LOGIN_VALIDATE_SUCCESS:
             return {
                 ...state,
