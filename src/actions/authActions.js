@@ -5,7 +5,6 @@ export function getUserAction () {
     return async (dispatch) => {
         await clientAxios.get('/login/validate', { withCredentials: true })
             .then ( res => {
-                console.log(res.data);
                 dispatch(loginSuccess(res.data))
             })
             .catch( err => {
@@ -33,23 +32,38 @@ const loginError = (error) => {
 
 export function validateLoginAction (auth){
     return dispatch => {
+        console.log('validateLoginAction', auth);
+        dispatch(loginValidateRequest())
         if(auth){
-            dispatch({
-                type: types.LOGIN_VALIDATE_SUCCESS,
-                payload: auth
-            })
+            dispatch(loginValidateSuccess(auth))
         }else{
-            dispatch({
-                type: types.LOGIN_VALIDATE_ERROR,
-                payload: null
-            })
+            dispatch(loginValidateError('No hay autenticación'))
             logoutAction()
         }
     }
 }
 
+
+const loginValidateRequest = () => ({
+    type: types.LOGIN_VALIDATE_REQUEST
+})
+
+const loginValidateSuccess = payload => ({
+    type: types.LOGIN_VALIDATE_SUCCESS,
+    payload
+})
+
+const loginValidateError = payload => ({
+    type: types.LOGIN_VALIDATE_ERROR,
+    payload
+})
+
+
+
+
 export function logoutAction(){
     return async (dispatch) => {
+        dispatch(logoutRequest())
         try {
             await clientAxios.get('/auth/logout', {withCredentials: true})
             dispatch(logoutSuccess())
@@ -58,6 +72,11 @@ export function logoutAction(){
         }
     }
 }
+
+const logoutRequest = () => ({
+    type: types.LOGOUT_REQUEST
+})
+
 
 const logoutSuccess = () => ({
     type: types.LOGOUT_SUCCESS

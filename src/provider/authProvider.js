@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { getAccessToken, refreshAccessToken, getRefreshToken } from "../api/authApi"
 import jwtDecode from 'jwt-decode';
-import { logoutAction } from "../actions/authActions";
 
 
 export default function AuthProvider(){
@@ -27,7 +26,8 @@ function checkUserLogin( setAuth ) {
     if(!accessToken){
         const refreshToken = getRefreshToken()
         if(!refreshToken){
-            logoutAction()
+            localStorage.removeItem('accessToken')
+            localStorage.removeItem('refreshToken')
             setAuth({
                 userAuth: null,
                 token: null,

@@ -1,7 +1,11 @@
 import axios from 'axios'
 
 const getToken = () => {
-    return localStorage.getItem('accessToken')
+    const accessToken = localStorage.getItem('accessToken')
+    if(accessToken !== '' || accessToken !== null) {    
+        return accessToken
+    }
+
 }
 
 const clientAxios = axios.create({

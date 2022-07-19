@@ -26,8 +26,7 @@ export default function LayoutPrivate({children}) {
     const isAuth = authProvider()
     const { isAuthenticated } = useSelector( state => state.auth )
     const { isLoading } = useSelector( state => state.auth )
-
-   
+  
 
     useEffect(() => {
         dispatch(validateLoginAction(isAuth))
@@ -35,7 +34,7 @@ export default function LayoutPrivate({children}) {
     }, [isAuth])
 
  
-
+    console.log(isAuth);
 
     if( (isAuthenticated || isAuth.isAuthenticated) === false && !isLoading ){
         navigate("/login")

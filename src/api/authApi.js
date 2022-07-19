@@ -24,17 +24,16 @@ export function getRefreshToken(){
 export async function refreshAccessToken(){
 	const refreshToken = localStorage.getItem('refreshToken')
 	try {
-		await clientAxios.post('/auth/refresh-access-token', refreshToken)
+		await clientAxios.post('/auth/refresh-access-token', { refreshToken })
 		.then( response => {
-			const { accessToken, refreshToken } = response
+			const { accessToken, refreshToken } = response.data
 			localStorage.setItem('accessToken', accessToken)
 			localStorage.setItem('refreshToken', refreshToken)
 		})
 		
 	} catch (error) {
-    console.log(error);
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('refreshToken')
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('refreshToken')
 	}
 }
 

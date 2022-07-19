@@ -11,7 +11,7 @@ const Logout = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const {errors}  = useSelector( state => state.auth )
+    const {errors, isLoading}  = useSelector( state => state.auth )
 
     const showModal = () => {
         setVisible(true);
@@ -21,14 +21,16 @@ const Logout = () => {
         setVisible(false);
     };
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         dispatch(logoutAction())
         hideModal()
         if(!errors){
-            navigate('/login')
+            if(!isLoading){
+                navigate('/login')
+            }
         }else{
             // error
-            notification['type']({
+            notification['error']({
                 message: 'Ha habido un error',
                 description: errors
             })

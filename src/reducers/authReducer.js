@@ -24,6 +24,12 @@ export default (state = initialState, action) => {
                 isAuthenticated: false,
                 userAuth: null
             }
+        case types.LOGOUT_REQUEST:
+        case types.LOGIN_VALIDATE_REQUEST:
+            return {
+                ...state,
+                isLoading: true
+            }
 
         case types.LOGIN_SUCCESS:
             localStorage.setItem('refreshToken', action.payload.refreshToken)
