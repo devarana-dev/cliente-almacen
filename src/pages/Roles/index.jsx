@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { deleteRoleAction, getAllRolesAction } from '../../actions/roleActions';
+import { AntdNotification } from '../../components/Elements/Notification';
 import { getColumnSearchProps } from '../../hooks/useFilter'
 
 const Roles = () => {
@@ -87,6 +88,7 @@ const Roles = () => {
     return ( 
     <>
         <h1 className='text-dark text-xl text-center font-medium'>Roles</h1>
+        {  (errors && errors.length > 0) && <AntdNotification errors={errors} type='error'/>}
             <div className='py-2 flex justify-between'>
                 <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Regresar</Button>
                 <Button type='primary' onClick={() => navigate('create')}>Agregar Nuevo Rol</Button>

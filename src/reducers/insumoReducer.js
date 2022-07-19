@@ -5,7 +5,12 @@ const initialState = {
     insumos: [],
     isLoading: true,
     errors: null,
-    editedInsumo: null
+    editedInsumo: null,
+
+    upload: false,
+    uploadState: null,
+    uploadMessage: null,
+    uploadedCount: 0,
 }
 
 // eslint-disable-next-line
@@ -23,6 +28,15 @@ export default (state = initialState, action) => {
                 editedInsumo: null
 
             }
+
+        case types.UPLOAD_MASSIVE_INSUMO:
+            return {
+                ...state,
+                isLoading: false,
+                errors: null,
+                upload: true
+            }
+        
         case types.GET_ALL_INSUMO_SUCCESS:
             return {
                 ...state,
@@ -35,7 +49,19 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
-                insumos: [...state.insumos, action.payload]
+                insumos: [...state.insumos, action.payload],
+            }
+
+        case types.UPLOAD_MASSIVE_INSUMO_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                errors: null,
+                insumos: [...state.insumos, ...action.payload.insumosNoCreados],
+                upload: false,
+                uploadState: 'success',
+                uploadMessage: action.payload.message,
+                uploadedCount: action.payload.insumosNoCreados.length
             }
         case types.UPDATE_INSUMO_SUCCESS:
             return {
@@ -67,10 +93,28 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 isLoading: false,
-                errors: action.payload
+                errors: action.payload,
+                upload: false
             }
 
+        case types.UPLOAD_MASSIVE_INSUMO_ERROR:
+            return {
+                ...state,
+                isLoading: false,
+                errors: action.payload,
+                upload: false,
+                uploadState: 'error',
+                uploadMessage: action.payload.message
+            }
         
+        case types.CLEAR_UPLOAD_STATE:
+            return {
+                ...state,
+                upload: false,
+                uploadState: null,
+                uploadMessage: null,
+                uploadedCount: 0
+            }
         
         default:
             return state

@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { deletePersonalAction, getAllPersonalAction } from '../../actions/personalActions';
 import moment from 'moment';
 import { getColumnSearchProps } from '../../hooks/useFilter'
+import { AntdNotification } from '../../components/Elements/Notification';
 
 const Personal = () => {
 
@@ -107,6 +108,7 @@ const Personal = () => {
     return ( 
     <>
         <h1 className='text-dark text-xl text-center font-medium'>Lideres de Cuadrilla</h1>
+        {  (errors && errors.length > 0) && <AntdNotification errors={errors} type='error'/>}
         <div className='py-2 flex justify-between'>
             <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Regresar</Button>
             <Button type='primary' onClick={() => navigate('create')}>Agregar Nuevo Lider de Cuadrilla</Button>

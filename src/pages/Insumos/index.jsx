@@ -1,11 +1,13 @@
  
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Table, Popconfirm, notification } from 'antd';
+import { Button, Table, Popconfirm, notification, Modal } from 'antd';
 
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { deleteInsumoAction, getAllInsumosAction } from '../../actions/insumoActions';
+import { deleteInsumoAction, getAllInsumosAction, clearUploadState } from '../../actions/insumoActions';
+import { AntdNotification } from '../../components/Elements/Notification';
+import UploadFile from '../../components/Elements/UploadFile';
 
 import { getColumnSearchProps } from '../../hooks/useFilter'
 const Insumos = () => {
@@ -13,6 +15,7 @@ const Insumos = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const [ dataSource, setDataSource ] = useState([]);
     const { insumos, isLoading, errors } = useSelector(state => state.insumos);
 
@@ -110,15 +113,35 @@ const Insumos = () => {
 		}
 	}
 
+    const showModal = () => {
+		setIsModalVisible(true);
+	};    
+	const handleOk = () => {
+		setIsModalVisible(false);
+	};
+	
+	const handleCancel = () => {
+		setIsModalVisible(false);
+        dispatch(clearUploadState())
+	};
+
 
     return ( 
     <>
     <h1 className='text-dark text-xl text-center font-medium'>Insumos</h1>
+        {  (errors && errors.length > 0) && <AntdNotification errors={errors} type='error'/>}
 		<div className='py-2 flex justify-between'>
 			<Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Regresar</Button>
-			<Button type='primary' onClick={() => navigate('create')}>Agregar Nuevo Insumo</Button>
+			<div>
+                <Button type='default' onClick={() => showModal()}>Importar Insumos</Button>
+                <Button className='ml-5' type='primary' onClick={() => navigate('create')}>Agregar Nuevo Insumo</Button>
+            </div>
 		</div>
         <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>
+
+        <Modal title="Cargar Insumo" visible={isModalVisible} footer={null} onCancel={handleCancel}>
+				<UploadFile/>
+        </Modal>
     </>
     );
 }

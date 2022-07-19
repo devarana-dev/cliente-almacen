@@ -1,37 +1,44 @@
 import { Button, Upload, message } from "antd";
 import { UploadOutlined } from '@ant-design/icons';
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { uploadMassiveInsumo } from "../../actions/insumoActions";
 
 export default function UploadFile(params) {
     
-    const { route } = params
+    // const { route, fn, uploading } = params
+
+    const { upload, uploadState, uploadMessage, uploadedCount} = useSelector(state => state.insumos)
 
     const [fileList, setFileList] = useState([]);
     const [uploading, setUploading] = useState(false);
+    const dispatch = useDispatch();
 
   const handleUpload = () => {
     const formData = new FormData();
     fileList.forEach((file) => {
-      formData.append('files[]', file);
+        formData.append('insumos', file);
     });
-    setUploading(true); // You can use any AJAX library you like
-
-    fetch('https://www.mocky.io/v2/5cc8019d300000980a055e76', {
-      method: 'POST',
-      body: formData,
-    })
-      .then((res) => res.json())
-      .then(() => {
-        setFileList([]);
-        message.success('upload successfully.');
-      })
-      .catch(() => {
-        message.error('upload failed.');
-      })
-      .finally(() => {
-        setUploading(false);
-      });
+    dispatch(uploadMassiveInsumo(formData))
   };
+
+
+  const uploadedState = () => {
+    
+    if(uploadState === 'error'){
+        message.error(uploadMessage)
+    }
+    if(uploadState === 'success'){
+        message.success(uploadedCount + ' ' + uploadMessage)
+        setFileList([])
+    }
+
+    setUploading(upload);
+  }
+
+    useEffect(() => {
+        uploadedState()
+    }, [upload])
 
   const props = {
     onRemove: (file) => {
@@ -50,7 +57,8 @@ export default function UploadFile(params) {
     return(
         <div className="flex flex-col content-center">
             <p className="text-sm text-dark py-2 text-center"> * Solo acepta archivos Excel *  </p>
-            <Upload {...props} accept="application/vnd.ms-excel">
+            {/* acceptar solo csv */}
+            <Upload {...props} accept=" .csv " >
                 <Button icon={<UploadOutlined />}>Selecciona Archivo</Button>
             </Upload>
             <Button

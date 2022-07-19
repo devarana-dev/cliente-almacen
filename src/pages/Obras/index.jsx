@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { deleteObraAction, getAllObraAction } from '../../actions/obraActions';
+import { AntdNotification } from '../../components/Elements/Notification';
 import { getColumnSearchProps } from '../../hooks/useFilter'
 
 const Obras = () => {
@@ -101,6 +102,7 @@ const Obras = () => {
     return ( 
     <>
         <h1 className='text-dark text-xl text-center font-medium'>Obra / CC</h1>
+        {  (errors && errors.length > 0) && <AntdNotification errors={errors} type='error'/>}
 		<div className='py-2 flex justify-between'>
 			<Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Regresar</Button>
 			<Button type='primary' onClick={() => navigate('create')}>Agregar Nueva Obra/CC</Button>

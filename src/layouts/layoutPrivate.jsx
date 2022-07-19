@@ -33,9 +33,6 @@ export default function LayoutPrivate({children}) {
         // eslint-disable-next-line
     }, [isAuth])
 
- 
-    console.log(isAuth);
-
     if( (isAuthenticated || isAuth.isAuthenticated) === false && !isLoading ){
         navigate("/login")
     }

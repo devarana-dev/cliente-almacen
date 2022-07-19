@@ -32,7 +32,6 @@ const loginError = (error) => {
 
 export function validateLoginAction (auth){
     return dispatch => {
-        console.log('validateLoginAction', auth);
         dispatch(loginValidateRequest())
         if(auth){
             dispatch(loginValidateSuccess(auth))

@@ -1,6 +1,6 @@
 
-import { CheckCircleOutlined, EyeOutlined, FrownOutlined, SendOutlined, StopOutlined } from '@ant-design/icons';
-import { Button, Modal, notification, Popconfirm, Table, Tag } from 'antd';
+import { CheckCircleOutlined, FrownOutlined, StopOutlined } from '@ant-design/icons';
+import { Button, Table, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
@@ -8,26 +8,18 @@ import { getAllValesAction } from '../../actions/valeActions';
 import { getColumnSearchProps } from '../../hooks/useFilter'
 import {nanoid} from 'nanoid'
 import '../../assets/scss/showVale.scss'
+import { AntdNotification } from '../../components/Elements/Notification';
 
 const ValesSalida = () => {
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { vales } = useSelector( state => state.vales )
+    const { vales, errors } = useSelector( state => state.vales )
     const [ dataSource, setDataSource ] = useState([]);
     const [ dataNestedSource, setDataNestedSource ] = useState([])
-	const [isModalVisible, setIsModalVisible] = useState(false);
-
-	const showModal = () => {
-		setIsModalVisible(true);
-	};    
-	const handleOk = () => {
-		setIsModalVisible(false);
-	};
 	
-	const handleCancel = () => {
-		setIsModalVisible(false);
-	};
+
+
 
     useEffect(() => {
         dispatch(getAllValesAction())
@@ -181,16 +173,15 @@ const ValesSalida = () => {
     
     return ( 
         <>
+            {  (errors && errors.length > 0) && <AntdNotification errors={errors} type='error'/>}
             <h1 className='text-dark text-xl text-center font-medium'>Vales</h1>
             <div className='py-2 flex justify-between'>
                 <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Volver</Button>
-                <Button type='primary' onClick={() => navigate('nuevo')}>Agregar Nuevo Vale</Button>
+                <Button type='primary' onClick={() => navigate('nuevo')} className="ml-5">Agregar Nuevo Vale</Button>
             </div>
             <Table columns={columns} dataSource={dataSource} expandable={{expandedRowRender, defaultExpandedRowKeys: ['0']}}/>
 
-			<Modal title="Basic Modal" visible={isModalVisible} footer={null} width={1000} onCancel={handleCancel}>
-				<Table />
-			</Modal>
+
         </>    
     );
 }

@@ -156,3 +156,47 @@ const deleteInsumoError = error => {
         payload: error
     }
 }
+
+
+
+export function uploadMassiveInsumo (form) {
+    return async (dispatch) => {
+        dispatch(uploadMassiveInsumoRequest())
+        await clientAxios.post('/insumos/massiveUpload', form, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+            .then ( res => {
+                dispatch(uploadMassiveInsumoSuccess(res.data))
+            }).catch( err => {
+                console.log('Error uploadMassiveInsumo', err.response);
+                dispatch(uploadMassiveInsumoError(err))
+            } )
+    }
+}
+
+const uploadMassiveInsumoRequest = () => {
+    return {
+        type: types.UPLOAD_MASSIVE_INSUMO
+    }
+}
+const uploadMassiveInsumoSuccess = payload => {
+    return {
+        type: types.UPLOAD_MASSIVE_INSUMO_SUCCESS,
+        payload
+    }
+}
+const uploadMassiveInsumoError = error => {
+    return {
+        type: types.UPLOAD_MASSIVE_INSUMO_ERROR,
+        payload: error
+    }
+}
+
+
+export const clearUploadState = () => {
+    return {
+        type: types.CLEAR_UPLOAD_STATE
+    }
+}
