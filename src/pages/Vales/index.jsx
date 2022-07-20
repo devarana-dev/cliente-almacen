@@ -1,10 +1,10 @@
 
 import { CheckCircleOutlined, FrownOutlined, StopOutlined } from '@ant-design/icons';
-import { Button, Table, Tag } from 'antd';
+import { Button, Table, Tag, Modal, Input } from 'antd';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
-import { getAllValesAction } from '../../actions/valeActions';
+import { deliverValeAction, getAllValesAction } from '../../actions/valeActions';
 import { getColumnSearchProps } from '../../hooks/useFilter'
 import {nanoid} from 'nanoid'
 import '../../assets/scss/showVale.scss'
@@ -12,13 +12,42 @@ import { AntdNotification } from '../../components/Elements/Notification';
 
 const ValesSalida = () => {
 
+    const { TextArea } = Input;
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const { vales, errors } = useSelector( state => state.vales )
     const [ dataSource, setDataSource ] = useState([]);
     const [ dataNestedSource, setDataNestedSource ] = useState([])
-	
+    const [ validarCantidad, setValidarCantidad ] = useState(true)
 
+    const [visible, setVisible] = useState(false);
+	
+    const [ entrega, setEntrega ] = useState({
+        id: 0,
+        valeSalidaId: 0,
+        insumoId: 0,
+        cantidadEntregada: 0,
+        comentarios: '',
+        type: 1
+    })
+
+
+    const showModal = () => {
+        setVisible(true);
+    };
+    
+    const hideModal = () => {
+        setVisible(false);
+        setValidarCantidad(true)
+        setEntrega({
+            id: 0,
+            valeSalidaId: 0,
+            insumoId: 0,
+            cantidadEntregada: 0,
+            comentarios: '',
+            type: 1
+        })
+    };
 
 
     useEffect(() => {
@@ -127,9 +156,9 @@ const ValesSalida = () => {
                 render: item => item.unidadMedida
             },
             {
-                title: 'Cantidad',
-                dataIndex: 'cantidad',
-                key: `cantidad-${nanoid(5)}`,
+                title: 'Solicitado',
+                dataIndex: 'cantidadSolicitada',
+                key: `cantidadSolicitada-${nanoid(5)}`,
                 render: item => Number(item)
             },
             {
@@ -142,18 +171,20 @@ const ValesSalida = () => {
                 title: 'Pendiente',
                 dataIndex: 'detalle_salidas',
                 key: `detalle_salidas-${nanoid(5)}`,
-                render: (text, record) => (record.cantidad - record.cantidadEntregada )
+                render: (text, record) => (record.cantidadSolicitada - record.cantidadEntregada )
             },
             {
                 title: 'Acciones',
                 dataIndex: 'acciones',
                 key: `acciones`,
                 render: (text, record, index) => (
+                    record.status === 1 ?
                     <div key={index} className="flex justify-between">
                         <Button onClick={ () => handleEntrega(record, 1) } type='primary'> <CheckCircleOutlined /> </Button>
                         <Button onClick={ () => handleEntrega(record, 2) } type='warning'> <FrownOutlined /> </Button>
                         <Button onClick={ () => handleEntrega(record, 3) } type='danger'> <StopOutlined /> </Button>
                     </div>
+                    : null
                 )
             }
         ]
@@ -161,14 +192,54 @@ const ValesSalida = () => {
     }
 
 
+    
+
     const handleEntrega = (record, type) => {
 
-        // 1 - Completa
-        // 2 - Parcial
-        // 3 - Denegar
-        console.log('Detalle Salida ID', record.id)
-        console.log('valeSalidaId', record.valeSalidaId)
-        console.log('insumoId', record.insumoId)
+        setEntrega({
+            ...entrega,
+            id: record.id,
+            valeSalidaId: record.valeSalidaId,
+            insumoId: record.insumoId,
+            type: type,
+            cantidadEntregada: type === 1? Number(record.cantidadSolicitada) : Number(entrega.cantidadEntregada),
+            cantidadSolicitada: Number(record.cantidadSolicitada)
+        })
+
+
+        showModal()
+    }
+
+    const handleSubmit = () => {
+ 
+
+        dispatch(deliverValeAction(entrega))
+
+        setEntrega({
+            id: 0,
+            valeSalidaId: 0,
+            insumoId: 0,
+            cantidadEntregada: 0,
+            comentarios: '',
+            type: 1
+        })
+
+        hideModal()
+    }
+
+    const handleChange = (e) => {
+
+        const { value, name } = e.target
+        setEntrega({ 
+            ...entrega, 
+            cantidadEntregada: Number(value)
+        })
+        
+        if( entrega.cantidadSolicitada <= value ){
+            setValidarCantidad(false)
+        } else {
+            setValidarCantidad(true)
+        }
     }
     
     return ( 
@@ -181,7 +252,44 @@ const ValesSalida = () => {
             </div>
             <Table columns={columns} dataSource={dataSource} expandable={{expandedRowRender, defaultExpandedRowKeys: ['0']}}/>
 
+            <Modal
+                title="Confirmación"
+                visible={visible}
+                onOk={handleSubmit}
+                onCancel={hideModal}
+                okText="Enviar"
+                cancelText="Cancelar"
+                okButtonProps={{ disabled: !validarCantidad }}
+            >
+                
 
+                {
+                    entrega.type === 1 ?
+                    <>
+                        <p> Estás seguro que has entregado esto? </p>
+                        <p>No se podrá modificar después</p>
+                    </>
+                    :
+                    entrega.type === 2 ?
+                    <>
+                        <p>Estás seguro que harás una entrega parcial, solo tienes 24h para completar la entrega. </p>
+                        <p>Cúantos entregarás?</p>
+                        <Input className='my-3' type="number" value={entrega.cantidadEntregada} name="cantidadEntrega" onChange={ handleChange } status={ !validarCantidad ? 'error' : null }/>
+                        <span className='py-2 text-danger'>
+                            { !validarCantidad ? 
+                                `No puede ser mayor a ${entrega.cantidadSolicitada } `
+                            : null }
+                        </span>
+                    </>
+                    :
+                    entrega.type === 3 ?
+                    <>
+                        <p>No se entregará <span className='font-bold'>NINGÚN</span> insumo, explica porqué </p>
+                        <TextArea className='my-3' value={entrega.comentarios} onChange={ (e) => setEntrega({ ...entrega,  comentarios: e.target.value})}/>
+                    </>
+                    : null
+                }
+            </Modal>
         </>    
     );
 }

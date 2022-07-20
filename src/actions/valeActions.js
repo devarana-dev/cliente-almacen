@@ -62,3 +62,34 @@ const getAllValesError = error => {
         payload: error
     }
 }
+
+export function deliverValeAction(vale){
+    return async (dispatch) => {
+        dispatch(deliverValeRequest())
+        await clientAxios.post('/vales/deliver', vale)
+            .then ( res => {
+                dispatch(deliverValeSuccess(res.data))
+            }).catch( err => {
+                console.log('Error deliverValeAction', err.response);
+                dispatch(deliverValeError(err.response.data.message))
+            } )
+    }
+}
+
+const deliverValeRequest = () => {
+    return {
+        type: types.DELIVER_VALE
+    }
+}
+const deliverValeSuccess = payload => {
+    return {
+        type: types.DELIVER_VALE_SUCCESS,
+        payload
+    }
+}
+const deliverValeError = error => {
+    return {
+        type: types.DELIVER_VALE_ERROR,
+        payload: error
+    }
+}

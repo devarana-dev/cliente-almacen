@@ -21,6 +21,37 @@ export default (state = initialState, action) => {
                 editedVale: null
             }
         
+        case types.DELIVER_VALE:
+            return {
+                ...state,
+                isLoading: true,
+                errors: null,             
+            }
+
+        case types.DELIVER_VALE_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                errors: null,
+                vales: state.vales.map(vale => {
+                    if(vale.id === action.payload.insumo.valeSalidaId) {
+                        vale.statusVale = action.payload.valeSalida.statusVale
+                        vale.detalle_salidas.map(detalle => {
+                            if(detalle.id === action.payload.insumo.id) {
+                                return (
+                                    detalle.cantidadEntregada = action.payload.insumo.cantidadEntregada,
+                                    detalle.cantidadSolicitada = action.payload.insumo.cantidadSolicitada,
+                                    detalle.status = action.payload.insumo.status
+                                )
+                            }
+                        })
+                    }
+                    return vale
+                })
+            }
+
+
+        
         case types.UPDATE_VALE:
             return {
                 ...state,

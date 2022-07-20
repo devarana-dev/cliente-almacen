@@ -21,7 +21,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
     const [ unidad, setUnidad ] = useState('')
     const [ insumo, setInsumo ] = useState({
         id: '',
-        cantidad: 0
+        cantidadSolicitada: 0
     })
 
     const { listaInsumos } = vale
@@ -55,8 +55,8 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
         },
         {
             title: 'Cantidad',
-            dataIndex: 'cantidad',
-            key: 'cantidad',
+            dataIndex: 'cantidadSolicitada',
+            key: 'cantidadSolicitada',
             width: 100
         },
         {
@@ -79,7 +79,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
     }
 
     const handleSubmit = () => {
-        if(insumo.cantidad > 0 && insumo.cantidad !== ''){
+        if(insumo.cantidadSolicitada > 0 && insumo.cantidadSolicitada !== ''){
             const [result] = insumos.filter( item => item.id === insumo.id )
 
             setVale({
@@ -189,14 +189,14 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
             <Form.Item 
                 className=" w-full col-span-1"
                 label="Cantidad"
-                name="cantidad"
+                name="cantidadSolicitada"
                 hasFeedback
                 rules={[
-                    { required: true, message: "Digita una cantidad", min: 0  }
+                    { required: true, message: "Digita una cantidadSolicitada", min: 0  }
                 ]}
                 
             >
-                <Input min={ 0 } name="cantidad" onChange={ handleChange }/>
+                <Input min={ 0 } name="cantidadSolicitada" onChange={ handleChange }/>
             </Form.Item>
             <Form.Item 
                 className=" w-full col-span-1"
