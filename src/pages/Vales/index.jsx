@@ -200,9 +200,9 @@ const ValesSalida = () => {
                 render: (text, record, index) => (
                     record.status === 1 ?
                     <div key={index} className="flex justify-between">
-                        <Button onClick={ () => handleEntrega(record, 1) } type='primary'> <CheckCircleOutlined /> </Button>
-                        <Button onClick={ () => handleEntrega(record, 2) } type='warning'> <FrownOutlined /> </Button>
-                        <Button onClick={ () => handleEntrega(record, 3) } type='danger'> <StopOutlined /> </Button>
+                        <Button htmlType='button' onClick={ () => handleEntrega(record, 1) } type='primary'> <CheckCircleOutlined /> </Button>
+                        <Button htmlType='button' onClick={ () => handleEntrega(record, 2) } type='warning'> <FrownOutlined /> </Button>
+                        <Button htmlType='button' onClick={ () => handleEntrega(record, 3) } type='danger'> <StopOutlined /> </Button>
                     </div>
                     : 
                     record.status === 2 ?
@@ -290,7 +290,7 @@ const ValesSalida = () => {
                 <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Volver</Button>
                 <Button type='primary' onClick={() => navigate('nuevo')} className="ml-5">Agregar Nuevo Vale</Button>
             </div>
-            <Table key={nanoid()} columns={columns} dataSource={dataSource} expandable={{expandedRowRender, defaultExpandedRowKeys: ['0']}}/>
+            <Table key={123} columns={columns} dataSource={dataSource} expandable={{expandedRowRender, defaultExpandedRowKeys: ['0']}}/>
 
             <Modal
                 title="Confirmación"
