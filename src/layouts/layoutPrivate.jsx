@@ -7,7 +7,6 @@ import authProvider from "../provider/authProvider";
 import "../assets/scss/layout.scss"
 
 import {
-    LogoutOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
   } from '@ant-design/icons';
@@ -15,6 +14,7 @@ import Menu from "../components/layout/Menu";
 import { validateLoginAction } from "../actions/authActions";
 import Socket from "../components/socket";
 import Logout from "../components/layout/Logout";
+import tokenAuth from "../config/tokenAuth";
 
 export default function LayoutPrivate({children}) {
     const dispatch = useDispatch()
@@ -27,9 +27,11 @@ export default function LayoutPrivate({children}) {
     const { isAuthenticated } = useSelector( state => state.auth )
     const { isLoading } = useSelector( state => state.auth )
   
+    
 
     useEffect(() => {
         dispatch(validateLoginAction(isAuth))
+        tokenAuth(isAuth.token)
         // eslint-disable-next-line
     }, [isAuth])
 

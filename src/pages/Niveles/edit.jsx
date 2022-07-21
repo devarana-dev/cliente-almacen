@@ -22,9 +22,6 @@ const EditNiveles = () => {
         nombre: "",
         status: "",
     });
-    
-
-    
 
     useEffect(() =>{
         if(!editedNivel){
@@ -45,7 +42,7 @@ const EditNiveles = () => {
             zonas: editedNivel? editedNivel.zonas.map(item => item.id) : null,
             actividades: editedNivel? editedNivel.actividades.map(item => item.id) : null
         })
-
+    // eslint-disable-next-line
     },[editedNivel])
 
     const handleChange = (e) => {

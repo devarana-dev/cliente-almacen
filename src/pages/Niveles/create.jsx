@@ -28,6 +28,7 @@ const CreateNiveles = () => {
     useEffect(() => {
         dispatch(getAllZonaAction())
         dispatch(getAllActividadAction())
+    // eslint-disable-next-line
     }, [])
 
     const handleChange = (e) => {

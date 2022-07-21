@@ -24,6 +24,7 @@ const CreateObra = () => {
     
     useEffect(() => {
         dispatch(getAllNivelesAction())
+        // eslint-disable-next-line
     }, [])
 
     const handleChange = (e) => {

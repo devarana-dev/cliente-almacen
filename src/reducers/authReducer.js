@@ -5,8 +5,8 @@ const initialState = {
     isAuthenticated: false,
     userAuth: null,
     isLoading: true,
-    errors: null
-    // token: null,
+    errors: null,
+    token: null,
 }
 
 
@@ -49,7 +49,8 @@ export default (state = initialState, action) => {
                 isAuthenticated: false,
                 isLoading: false,
                 errors: null,
-                userAuth: null
+                userAuth: null,
+                token: null
             }        
         case types.LOGIN_VALIDATE_SUCCESS:
             return {
@@ -57,6 +58,7 @@ export default (state = initialState, action) => {
                 userAuth: action.payload.userAuth,
                 isLoading: action.payload.isLoading,
                 isAuthenticated: action.payload.isAuthenticated,
+                token: action.payload.token,
                 errors: null,
             }
         default:

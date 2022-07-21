@@ -1,8 +1,8 @@
-import { Form, Input, Select, Button, notification, TextArea } from "antd";
+import { Form, Input, Select, Button, notification } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams} from "react-router-dom";
-import { createRoleAction, getRoleAction, updateRoleAction } from "../../actions/roleActions";
+import { getRoleAction, updateRoleAction } from "../../actions/roleActions";
 
 const EditRoles = () => {
 
@@ -27,6 +27,8 @@ const EditRoles = () => {
         }
         setRole({...editedRole})
         form.setFieldsValue({...editedRole})
+
+    // eslint-disable-next-line
     },[editedRole])
 
     const handleChange = (e) => {
@@ -37,7 +39,6 @@ const EditRoles = () => {
     }
 
     const handleSubmit = () => {
-        console.log(role);
         dispatch(updateRoleAction(role));
 
         if(!errors){

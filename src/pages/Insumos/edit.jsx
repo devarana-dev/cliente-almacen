@@ -34,7 +34,8 @@ const EditInsumos = () => {
         setInsumo({ ...editedInsumo })
 
         form.setFieldsValue({ ...editedInsumo })
-
+        
+    // eslint-disable-next-line
     },[editedInsumo])
 
     const handleChange = (e) => {

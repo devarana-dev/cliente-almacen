@@ -63,7 +63,6 @@ export default (state = initialState, action) => {
         case types.GET_ALL_NIVEL_ERROR:
         case types.UPDATE_NIVEL_ERROR:
         case types.GET_NIVEL_ERROR:
-        case types.GET_ALL_NIVEL_ERROR:
         case types.CREATE_NIVEL_ERROR:
             return {
                 ...state,

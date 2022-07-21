@@ -75,7 +75,7 @@ const ValesSalida = () => {
         {
             title: 'Folio',
             dataIndex: 'id',
-            key: 'id',
+            key: `id-${nanoid()}`,
             sorter: (a, b) => a.id - b.id,
             ...getColumnSearchProps('id'),
             width: 100
@@ -83,21 +83,21 @@ const ValesSalida = () => {
         {
             title: 'Elaborado Por',
             dataIndex: 'residente',
-            key: `residente-${nanoid(4)}`,
+            key: `residente-${nanoid()}`,
             sorter: (a, b) => a.residente.localeCompare(b.residente),
             ...getColumnSearchProps('residente'),
         },
         {
             title: 'Entregar A',
             dataIndex: 'personalInfo',
-            key: `personalInfo-${nanoid(4)}`,
+            key: `personalInfo-${nanoid()}`,
             sorter: (a, b) => a.personalInfo.localeCompare(b.personalInfo),
             ...getColumnSearchProps('personalInfo'),
         },
         {
             title: 'Actividad',
             dataIndex: 'actividadInfo',
-            key: `actividadInfo-${nanoid(4)}`,
+            key: `actividadInfo-${nanoid()}`,
             sorter: (a, b) => a.actividadInfo.localeCompare(b.actividadInfo),
             ...getColumnSearchProps('actividadInfo'),
         },
@@ -106,9 +106,13 @@ const ValesSalida = () => {
             dataIndex: 'statusVale',
             key: 'statusVale',
             render: (text, record, index) => ( 
-                record.statusVale === 1 ? <Tag key={nanoid(4)} color="green">Por Entregar</Tag>:
-                record.statusVale === 2 ? <Tag key={nanoid(4)} color="lime">Borrador</Tag> :
-                record.statusVale === 3 ? <Tag key={nanoid(4)} color="geekblue">Entregado</Tag> : ''
+                record.statusVale === 1 ? <Tag key={nanoid(4)} color="green">Sin Entregar</Tag>:
+                record.statusVale === 2 ? <Tag key={nanoid(4)} color="lime">Parcialmente Entregado Abierto</Tag> :
+                record.statusVale === 3 ? <Tag key={nanoid(4)} color="magenta">Parcialmente Entregado Cerrado</Tag> :
+                record.statusVale === 4 ? <Tag key={nanoid(4)} color="volcano">Cerrado</Tag>:
+                record.statusVale === 5 ? <Tag key={nanoid(4)} color="red">Sin Insumos</Tag> :
+                record.statusVale === 6 ?  <Tag key={nanoid(4)} color="geekblue">Entregado</Tag> :
+                record.statusVale === 7 ?  <Tag key={nanoid(4)} color="gold">Borrador</Tag> : ''
              ),
             filters: [
                 { 
@@ -116,12 +120,28 @@ const ValesSalida = () => {
                     value: 1
                 },
                 { 
-                    text: 'Borrador',
+                    text: 'Parcialmente Entregado Abierto',
                     value: 2
                 },
                 { 
-                    text: 'Entregado',
+                    text: 'Parcialmente Entregado Cerrado',
                     value: 3
+                },
+                { 
+                    text: 'Cerrado',
+                    value: 4
+                },
+                { 
+                    text: 'Sin Insumos',
+                    value: 5
+                },
+                { 
+                    text: 'Entregado',
+                    value: 6
+                },
+                { 
+                    text: 'Borrador',
+                    value: 7
                 },
             ],
             onFilter: (value, record) => record.statusVale === value,
@@ -140,43 +160,43 @@ const ValesSalida = () => {
             {
                 title: 'ID Enkontrol',
                 dataIndex: 'insumo',
-                key: `insumo-${nanoid(3)}`,
+                key: `insumo-${nanoid()}`,
                 render: item =>  item.claveEnk
             },
             {
                 title: 'Nombre',
                 dataIndex: 'insumo',
-                key: `insumo-${nanoid(4)}`,
+                key: `insumo-${nanoid()}`,
                 render: item => item.nombre
             },
             {
                 title: 'Unidad de Medida',
                 dataIndex: 'insumo',
-                key: `insumo-${nanoid(5)}`,
+                key: `insumo-${nanoid()}`,
                 render: item => item.unidadMedida
             },
             {
                 title: 'Solicitado',
                 dataIndex: 'cantidadSolicitada',
-                key: `cantidadSolicitada-${nanoid(5)}`,
+                key: `cantidadSolicitada-${nanoid()}`,
                 render: item => Number(item)
             },
             {
                 title: 'Entregado',
                 dataIndex: 'cantidadEntregada',
-                key: `cantidadEntregada-${nanoid(5)}`,
+                key: `cantidadEntregada-${nanoid()}`,
                 render: item => Number(item)
             },
             {
                 title: 'Pendiente',
                 dataIndex: 'detalle_salidas',
-                key: `detalle_salidas-${nanoid(5)}`,
+                key: `detalle_salidas-${nanoid()}`,
                 render: (text, record) => (record.cantidadSolicitada - record.cantidadEntregada )
             },
             {
                 title: 'Acciones',
                 dataIndex: 'acciones',
-                key: `acciones`,
+                key: `acciones-${nanoid()}`,
                 render: (text, record, index) => (
                     record.status === 1 ?
                     <div key={index} className="flex justify-between">
@@ -184,11 +204,22 @@ const ValesSalida = () => {
                         <Button onClick={ () => handleEntrega(record, 2) } type='warning'> <FrownOutlined /> </Button>
                         <Button onClick={ () => handleEntrega(record, 3) } type='danger'> <StopOutlined /> </Button>
                     </div>
-                    : null
+                    : 
+                    record.status === 2 ?
+                    <div key={index}>
+                        <Tag color="blue">Continuar Entrega</Tag> 
+                        <Button onClick={ () => handleEntrega(record, 2) } type='warning'> <FrownOutlined /> </Button>
+                    </div>
+                    : record.status === 3 ? <Tag key={nanoid(4)} color="magenta">Parcialmente Entregado Cerrado</Tag> 
+                    : record.status === 4 ? <Tag key={nanoid(4)} color="volcano">Cerrado</Tag>
+                    : record.status === 5 ? <Tag key={nanoid(4)} color="red">Sin Insumos</Tag> 
+                    : record.status === 6 ?  <Tag key={nanoid(4)} color="geekblue">Entregado</Tag> 
+                    : record.status === 7 ?  <Tag key={nanoid(4)} color="gold">Borrador</Tag> : null
+                    
                 )
             }
         ]
-        return <Table columns={columns} dataSource={dataNestedSource} pagination={false} rowKey={nanoid(4)} className="nestedTable"/>
+        return <Table key={nanoid()} columns={columns} dataSource={dataNestedSource} pagination={false}  className="nestedTable"/>
     }
 
 
@@ -229,17 +260,26 @@ const ValesSalida = () => {
 
     const handleChange = (e) => {
 
-        const { value, name } = e.target
+        const { value } = e.target
         setEntrega({ 
             ...entrega, 
             cantidadEntregada: Number(value)
         })
+
         
-        if( entrega.cantidadSolicitada <= value ){
+        
+        if( (entrega.cantidadSolicitada - buscarEntregado(entrega.valeSalidaId, entrega.id))  < value ){
             setValidarCantidad(false)
         } else {
             setValidarCantidad(true)
         }
+    }
+
+    const buscarEntregado = (valeSalidaId, id) => {
+        const [{detalle_salidas}] = vales.filter( item => item.id === valeSalidaId)
+        const [result] = detalle_salidas.filter( item => item.id === id)
+   
+        return result.cantidadEntregada
     }
     
     return ( 
@@ -250,7 +290,7 @@ const ValesSalida = () => {
                 <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Volver</Button>
                 <Button type='primary' onClick={() => navigate('nuevo')} className="ml-5">Agregar Nuevo Vale</Button>
             </div>
-            <Table columns={columns} dataSource={dataSource} expandable={{expandedRowRender, defaultExpandedRowKeys: ['0']}}/>
+            <Table key={nanoid()} columns={columns} dataSource={dataSource} expandable={{expandedRowRender, defaultExpandedRowKeys: ['0']}}/>
 
             <Modal
                 title="Confirmación"
@@ -277,7 +317,7 @@ const ValesSalida = () => {
                         <Input className='my-3' type="number" value={entrega.cantidadEntregada} name="cantidadEntrega" onChange={ handleChange } status={ !validarCantidad ? 'error' : null }/>
                         <span className='py-2 text-danger'>
                             { !validarCantidad ? 
-                                `No puede ser mayor a ${entrega.cantidadSolicitada } `
+                                `No puede ser mayor a ${ entrega.cantidadSolicitada - buscarEntregado(entrega.valeSalidaId, entrega.id) } `
                             : null }
                         </span>
                     </>

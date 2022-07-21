@@ -1,4 +1,4 @@
-import { Form, Input, Select, Button, notification, TextArea } from "antd";
+import { Form, Input, Select, Button, notification } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams} from "react-router-dom";
@@ -27,6 +27,7 @@ const EditActividades = () => {
         }
         setActividad({...editedActividad})
         form.setFieldsValue({...editedActividad})
+    // eslint-disable-next-line
     },[editedActividad])
 
     const handleChange = (e) => {

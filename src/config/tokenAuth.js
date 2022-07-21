@@ -1,8 +1,6 @@
 import clientAxios from './axios';
 
-const tokenAuth = () => {
-    const accessToken = localStorage.getItem('accessToken')
-    console.log(accessToken);
+const tokenAuth = (accessToken) => {
     if(accessToken !== '' || accessToken !== null) {
         clientAxios.defaults.headers.common['accessToken'] = accessToken
     }else{

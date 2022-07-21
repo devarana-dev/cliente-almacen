@@ -9,6 +9,7 @@ const Socket = () => {
     useEffect(() => {
         const socket = io.connect(process.env.REACT_APP_SERVER);
         setSocket(socket);
+        // eslint-disable-next-line
     }, []);
     // console.log(socket);
 

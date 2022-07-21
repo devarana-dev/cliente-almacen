@@ -1,4 +1,4 @@
-import { Form, Input, Select, Button, notification, TextArea } from "antd";
+import { Form, Input, Select, Button, notification } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams} from "react-router-dom";
@@ -11,7 +11,6 @@ const EditZonas = () => {
     const {id} = useParams()
     const [form] = Form.useForm();
     const { Option } = Select;
-    const { TextArea } = Input;
 
     const { errors, editedZona, isLoading } = useSelector(state => state.zonas);
 
@@ -26,6 +25,7 @@ const EditZonas = () => {
         }
         setZona({...editedZona})
         form.setFieldsValue({...editedZona})
+    // eslint-disable-next-line
     },[editedZona])
 
     const handleChange = (e) => {

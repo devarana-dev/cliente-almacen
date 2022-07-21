@@ -36,7 +36,7 @@ const EditObra = () => {
         })
 
         dispatch(getAllNivelesAction())
-
+    // eslint-disable-next-line
     }, [editedObra])
 
     const handleChange = (e) => {

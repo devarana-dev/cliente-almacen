@@ -1,5 +1,5 @@
  
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined } from '@ant-design/icons';
 import { Button, Table, Popconfirm, notification, Modal } from 'antd';
 
 import { useEffect, useState } from 'react';
@@ -116,9 +116,6 @@ const Insumos = () => {
     const showModal = () => {
 		setIsModalVisible(true);
 	};    
-	const handleOk = () => {
-		setIsModalVisible(false);
-	};
 	
 	const handleCancel = () => {
 		setIsModalVisible(false);
