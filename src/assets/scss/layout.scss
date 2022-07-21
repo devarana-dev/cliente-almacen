@@ -3,13 +3,13 @@
 
 
 .layout{
-    height: 100vh!important;
-    max-height: 100vh!important;
+    
+    min-height: 100vh!important;
     background-color: $background !important;
     &__sider{
         background-color: $white !important;
         box-shadow: 0 0 5px rgba(0,0,0,.1);
-        margin: 10px;
+        margin: 5px 10px;
         border-radius: 10px;
         overflow-y: auto;        
         overflow-x: hidden;
@@ -117,6 +117,10 @@
     display: none !important ;
 }
 
+.ant-table-cell{
+    font-size: 14px!important;
+    padding: 7px 16px !important;
+}
 
 
 .layout-right{
@@ -132,9 +136,9 @@
 
     &__content{
         box-shadow: 0 0 5px rgba(0,0,0,.1);
-        margin: 10px;
+        margin: 5px 10px;
         border-radius: 10px;
-        padding: 20px;
+        padding: 10px;
         background-color: $white!important;
     }
 }

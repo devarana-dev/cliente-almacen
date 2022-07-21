@@ -65,6 +65,7 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                 
                     
                 <Form.Item
+                    className='mb-3'
                         rules={[
                             { required: true, message: 'Debes seleccionar un Almacén' },
                         ]}
@@ -76,13 +77,13 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                             placeholder="Selecciona un Almacén"
                             filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                             showSearch
-                            size='large'
                         >
                             <Option key={1} value={4}>Almacén 4</Option>
                         </Select>
                 </Form.Item>
 
                 <Form.Item
+                    className='mb-3'
                     rules={[
                         { required: true, message: 'Debes seleccionar un centro de costo' },
                     ]}
@@ -93,7 +94,6 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                     <Select 
                         filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                         showSearch
-                        size='large'
                         onChange= { (e) => { handleChangeObra(e);  } }
                         name="obraId"         
                     >
@@ -106,6 +106,7 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                 </Form.Item>
 
                 <Form.Item
+                    className='mb-3'
                     rules={[
                         { required: true, message: 'Debes seleccionar un nivel' },
                     ]}
@@ -117,7 +118,6 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                         filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                         disabled={selectedNivel.length === 0}
                         showSearch
-                        size='large'
                         onChange={ (e) => { handleChangeNivel(e) }}
                         name="nivelId"
                     >
@@ -131,6 +131,7 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                 </Form.Item>
 
                 <Form.Item
+                    className='mb-3'
                     rules={[
                         { required: true, message: 'Debes seleccionar una zona / prototipo'},
                     ]}
@@ -142,7 +143,6 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                         filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                         disabled={selectedZona.length === 0}
                         showSearch
-                        size='large'
                         name="zonaId"
                         onChange={ (e) => { setVale({...vale, zonaId: e})}}
                         >
@@ -157,6 +157,7 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                 </Form.Item>
 
                 <Form.Item
+                    className='mb-3'
                     rules={[
                         { required: true, message: 'Debes seleccionar un tipo de trabajo' },
                     ]}
@@ -168,7 +169,6 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                         filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                         disabled={selectedActividad.length === 0}
                         showSearch
-                        size='large'
                         onChange={ (e) => { setVale({...vale, actividadId: e})}}
                         >
                         {
@@ -181,6 +181,7 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                 </Form.Item>
 
                 <Form.Item
+                    className='mb-3'
                     rules={[
                         { required: true, message: 'Debes seleccionar a un jefe de cuadrilla' },
                     ]}
@@ -191,7 +192,6 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                     <Select 
                         filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                         showSearch
-                        size='large'
                         onChange={ (e) => { setVale({...vale, personalId: e})}}
                         >
                         {
