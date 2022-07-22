@@ -29,10 +29,12 @@ export default function Login() {
     return (
         <>
         {errors ?  <AntdNotification type='error' description={errors} /> : null }
-        <h1 className="text-center text-3xl font-bold text-white m-auto">App</h1>
-        <Box className="w-full max-w-screen-sm bg-transparent mb-10 mx-auto text-center">
-            <Button onClick={redirectToGoogleSSO}> Entrar con Google </Button>
-        </Box>
+        <div className='m-auto bg-glassmorphism p-3 rounded-md'>
+            <h1 className="text-center text-3xl font-bold  m-auto drop-shadow-lg text-light " >Sistema de Gestión de Obra</h1>
+            <Box className="w-full max-w-screen-sm bg-transparent mb-10 mx-auto text-center">
+                <Button type='primary' onClick={redirectToGoogleSSO}> Entrar con Google </Button>
+            </Box>
+        </div>
         </>
     )
 };

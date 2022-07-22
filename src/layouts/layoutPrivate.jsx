@@ -15,6 +15,7 @@ import { validateLoginAction } from "../actions/authActions";
 import Socket from "../components/socket";
 import Logout from "../components/layout/Logout";
 import tokenAuth from "../config/tokenAuth";
+import Logotipo from "../assets/img/LogoDevarana.png"
 
 export default function LayoutPrivate({children}) {
     const dispatch = useDispatch()
@@ -35,9 +36,11 @@ export default function LayoutPrivate({children}) {
         // eslint-disable-next-line
     }, [isAuth])
 
+ 
     if( (isAuthenticated || isAuth.isAuthenticated) === false && !isLoading ){
         navigate("/login")
     }
+   
 
     return (        
         <Layout className="layout">
@@ -54,7 +57,7 @@ export default function LayoutPrivate({children}) {
                 }}
             >
             <div className="h-14 p-2 text-center">
-                Logotipo
+                <img src={Logotipo} alt="Logotipo" className="max-w-full p-2" />
             </div>
             <Menu collapsed={collapsed} setCollapsed={setCollapsed}/>
             

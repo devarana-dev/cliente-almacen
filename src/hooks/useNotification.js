@@ -4,13 +4,15 @@ export default function openNotificationWithIcon (type, errors)  {
 
     let description = ''
     let message = ''
+
+ 
  
     if(typeof(errors) === 'string') {
         description = errors
+    }else {
+        description = 'Lo sentimos hubo problemas en el servidor intente nuevamente, si el problema persiste comuniquese con el administrador del sistema'
     }
-    if(typeof(errors) === 'object') {
-        description = 'Todos los campos son obligatorios'
-    }
+
     
     switch (type) {
         case 'success':

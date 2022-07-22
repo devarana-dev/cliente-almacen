@@ -76,7 +76,7 @@ export function createUsuarioAction(usuario){
             })
             .catch( err => {
                 console.log('Error createUsuarioAction', err.response);
-                dispatch(createUsuarioError(err.response.data))
+                dispatch(createUsuarioError(err.response.data.message))
             })
     }
 }
@@ -108,7 +108,7 @@ export function updateUsuarioAction(usuario){
             })
             .catch( err => {
                 console.log('Error updateUsuarioAction', err.response);
-                dispatch(updateUsuarioError(err.response.data))
+                dispatch(updateUsuarioError(err.response.data.message))
             })
     }
 }

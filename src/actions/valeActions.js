@@ -71,7 +71,7 @@ export function deliverValeAction(vale){
                 dispatch(deliverValeSuccess(res.data))
             }).catch( err => {
                 console.log('Error deliverValeAction', err.response);
-                dispatch(deliverValeError(err.response.data))
+                dispatch(deliverValeError(err.response.data.message))
             } )
     }
 }

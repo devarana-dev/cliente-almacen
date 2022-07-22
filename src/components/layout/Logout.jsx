@@ -1,5 +1,6 @@
 import { LogoutOutlined } from '@ant-design/icons';
 import { Button, Modal, notification } from 'antd';
+import { useEffect } from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -11,7 +12,7 @@ const Logout = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const {errors, isLoading}  = useSelector( state => state.auth )
+    const {errors, isLoading, logout }  = useSelector( state => state.auth )
 
     const showModal = () => {
         setVisible(true);
@@ -21,22 +22,24 @@ const Logout = () => {
         setVisible(false);
     };
 
-    const handleLogout = async () => {
+    const handleLogout = () => {
         dispatch(logoutAction())
-        hideModal()
-        if(!errors){
-            if(!isLoading){
-                navigate('/login')
-            }
-        }else{
+    }
+
+
+    useEffect(() => {
+        if(logout && !isLoading){
+            hideModal()
+            navigate('/login')
+        }
+        if(errors){
             // error
             notification['error']({
                 message: 'Ha habido un error',
                 description: errors
             })
         }
-        
-    }
+    }, [logout])
     return ( 
 
         <>

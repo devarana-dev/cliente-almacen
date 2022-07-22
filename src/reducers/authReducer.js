@@ -7,6 +7,7 @@ const initialState = {
     isLoading: true,
     errors: null,
     token: null,
+    logout: false,
 }
 
 
@@ -22,13 +23,15 @@ export default (state = initialState, action) => {
                 errors: action.payload,
                 isLoading: false,
                 isAuthenticated: false,
-                userAuth: null
+                userAuth: null,
+                logout: false,
+                token: null,
             }
-        case types.LOGOUT_REQUEST:
         case types.LOGIN_VALIDATE_REQUEST:
             return {
                 ...state,
-                isLoading: true
+                isLoading: true,
+                logout: false,
             }
 
         case types.LOGIN_SUCCESS:
@@ -39,6 +42,7 @@ export default (state = initialState, action) => {
                 isAuthenticated: true,
                 isLoading: false,
                 errors: null,
+                logout: false,
             }
 
         case types.LOGOUT_SUCCESS:
@@ -50,7 +54,8 @@ export default (state = initialState, action) => {
                 isLoading: false,
                 errors: null,
                 userAuth: null,
-                token: null
+                token: null,
+                logout: true
             }        
         case types.LOGIN_VALIDATE_SUCCESS:
             return {
@@ -60,6 +65,7 @@ export default (state = initialState, action) => {
                 isAuthenticated: action.payload.isAuthenticated,
                 token: action.payload.token,
                 errors: null,
+                logout: false,
             }
         default:
             return state

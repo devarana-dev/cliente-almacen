@@ -38,3 +38,10 @@ html{
 .ant-image-preview-img{
     display: unset !important;
 }
+
+.bg-glassmorphism{
+    background: rgba(255,255,255,0.3);
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
+    border: 1px solid rgba(255,255,255,0.15);
+}

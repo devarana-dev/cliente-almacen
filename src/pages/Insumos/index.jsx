@@ -11,7 +11,6 @@ import UploadFile from '../../components/Elements/UploadFile';
 
 import { getColumnSearchProps } from '../../hooks/useFilter'
 
-import insumoExample from '../../assets/img/insumos.png'
 const Insumos = () => {
 
     const dispatch = useDispatch();

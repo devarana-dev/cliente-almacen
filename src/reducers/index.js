@@ -10,6 +10,7 @@ import obraReducer from "./obraReducer";
 import personalReducer from "./personalReducer";
 import insumoReducer from "./insumoReducer";
 import valesReducer from "./valesReducer";
+import permisosReducer from "./permisosReducer";
 
 
 export default combineReducers({
@@ -22,5 +23,6 @@ export default combineReducers({
     obras: obraReducer,
     personal: personalReducer,
     insumos: insumoReducer,
-    vales: valesReducer
+    vales: valesReducer,
+    permisos: permisosReducer
 })
