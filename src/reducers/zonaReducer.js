@@ -5,7 +5,9 @@ const initialState = {
     zonas: [],
     isLoading: true,
     errors: null,
-    editedZona: null
+    editedZona: null,
+    created: false,
+    updated: false,
 }
 
 // eslint-disable-next-line
@@ -20,8 +22,9 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: true,
                 errors: null,
-                editedZona: null
-
+                editedZona: null,
+                created: false,
+                updated: false,
             }
         case types.GET_ALL_ZONA_SUCCESS:
             return {
@@ -45,7 +48,8 @@ export default (state = initialState, action) => {
                 isLoading: false,
                 errors: null,
                 zonas: state.zonas.map(zona => zona.id === action.payload.id ? action.payload : zona),
-                editedZona: null
+                editedZona: null,
+                updated: true
             }
         case types.DELETE_ZONA_SUCCESS:
             return {
@@ -71,7 +75,8 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
-                zonas: [...state.zonas, action.payload]
+                zonas: [...state.zonas, action.payload],
+                created: true
             }
         default:
             return state

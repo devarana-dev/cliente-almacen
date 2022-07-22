@@ -76,7 +76,7 @@ export function createUsuarioAction(usuario){
             })
             .catch( err => {
                 console.log('Error createUsuarioAction', err.response);
-                dispatch(createUsuarioError(err.response.data.message))
+                dispatch(createUsuarioError(err.response.data))
             })
     }
 }
@@ -91,10 +91,10 @@ const createUsuarioSuccess = payload => {
         payload
     }
 }
-const createUsuarioError = error => {
+const createUsuarioError = payload => {
     return {
         type: types.CREATE_USER_ERROR,
-        payload: error
+        payload
     }
 }
 
@@ -108,7 +108,7 @@ export function updateUsuarioAction(usuario){
             })
             .catch( err => {
                 console.log('Error updateUsuarioAction', err.response);
-                dispatch(updateUsuarioError(err.response.data.message))
+                dispatch(updateUsuarioError(err.response.data))
             })
     }
 }
@@ -123,10 +123,10 @@ const updateUsuarioSuccess = payload => {
         payload
     }
 }
-const updateUsuarioError = error => {
+const updateUsuarioError = payload => {
     return {
         type: types.UPDATE_USER_ERROR,
-        payload: error
+        payload
     }
 }
 
@@ -155,9 +155,9 @@ const deleteUsuarioSuccess = payload => {
         payload
     }
 }
-const deleteUsuarioError = error => {
+const deleteUsuarioError = payload => {
     return {
         type: types.DELETE_USER_ERROR,
-        payload: error
+        payload
     }
 }

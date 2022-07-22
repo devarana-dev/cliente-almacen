@@ -65,7 +65,7 @@ const Roles = () => {
                   <Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
                 </Popconfirm>
             </div>,
-            width: 200,
+            width: 150,
         }
         
     ];

@@ -11,6 +11,9 @@ const initialState = {
     uploadState: null,
     uploadMessage: null,
     uploadedCount: 0,
+
+    created: false,
+    updated: false,
 }
 
 // eslint-disable-next-line
@@ -25,7 +28,9 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: true,
                 errors: null,
-                editedInsumo: null
+                editedInsumo: null,
+                created: false,
+                updated: false,
 
             }
 
@@ -50,6 +55,7 @@ export default (state = initialState, action) => {
                 isLoading: false,
                 errors: null,
                 insumos: [...state.insumos, action.payload],
+                created: true
             }
 
         case types.UPLOAD_MASSIVE_INSUMO_SUCCESS:
@@ -68,7 +74,8 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
-                insumos: state.insumos.map(insumo => insumo.id === action.payload.id ? action.payload : insumo)
+                insumos: state.insumos.map(insumo => insumo.id === action.payload.id ? action.payload : insumo),
+                updated: true
             }
         case types.GET_INSUMO_SUCCESS:
             return {

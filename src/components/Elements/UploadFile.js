@@ -52,14 +52,22 @@ export default function UploadFile(params) {
       return false;
     },
     fileList,
+    progress: {
+        strokeColor: {
+            '0%': '#108ee9',
+            '100%': '#87d068'
+        },
+        strokeWidth: 3,
+        format: (percent) => `${percent}%`
+    }
   };
 
     return(
         <div className="flex flex-col content-center">
-            <p className="text-sm text-dark py-2 text-center"> * Solo acepta archivos Excel *  </p>
+            <p className="text-sm text-dark py-2"> * Solo acepta archivos cvs *  </p>
             {/* acceptar solo csv */}
-            <Upload {...props} accept=" .csv " >
-                <Button icon={<UploadOutlined />}>Selecciona Archivo</Button>
+            <Upload {...props} accept=".csv">
+                <Button icon={<UploadOutlined />}> Selecciona Archivo</Button>
             </Upload>
             <Button
                 type="primary"

@@ -5,6 +5,7 @@ import { useNavigate, useParams} from "react-router-dom";
 import { getAllActividadAction } from "../../actions/actividadActions";
 import { getInsumoAction, updateInsumoAction } from "../../actions/insumoActions";
 import { getAllZonaAction } from "../../actions/zonaActions";
+import openNotificationWithIcon from "../../hooks/useNotification";
 
 
 const EditInsumos = () => {
@@ -15,7 +16,7 @@ const EditInsumos = () => {
     const [form] = Form.useForm();
     const { Option } = Select;
     
-    const { errors, editedInsumo, isLoading } = useSelector( state => state.insumos );
+    const { errors, editedInsumo, isLoading, updated } = useSelector( state => state.insumos );
 
     const [insumo, setInsumo] = useState({
         nombre: "",
@@ -47,17 +48,22 @@ const EditInsumos = () => {
 
     const handleSubmit = () => {
         dispatch(updateInsumoAction(insumo));
-
-        if(!errors){
-                notification.success({
-                    message: "Correcto",
-                    description: "El insumo ha sido actualizado",
-                    duration: 2,
-                });
-            }
-        navigate("/insumos");
     }
-    
+
+    useEffect(() => {
+        displayAlert()
+    }, [errors, updated])
+
+    const displayAlert = () => {
+        if(errors){
+            openNotificationWithIcon('error', errors)
+        }
+        if(updated){
+            openNotificationWithIcon('success', 'El insumo ha sido actualizado correctamente')
+            navigate('/insumos')
+        }
+    }
+
     if(isLoading) return <div>Cargando...</div>
     if(!editedInsumo) return <div>No se encontro el insumo</div>
     return ( 

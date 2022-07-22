@@ -4,12 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getAllRolesAction } from "../../actions/roleActions";
 import { createPersonalAction } from "../../actions/personalActions";
+import openNotificationWithIcon from "../../hooks/useNotification";
 
 const CreatePersonal = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { errors } = useSelector(state => state.personal);
+    const { errors, created } = useSelector(state => state.personal);
     const [personal, setPersonal] = useState({
         nombre: "",
         apellidoPaterno: "",
@@ -34,19 +35,23 @@ const CreatePersonal = () => {
 
 
     const handleSubmit = () => {
-        
         dispatch(createPersonalAction(personal));
+    }
 
-        if(!errors){
-            notification.success({
-                message: "Personal actualizado",
-                description: "El personal ha sido actualizado correctamente",
-                duration: 2,
-            });
+    useEffect(() => {
+        displayAlert()
+    }, [errors, created])
+
+    const displayAlert = () => {
+        if(errors){
+            openNotificationWithIcon('error', errors)
+        }
+        if(created){
+            openNotificationWithIcon('success', 'El personal ha sido actualizado correctamente')
             navigate('/personal')
         }
-        
     }
+
     return (
 
         <Form 

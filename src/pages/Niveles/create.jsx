@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { getAllActividadAction } from "../../actions/actividadActions";
 import { createNivelAction } from "../../actions/nivelActions";
 import { getAllZonaAction } from "../../actions/zonaActions";
+import openNotificationWithIcon from "../../hooks/useNotification";
 
 const CreateNiveles = () => {
 
@@ -13,7 +14,7 @@ const CreateNiveles = () => {
     const navigate = useNavigate();
     const { Option } = Select;
 
-    const { errors } = useSelector(state => state.niveles);
+    const { errors, created } = useSelector(state => state.niveles);
     const { zonas } = useSelector( state => state.zonas )
     const { actividades } = useSelector( state => state.actividades )
 
@@ -73,14 +74,19 @@ const CreateNiveles = () => {
 
     const handleSubmit = () => {
         dispatch(createNivelAction(nivel));
+    }
 
-        if(!errors){                
-            notification.success({
-                message: "Correcto!",
-                description: "El nivel ha sido creado correctamente",
-                duration: 2,
-            });
-            navigate("/niveles");
+    useEffect(() => {
+        displayAlert()
+    }, [errors, created])
+
+    const displayAlert = () => {
+        if(errors){
+            openNotificationWithIcon('error', errors)
+        }
+        if(created){
+            openNotificationWithIcon('success', 'El nivel ha sido creado correctamente')
+            navigate('/niveles')
         }
     }
     

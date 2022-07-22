@@ -5,7 +5,9 @@ const initialState = {
     roles: [],
     isLoading: true,
     errors: null,
-    editedRole: null
+    editedRole: null,
+    created: false,
+    updated: false,
 }
 
 
@@ -24,7 +26,9 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: true,
                 errors: null,
-                editedRole: null
+                editedRole: null,
+                created: false,
+                updated: false,
             }
         
         case types.GET_ROLE_SUCCESS:
@@ -48,7 +52,8 @@ export default (state = initialState, action) => {
                 isLoading: false,
                 errors: null,
                 roles: state.roles.map(role => role.id === action.payload.id ? action.payload : role),
-                editedRole: null
+                editedRole: null,
+                updated: true
             }
 
         case types.DELETE_ROLE_SUCCESS:
@@ -73,7 +78,9 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 roles: [...state.roles, action.payload],
-                isLoading: false
+                isLoading: false,
+                errors: null,
+                created: true
             }
 
         

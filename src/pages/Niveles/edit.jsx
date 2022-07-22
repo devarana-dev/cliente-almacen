@@ -5,6 +5,7 @@ import { useNavigate, useParams} from "react-router-dom";
 import { getAllActividadAction } from "../../actions/actividadActions";
 import { getNivelAction, updateNivelAction } from "../../actions/nivelActions";
 import { getAllZonaAction } from "../../actions/zonaActions";
+import openNotificationWithIcon from "../../hooks/useNotification";
 
 const EditNiveles = () => {
 
@@ -14,7 +15,7 @@ const EditNiveles = () => {
     const [form] = Form.useForm();
     const { Option } = Select;
     
-    const { errors, editedNivel, isLoading } = useSelector( state => state.niveles );
+    const { errors, editedNivel, isLoading, updated } = useSelector( state => state.niveles );
     const { zonas } = useSelector( state => state.zonas )
     const { actividades } = useSelector( state => state.actividades )
 
@@ -87,15 +88,20 @@ const EditNiveles = () => {
 
     const handleSubmit = () => {
         dispatch(updateNivelAction(nivel));
+    }
 
-        if(!errors){
-                notification.success({
-                    message: "Correcto",
-                    description: "El nivel ha sido actualizado",
-                    duration: 2,
-                });
-            }
-        navigate("/niveles");
+    useEffect(() => {
+        displayAlert()
+    }, [errors, updated])
+
+    const displayAlert = () => {
+        if(errors){
+            openNotificationWithIcon('error', errors)
+        }
+        if(updated){
+            openNotificationWithIcon('success', 'El nivel ha sido actualizado correctamente')
+            navigate('/niveles')
+        }
     }
     
     if(isLoading) return <div>Cargando...</div>

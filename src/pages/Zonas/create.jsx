@@ -1,8 +1,9 @@
 import { Form, Input, Select, Button, notification } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { createZonaAction } from "../../actions/zonaActions";
+import openNotificationWithIcon from "../../hooks/useNotification";
 
 const CreateZonas = () => {
 
@@ -10,7 +11,7 @@ const CreateZonas = () => {
     const navigate = useNavigate();
     const { Option } = Select;
 
-    const { errors } = useSelector(state => state.zonas);
+    const { errors, created } = useSelector(state => state.zonas);
 
     const [zona, setZona] = useState({
         nombre: "",
@@ -27,14 +28,19 @@ const CreateZonas = () => {
 
     const handleSubmit = () => {
         dispatch(createZonaAction(zona));
+    }
 
-        if(!errors){                
-            notification.success({
-                message: "Zona creada",
-                description: "La zona o prototipo han sido creados correctamente",
-                duration: 2,
-            });
-            navigate("/zonas");
+    useEffect(() => {
+        displayAlert()
+    }, [errors, created])
+
+    const displayAlert = () => {
+        if(errors){
+            openNotificationWithIcon('error', errors)
+        }
+        if(created){
+            openNotificationWithIcon('success', 'La zona ha sido creada correctamente')
+            navigate('/zonas')
         }
     }
     

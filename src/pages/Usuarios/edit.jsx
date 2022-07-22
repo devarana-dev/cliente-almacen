@@ -1,9 +1,10 @@
-import { Form, Input, Select, Button, notification } from "antd";
+import { Form, Input, Select, Button } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { getAllRolesAction } from "../../actions/roleActions";
 import { getUsuarioAction, updateUsuarioAction } from "../../actions/usuarioActions";
+import openNotificationWithIcon from "../../hooks/useNotification";
 
 const EditUsuario = () => {
     const dispatch = useDispatch();
@@ -13,7 +14,7 @@ const EditUsuario = () => {
     const {id} = useParams()
     const [form] = Form.useForm();
 
-    const { editedUsuario, isLoading, errors } = useSelector(state => state.usuarios);
+    const { editedUsuario, isLoading, errors, updated } = useSelector(state => state.usuarios);
     const { roles } = useSelector(state => state.roles);
 
     useEffect(() => {
@@ -28,6 +29,20 @@ const EditUsuario = () => {
         // eslint-disable-next-line
     }, [editedUsuario])
 
+    useEffect(() => {
+        displayAlert()
+    }, [errors, updated])
+
+    const displayAlert = () => {
+        if(errors){
+            openNotificationWithIcon('error', errors)
+        }
+        if(updated){
+            openNotificationWithIcon('success', 'El usuario ha sido actualizado correctamente')
+            navigate('/usuarios')
+        }
+    }
+
     const [usuario, setUsuario] = useState({
         nombre: "",
         apellidoPaterno: "",
@@ -39,7 +54,6 @@ const EditUsuario = () => {
 
 
     const handleChange = (e) => {
-        console.log(usuario);
         setUsuario({
             ...usuario,
             [e.target.name]: e.target.value,
@@ -49,20 +63,11 @@ const EditUsuario = () => {
 
     const handleSubmit = () => {
         dispatch(updateUsuarioAction(usuario));
-
-        if(!errors){
-
-            notification.success({
-                message: "Usuario actualizado",
-                description: "El usuario ha sido actualizado correctamente",
-                duration: 2,
-            });
-            navigate('/usuarios')
-        }
     }
 
     if(isLoading) return <div>Cargando...</div>
-    if(!editedUsuario) return <div>No se encontro el usuario</div>
+    if(!editedUsuario) return <div>No se encontro el personal</div>
+
     
     return (
 

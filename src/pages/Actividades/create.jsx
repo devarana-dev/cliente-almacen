@@ -1,8 +1,9 @@
 import { Form, Input, Select, Button, notification } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { createActividadAction } from "../../actions/actividadActions";
+import openNotificationWithIcon from "../../hooks/useNotification";
 
 const CreateActividades = () => {
 
@@ -11,7 +12,7 @@ const CreateActividades = () => {
     const { Option } = Select;
     const { TextArea } = Input;
 
-    const { errors } = useSelector(state => state.actividades);
+    const { errors, created } = useSelector(state => state.actividades);
 
     const [actividad, setActividad] = useState({
         nombre: "",
@@ -29,14 +30,19 @@ const CreateActividades = () => {
 
     const handleSubmit = () => {
         dispatch(createActividadAction(actividad));
+    }
 
-        if(!errors){                
-            notification.success({
-                message: "Actividad creada",
-                description: "La actividad o prototipo han sido creados correctamente",
-                duration: 2,
-            });
-            navigate("/actividades");
+    useEffect(() => {
+        displayAlert()
+    }, [errors, created])
+
+    const displayAlert = () => {
+        if(errors){
+            openNotificationWithIcon('error', errors)
+        }
+        if(created){
+            openNotificationWithIcon('success', 'La actividad ha sido creada correctamente')
+            navigate('/actividades')
         }
     }
     

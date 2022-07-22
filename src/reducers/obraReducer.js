@@ -5,13 +5,10 @@ const initialState = {
     obra: [],
     isLoading: true,
     errors: null,
-    editedObra: null
+    editedObra: null,
+    created: false,
+    updated: false,
 }
-
-// GET_OBRA_SUCCESS
-// CREATE_OBRA_SUCCESS
-// UPDATE_OBRA_SUCCESS
-// DELETE_OBRA_SUCCESS
 
 // eslint-disable-next-line
 export default (state = initialState, action) => {
@@ -25,8 +22,9 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: true,
                 errors: null,
-                editedObra: null
-
+                editedObra: null,
+                created: false,
+                updated: false,
             }
         case types.GET_ALL_OBRA_SUCCESS:
             return {
@@ -47,14 +45,16 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
-                obra: [...state.obra, action.payload]
+                obra: [...state.obra, action.payload],
+                created: true
             }
         case types.UPDATE_OBRA_SUCCESS:
             return {
                 ...state,
                 isLoading: false,
                 errors: null,
-                obra: state.obra.map(obra => ( obra._id === action.payload._id ? action.payload : obra ))
+                obra: state.obra.map(obra => ( obra._id === action.payload._id ? action.payload : obra )),
+                updated: true
             }
         case types.DELETE_OBRA_SUCCESS:
             return {

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { createObraAction } from "../../actions/obraActions";
 import { getAllNivelesAction } from "../../actions/nivelActions";
+import openNotificationWithIcon from "../../hooks/useNotification";
 
 const CreateObra = () => {
 
@@ -11,7 +12,7 @@ const CreateObra = () => {
     const navigate = useNavigate();
     const { Option } = Select;
 
-    const { errors } = useSelector(state => state.obras );
+    const { errors, created } = useSelector(state => state.obras );
     const { niveles } = useSelector( state => state.niveles )
 
     const [obra, setObra] = useState({
@@ -34,6 +35,20 @@ const CreateObra = () => {
         });
     }
 
+    useEffect(() => {
+        displayAlert()
+    }, [errors, created])
+
+    const displayAlert = () => {
+        if(errors){
+            openNotificationWithIcon('error', errors)
+        }
+        if(created){
+            openNotificationWithIcon('success', 'Se ha creado la obra correctamente')
+            navigate('/obra')
+        }
+    }
+
     const handleCheck = (e) => {
         const { value, checked } = e.target
         if ( checked ) {
@@ -52,15 +67,6 @@ const CreateObra = () => {
 
     const handleSubmit = () => {
         dispatch(createObraAction(obra));
-
-        if(!errors){                
-            notification.success({
-                message: "Correcto!",
-                description: "Se ha creado la obra correctamente",
-                duration: 2,
-            });
-            navigate("/obra");
-        }
     }
     
     return ( 

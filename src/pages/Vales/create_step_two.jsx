@@ -7,6 +7,7 @@ import {nanoid} from 'nanoid'
 import {  DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { createValeAction } from "../../actions/valeActions";
 import '../../assets/scss/createVale.scss'
+import openNotificationWithIcon from "../../hooks/useNotification";
 
 const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
 
@@ -15,7 +16,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
 
     const { Option } = Select
     const [ form ] = Form.useForm();
-    const { insumos, isLoading, errors } = useSelector( state => state.insumos )
+    const { insumos, isLoading, errors, created } = useSelector( state => state.insumos )
     
     const [ dataSource, setDataSource ] = useState([]);
     const [ unidad, setUnidad ] = useState('')
@@ -138,16 +139,21 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
     };
     
     const handleSubmitVale = () => {
-
         dispatch(createValeAction(vale))
+    }
 
-        if(!errors){                
-            notification.success({
-                message: "Vale creado",
-                description: "El vale ha sido creado correctamente",
-                duration: 2,
-            });
-            navigate("/vales-salida");
+
+    useEffect(() => {
+        displayAlert()
+    }, [errors, created])
+
+    const displayAlert = () => {
+        if(errors){
+            openNotificationWithIcon('error', errors)
+        }
+        if(created){
+            openNotificationWithIcon('success', 'El vale ha sido creado correctamente')
+            navigate('/vales-salida')
         }
     }
     return ( 

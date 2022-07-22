@@ -9,13 +9,14 @@ import { getColumnSearchProps } from '../../hooks/useFilter'
 import {nanoid} from 'nanoid'
 import '../../assets/scss/showVale.scss'
 import { AntdNotification } from '../../components/Elements/Notification';
+import openNotificationWithIcon from '../../hooks/useNotification';
 
 const ValesSalida = () => {
 
     const { TextArea } = Input;
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { vales, errors } = useSelector( state => state.vales )
+    const { vales, errors, delivered } = useSelector( state => state.vales )
     const [ dataSource, setDataSource ] = useState([]);
     const [ dataNestedSource, setDataNestedSource ] = useState([])
     const [ validarCantidad, setValidarCantidad ] = useState(true)
@@ -106,13 +107,13 @@ const ValesSalida = () => {
             dataIndex: 'statusVale',
             key: 'statusVale',
             render: (text, record, index) => ( 
-                record.statusVale === 1 ? <Tag key={nanoid(4)} color="green">Sin Entregar</Tag>:
-                record.statusVale === 2 ? <Tag key={nanoid(4)} color="lime">Parcialmente Entregado Abierto</Tag> :
-                record.statusVale === 3 ? <Tag key={nanoid(4)} color="magenta">Parcialmente Entregado Cerrado</Tag> :
-                record.statusVale === 4 ? <Tag key={nanoid(4)} color="volcano">Cerrado</Tag>:
-                record.statusVale === 5 ? <Tag key={nanoid(4)} color="red">Sin Insumos</Tag> :
-                record.statusVale === 6 ?  <Tag key={nanoid(4)} color="geekblue">Entregado</Tag> :
-                record.statusVale === 7 ?  <Tag key={nanoid(4)} color="gold">Borrador</Tag> : ''
+                record.statusVale === 1 ? <Tag className='mx-auto' key={nanoid(4)} color="green">Sin Entregar</Tag>:
+                record.statusVale === 2 ? <Tag className='mx-auto' key={nanoid(4)} color="lime">Parcialmente Entregado Abierto</Tag> :
+                record.statusVale === 3 ? <Tag className='mx-auto' key={nanoid(4)} color="magenta">Parcialmente Entregado Cerrado</Tag> :
+                record.statusVale === 4 ? <Tag className='mx-auto' key={nanoid(4)} color="volcano">Cerrado</Tag>:
+                record.statusVale === 5 ? <Tag className='mx-auto' key={nanoid(4)} color="red">Sin Insumos</Tag> :
+                record.statusVale === 6 ?  <Tag className='mx-auto' key={nanoid(4)} color="geekblue">Entregado</Tag> :
+                record.statusVale === 7 ?  <Tag className='mx-auto' key={nanoid(4)} color="gold">Borrador</Tag> : ''
              ),
             filters: [
                 { 
@@ -197,6 +198,7 @@ const ValesSalida = () => {
                 title: 'Acciones',
                 dataIndex: 'acciones',
                 key: `acciones-${nanoid()}`,
+                width: 200,
                 render: (text, record, index) => (
                     record.status === 1 ?
                     <div key={index} className="flex justify-between">
@@ -242,32 +244,38 @@ const ValesSalida = () => {
     }
 
     const handleSubmit = () => {
- 
-
         dispatch(deliverValeAction(entrega))
+    }
 
-        setEntrega({
-            id: 0,
-            valeSalidaId: 0,
-            insumoId: 0,
-            cantidadEntregada: 0,
-            comentarios: '',
-            type: 1
-        })
+    useEffect(() => {
+        displayAlert()
+    }, [errors, delivered])
 
-        hideModal()
+    const displayAlert = () => {
+        if(errors){
+            openNotificationWithIcon('error', errors)
+        }
+        if(delivered){
+            openNotificationWithIcon('success', 'Se ha guardado correctamente')
+            setEntrega({
+                id: 0,
+                valeSalidaId: 0,
+                insumoId: 0,
+                cantidadEntregada: 0,
+                comentarios: '',
+                type: 1
+            })
+            hideModal()
+        }
     }
 
     const handleChange = (e) => {
-
         const { value } = e.target
         setEntrega({ 
             ...entrega, 
             cantidadEntregada: Number(value)
         })
-
-        
-        
+    
         if( (entrega.cantidadSolicitada - buscarEntregado(entrega.valeSalidaId, entrega.id))  < value ){
             setValidarCantidad(false)
         } else {
@@ -284,7 +292,6 @@ const ValesSalida = () => {
     
     return ( 
         <>
-            {  (errors && errors.length > 0) && <AntdNotification errors={errors} type='error'/>}
             <h1 className='text-dark text-xl text-center font-medium'>Vales</h1>
             <div className='py-2 flex justify-between'>
                 <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Volver</Button>

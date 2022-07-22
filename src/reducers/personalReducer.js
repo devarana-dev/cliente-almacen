@@ -5,7 +5,9 @@ const initialState = {
     personal: [],
     editedPersonal: null,
     isLoading: true,
-    errors: null
+    errors: null,
+    created: false,
+    updated: false,
 }
 
 // eslint-disable-next-line
@@ -21,7 +23,9 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: true,
                 errors: null,
-                editedPersonal: null
+                editedPersonal: null,
+                created: false,
+                updated: false,
             }
         case types.GET_ALL_PERSONAL_SUCCESS:
             return {
@@ -44,7 +48,8 @@ export default (state = initialState, action) => {
                 ...state,
                 personal: [...state.personal, action.payload],
                 isLoading: false,
-                errors: null
+                errors: null,
+                created: true
             }
 
         case types.UPDATE_PERSONAL_SUCCESS:
@@ -53,7 +58,8 @@ export default (state = initialState, action) => {
                 isLoading: false,
                 errors: null,
                 editedPersonal: null,
-                personal: state.personal.map(item => ( item.id === action.payload.id ? action.payload : item ))
+                personal: state.personal.map(item => ( item.id === action.payload.id ? action.payload : item )),
+                updated: true
             }
             
         case types.DELETE_PERSONAL_SUCCESS:

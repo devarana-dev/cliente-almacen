@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams} from "react-router-dom";
 import { getActividadAction, updateActividadAction } from "../../actions/actividadActions";
+import openNotificationWithIcon from "../../hooks/useNotification";
 
 const EditActividades = () => {
 
@@ -13,7 +14,7 @@ const EditActividades = () => {
     const { Option } = Select;
     const { TextArea } = Input;
 
-    const { errors, editedActividad, isLoading } = useSelector(state => state.actividades);
+    const { errors, editedActividad, isLoading, updated } = useSelector(state => state.actividades);
 
     const [actividad, setActividad] = useState({
         nombre: "",
@@ -38,17 +39,21 @@ const EditActividades = () => {
     }
 
     const handleSubmit = () => {
-        console.log(actividad);
         dispatch(updateActividadAction(actividad));
+    }
 
-        if(!errors){
-                notification.success({
-                    message: "Actividad actualizado",
-                    description: "La actividad ha sido actualizado correctamente",
-                    duration: 2,
-                });
-            }
-        navigate("/actividades");
+    useEffect(() => {
+        displayAlert()
+    }, [errors, updated])
+
+    const displayAlert = () => {
+        if(errors){
+            openNotificationWithIcon('error', errors)
+        }
+        if(updated){
+            openNotificationWithIcon('success', 'La actividad ha sido actualizado correctamente')
+            navigate('/actividades')
+        }
     }
     
     if(isLoading) return <div>Cargando...</div>

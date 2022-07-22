@@ -1,8 +1,9 @@
 import { Form, Input, Select, Button, notification } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { createInsumoAction } from "../../actions/insumoActions";
+import openNotificationWithIcon from "../../hooks/useNotification";
 
 const CreateInsumos = () => {
 
@@ -10,7 +11,7 @@ const CreateInsumos = () => {
     const navigate = useNavigate();
     const { Option } = Select;
 
-    const { errors } = useSelector(state => state.insumos);
+    const { errors, created } = useSelector(state => state.insumos);
 
     const [insumo, setInsumo] = useState({
         nombre: "",
@@ -32,14 +33,19 @@ const CreateInsumos = () => {
 
     const handleSubmit = () => {
         dispatch(createInsumoAction(insumo));
+    }
 
-        if(!errors){                
-            notification.success({
-                message: "Correcto!",
-                description: "El insumo ha sido creado correctamente",
-                duration: 2,
-            });
-            navigate("/insumos");
+    useEffect(() => {
+        displayAlert()
+    }, [errors, created])
+
+    const displayAlert = () => {
+        if(errors){
+            openNotificationWithIcon('error', errors)
+        }
+        if(created){
+            openNotificationWithIcon('success', 'El insumo ha sido creado correctamente')
+            navigate('/insumos')
         }
     }
     

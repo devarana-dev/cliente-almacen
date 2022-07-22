@@ -5,7 +5,9 @@ const initialState = {
     actividades: [],
     isLoading: true,
     errors: null,
-    editedActividad: null
+    editedActividad: null,
+    created: false,
+    updated: false,
 }
 
 // eslint-disable-next-line
@@ -20,8 +22,9 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: true,
                 errors: null,
-                editedActividad: null
-
+                editedActividad: null,
+                created: false,
+                updated: false,
             }
         case types.GET_ALL_ACTIVIDAD_SUCCESS:
             return {
@@ -44,7 +47,8 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
-                actividades: [...state.actividades, action.payload]
+                actividades: [...state.actividades, action.payload],
+                created: true
             }
 
         case types.UPDATE_ACTIVIDAD_SUCCESS:
@@ -52,7 +56,8 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
-                actividades: state.actividades.map(actividad => actividad.id === action.payload.id ? action.payload : actividad)
+                actividades: state.actividades.map(actividad => actividad.id === action.payload.id ? action.payload : actividad),
+                updated: true
             }
         
         case types.DELETE_ACTIVIDAD_SUCCESS:

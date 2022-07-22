@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams} from "react-router-dom";
 import { getRoleAction, updateRoleAction } from "../../actions/roleActions";
+import openNotificationWithIcon from "../../hooks/useNotification";
 
 const EditRoles = () => {
 
@@ -13,7 +14,7 @@ const EditRoles = () => {
     const { Option } = Select;
     const { TextArea } = Input;
 
-    const { errors, editedRole, isLoading } = useSelector(state => state.roles);
+    const { errors, editedRole, isLoading , updated} = useSelector(state => state.roles);
 
     const [role, setRole] = useState({
         nombre: "",
@@ -49,6 +50,20 @@ const EditRoles = () => {
                 });
             }
         navigate("/roles");
+    }
+
+    useEffect(() => {
+        displayAlert()
+    }, [errors, updated])
+
+    const displayAlert = () => {
+        if(errors){
+            openNotificationWithIcon('error', errors)
+        }
+        if(updated){
+            openNotificationWithIcon('success', 'El rol ha sido creado correctamente')
+            navigate('/roles')
+        }
     }
     
     if(isLoading) return <div>Cargando...</div>

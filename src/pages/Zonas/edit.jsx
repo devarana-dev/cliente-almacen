@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams} from "react-router-dom";
 import { getZonaAction, updateZonaAction } from "../../actions/zonaActions";
+import openNotificationWithIcon from "../../hooks/useNotification";
 
 const EditZonas = () => {
 
@@ -12,7 +13,7 @@ const EditZonas = () => {
     const [form] = Form.useForm();
     const { Option } = Select;
 
-    const { errors, editedZona, isLoading } = useSelector(state => state.zonas);
+    const { errors, editedZona, isLoading, updated } = useSelector(state => state.zonas);
 
     const [zona, setZona] = useState({
         nombre: "",
@@ -36,17 +37,21 @@ const EditZonas = () => {
     }
 
     const handleSubmit = () => {
-        console.log(zona);
         dispatch(updateZonaAction(zona));
+    }
 
-        if(!errors){
-                notification.success({
-                    message: "Zona actualizada",
-                    description: "La zona se ha sido actualizado correctamente",
-                    duration: 2,
-                });
-            }
-        navigate("/zonas");
+    useEffect(() => {
+        displayAlert()
+    }, [errors, updated])
+
+    const displayAlert = () => {
+        if(errors){
+            openNotificationWithIcon('error', errors)
+        }
+        if(updated){
+            openNotificationWithIcon('success', 'La zona se ha sido actualizado correctamente')
+            navigate('/zonas')
+        }
     }
     
     if(isLoading) return <div>Cargando...</div>

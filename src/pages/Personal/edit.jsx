@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { getPersonalAction, updatePersonalAction } from "../../actions/personalActions";
+import openNotificationWithIcon from "../../hooks/useNotification";
 
 const EditPersonal = () => {
     const dispatch = useDispatch();
@@ -12,7 +13,7 @@ const EditPersonal = () => {
     const {id} = useParams()
     const [form] = Form.useForm();
 
-    const { editedPersonal, isLoading, errors } = useSelector(state => state.personal);
+    const { editedPersonal, isLoading, errors, updated } = useSelector(state => state.personal);
 
     const [personal, setPersonal] = useState({
         nombre: "",
@@ -54,16 +55,19 @@ const EditPersonal = () => {
 
 
     const handleSubmit = () => {
-        console.log(personal.fechaIngreso);
         dispatch(updatePersonalAction(personal));
+    }
 
-        if(!errors){
+    useEffect(() => {
+        displayAlert()
+    }, [errors, updated])
 
-            notification.success({
-                message: "Personal actualizado",
-                description: "El personal ha sido actualizado correctamente",
-                duration: 2,
-            });
+    const displayAlert = () => {
+        if(errors){
+            openNotificationWithIcon('error', errors)
+        }
+        if(updated){
+            openNotificationWithIcon('success', 'El personal ha sido actualizado correctamente')
             navigate('/personal')
         }
     }

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams} from "react-router-dom";
 import { getObraAction, updateObraAction } from "../../actions/obraActions";
 import { getAllNivelesAction } from "../../actions/nivelActions";
+import openNotificationWithIcon from "../../hooks/useNotification";
 
 const EditObra = () => {
 
@@ -13,7 +14,7 @@ const EditObra = () => {
     const [form] = Form.useForm();
     const { Option } = Select;
 
-    const { errors, editedObra, isLoading } = useSelector(state => state.obras);
+    const { errors, editedObra, isLoading, updated } = useSelector(state => state.obras);
     const {niveles} = useSelector( state => state.niveles )
 
     const [obra, setObra] = useState({
@@ -64,15 +65,20 @@ const EditObra = () => {
 
     const handleSubmit = () => {
         dispatch(updateObraAction(obra));
+    }
 
-        if(!errors){
-                notification.success({
-                    message: "Correcto!",
-                    description: "Se ha actualizado la obra correctamente",
-                    duration: 2,
-                });
-            }
-        navigate("/obra");
+    useEffect(() => {
+        displayAlert()
+    }, [errors, updated])
+
+    const displayAlert = () => {
+        if(errors){
+            openNotificationWithIcon('error', errors)
+        }
+        if(updated){
+            openNotificationWithIcon('success', 'Se ha actualizado la obra correctamente')
+            navigate('/obra')
+        }
     }
     
     if(isLoading) return <div>Cargando...</div>

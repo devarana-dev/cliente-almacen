@@ -1,6 +1,6 @@
  
 import { DeleteOutlined } from '@ant-design/icons';
-import { Button, Table, Popconfirm, notification, Modal } from 'antd';
+import { Button, Table, Popconfirm, notification, Modal, Image } from 'antd';
 
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
@@ -10,12 +10,15 @@ import { AntdNotification } from '../../components/Elements/Notification';
 import UploadFile from '../../components/Elements/UploadFile';
 
 import { getColumnSearchProps } from '../../hooks/useFilter'
+
+import insumoExample from '../../assets/img/insumos.png'
 const Insumos = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [ showImage, setShowImage ] = useState(false)
     const [ dataSource, setDataSource ] = useState([]);
     const { insumos, isLoading, errors } = useSelector(state => state.insumos);
 
@@ -137,7 +140,11 @@ const Insumos = () => {
         <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>
 
         <Modal title="Cargar Insumo" visible={isModalVisible} footer={null} onCancel={handleCancel}>
-				<UploadFile/>
+                {/* <div className='flex py-3 flex-col items-center'>
+                    <p>Ejemplo</p>
+                    <Image src={insumoExample} width={150} /> 
+                </div> */}
+            <UploadFile/>
         </Modal>
     </>
     );

@@ -5,7 +5,10 @@ const initialState = {
     vales: [],
     editedVale: null,
     isLoading: true,
-    errors: null
+    errors: null,
+    created: false,
+    updated: false,
+    delivered: false,
 }
 
 export default (state = initialState, action) => {
@@ -18,7 +21,10 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: true,
                 errors: null,
-                editedVale: null
+                editedVale: null,
+                created: false,
+                updated: false,
+                delivered: false,
             }
         
         case types.DELIVER_VALE:
@@ -33,6 +39,7 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
+                delivered: true,
                 vales: state.vales.map(vale => {
                     if(vale.id === action.payload.insumo.valeSalidaId) {
                         vale.statusVale = action.payload.valeSalida.statusVale
@@ -50,8 +57,14 @@ export default (state = initialState, action) => {
                 })
             }
 
-
-        
+        case types.DELIVER_VALE_ERROR:    
+            return {
+                ...state,
+                isLoading: false,
+                errors: action.payload,
+                delivered: false,
+            }
+                    
         case types.UPDATE_VALE:
             return {
                 ...state,
@@ -80,7 +93,8 @@ export default (state = initialState, action) => {
                 ...state,
                 vales: [...state.vales, action.payload],
                 isLoading: false,
-                errors: null
+                errors: null,
+                created: true
             }
 
         case types.UPDATE_VALE_SUCCESS:
@@ -88,6 +102,8 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
+                vales: state.vales.map(vale => ( vale._id === action.payload._id ? action.payload : vale )),
+                updated: true
             }
 
         case types.GET_ALL_VALE_ERROR:

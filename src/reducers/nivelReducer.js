@@ -5,7 +5,9 @@ const initialState = {
     niveles: [],
     isLoading: true,
     errors: null,
-    editedNivel: null
+    editedNivel: null,
+    created: false,
+    updated: false,
 }
 
 // eslint-disable-next-line
@@ -20,7 +22,9 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: true,
                 errors: null,
-                editedNivel: null
+                editedNivel: null,
+                created: false,
+                updated: false,
 
             }
         case types.GET_ALL_NIVEL_SUCCESS:
@@ -35,14 +39,16 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
-                niveles: [...state.niveles, action.payload]
+                niveles: [...state.niveles, action.payload],
+                created: true
             }
         case types.UPDATE_NIVEL_SUCCESS:
             return {
                 ...state,
                 isLoading: false,
                 errors: null,
-                niveles: state.niveles.map(nivel => nivel.id === action.payload.id ? action.payload : nivel)
+                niveles: state.niveles.map(nivel => nivel.id === action.payload.id ? action.payload : nivel),
+                updated: true
             }
         case types.GET_NIVEL_SUCCESS:
             return {

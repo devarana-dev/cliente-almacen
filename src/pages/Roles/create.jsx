@@ -1,8 +1,9 @@
 import { Form, Input, Select, Button, notification } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { createRoleAction } from "../../actions/roleActions";
+import openNotificationWithIcon from "../../hooks/useNotification";
 
 const CreateRoles = () => {
 
@@ -11,7 +12,7 @@ const CreateRoles = () => {
     const { Option } = Select;
     const { TextArea } = Input;
 
-    const { errors } = useSelector(state => state.roles);
+    const { errors, created } = useSelector(state => state.roles);
 
     const [role, setRole] = useState({
         nombre: "",
@@ -29,14 +30,19 @@ const CreateRoles = () => {
 
     const handleSubmit = () => {
         dispatch(createRoleAction(role));
+    }
 
-        if(!errors){                
-            notification.success({
-                message: "Rol creado",
-                description: "El rol ha sido creado correctamente",
-                duration: 2,
-            });
-            navigate("/roles");
+    useEffect(() => {
+        displayAlert()
+    }, [errors, created])
+
+    const displayAlert = () => {
+        if(errors){
+            openNotificationWithIcon('error', errors)
+        }
+        if(created){
+            openNotificationWithIcon('success', 'El rol ha sido creado correctamente')
+            navigate('/roles')
         }
     }
     

@@ -1,22 +1,17 @@
-import { notification } from 'antd'
-import { useEffect } from 'react'
+import { notification } from 'antd';
 
-
-export const AntdNotification = ({ type, errors }) => {
+export default function openNotificationWithIcon (type, errors)  {
 
     let description = ''
     let message = ''
-
+ 
     if(typeof(errors) === 'string') {
         description = errors
     }
-    else if(typeof(errors) === 'object') {
-        Object.keys(errors).forEach(key => {
-            description += `${key} ${errors[key]}\n`
-        })
+    if(typeof(errors) === 'object') {
+        description = 'Todos los campos son obligatorios'
     }
-
-
+    
     switch (type) {
         case 'success':
             message = 'Correcto!'
@@ -34,13 +29,8 @@ export const AntdNotification = ({ type, errors }) => {
             message = 'Parece que hubo un problema'
             break;
     }
-
-    useEffect(() => {
-        notification[type]({
-            message,
-            description: errors,
-        })
-    }, [  ])
-
-    return null
-}
+    notification[type]({
+        message: message,
+        description
+    });
+};
