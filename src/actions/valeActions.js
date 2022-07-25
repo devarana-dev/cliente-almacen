@@ -6,7 +6,7 @@ export function createValeAction(vale){
         dispatch(createValeRequest())
         await clientAxios.post('/vales', vale)
             .then ( res => {
-                dispatch(createValeSuccess(res.data.vale))
+                dispatch(createValeSuccess(res.data.valeSalida))
             }).catch( err => {
                 console.log('Error createValeAction', err.response);
                 dispatch(createValeError(err.response.data.message))

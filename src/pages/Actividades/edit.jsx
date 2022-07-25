@@ -64,7 +64,7 @@ const EditActividades = () => {
     return ( 
         <Form
             className="max-w-screen-md mx-auto"
-            onFinish={() => handleSubmit()}
+            onFinish={handleSubmit}
             layout="vertical"
             onChange={handleChange}
             form={form}

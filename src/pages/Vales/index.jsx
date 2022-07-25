@@ -20,6 +20,7 @@ const ValesSalida = () => {
     const [ dataSource, setDataSource ] = useState([]);
     const [ dataNestedSource, setDataNestedSource ] = useState([])
     const [ validarCantidad, setValidarCantidad ] = useState(true)
+    const [activeExpRow, setActiveExpRow] = useState();
 
     const [visible, setVisible] = useState(false);
 	
@@ -154,26 +155,33 @@ const ValesSalida = () => {
     const expandedRowRender = (record, index, indent, expanded) => {
 
         if(expanded){
-            setDataNestedSource(record.detalle_salidas)
+
+            // añadir key a cada objeto del array 
+            setDataNestedSource( record.detalle_salidas )
+            // setDataNestedSource(
+            //     record.detalle_salidas
+            // )
+
+
         }
     
         const columns = [
             {
                 title: 'ID Enkontrol',
                 dataIndex: 'insumo',
-                key: `insumo-${nanoid()}`,
+                key: `clave-${nanoid()}`,
                 render: item =>  item.claveEnk
             },
             {
                 title: 'Nombre',
                 dataIndex: 'insumo',
-                key: `insumo-${nanoid()}`,
+                key: `nombre-${nanoid()}`,
                 render: item => item.nombre
             },
             {
                 title: 'Unidad de Medida',
                 dataIndex: 'insumo',
-                key: `insumo-${nanoid()}`,
+                key: `unidad-${nanoid()}`,
                 render: item => item.unidadMedida
             },
             {
@@ -221,7 +229,7 @@ const ValesSalida = () => {
                 )
             }
         ]
-        return <Table key={nanoid()} columns={columns} dataSource={dataNestedSource} pagination={false}  className="nestedTable"/>
+        return <Table key={nanoid()} columns={columns} dataSource={dataNestedSource} pagination={false} rowKey={nanoid()}  className="nestedTable"/>
     }
 
 
@@ -297,7 +305,17 @@ const ValesSalida = () => {
                 <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Volver</Button>
                 <Button type='primary' onClick={() => navigate('nuevo')} className="ml-5">Agregar Nuevo Vale</Button>
             </div>
-            <Table key={123} columns={columns} dataSource={dataSource} expandable={{expandedRowRender, defaultExpandedRowKeys: ['0']}}/>
+            <Table key={123} columns={columns} dataSource={dataSource} expandable={{expandedRowRender, defaultExpandedRowKeys: ['0'], expandedRowKeys: activeExpRow,
+            rowExpandable: (record) => true,
+            onExpand: (expanded, record) => {
+                const keys = [];
+                if (expanded) {
+                  keys.push(record.id - 1);
+                }
+                setActiveExpRow(keys);
+              }}}
+            
+            />
 
             <Modal
                 title="Confirmación"

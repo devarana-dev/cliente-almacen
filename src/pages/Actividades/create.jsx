@@ -17,7 +17,7 @@ const CreateActividades = () => {
 
     const [actividad, setActividad] = useState({
         nombre: "",
-        status: "",
+        status: true,
         descripcion: "",
     });
     const {nombre, descripcion, status} = actividad
@@ -84,6 +84,7 @@ const CreateActividades = () => {
                     { required: true, message: "Debes seleccionar un estatus" },
                 ]}
                 hasFeedback
+                initialValue={status}
             >
                 <Select value={status} placeholder="Selecciona un estatus" name="status" onChange={ (value) => { setActividad({...actividad, status:value})} }>
                     <Option value={true}>Activo</Option>

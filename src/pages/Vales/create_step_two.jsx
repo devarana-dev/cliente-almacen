@@ -16,7 +16,8 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
 
     const { Option } = Select
     const [ form ] = Form.useForm();
-    const { insumos, isLoading, errors, created } = useSelector( state => state.insumos )
+    const { insumos, isLoading, errors } = useSelector( state => state.insumos )
+    const { created, errors:errorsVale } = useSelector(state => state.vales)
     
     const [ dataSource, setDataSource ] = useState([]);
     const [ unidad, setUnidad ] = useState('')
@@ -145,11 +146,11 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
 
     useEffect(() => {
         displayAlert()
-    }, [errors, created])
+    }, [errors, created, errorsVale])
 
     const displayAlert = () => {
-        if(errors){
-            openNotificationWithIcon('error', errors)
+        if(errors || errorsVale){
+            openNotificationWithIcon('error', errors || errorsVale)
         }
         if(created){
             openNotificationWithIcon('success', 'El vale ha sido creado correctamente')

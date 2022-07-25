@@ -133,7 +133,6 @@ export function deleteRoleAction(id){
         dispatch(deleteRoleRequest())
         await clientAxios.delete(`/roles/${id}`)
             .then ( res => {
-                console.log(res.data);
                 dispatch(deleteRoleSuccess(res.data.role))
             }).catch( err => {
                 console.log('Error deleteRoleAction', err.response);

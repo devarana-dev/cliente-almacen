@@ -100,6 +100,7 @@ export function updateActividadAction(actividad){
         dispatch(updateActividadRequest())
         await clientAxios.put(`/actividades/${actividad.id}`, actividad)
             .then ( res => {
+                console.log(res.data.actividad)
                 dispatch(updateActividadSuccess(res.data.actividad))
             }).catch( err => {
                 console.log('Error updateActividadAction', err.response);

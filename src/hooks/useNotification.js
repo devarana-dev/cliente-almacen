@@ -5,8 +5,6 @@ export default function openNotificationWithIcon (type, errors)  {
     let description = ''
     let message = ''
 
-    console.log(errors);
- 
     if(typeof(errors) === 'string') {
         description = errors
     }else {
