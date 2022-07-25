@@ -6,9 +6,11 @@ import { Button, notification, Popconfirm, Table } from 'antd';
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { cleanErrorAction } from '../../actions/globalActions';
 import { deleteZonaAction, getAllZonaAction } from '../../actions/zonaActions';
 import { AntdNotification } from '../../components/Elements/Notification';
 import { getColumnSearchProps } from '../../hooks/useFilter'
+import openNotificationWithIcon from '../../hooks/useNotification';
 
 const Zonas = () => {
 
@@ -16,7 +18,7 @@ const Zonas = () => {
     const navigate = useNavigate();
 
     const [ dataSource, setDataSource ] = useState([]);
-    const { zonas, isLoading, errors } = useSelector(state => state.zonas);
+    const { zonas, isLoading, errors, deleted} = useSelector(state => state.zonas);
     
 
     useEffect(() => {
@@ -84,23 +86,26 @@ const Zonas = () => {
 
     const handleDelete = (id) => {
       dispatch(deleteZonaAction(id))
-      if (errors){
-        notification['error']({
-          message: 'Error al eliminar',
-          description: errors
-        })
-      }else{
-        notification['success']({
-          message: 'Correcto!',
-          description: 'Se ha eliminado correctamente'
-        })
-      }
+    }
+
+    useEffect(() => {
+        displayAlert()
+    }, [errors, deleted])
+
+    const displayAlert = () => {
+        if(errors){
+            openNotificationWithIcon('error', errors)
+            dispatch( cleanErrorAction() )
+            
+        }
+        if(deleted){
+            openNotificationWithIcon('success', 'La zona se ha eliminado')
+        }
     }
 
     return ( 
     <>
         <h1 className='text-dark text-xl text-center font-medium'>Zonas</h1>
-        {  (errors && errors.length > 0) && <AntdNotification errors={errors} type='error'/>}
         <div className='py-2 flex justify-between'>
           <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Regresar</Button>
           <Button type='primary' onClick={() => navigate('create')}>Agregar Nueva Zona</Button>

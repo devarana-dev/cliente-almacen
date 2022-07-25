@@ -5,7 +5,7 @@ export default function openNotificationWithIcon (type, errors)  {
     let description = ''
     let message = ''
 
- 
+    console.log(errors);
  
     if(typeof(errors) === 'string') {
         description = errors
@@ -19,13 +19,13 @@ export default function openNotificationWithIcon (type, errors)  {
             message = 'Correcto!'
         break;
         case 'error':
-            message = 'Parece que hubo un problema'
+            message = 'Error!'
         break;
         case 'warning':
             message = 'Atención!'
         break;
         case 'info':
-            message = 'Información'
+            message = 'Información!'
         break;   
         default:
             message = 'Parece que hubo un problema'

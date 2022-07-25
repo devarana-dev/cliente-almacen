@@ -3,7 +3,9 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
+import { cleanErrorAction } from "../../actions/globalActions";
 import { getPersonalAction, updatePersonalAction } from "../../actions/personalActions";
+import Loading from "../../components/Elements/Loading";
 import openNotificationWithIcon from "../../hooks/useNotification";
 
 const EditPersonal = () => {
@@ -65,6 +67,7 @@ const EditPersonal = () => {
     const displayAlert = () => {
         if(errors){
             openNotificationWithIcon('error', errors)
+            dispatch( cleanErrorAction() )
         }
         if(updated){
             openNotificationWithIcon('success', 'El personal ha sido actualizado correctamente')
@@ -72,7 +75,7 @@ const EditPersonal = () => {
         }
     }
 
-    if(isLoading) return <div>Cargando...</div>
+    if(isLoading) return <Loading />
     if(!editedPersonal) return <div>No se encontro el personal</div>
     
     return (

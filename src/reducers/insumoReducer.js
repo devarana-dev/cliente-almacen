@@ -14,6 +14,7 @@ const initialState = {
 
     created: false,
     updated: false,
+    deleted: false,
 }
 
 // eslint-disable-next-line
@@ -31,6 +32,7 @@ export default (state = initialState, action) => {
                 editedInsumo: null,
                 created: false,
                 updated: false,
+                deleted: false,
 
             }
 
@@ -90,7 +92,8 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
-                insumos: state.insumos.filter(insumo => insumo.id !== action.payload.id)
+                insumos: state.insumos.filter(insumo => insumo.id !== action.payload.id),
+                deleted: true
             }
 
         case types.GET_ALL_INSUMO_ERROR:
@@ -122,7 +125,11 @@ export default (state = initialState, action) => {
                 uploadMessage: null,
                 uploadedCount: 0
             }
-        
+        case types.CLEAN_ERROR_STATE:
+            return {
+                ...state,
+                errors: null
+            }
         default:
             return state
     }

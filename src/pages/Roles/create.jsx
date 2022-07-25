@@ -1,14 +1,14 @@
-import { Form, Input, Select, Button, notification, Checkbox } from "antd";
+import { Form, Input, Select, Button, notification, Checkbox, Divider } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { cleanErrorAction } from "../../actions/globalActions";
 import { getAllPermisosAction } from "../../actions/permisosActions";
 import { createRoleAction } from "../../actions/roleActions";
 import openNotificationWithIcon from "../../hooks/useNotification";
 
 const CreateRoles = () => {
 
-    const [indeterminate, setIndeterminate] = useState(true);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { Option } = Select;
@@ -16,14 +16,16 @@ const CreateRoles = () => {
 
     const { errors, created } = useSelector(state => state.roles);
     const { permisos } = useSelector( state => state.permisos )
-   
-
+    
     const [role, setRole] = useState({
         nombre: "",
         descripcion: "",
         status: true,
         permisos: []
     });
+
+    const [indeterminate, setIndeterminate] = useState(role.permisos);
+    const [checkAll, setCheckAll] = useState(false);
 
     const {nombre, descripcion, status} = role
     
@@ -49,12 +51,21 @@ const CreateRoles = () => {
     const displayAlert = () => {
         if(errors){
             openNotificationWithIcon('error', errors)
+            dispatch( cleanErrorAction() )
         }
         if(created){
             openNotificationWithIcon('success', 'El rol ha sido creado correctamente')
             navigate('/roles')
         }
     }
+
+    useEffect(() => {
+        if( role.permisos.length > 0 && permisos.length > role.permisos.length){
+            setIndeterminate(true)
+        }else{
+            setIndeterminate(false)
+        }
+    }, [role.permisos])
  
 
     const handleCheck = (e) => {
@@ -72,16 +83,35 @@ const CreateRoles = () => {
             })
         }
 
-        console.log(role);
+        
     }
 
-    
+    const onCheckAllChange = (e) => {
+
+        const { value, checked } = e.target
+
+        if(checked){
+            setRole({
+                ...role,
+                permisos: permisos.map( item => item.id)
+            })
+            setIndeterminate(false)
+            setCheckAll(true)
+        }else{
+            setRole({
+                ...role,
+                permisos: []
+            })
+            setCheckAll(false)
+        }
+    }
+
+        
     return ( 
         <Form
             className="max-w-screen-md mx-auto"
             onFinish={() => handleSubmit()}
             layout="vertical"
-            onChange={handleChange}
         >
             <h1 className="text-center text-2xl font-bold text-dark"> Nuevo Rol </h1>
 
@@ -93,7 +123,7 @@ const CreateRoles = () => {
                 ]}
                 hasFeedback
             >
-                <Input value={nombre} name="nombre" />
+                <Input value={nombre} name="nombre" onChange={handleChange}/>
             </Form.Item>
 
             <Form.Item
@@ -104,7 +134,7 @@ const CreateRoles = () => {
                 ]}
                 hasFeedback
             >
-                <TextArea value={descripcion} name="descripcion"/>
+                <TextArea value={descripcion} name="descripcion" onChange={handleChange}/>
             </Form.Item>
 
             <Form.Item
@@ -122,30 +152,31 @@ const CreateRoles = () => {
 
 
             <>
-                <Checkbox indeterminate={indeterminate}>
+            <Divider/>
+                <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}> 
                     Seleccionar Todos
                 </Checkbox>
                 <div className="grid grid-cols-4">
                     <>
-                        <div className="col-span-1">
-                            <p className="font-bold">Ver</p>
+                        <div className="col-span-1 py-3">
+                            <h2 className="font-bold text-dark text-xl ml-3">Ver</h2>
                         </div>
                         <div className="col-span-1">
-                            <p className="font-bold">Crear</p>
+                            <h2 className="font-bold text-dark text-xl ml-3">Crear</h2>
                         </div>
                         <div className="col-span-1">
-                            <p className="font-bold">Editar</p>
+                            <h2 className="font-bold text-dark text-xl ml-3">Editar</h2>
                         </div>
                         <div className="col-span-1">
-                            <p className="font-bold">Borrar</p>
+                            <h2 className="font-bold text-dark text-xl ml-3">Borrar</h2>
                         </div>
                     </>
                 </div>
-                <Checkbox.Group> 
+                <Checkbox.Group defaultValue={role.permisos} value={role.permisos} className="w-full"> 
                     <div className="grid grid-cols-4 gap-y-1">
                         {
                             permisos.map ((item, i) => (
-                                <Checkbox name="permisos" key={i} value={item.id} onChange={ (e) => handleCheck(e) }> {item.nombre} </Checkbox>
+                                <Checkbox className="first-of-type:ml-2" checked={role.permisos.includes(item.id)} name="permisos" key={i} value={item.id} onChange={ (e) => handleCheck(e) }> {item.nombre} </Checkbox>
                                
                             ))
                         }

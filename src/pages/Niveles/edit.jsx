@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams} from "react-router-dom";
 import { getAllActividadAction } from "../../actions/actividadActions";
+import { cleanErrorAction } from "../../actions/globalActions";
 import { getNivelAction, updateNivelAction } from "../../actions/nivelActions";
 import { getAllZonaAction } from "../../actions/zonaActions";
+import Loading from "../../components/Elements/Loading";
 import openNotificationWithIcon from "../../hooks/useNotification";
 
 const EditNiveles = () => {
@@ -97,6 +99,7 @@ const EditNiveles = () => {
     const displayAlert = () => {
         if(errors){
             openNotificationWithIcon('error', errors)
+            dispatch( cleanErrorAction() )
         }
         if(updated){
             openNotificationWithIcon('success', 'El nivel ha sido actualizado correctamente')
@@ -104,7 +107,7 @@ const EditNiveles = () => {
         }
     }
     
-    if(isLoading) return <div>Cargando...</div>
+    if(isLoading) return <Loading />
     if(!editedNivel) return <div>No se encontro el nivel</div>
     return ( 
         <Form

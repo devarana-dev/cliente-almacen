@@ -5,9 +5,11 @@ import { Button, notification, Popconfirm, Table } from 'antd';
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { cleanErrorAction } from '../../actions/globalActions';
 import { deleteUsuarioAction, getAllUsuariosAction } from '../../actions/usuarioActions';
 import { AntdNotification } from '../../components/Elements/Notification';
 import { getColumnSearchProps } from '../../hooks/useFilter'
+import openNotificationWithIcon from '../../hooks/useNotification';
 
 const Usuarios = () => {
 
@@ -15,7 +17,7 @@ const Usuarios = () => {
     const navigate = useNavigate();
 
     const [ dataSource, setDataSource ] = useState([]);
-    const {usuarios, isLoading, errors} = useSelector(state => state.usuarios);
+    const {usuarios, isLoading, errors, deleted} = useSelector(state => state.usuarios);
 
     useEffect(() => {
         dispatch(getAllUsuariosAction())
@@ -33,18 +35,22 @@ const Usuarios = () => {
 
 	const handleDelete = (id) => {
 		dispatch(deleteUsuarioAction(id))
-		if (errors){
-			notification['error']({
-				message: 'Error al eliminar',
-				description: errors
-			})
-		}else{
-			notification['success']({
-				message: 'Correcto!',
-				description: 'Se ha eliminado correctamente'
-			})
-		}
 	}
+
+    useEffect(() => {
+        displayAlert()
+    }, [errors, deleted])
+
+    const displayAlert = () => {
+        if(errors){
+            openNotificationWithIcon('error', errors)
+            dispatch( cleanErrorAction() )
+            
+        }
+        if(deleted){
+            openNotificationWithIcon('success', 'El usuario se ha eliminado')
+        }
+    }
 
 
     const columns = [
@@ -115,7 +121,6 @@ const Usuarios = () => {
     return ( 
     <>
 		<h1 className='text-dark text-xl text-center font-medium'>Usuarios</h1>
-        {  (errors && errors.length > 0) && <AntdNotification errors={errors} type='error'/>}
 		<div className='py-2 flex justify-between'>
 			<Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Volver</Button>
 			<Button type='primary' onClick={() => navigate('create')}>Agregar Nuevo Usuario</Button>

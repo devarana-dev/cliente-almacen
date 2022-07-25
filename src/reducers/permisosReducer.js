@@ -44,7 +44,11 @@ export default (state = initialState, action) => {
                 isLoading: false,
                 errors: action.payload
             }
-    
+        case types.CLEAN_ERROR_STATE:
+            return {
+                ...state,
+                errors: null
+            }
         default:
             return state;
     }

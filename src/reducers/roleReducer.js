@@ -8,6 +8,7 @@ const initialState = {
     editedRole: null,
     created: false,
     updated: false,
+    deleted: false
 }
 
 
@@ -29,6 +30,7 @@ export default (state = initialState, action) => {
                 editedRole: null,
                 created: false,
                 updated: false,
+                deleted: false
             }
         
         case types.GET_ROLE_SUCCESS:
@@ -61,7 +63,8 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
-                roles: state.roles.filter(role => role.id !== action.payload.id)
+                roles: state.roles.filter(role => role.id !== action.payload.id),
+                deleted: true
             }
 
         case types.DELETE_ROLE_ERROR:
@@ -72,7 +75,16 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 errors: action.payload,
-                isLoading: false
+                isLoading: false,
+                created: false,
+                updated: false,
+                deleted: false,
+                
+            }
+        case types.CLEAN_ERROR_STATE:
+            return {
+                ...state,
+                errors: null
             }
         case types.CREATE_ROLE_SUCCESS:
             return {

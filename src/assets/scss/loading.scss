@@ -1,0 +1,45 @@
+@import './variables';
+
+.loading{
+    position: relative;
+    height: 100%;
+}
+//spinner unicamente sobre el elemento
+.loading__spinner{
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    right: 0;
+    margin: auto;
+
+}
+
+
+.loader span {
+ font-size: 22px;
+ font-family: 'Courier New', Courier, monospace;
+ font-weight: 600;
+ animation: blur 3s linear infinite;
+ line-height: 20px;
+ transition: all 0.5s;
+ letter-spacing: 0.2em;
+}
+
+@keyframes blur {
+ 0%, 90% {
+  filter: blur(0);
+ }
+
+ 50% {
+  filter: blur(10px);
+ }
+}
+
+

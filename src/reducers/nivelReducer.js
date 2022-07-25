@@ -8,6 +8,7 @@ const initialState = {
     editedNivel: null,
     created: false,
     updated: false,
+    deleted: false,
 }
 
 // eslint-disable-next-line
@@ -25,6 +26,7 @@ export default (state = initialState, action) => {
                 editedNivel: null,
                 created: false,
                 updated: false,
+                deleted: false,
 
             }
         case types.GET_ALL_NIVEL_SUCCESS:
@@ -63,7 +65,8 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
-                niveles: state.niveles.filter(nivel => nivel.id !== action.payload.id)
+                niveles: state.niveles.filter(nivel => nivel.id !== action.payload.id),
+                deleted: true
             }
 
         case types.GET_ALL_NIVEL_ERROR:
@@ -76,7 +79,11 @@ export default (state = initialState, action) => {
                 errors: action.payload
             }
 
-        
+        case types.CLEAN_ERROR_STATE:
+            return {
+                ...state,
+                errors: null
+            }
         
         default:
             return state

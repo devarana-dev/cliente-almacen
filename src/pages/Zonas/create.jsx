@@ -2,6 +2,7 @@ import { Form, Input, Select, Button, notification } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { cleanErrorAction } from "../../actions/globalActions";
 import { createZonaAction } from "../../actions/zonaActions";
 import openNotificationWithIcon from "../../hooks/useNotification";
 
@@ -37,6 +38,7 @@ const CreateZonas = () => {
     const displayAlert = () => {
         if(errors){
             openNotificationWithIcon('error', errors)
+            dispatch( cleanErrorAction() )
         }
         if(created){
             openNotificationWithIcon('success', 'La zona ha sido creada correctamente')

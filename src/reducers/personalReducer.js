@@ -8,6 +8,7 @@ const initialState = {
     errors: null,
     created: false,
     updated: false,
+    deleted: false,
 }
 
 // eslint-disable-next-line
@@ -26,6 +27,7 @@ export default (state = initialState, action) => {
                 editedPersonal: null,
                 created: false,
                 updated: false,
+                deleted: false,
             }
         case types.GET_ALL_PERSONAL_SUCCESS:
             return {
@@ -67,7 +69,8 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
-                personal: state.personal.filter(item => item.id !== action.payload.id)
+                personal: state.personal.filter(item => item.id !== action.payload.id),
+                deleted: true
             }
         
         case types.UPDATE_PERSONAL_ERROR:
@@ -80,7 +83,11 @@ export default (state = initialState, action) => {
                 errors: action.payload,
                 isLoading: false
             }
-            
+        case types.CLEAN_ERROR_STATE:
+            return {
+                ...state,
+                errors: null
+            }   
         default:
             return state
     }

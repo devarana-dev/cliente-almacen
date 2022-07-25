@@ -9,6 +9,8 @@ import { deletePersonalAction, getAllPersonalAction } from '../../actions/person
 import moment from 'moment';
 import { getColumnSearchProps } from '../../hooks/useFilter'
 import { AntdNotification } from '../../components/Elements/Notification';
+import openNotificationWithIcon from '../../hooks/useNotification';
+import { cleanErrorAction } from '../../actions/globalActions';
 
 const Personal = () => {
 
@@ -16,7 +18,7 @@ const Personal = () => {
     const navigate = useNavigate();
 
     const [ dataSource, setDataSource ] = useState([]);
-    const {personal, isLoading, errors} = useSelector(state => state.personal);
+    const {personal, isLoading, errors, deleted} = useSelector(state => state.personal);
 
     useEffect(() => {
         dispatch(getAllPersonalAction())
@@ -88,18 +90,22 @@ const Personal = () => {
 
 	const handleDelete = (id) => {
 		dispatch(deletePersonalAction(id))
-		if (errors){
-			notification['error']({
-				message: 'Error al eliminar',
-				description: errors
-			})
-		}else{
-			notification['success']({
-				message: 'Correcto!',
-				description: 'Se ha eliminado correctamente'
-			})
-		}
 	}
+
+    useEffect(() => {
+        displayAlert()
+    }, [errors, deleted])
+
+    const displayAlert = () => {
+        if(errors){
+            openNotificationWithIcon('error', errors)
+            dispatch( cleanErrorAction() )
+            
+        }
+        if(deleted){
+            openNotificationWithIcon('success', 'El insumo se ha eliminado')
+        }
+    }
 
     if(isLoading) {
         return <div>Cargando...</div>
@@ -108,7 +114,6 @@ const Personal = () => {
     return ( 
     <>
         <h1 className='text-dark text-xl text-center font-medium'>Lideres de Cuadrilla</h1>
-        {  (errors && errors.length > 0) && <AntdNotification errors={errors} type='error'/>}
         <div className='py-2 flex justify-between'>
             <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Regresar</Button>
             <Button type='primary' onClick={() => navigate('create')}>Agregar Nuevo Lider de Cuadrilla</Button>

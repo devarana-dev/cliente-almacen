@@ -6,8 +6,10 @@ import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { deleteActividadAction, getAllActividadAction } from '../../actions/actividadActions';
+import { cleanErrorAction } from '../../actions/globalActions';
 import { AntdNotification } from '../../components/Elements/Notification';
 import { getColumnSearchProps } from '../../hooks/useFilter'
+import openNotificationWithIcon from '../../hooks/useNotification';
 
 const Actividades = () => {
 
@@ -15,7 +17,7 @@ const Actividades = () => {
         const navigate = useNavigate();
 
         const [ dataSource, setDataSource ] = useState([]);
-        const {actividades, isLoading, errors} = useSelector(state => state.actividades);
+        const {actividades, isLoading, errors, deleted} = useSelector(state => state.actividades);
 
         useEffect(() => {
                 dispatch(getAllActividadAction())
@@ -82,22 +84,25 @@ const Actividades = () => {
 
         const handleDelete = (id) => {
             dispatch(deleteActividadAction(id))
-            if (errors){
-                notification['error']({
-                    message: 'Error al eliminar',
-                    description: errors
-                })
-            }else{
-                notification['success']({
-                    message: 'Correcto!',
-                    description: 'Se ha eliminado correctamente'
-                })
+        }
+
+        useEffect(() => {
+            displayAlert()
+        }, [errors, deleted])
+    
+        const displayAlert = () => {
+            if(errors){
+                openNotificationWithIcon('error', errors)
+                dispatch( cleanErrorAction() )
+                
+            }
+            if(deleted){
+                openNotificationWithIcon('success', 'El insumo se ha eliminado')
             }
         }
 
         return ( 
         <>
-        {  (errors && errors.length > 0) && <AntdNotification errors={errors} type='error'/>}
             <h1 className='text-dark text-xl text-center font-medium'>Actividades</h1>
             <div className='py-2 flex justify-between'>
                 <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Regresar</Button>

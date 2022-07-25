@@ -9,6 +9,7 @@ const initialState = {
     created: false,
     updated: false,
     delivered: false,
+    deleted: false,
 }
 
 export default (state = initialState, action) => {
@@ -25,6 +26,7 @@ export default (state = initialState, action) => {
                 created: false,
                 updated: false,
                 delivered: false,
+                deleted: false,
             }
         
         case types.DELIVER_VALE:
@@ -115,7 +117,11 @@ export default (state = initialState, action) => {
                 isLoading: false,
                 errors: action.payload
             }
-
+        case types.CLEAN_ERROR_STATE:
+            return {
+                ...state,
+                errors: null
+            }
         default:
             return state
     }

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { createObraAction } from "../../actions/obraActions";
 import { getAllNivelesAction } from "../../actions/nivelActions";
 import openNotificationWithIcon from "../../hooks/useNotification";
+import { cleanErrorAction } from "../../actions/globalActions";
 
 const CreateObra = () => {
 
@@ -42,6 +43,7 @@ const CreateObra = () => {
     const displayAlert = () => {
         if(errors){
             openNotificationWithIcon('error', errors)
+            dispatch( cleanErrorAction() )
         }
         if(created){
             openNotificationWithIcon('success', 'Se ha creado la obra correctamente')

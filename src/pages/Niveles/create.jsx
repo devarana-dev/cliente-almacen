@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getAllActividadAction } from "../../actions/actividadActions";
+import { cleanErrorAction } from "../../actions/globalActions";
 import { createNivelAction } from "../../actions/nivelActions";
 import { getAllZonaAction } from "../../actions/zonaActions";
 import openNotificationWithIcon from "../../hooks/useNotification";
@@ -83,6 +84,7 @@ const CreateNiveles = () => {
     const displayAlert = () => {
         if(errors){
             openNotificationWithIcon('error', errors)
+            dispatch( cleanErrorAction() )
         }
         if(created){
             openNotificationWithIcon('success', 'El nivel ha sido creado correctamente')

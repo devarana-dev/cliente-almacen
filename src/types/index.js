@@ -184,5 +184,6 @@ export const types = {
 
 
     CLEAR_UPLOAD_STATE:'CLEAR_UPLOAD_STATE',
+    CLEAN_ERROR_STATE:'CLEAN_ERROR_STATE',
 
 }

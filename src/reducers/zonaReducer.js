@@ -8,6 +8,7 @@ const initialState = {
     editedZona: null,
     created: false,
     updated: false,
+    deleted: false,
 }
 
 // eslint-disable-next-line
@@ -25,6 +26,7 @@ export default (state = initialState, action) => {
                 editedZona: null,
                 created: false,
                 updated: false,
+                deleted: false,
             }
         case types.GET_ALL_ZONA_SUCCESS:
             return {
@@ -56,7 +58,8 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
-                zonas: state.zonas.filter(zona => zona.id !== action.payload.id)
+                zonas: state.zonas.filter(zona => zona.id !== action.payload.id),
+                deleted: true
             }
 
         case types.DELETE_ZONA_ERROR:
@@ -77,6 +80,11 @@ export default (state = initialState, action) => {
                 errors: null,
                 zonas: [...state.zonas, action.payload],
                 created: true
+            }
+        case types.CLEAN_ERROR_STATE:
+            return {
+                ...state,
+                errors: null
             }
         default:
             return state

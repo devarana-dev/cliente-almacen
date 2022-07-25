@@ -2,6 +2,7 @@ import { Form, Input, Select, Button, notification } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { cleanErrorAction } from "../../actions/globalActions";
 import { getAllRolesAction } from "../../actions/roleActions";
 import { createUsuarioAction } from "../../actions/usuarioActions";
 import { AntdNotification } from "../../components/Elements/Notification";
@@ -37,6 +38,7 @@ const CreateUsuario = () => {
     const displayAlert = () => {
         if(errors){
             openNotificationWithIcon('error', errors)
+            dispatch( cleanErrorAction() )
         }
         if(created){
             openNotificationWithIcon('success', 'El usuario ha sido creado correctamente')

@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams} from "react-router-dom";
 import { getActividadAction, updateActividadAction } from "../../actions/actividadActions";
+import { cleanErrorAction } from "../../actions/globalActions";
+import Loading from "../../components/Elements/Loading";
 import openNotificationWithIcon from "../../hooks/useNotification";
 
 const EditActividades = () => {
@@ -49,6 +51,7 @@ const EditActividades = () => {
     const displayAlert = () => {
         if(errors){
             openNotificationWithIcon('error', errors)
+            dispatch( cleanErrorAction() )
         }
         if(updated){
             openNotificationWithIcon('success', 'La actividad ha sido actualizado correctamente')
@@ -56,7 +59,7 @@ const EditActividades = () => {
         }
     }
     
-    if(isLoading) return <div>Cargando...</div>
+    if(isLoading) return <Loading />
     if(!editedActividad) return <div>No se encontro la actividad</div>
     return ( 
         <Form

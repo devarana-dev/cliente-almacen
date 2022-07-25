@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { createActividadAction } from "../../actions/actividadActions";
+import { cleanErrorAction } from "../../actions/globalActions";
 import openNotificationWithIcon from "../../hooks/useNotification";
 
 const CreateActividades = () => {
@@ -39,6 +40,7 @@ const CreateActividades = () => {
     const displayAlert = () => {
         if(errors){
             openNotificationWithIcon('error', errors)
+            dispatch( cleanErrorAction() )
         }
         if(created){
             openNotificationWithIcon('success', 'La actividad ha sido creada correctamente')

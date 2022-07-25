@@ -1,8 +1,11 @@
-import { Form, Input, Select, Button, notification } from "antd";
+import { Form, Input, Select, Button, notification, Divider, Checkbox } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams} from "react-router-dom";
+import { cleanErrorAction } from "../../actions/globalActions";
+import { getAllPermisosAction } from "../../actions/permisosActions";
 import { getRoleAction, updateRoleAction } from "../../actions/roleActions";
+import Loading from "../../components/Elements/Loading";
 import openNotificationWithIcon from "../../hooks/useNotification";
 
 const EditRoles = () => {
@@ -15,19 +18,33 @@ const EditRoles = () => {
     const { TextArea } = Input;
 
     const { errors, editedRole, isLoading , updated} = useSelector(state => state.roles);
+    const { permisos } = useSelector( state => state.permisos )
+
 
     const [role, setRole] = useState({
         nombre: "",
         descripcion: "",
         status: "",
+        permisos: []
     });
 
-    useEffect(() =>{
+    const [indeterminate, setIndeterminate] = useState(role.permisos);
+    const [checkAll, setCheckAll] = useState(false);
+
+
+    useEffect(() => {
+        dispatch(getAllPermisosAction())
         if(!editedRole){
             dispatch(getRoleAction(id))
         }
-        setRole({...editedRole})
-        form.setFieldsValue({...editedRole})
+        setRole({
+            ...editedRole,
+            permisos: editedRole ? editedRole.permisos.map(item => item.id) : []
+        })
+        form.setFieldsValue({
+            ...editedRole,
+            permisos: editedRole ? editedRole.permisos.map(item => item.id) : []
+        })
 
     // eslint-disable-next-line
     },[editedRole])
@@ -41,15 +58,6 @@ const EditRoles = () => {
 
     const handleSubmit = () => {
         dispatch(updateRoleAction(role));
-
-        if(!errors){
-                notification.success({
-                    message: "Rol actualizado",
-                    description: "El rol ha sido actualizado correctamente",
-                    duration: 2,
-                });
-            }
-        navigate("/roles");
     }
 
     useEffect(() => {
@@ -59,21 +67,76 @@ const EditRoles = () => {
     const displayAlert = () => {
         if(errors){
             openNotificationWithIcon('error', errors)
+            dispatch( cleanErrorAction() )
         }
         if(updated){
-            openNotificationWithIcon('success', 'El rol ha sido creado correctamente')
+            openNotificationWithIcon('success', 'El rol ha sido actualizado correctamente')
             navigate('/roles')
         }
     }
+
+    useEffect(() => {
+        if( role.permisos && role.permisos.length > 0 && permisos.length > role.permisos.length){
+            setIndeterminate(true)
+        }else{
+            setIndeterminate(false)
+        }
+
+        if(role.permisos.length === permisos.length){
+            setCheckAll(true)
+        }
+
+        
+    }, [role.permisos])
+ 
+
+    const handleCheck = (e) => {
+        const { value, checked } = e.target
+        if ( checked ) {
+            setRole({
+                ...role,
+                permisos: role.permisos ? [...role.permisos, value] : [value]
+            })
+        }
+        else {
+            setRole({
+                ...role,
+                permisos: role.permisos.filter((e) => e !== Number(value))
+            })
+        }
+
+        
+    }
+
+    const onCheckAllChange = (e) => {
+
+        const { value, checked } = e.target
+
+        if(checked){
+            setRole({
+                ...role,
+                permisos: permisos.map( item => item.id)
+            })
+            setIndeterminate(false)
+            setCheckAll(true)
+            
+        }else{
+            setRole({
+                ...role,
+                permisos: []
+            })
+            setCheckAll(false)
+        }
+    }
     
-    if(isLoading) return <div>Cargando...</div>
+    if(isLoading) return <Loading />
     if(!editedRole) return <div>No se encontro el rol</div>
     return ( 
         <Form
             className="max-w-screen-md mx-auto"
             onFinish={() => handleSubmit()}
             layout="vertical"
-            onChange={handleChange}
+            
             form={form}
         >
             <h1 className="text-center text-2xl font-bold text-dark"> Editar Rol </h1>
@@ -86,7 +149,7 @@ const EditRoles = () => {
                 ]}
                 hasFeedback
             >
-                <Input name="nombre" />
+                <Input name="nombre" onChange={handleChange}/>
             </Form.Item>
 
             <Form.Item
@@ -97,7 +160,7 @@ const EditRoles = () => {
                 ]}
                 hasFeedback
             >
-                <TextArea name="descripcion"/>
+                <TextArea name="descripcion" onChange={handleChange}/>
             </Form.Item>
 
             <Form.Item
@@ -112,6 +175,39 @@ const EditRoles = () => {
                     <Option value={false}>Inactivo</Option> 
                 </Select>
             </Form.Item>
+
+            <>
+            <Divider/>
+                <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}> 
+                    Seleccionar Todos
+                </Checkbox>
+                <div className="grid grid-cols-4">
+                    <>
+                        <div className="col-span-1 py-3">
+                            <h2 className="font-bold text-dark text-xl ml-3">Ver</h2>
+                        </div>
+                        <div className="col-span-1">
+                            <h2 className="font-bold text-dark text-xl ml-3">Crear</h2>
+                        </div>
+                        <div className="col-span-1">
+                            <h2 className="font-bold text-dark text-xl ml-3">Editar</h2>
+                        </div>
+                        <div className="col-span-1">
+                            <h2 className="font-bold text-dark text-xl ml-3">Borrar</h2>
+                        </div>
+                    </>
+                </div>
+                <Checkbox.Group defaultValue={role.permisos} value={role.permisos} className="w-full"> 
+                    <div className="grid grid-cols-4 gap-y-1">
+                        {
+                            permisos.map ((item, i) => (
+                                <Checkbox className="first-of-type:ml-2" checked={role.permisos && role.permisos.includes(item.id)} name="permisos" key={i} value={item.id} onChange={ (e) => handleCheck(e) }> {item.nombre} </Checkbox>
+                               
+                            ))
+                        }
+                    </div>
+                </Checkbox.Group>
+            </>
 
             <Form.Item className="py-5">
                 <div className="flex justify-between">

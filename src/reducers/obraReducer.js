@@ -8,6 +8,7 @@ const initialState = {
     editedObra: null,
     created: false,
     updated: false,
+    deleted: false,
 }
 
 // eslint-disable-next-line
@@ -25,6 +26,7 @@ export default (state = initialState, action) => {
                 editedObra: null,
                 created: false,
                 updated: false,
+                deleted: false,
             }
         case types.GET_ALL_OBRA_SUCCESS:
             return {
@@ -61,7 +63,8 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
-                obra: state.obra.filter(obra => obra.id !== action.payload.id)
+                obra: state.obra.filter(obra => obra.id !== action.payload.id),
+                deleted: true
             }
         case types.GET_ALL_OBRA_ERROR:
         case types.GET_OBRA_ERROR:
@@ -74,6 +77,12 @@ export default (state = initialState, action) => {
                 isLoading: false,
                 errors: action.payload
             }
+
+        case types.CLEAN_ERROR_STATE:
+            return {
+                ...state,
+                errors: null
+        }
         default:
             return state
     }

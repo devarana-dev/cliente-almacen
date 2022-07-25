@@ -8,6 +8,7 @@ const initialState = {
     errors: null,
     created: false,
     updated: false,
+    deleted: false,
 }
 
 // eslint-disable-next-line
@@ -25,6 +26,7 @@ export default (state = initialState, action) => {
                 errors: null,
                 created: false,
                 updated: false,
+                deleted: false,
             }
 
         case types.GET_ALL_USER_SUCCESS:
@@ -67,7 +69,8 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
-                usuarios: state.usuarios.filter(usuario => usuario.id !== action.payload.id)
+                usuarios: state.usuarios.filter(usuario => usuario.id !== action.payload.id),
+                deleted: true
             }
 
         case types.UPDATE_USER_ERROR:
@@ -80,7 +83,11 @@ export default (state = initialState, action) => {
                 errors: action.payload,
                 isLoading: false
             }
-            
+        case types.CLEAN_ERROR_STATE:
+            return {
+                ...state,
+                errors: null
+            }   
         default:
             return state
     }

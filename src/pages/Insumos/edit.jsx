@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams} from "react-router-dom";
 import { getAllActividadAction } from "../../actions/actividadActions";
+import { cleanErrorAction } from "../../actions/globalActions";
 import { getInsumoAction, updateInsumoAction } from "../../actions/insumoActions";
 import { getAllZonaAction } from "../../actions/zonaActions";
+import Loading from "../../components/Elements/Loading";
 import openNotificationWithIcon from "../../hooks/useNotification";
 
 
@@ -57,6 +59,7 @@ const EditInsumos = () => {
     const displayAlert = () => {
         if(errors){
             openNotificationWithIcon('error', errors)
+            dispatch( cleanErrorAction() ) 
         }
         if(updated){
             openNotificationWithIcon('success', 'El insumo ha sido actualizado correctamente')
@@ -64,7 +67,7 @@ const EditInsumos = () => {
         }
     }
 
-    if(isLoading) return <div>Cargando...</div>
+    if(isLoading) return <Loading />
     if(!editedInsumo) return <div>No se encontro el insumo</div>
     return ( 
         <Form

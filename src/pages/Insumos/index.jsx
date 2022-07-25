@@ -5,11 +5,14 @@ import { Button, Table, Popconfirm, notification, Modal, Image } from 'antd';
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { cleanErrorAction } from '../../actions/globalActions';
 import { deleteInsumoAction, getAllInsumosAction, clearUploadState } from '../../actions/insumoActions';
+import Loading from '../../components/Elements/Loading';
 import { AntdNotification } from '../../components/Elements/Notification';
 import UploadFile from '../../components/Elements/UploadFile';
 
 import { getColumnSearchProps } from '../../hooks/useFilter'
+import openNotificationWithIcon from '../../hooks/useNotification';
 
 const Insumos = () => {
 
@@ -19,7 +22,7 @@ const Insumos = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [ showImage, setShowImage ] = useState(false)
     const [ dataSource, setDataSource ] = useState([]);
-    const { insumos, isLoading, errors } = useSelector(state => state.insumos);
+    const { insumos, isLoading, errors, deleted } = useSelector(state => state.insumos);
 
     useEffect(() => {
         dispatch(getAllInsumosAction())
@@ -102,18 +105,22 @@ const Insumos = () => {
 
 	const handleDelete = (id) => {
 		dispatch(deleteInsumoAction(id))
-		if (errors){
-			notification['error']({
-				message: 'Error al eliminar',
-				description: errors
-			})
-		}else{
-			notification['success']({
-				message: 'Correcto!',
-				description: 'Se ha eliminado correctamente'
-			})
-		}
 	}
+
+    useEffect(() => {
+        displayAlert()
+    }, [errors, deleted])
+
+    const displayAlert = () => {
+        if(errors){
+            openNotificationWithIcon('error', errors)
+            dispatch( cleanErrorAction() )
+            
+        }
+        if(deleted){
+            openNotificationWithIcon('success', 'El insumo se ha eliminado')
+        }
+    }
 
     const showModal = () => {
 		setIsModalVisible(true);
@@ -128,7 +135,6 @@ const Insumos = () => {
     return ( 
     <>
     <h1 className='text-dark text-xl text-center font-medium'>Insumos</h1>
-        {  (errors && errors.length > 0) && <AntdNotification errors={errors} type='error'/>}
 		<div className='py-2 flex justify-between'>
 			<Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Regresar</Button>
 			<div>

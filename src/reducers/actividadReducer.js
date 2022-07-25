@@ -8,6 +8,7 @@ const initialState = {
     editedActividad: null,
     created: false,
     updated: false,
+    deleted: false,
 }
 
 // eslint-disable-next-line
@@ -25,6 +26,7 @@ export default (state = initialState, action) => {
                 editedActividad: null,
                 created: false,
                 updated: false,
+                deleted: false,
             }
         case types.GET_ALL_ACTIVIDAD_SUCCESS:
             return {
@@ -50,7 +52,11 @@ export default (state = initialState, action) => {
                 actividades: [...state.actividades, action.payload],
                 created: true
             }
-
+        case types.CLEAN_ERROR_STATE:
+            return {
+                ...state,
+                errors: null
+            }
         case types.UPDATE_ACTIVIDAD_SUCCESS:
             return {
                 ...state,
@@ -65,7 +71,8 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
-                actividades: state.actividades.filter(actividad => actividad.id !== action.payload.id)
+                actividades: state.actividades.filter(actividad => actividad.id !== action.payload.id),
+                deleted: true,
             }
 
         case types.DELETE_ACTIVIDAD_ERROR:

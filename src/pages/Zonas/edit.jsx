@@ -2,7 +2,9 @@ import { Form, Input, Select, Button, notification } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams} from "react-router-dom";
+import { cleanErrorAction } from "../../actions/globalActions";
 import { getZonaAction, updateZonaAction } from "../../actions/zonaActions";
+import Loading from "../../components/Elements/Loading";
 import openNotificationWithIcon from "../../hooks/useNotification";
 
 const EditZonas = () => {
@@ -47,6 +49,7 @@ const EditZonas = () => {
     const displayAlert = () => {
         if(errors){
             openNotificationWithIcon('error', errors)
+            dispatch( cleanErrorAction() )
         }
         if(updated){
             openNotificationWithIcon('success', 'La zona se ha sido actualizado correctamente')
@@ -54,7 +57,7 @@ const EditZonas = () => {
         }
     }
     
-    if(isLoading) return <div>Cargando...</div>
+    if(isLoading) return <Loading />
     if(!editedZona) return <div>No se encontro la Zona</div>
     return ( 
         <Form

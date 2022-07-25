@@ -5,9 +5,11 @@ import { Button, Table, Popconfirm, notification } from 'antd';
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { cleanErrorAction } from '../../actions/globalActions';
 import { deleteObraAction, getAllObraAction } from '../../actions/obraActions';
 import { AntdNotification } from '../../components/Elements/Notification';
 import { getColumnSearchProps } from '../../hooks/useFilter'
+import openNotificationWithIcon from '../../hooks/useNotification';
 
 const Obras = () => {
 
@@ -15,7 +17,7 @@ const Obras = () => {
     const navigate = useNavigate();
 
     const [ dataSource, setDataSource ] = useState([]);
-    const { obra, isLoading, errors } = useSelector(state => state.obras);
+    const { obra, isLoading, errors, deleted} = useSelector(state => state.obras);
 
     useEffect(() => {
         dispatch(getAllObraAction())
@@ -86,23 +88,26 @@ const Obras = () => {
 
 	const handleDelete = (id) => {
 		dispatch(deleteObraAction(id))
-		if (errors){
-			notification['error']({
-				message: 'Error al eliminar',
-				description: errors
-			})
-		}else{
-			notification['success']({
-				message: 'Correcto!',
-				description: 'Se ha eliminado correctamente'
-			})
-		}
 	}
+
+    useEffect(() => {
+        displayAlert()
+    }, [errors, deleted])
+
+    const displayAlert = () => {
+        if(errors){
+            openNotificationWithIcon('error', errors)
+            dispatch( cleanErrorAction() )
+            
+        }
+        if(deleted){
+            openNotificationWithIcon('success', 'La obra se ha eliminado')
+        }
+    }
 
     return ( 
     <>
         <h1 className='text-dark text-xl text-center font-medium'>Obra / CC</h1>
-        {  (errors && errors.length > 0) && <AntdNotification errors={errors} type='error'/>}
 		<div className='py-2 flex justify-between'>
 			<Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Regresar</Button>
 			<Button type='primary' onClick={() => navigate('create')}>Agregar Nueva Obra/CC</Button>

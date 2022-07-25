@@ -5,6 +5,8 @@ import { useNavigate, useParams} from "react-router-dom";
 import { getObraAction, updateObraAction } from "../../actions/obraActions";
 import { getAllNivelesAction } from "../../actions/nivelActions";
 import openNotificationWithIcon from "../../hooks/useNotification";
+import { cleanErrorAction } from "../../actions/globalActions";
+import Loading from "../../components/Elements/Loading";
 
 const EditObra = () => {
 
@@ -74,6 +76,7 @@ const EditObra = () => {
     const displayAlert = () => {
         if(errors){
             openNotificationWithIcon('error', errors)
+            dispatch( cleanErrorAction() )
         }
         if(updated){
             openNotificationWithIcon('success', 'Se ha actualizado la obra correctamente')
@@ -81,7 +84,7 @@ const EditObra = () => {
         }
     }
     
-    if(isLoading) return <div>Cargando...</div>
+    if(isLoading) return <Loading />
     if(!editedObra) return <div>No se encontro el centro de costo</div>
     return ( 
         <Form

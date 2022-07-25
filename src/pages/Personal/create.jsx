@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { getAllRolesAction } from "../../actions/roleActions";
 import { createPersonalAction } from "../../actions/personalActions";
 import openNotificationWithIcon from "../../hooks/useNotification";
+import { cleanErrorAction } from "../../actions/globalActions";
 
 const CreatePersonal = () => {
     const dispatch = useDispatch();
@@ -45,6 +46,7 @@ const CreatePersonal = () => {
     const displayAlert = () => {
         if(errors){
             openNotificationWithIcon('error', errors)
+            dispatch( cleanErrorAction() )
         }
         if(created){
             openNotificationWithIcon('success', 'El personal ha sido actualizado correctamente')

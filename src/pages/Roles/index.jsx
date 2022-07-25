@@ -1,13 +1,14 @@
 
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, notification, Popconfirm, Table } from 'antd';
+import { Button, Popconfirm, Table } from 'antd';
 
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { cleanErrorAction } from '../../actions/globalActions';
 import { deleteRoleAction, getAllRolesAction } from '../../actions/roleActions';
-import { AntdNotification } from '../../components/Elements/Notification';
 import { getColumnSearchProps } from '../../hooks/useFilter'
+import openNotificationWithIcon from '../../hooks/useNotification';
 
 const Roles = () => {
 
@@ -15,7 +16,7 @@ const Roles = () => {
     const navigate = useNavigate();
 
     const [ dataSource, setDataSource ] = useState([]);
-    const {roles, isLoading, errors} = useSelector(state => state.roles);
+    const {roles, isLoading, errors, deleted} = useSelector(state => state.roles);
 
     useEffect(() => {
         dispatch(getAllRolesAction())
@@ -72,23 +73,26 @@ const Roles = () => {
 
 	const handleDelete = (id) => {
 		dispatch(deleteRoleAction(id))
-		if (errors){
-			notification['error']({
-				message: 'Error al eliminar',
-				description: errors
-			})
-		}else{
-			notification['success']({
-				message: 'Correcto!',
-				description: 'Se ha eliminado correctamente'
-			})
-		}
 	}
+
+    useEffect(() => {
+        displayAlert()
+    }, [errors, deleted])
+
+    const displayAlert = () => {
+        if(errors){
+            openNotificationWithIcon('error', errors)
+            dispatch( cleanErrorAction() )
+            
+        }
+        if(deleted){
+            openNotificationWithIcon('success', 'El rol se ha eliminado')
+        }
+    }
 
     return ( 
     <>
         <h1 className='text-dark text-xl text-center font-medium'>Roles</h1>
-        {  (errors && errors.length > 0) && <AntdNotification errors={errors} type='error'/>}
             <div className='py-2 flex justify-between'>
                 <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Regresar</Button>
                 <Button type='primary' onClick={() => navigate('create')}>Agregar Nuevo Rol</Button>
