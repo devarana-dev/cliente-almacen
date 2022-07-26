@@ -1,6 +1,6 @@
 
 import { CheckCircleOutlined, FrownOutlined, StopOutlined } from '@ant-design/icons';
-import { Button, Table, Tag, Modal, Input } from 'antd';
+import { Button, Table, Tag, Modal, Input, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
@@ -8,8 +8,8 @@ import { deliverValeAction, getAllValesAction } from '../../actions/valeActions'
 import { getColumnSearchProps } from '../../hooks/useFilter'
 import {nanoid} from 'nanoid'
 import '../../assets/scss/showVale.scss'
-import { AntdNotification } from '../../components/Elements/Notification';
 import openNotificationWithIcon from '../../hooks/useNotification';
+import moment from 'moment';
 
 const ValesSalida = () => {
 
@@ -104,6 +104,18 @@ const ValesSalida = () => {
             ...getColumnSearchProps('actividadInfo'),
         },
         {
+            title: 'Fecha',
+            dataIndex: 'fecha',
+            key: `fecha-${nanoid()}`,
+            sorter: (a, b) => a.fecha.localeCompare(b.fecha),
+            ...getColumnSearchProps('fecha'),
+            render: (text, record) => (
+                <div>
+                    { moment(record.fecha).format('DD/MM/YYYY') }
+                </div>
+            )
+        },
+        {
             title: 'Estatus',
             dataIndex: 'statusVale',
             key: 'statusVale',
@@ -111,11 +123,11 @@ const ValesSalida = () => {
                 record.statusVale === 1 ? <Tag className='mx-auto' key={nanoid(4)} color="green">Sin Entregar</Tag>:
                 record.statusVale === 2 ? <Tag className='mx-auto' key={nanoid(4)} color="lime">Parcialmente Entregado Abierto</Tag> :
                 record.statusVale === 3 ? <Tag className='mx-auto' key={nanoid(4)} color="magenta">Parcialmente Entregado Cerrado</Tag> :
-                record.statusVale === 4 ? <Tag className='mx-auto' key={nanoid(4)} color="volcano">Cerrado</Tag>:
-                record.statusVale === 5 ? <Tag className='mx-auto' key={nanoid(4)} color="red">Sin Insumos</Tag> :
-                record.statusVale === 6 ?  <Tag className='mx-auto' key={nanoid(4)} color="geekblue">Entregado</Tag> :
-                record.statusVale === 7 ?  <Tag className='mx-auto' key={nanoid(4)} color="gold">Borrador</Tag> : ''
-             ),
+                record.statusVale === 4 ? <Tag className='mx-auto' key={nanoid(4)} color="blue">Entregado</Tag>:
+                record.statusVale === 5 ? <Tag className='mx-auto' key={nanoid(4)} color="red">Cancelado</Tag> :
+                record.statusVale === 6 ?  <Tag className='mx-auto' key={nanoid(4)} color="geekblue">Borrador</Tag> :
+                record.statusVale === 7 ?  <Tag className='mx-auto' key={nanoid(4)} color="volcano">Cerrado</Tag> : ''
+            ),
             filters: [
                 { 
                     text: 'Por Entregar',
@@ -130,19 +142,19 @@ const ValesSalida = () => {
                     value: 3
                 },
                 { 
-                    text: 'Cerrado',
+                    text: 'Entregado',
                     value: 4
                 },
                 { 
-                    text: 'Sin Insumos',
+                    text: 'Cancelado',
                     value: 5
                 },
                 { 
-                    text: 'Entregado',
+                    text: 'Borrador',
                     value: 6
                 },
                 { 
-                    text: 'Borrador',
+                    text: 'Cerrado',
                     value: 7
                 },
             ],
@@ -155,14 +167,7 @@ const ValesSalida = () => {
     const expandedRowRender = (record, index, indent, expanded) => {
 
         if(expanded){
-
-            // añadir key a cada objeto del array 
             setDataNestedSource( record.detalle_salidas )
-            // setDataNestedSource(
-            //     record.detalle_salidas
-            // )
-
-
         }
     
         const columns = [
@@ -220,11 +225,9 @@ const ValesSalida = () => {
                         <Tag color="blue">Continuar Entrega</Tag> 
                         <Button onClick={ () => handleEntrega(record, 2) } type='warning'> <FrownOutlined /> </Button>
                     </div>
-                    : record.status === 3 ? <Tag key={nanoid(4)} color="magenta">Parcialmente Entregado Cerrado</Tag> 
-                    : record.status === 4 ? <Tag key={nanoid(4)} color="volcano">Cerrado</Tag>
-                    : record.status === 5 ? <Tag key={nanoid(4)} color="red">Sin Insumos</Tag> 
-                    : record.status === 6 ?  <Tag key={nanoid(4)} color="geekblue">Entregado</Tag> 
-                    : record.status === 7 ?  <Tag key={nanoid(4)} color="gold">Borrador</Tag> : null
+                    : record.status === 3 ? <Tag key={nanoid(4)} color="blue">Entregado</Tag> 
+                    : record.status === 4 ? <Tag key={nanoid(4)} color="volcano">Cancelado</Tag>
+                    : null
                     
                 )
             }
@@ -320,7 +323,7 @@ const ValesSalida = () => {
             <Modal
                 title="Confirmación"
                 visible={visible}
-                onOk={handleSubmit}
+                onOk={ () => {  entrega.type === 3  ? entrega.comentarios ? handleSubmit() : message.error('Error! Debes una razón ') : handleSubmit() } }
                 onCancel={hideModal}
                 okText="Enviar"
                 cancelText="Cancelar"

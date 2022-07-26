@@ -40,7 +40,8 @@ export const AntdNotification = ({ type, errors }) => {
             message,
             description: errors,
         })
-    }, [  ])
+        // eslint-disable-next-line
+    }, [])
 
     return null
 }

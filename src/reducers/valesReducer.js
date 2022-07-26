@@ -12,6 +12,7 @@ const initialState = {
     deleted: false,
 }
 
+// eslint-disable-next-line
 export default (state = initialState, action) => {
     switch(action.type) {
 
@@ -33,7 +34,8 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 isLoading: true,
-                errors: null,             
+                errors: null, 
+                delivered: false,
             }
 
         case types.DELIVER_VALE_SUCCESS:

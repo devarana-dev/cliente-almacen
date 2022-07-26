@@ -1,14 +1,12 @@
  
 import { DeleteOutlined } from '@ant-design/icons';
-import { Button, Table, Popconfirm, notification, Modal, Image } from 'antd';
+import { Button, Table, Popconfirm, Modal } from 'antd';
 
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { cleanErrorAction } from '../../actions/globalActions';
 import { deleteInsumoAction, getAllInsumosAction, clearUploadState } from '../../actions/insumoActions';
-import Loading from '../../components/Elements/Loading';
-import { AntdNotification } from '../../components/Elements/Notification';
 import UploadFile from '../../components/Elements/UploadFile';
 
 import { getColumnSearchProps } from '../../hooks/useFilter'
@@ -20,7 +18,6 @@ const Insumos = () => {
     const navigate = useNavigate();
 
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [ showImage, setShowImage ] = useState(false)
     const [ dataSource, setDataSource ] = useState([]);
     const { insumos, isLoading, errors, deleted } = useSelector(state => state.insumos);
 
@@ -86,6 +83,7 @@ const Insumos = () => {
         ],
         onFilter: (value, record) => record.status === value,
         render: (text, record) => ( record.status ? 'Activo' : 'Inactivo' ),
+        width: 150
     },
       
     {
@@ -145,10 +143,6 @@ const Insumos = () => {
         <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>
 
         <Modal title="Cargar Insumo" visible={isModalVisible} footer={null} onCancel={handleCancel}>
-                {/* <div className='flex py-3 flex-col items-center'>
-                    <p>Ejemplo</p>
-                    <Image src={insumoExample} width={150} /> 
-                </div> */}
             <UploadFile/>
         </Modal>
     </>
