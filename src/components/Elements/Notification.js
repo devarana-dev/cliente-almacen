@@ -4,17 +4,17 @@ import { useEffect } from 'react'
 
 export const AntdNotification = ({ type, errors }) => {
 
-    let description = ''
+    // let description = ''
     let message = ''
 
-    if(typeof(errors) === 'string') {
-        description = errors
-    }
-    else if(typeof(errors) === 'object') {
-        Object.keys(errors).forEach(key => {
-            description += `${key} ${errors[key]}\n`
-        })
-    }
+    // if(typeof(errors) === 'string') {
+    //     description = errors
+    // }
+    // else if(typeof(errors) === 'object') {
+    //     Object.keys(errors).forEach(key => {
+    //         description += `${key} ${errors[key]}\n`
+    //     })
+    // }
 
 
     switch (type) {

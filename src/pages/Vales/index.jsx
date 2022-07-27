@@ -260,6 +260,7 @@ const ValesSalida = () => {
 
     useEffect(() => {
         displayAlert()
+        // eslint-disable-next-line
     }, [errors, delivered])
 
     const displayAlert = () => {
@@ -313,10 +314,11 @@ const ValesSalida = () => {
             onExpand: (expanded, record) => {
                 const keys = [];
                 if (expanded) {
-                  keys.push(record.id - 1);
+                  keys.push(record.key);
                 }
                 setActiveExpRow(keys);
-              }}}
+              }
+            }}
             
             />
 

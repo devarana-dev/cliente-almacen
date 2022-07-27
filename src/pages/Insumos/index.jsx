@@ -107,6 +107,7 @@ const Insumos = () => {
 
     useEffect(() => {
         displayAlert()
+        // eslint-disable-next-line
     }, [errors, deleted])
 
     const displayAlert = () => {

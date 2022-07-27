@@ -44,9 +44,11 @@ export default (state = initialState, action) => {
                 isLoading: false,
                 errors: null,
                 delivered: true,
+                
                 vales: state.vales.map(vale => {
                     if(vale.id === action.payload.insumo.valeSalidaId) {
                         vale.statusVale = action.payload.valeSalida.statusVale
+                        // eslint-disable-next-line
                         vale.detalle_salidas.map(detalle => {
                             if(detalle.id === action.payload.insumo.id) {
                                 return (

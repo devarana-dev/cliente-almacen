@@ -11,6 +11,7 @@ import personalReducer from "./personalReducer";
 import insumoReducer from "./insumoReducer";
 import valesReducer from "./valesReducer";
 import permisosReducer from "./permisosReducer";
+import notificacionReducer from "./notificacionReducer";
 
 
 export default combineReducers({
@@ -24,5 +25,6 @@ export default combineReducers({
     personal: personalReducer,
     insumos: insumoReducer,
     vales: valesReducer,
-    permisos: permisosReducer
+    permisos: permisosReducer,
+    notificaciones: notificacionReducer
 })
