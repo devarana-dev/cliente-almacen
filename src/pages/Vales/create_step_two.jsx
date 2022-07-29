@@ -111,17 +111,9 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
                 content = "¿Has terminado el vale de salida?"
                 fn = () => handleSubmitVale()
             break;
-            case 2: 
-                content = "¿Deseas guardarlo en borrador y terminar después?"
-                fn = () => handleSubmitVale()
-            break;
-            case 3:
+            case 2:
                 content = "¿Estás seguro que deseas cancelar? Esto borrará lo que has registrado"
                 fn = () => navigate('/acciones')
-            break;
-            case 4:
-                content = "¿Estás seguro que deseas cancelar? Esto borrará lo que has registrado"
-                fn = () => navigate('/vales-salida')
             break;
                 
             default:
@@ -222,20 +214,15 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
 
     <div className="flex justify-between w-full">
         <Button type='dark' htmlType='button' onClick={ () => setCurrent(0) }>
-            Regresar
-        </Button>
-        <Button type='warning' htmlType='button' onClick={ async () => { const statusValue = 2; await setVale({ ...vale, statusVale: statusValue }); confirm(2)} }>
-            Borrador
-        </Button>        
+            Volver
+        </Button>     
         <Button type='primary' htmlType='button' onClick={ async () => { const statusValue = 1; await setVale({ ...vale, statusVale: statusValue }); confirm(1)  }} >
             Crear
         </Button>
-        <Button type='danger' htmlType='button' onClick={ () => confirm(3) } className="block sm:hidden">
+        <Button type='danger' htmlType='button' onClick={ () => confirm(2) } className="block sm:hidden">
             Salir
         </Button>
-        <Button type='danger' htmlType='button' onClick={ () => confirm(4) } className="hidden sm:block">
-            Salir
-        </Button>
+
     </div>
 
     </>

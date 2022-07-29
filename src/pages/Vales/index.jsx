@@ -457,7 +457,7 @@ const ValesSalida = () => {
         <>
             <h1 className='text-dark text-xl text-center font-medium'>Vales</h1>
             <div className='py-3 flex justify-between'>
-                <Button type='dark' className='block sm:hidden' onClick={() => navigate('/acciones')}>Volver</Button>
+                <Button type='dark' className='block sm:hidden' onClick={() => navigate('/')}>Inicio</Button>
                 <Button className='sm:block hidden' type='ghost' onClick={ () => dispatch(searchValeAction({})) }> Ver todos </Button>
                 <Button className='sm:block hidden' type='primary' onClick={ () => dispatch(searchValeAction({statusVale: 1})) }> Nuevos </Button>
                 <Button className='sm:block hidden' type='dark' onClick={ () => dispatch(searchValeAction({statusVale: 2})) }> Pendientes  </Button>

@@ -7,7 +7,6 @@ import Login from "../pages/Auth/Login"
 import Home from "../pages/Home"
 import LoginSuccess from "../pages/Auth/LoginSuccess"
 import LoginError from "../pages/Auth/LoginError"
-import Acciones from "../pages/Inicio/Acciones"
 import ValesSalida from "../pages/Vales"
 import CreateValesSalida from "../pages/Vales/create"
 import Error404 from "../pages/Error404"
@@ -59,11 +58,6 @@ const routesPrivate = [
         path: '/',
         layout: Private,
         component: Home
-    },
-    {
-        path: '/acciones',
-        layout: Private,
-        component: Acciones
     },
     {
         path: '/usuarios',

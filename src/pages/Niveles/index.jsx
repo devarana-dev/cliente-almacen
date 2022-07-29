@@ -99,7 +99,7 @@ const Niveles = () => {
     <>
         <h1 className='text-dark text-xl text-center font-medium'>Niveles</h1>
         <div className='py-2 flex justify-between'>
-          <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Regresar</Button>
+          <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/')}>Inicio</Button>
           <Button type='primary' onClick={() => navigate('create')}>Agregar Nuevo Nivel</Button>
         </div>
         <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>

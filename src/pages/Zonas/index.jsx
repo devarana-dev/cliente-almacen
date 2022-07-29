@@ -107,7 +107,7 @@ const Zonas = () => {
     <>
         <h1 className='text-dark text-xl text-center font-medium'>Zonas</h1>
         <div className='py-2 flex justify-between'>
-          <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Regresar</Button>
+          <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/')}>Inicio</Button>
           <Button type='primary' onClick={() => navigate('create')}>Agregar Nueva Zona</Button>
         </div>
         <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>

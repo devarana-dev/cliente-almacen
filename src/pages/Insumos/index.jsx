@@ -135,7 +135,7 @@ const Insumos = () => {
     <>
     <h1 className='text-dark text-xl text-center font-medium'>Insumos</h1>
 		<div className='py-2 flex justify-between'>
-			<Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Regresar</Button>
+			<Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Inicio</Button>
 			<div>
                 <Button type='default' onClick={() => showModal()}>Importar Insumos</Button>
                 <Button className='ml-5' type='primary' onClick={() => navigate('create')}>Agregar Nuevo Insumo</Button>

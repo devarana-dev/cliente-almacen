@@ -122,7 +122,7 @@ const Usuarios = () => {
     <>
 		<h1 className='text-dark text-xl text-center font-medium'>Usuarios</h1>
 		<div className='py-2 flex justify-between'>
-			<Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Volver</Button>
+			<Button type='dark' className='visible sm:invisible' onClick={() => navigate('/')}>Inicio</Button>
 			<Button type='primary' onClick={() => navigate('create')}>Agregar Nuevo Usuario</Button>
 		</div>
         <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>

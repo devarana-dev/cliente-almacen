@@ -115,7 +115,7 @@ const Personal = () => {
     <>
         <h1 className='text-dark text-xl text-center font-medium'>Lideres de Cuadrilla</h1>
         <div className='py-2 flex justify-between'>
-            <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Regresar</Button>
+            <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/')}>Inicio</Button>
             <Button type='primary' onClick={() => navigate('create')}>Agregar Nuevo Lider de Cuadrilla</Button>
         </div>
         <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>

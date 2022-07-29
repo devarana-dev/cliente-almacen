@@ -203,8 +203,8 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                 </Form.Item>
                         
                 <div className='flex justify-between'>
-                <Button type='dark' htmlType='button' onClick={() => navigate(-1)}>
-                    Regresar
+                <Button type='dark' htmlType='button' onClick={() => navigate('/')}>
+                    Salir
                 </Button>
                 <Button type='ghost' htmlType='submit'>
                     Continuar
