@@ -13,7 +13,7 @@ const CreateValesSalida = () => {
     });
 
     return ( 
-        <div className="max-w-2xl w-full mx-auto">
+        <div className="max-w-2xl w-full mx-auto px-10">
             <h1 className="text-center text-2xl font-bold text-dark pb-3">Vale de salida</h1>
             
                 
