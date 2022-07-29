@@ -8,7 +8,7 @@ import { cancelDetalleAction, cancelValeAction, closeValeAction, completeValeSal
 import { getColumnSearchProps } from '../../hooks/useFilter'
 import { nanoid } from 'nanoid'
 import '../../assets/scss/showVale.scss'
-import ekIcon from "../../assets/img/Original-EK.png"
+// import ekIcon from "../../assets/img/Original-EK.png"
 import openNotificationWithIcon from '../../hooks/useNotification';
 import moment from 'moment';
 
