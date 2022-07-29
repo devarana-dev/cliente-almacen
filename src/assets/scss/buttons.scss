@@ -63,8 +63,6 @@
     background: linear-gradient(190deg, $danger 0%, $danger-lighter 100%);
     border:1px solid $danger;
     color: white;
-    padding: 3px 5px;
-
     &:hover, &:focus{
         border:1px solid $danger;
         color: $danger;
@@ -78,7 +76,6 @@
     background: linear-gradient(190deg, $warning 0%, $warning-lighter 100%);
     border:1px solid $warning;
     color: white;
-    padding: 3px 5px;
     &:hover, &:focus{
         border:1px solid $warning;
         color:$warning;
@@ -97,4 +94,15 @@
         border:1px solid $dark;
         color: white;
     }
+}
+
+
+
+// Icons Icons
+
+.ant-btn.icon{
+    padding: 0px 8px!important;
+}
+.ant-btn > .anticon + span, .ant-btn > span + .anticon{
+    margin: 0px!important;
 }

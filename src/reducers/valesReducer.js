@@ -19,6 +19,9 @@ export default (state = initialState, action) => {
         case types.GET_ALL_VALE:
         case types.GET_VALE:
         case types.CREATE_VALE:
+        case types.CLOSE_VALE:
+        case types.CLOSE_DETALLE:
+        case types.DELIVER_VALE:
             return {
                 ...state,
                 isLoading: true,
@@ -29,14 +32,6 @@ export default (state = initialState, action) => {
                 delivered: false,
                 deleted: false,
             }
-        
-        case types.DELIVER_VALE:
-            return {
-                ...state,
-                isLoading: true,
-                errors: null, 
-                delivered: false,
-            }
 
         case types.DELIVER_VALE_SUCCESS:
             return {
@@ -46,15 +41,15 @@ export default (state = initialState, action) => {
                 delivered: true,
                 
                 vales: state.vales.map(vale => {
-                    if(vale.id === action.payload.insumo.valeSalidaId) {
+                    if(vale.id === action.payload.detalleSalida.valeSalidaId) {
                         vale.statusVale = action.payload.valeSalida.statusVale
                         // eslint-disable-next-line
                         vale.detalle_salidas.map(detalle => {
-                            if(detalle.id === action.payload.insumo.id) {
+                            if(detalle.id === action.payload.detalleSalida.id) {
                                 return (
-                                    detalle.cantidadEntregada = action.payload.insumo.cantidadEntregada,
-                                    detalle.cantidadSolicitada = action.payload.insumo.cantidadSolicitada,
-                                    detalle.status = action.payload.insumo.status
+                                    detalle.cantidadEntregada = action.payload.detalleSalida.cantidadEntregada,
+                                    detalle.cantidadSolicitada = action.payload.detalleSalida.cantidadSolicitada,
+                                    detalle.status = action.payload.detalleSalida.status
                                 )
                             }
                         })
@@ -67,8 +62,9 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 isLoading: false,
-                errors: action.payload,
+                errors: action.payload.message,
                 delivered: false,
+                // vales: state.vales.map(vale => ( vale.id === action.payload.valeSalida.id ? action.payload.valeSalida : vale )) ,
             }
                     
         case types.UPDATE_VALE:
@@ -108,7 +104,7 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
-                vales: state.vales.map(vale => ( vale._id === action.payload._id ? action.payload : vale )),
+                vales: state.vales.map(vale => ( vale.id === action.payload.id ? action.payload : vale )),
                 updated: true
             }
 
@@ -116,15 +112,45 @@ export default (state = initialState, action) => {
         case types.GET_VALE_ERROR:
         case types.CREATE_VALE_ERROR:
         case types.UPDATE_VALE_ERROR:
+        case types.CLOSE_VALE_ERROR:
+        case types.CLOSE_DETALLE_ERROR:
             return {
                 ...state,
                 isLoading: false,
-                errors: action.payload
+                errors: action.payload.message
             }
         case types.CLEAN_ERROR_STATE:
             return {
                 ...state,
                 errors: null
+            }
+
+        case types.CLOSE_VALE_SUCCESS:
+            console.log(action.payload.valeSalida);
+            return {
+                ...state,
+                isLoading: false,
+                errors: null,
+                vales: state.vales.map(vale => ( vale.id === action.payload.valeSalida.id ? action.payload.valeSalida : vale )),
+                updated: true
+            }
+        case types.CLOSE_DETALLE_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                errors: null,
+                vales: state.vales.map(vale => {
+                    if(vale.id === action.payload.detalleSalida.valeSalidaId) {
+                        vale.detalle_salidas.map(detalle => {
+                            if(detalle.id === action.payload.detalleSalida.id) {
+                                return (
+                                    detalle.status = action.payload.detalleSalida.status
+                                )
+                            }
+                        })
+                    }
+                    return vale
+                })
             }
         default:
             return state

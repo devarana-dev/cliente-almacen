@@ -14,8 +14,15 @@ const Socket = () => {
 
 
     useEffect(() => {
-        const socket = io.connect(process.env.REACT_APP_SERVER);
-        setSocket(socket);
+        const socketIO = io(process.env.REACT_APP_SERVER,
+            {
+                auth: {
+                    token: localStorage.getItem('accessToken')
+                }
+            }
+        );
+        setSocket(socketIO);
+        socketIO.emit("notificacion")
 
         dispatch(getNotificationesAction())
         // eslint-disable-next-line
