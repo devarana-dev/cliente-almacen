@@ -1,10 +1,12 @@
-import { Form, Input, Select, Button, notification } from "antd";
+import { Form, Input, Select, Button } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { cleanErrorAction } from "../../actions/globalActions";
 import { createInsumoAction } from "../../actions/insumoActions";
+import Forbidden from "../../components/Elements/Forbidden";
 import openNotificationWithIcon from "../../hooks/useNotification";
+import { hasPermission } from "../../utils/hasPermission";
 
 const CreateInsumos = () => {
 
@@ -38,6 +40,7 @@ const CreateInsumos = () => {
 
     useEffect(() => {
         displayAlert()
+        // eslint-disable-next-line
     }, [errors, created])
 
     const displayAlert = () => {
@@ -50,6 +53,9 @@ const CreateInsumos = () => {
             navigate('/insumos')
         }
     }
+
+    const { userPermission } = useSelector(state => state.permisos);
+    if(!hasPermission(userPermission, '/crear-insumos')) return <Forbidden/>
     
     return ( 
         <Form

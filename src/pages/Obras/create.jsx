@@ -1,4 +1,4 @@
-import { Form, Input, Select, Button, notification, Checkbox, Divider } from "antd";
+import { Form, Input, Select, Button, Checkbox, Divider } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +6,8 @@ import { createObraAction } from "../../actions/obraActions";
 import { getAllNivelesAction } from "../../actions/nivelActions";
 import openNotificationWithIcon from "../../hooks/useNotification";
 import { cleanErrorAction } from "../../actions/globalActions";
+import { hasPermission } from "../../utils/hasPermission";
+import Forbidden from "../../components/Elements/Forbidden";
 
 const CreateObra = () => {
 
@@ -15,6 +17,7 @@ const CreateObra = () => {
 
     const { errors, created } = useSelector(state => state.obras );
     const { niveles } = useSelector( state => state.niveles )
+    const { userPermission } = useSelector(state => state.permisos);
 
     const [obra, setObra] = useState({
         nombre: "",
@@ -38,6 +41,7 @@ const CreateObra = () => {
 
     useEffect(() => {
         displayAlert()
+        // eslint-disable-next-line
     }, [errors, created])
 
     const displayAlert = () => {
@@ -70,6 +74,9 @@ const CreateObra = () => {
     const handleSubmit = () => {
         dispatch(createObraAction(obra));
     }
+
+    
+    if(!hasPermission(userPermission, '/crear-obras')) return <Forbidden/>
     
     return ( 
         <Form

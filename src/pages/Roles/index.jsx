@@ -7,8 +7,10 @@ import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { cleanErrorAction } from '../../actions/globalActions';
 import { deleteRoleAction, getAllRolesAction } from '../../actions/roleActions';
+import Forbidden from '../../components/Elements/Forbidden';
 import { getColumnSearchProps } from '../../hooks/useFilter'
 import openNotificationWithIcon from '../../hooks/useNotification';
+import { groupPermission, hasPermission } from '../../utils/hasPermission';
 
 const Roles = () => {
 
@@ -17,6 +19,7 @@ const Roles = () => {
 
     const [ dataSource, setDataSource ] = useState([]);
     const {roles, isLoading, errors, deleted} = useSelector(state => state.roles);
+    const { userPermission } = useSelector(state => state.permisos);
 
     useEffect(() => {
         dispatch(getAllRolesAction())
@@ -61,12 +64,16 @@ const Roles = () => {
             key: 'acciones',
             render: (id) => 
             <div className='flex justify-around'> 
-                <Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button> 
+                { hasPermission(userPermission, '/editar-roles') ? <Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button>  : null } 
+                {
+                    hasPermission(userPermission, '/eliminar-roles') ? 
                 <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
-                  <Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
-                </Popconfirm>
-            </div>,
-            width: 150,
+                    <Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
+                </Popconfirm> : null
+                }
+			</div>,
+            width: groupPermission(userPermission, ['/editar-roles', '/eliminar-roles']) ? 150 : 0,
+            className: groupPermission(userPermission, ['/editar-roles', '/eliminar-roles']) ? 'block' : 'hidden',
         }
         
     ];
@@ -77,6 +84,7 @@ const Roles = () => {
 
     useEffect(() => {
         displayAlert()
+        // eslint-disable-next-line
     }, [errors, deleted])
 
     const displayAlert = () => {
@@ -90,12 +98,17 @@ const Roles = () => {
         }
     }
 
+    if(!hasPermission(userPermission, '/ver-roles') && !isLoading ) return <Forbidden/>
+
     return ( 
     <>
         <h1 className='text-dark text-xl text-center font-medium'>Roles</h1>
-            <div className='py-2 flex justify-between'>
-                <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/')}>Inicio</Button>
-                <Button type='primary' onClick={() => navigate('create')}>Agregar Nuevo Rol</Button>
+            <div className='py-2 flex justify-end'>          
+            {
+                hasPermission(userPermission, '/crear-roles') ?
+                <Button type='primary' onClick={() => navigate('create')}>Agregar Nuevo Nivel</Button>
+                : null 
+            }
             </div>
         <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>
     </>

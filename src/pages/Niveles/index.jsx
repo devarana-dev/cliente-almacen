@@ -1,15 +1,16 @@
 
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Table, Popconfirm, notification } from 'antd';
+import { Button, Table, Popconfirm } from 'antd';
 
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { cleanErrorAction } from '../../actions/globalActions';
 import { deleteNivelAction, getAllNivelesAction } from '../../actions/nivelActions';
-import { AntdNotification } from '../../components/Elements/Notification';
+import Forbidden from '../../components/Elements/Forbidden';
 import { getColumnSearchProps } from '../../hooks/useFilter'
 import openNotificationWithIcon from '../../hooks/useNotification';
+import { groupPermission, hasPermission } from '../../utils/hasPermission';
 
 const Niveles = () => {
 
@@ -18,6 +19,7 @@ const Niveles = () => {
 
     const [ dataSource, setDataSource ] = useState([]);
     const { niveles, isLoading, errors, deleted } = useSelector(state => state.niveles);
+    const { userPermission } = useSelector(state => state.permisos);
 
     useEffect(() => {
         dispatch(getAllNivelesAction())
@@ -65,13 +67,17 @@ const Niveles = () => {
             dataIndex: 'acciones',
             key: 'acciones',
             render: (id) => 
-            <div className='flex justify-around'> 
-            <Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button> 
-				<Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
-					<Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
-				</Popconfirm>
-            </div>,
-            width: 150,
+			<div className='flex justify-around'> 
+                { hasPermission(userPermission, '/editar-niveles') ? <Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button>  : null } 
+                {
+                    hasPermission(userPermission, '/eliminar-niveles') ? 
+                <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
+                    <Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
+                </Popconfirm> : null
+                }
+			</div>,
+            width: groupPermission(userPermission, ['/editar-niveles', '/eliminar-niveles']) ? 150 : 0,
+            className: groupPermission(userPermission, ['/editar-niveles', '/eliminar-niveles']) ? 'block' : 'hidden',
         }
         
     ];
@@ -82,6 +88,7 @@ const Niveles = () => {
 
     useEffect(() => {
         displayAlert()
+        // eslint-disable-next-line
     }, [errors, deleted])
 
     const displayAlert = () => {
@@ -95,12 +102,17 @@ const Niveles = () => {
         }
     }
 
+    if(!hasPermission(userPermission, '/ver-niveles') && !isLoading ) return <Forbidden/>
+    
     return ( 
     <>
         <h1 className='text-dark text-xl text-center font-medium'>Niveles</h1>
-        <div className='py-2 flex justify-between'>
-          <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/')}>Inicio</Button>
-          <Button type='primary' onClick={() => navigate('create')}>Agregar Nuevo Nivel</Button>
+        <div className='py-2 flex justify-end'>          
+        {
+            hasPermission(userPermission, '/crear-niveles') ?
+            <Button type='primary' onClick={() => navigate('create')}>Agregar Nuevo Nivel</Button>
+            : null 
+        }
         </div>
         <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>
     </>

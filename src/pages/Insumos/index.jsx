@@ -7,10 +7,12 @@ import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { cleanErrorAction } from '../../actions/globalActions';
 import { deleteInsumoAction, getAllInsumosAction, clearUploadState } from '../../actions/insumoActions';
+import Forbidden from '../../components/Elements/Forbidden';
 import UploadFile from '../../components/Elements/UploadFile';
 
 import { getColumnSearchProps } from '../../hooks/useFilter'
 import openNotificationWithIcon from '../../hooks/useNotification';
+import { groupPermission, hasPermission } from '../../utils/hasPermission';
 
 const Insumos = () => {
 
@@ -20,6 +22,8 @@ const Insumos = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [ dataSource, setDataSource ] = useState([]);
     const { insumos, isLoading, errors, deleted } = useSelector(state => state.insumos);
+    const { userPermission } = useSelector(state => state.permisos);
+    
 
     useEffect(() => {
         dispatch(getAllInsumosAction())
@@ -92,11 +96,15 @@ const Insumos = () => {
         key: 'acciones',
         render: (id) => 
         <div className='flex justify-around'> 
+        {   hasPermission(userPermission, '/eliminar-insumos') ? 
             <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
                 <Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
             </Popconfirm>
+            : '-'
+        }
         </div>,
-        width: 100,
+        width: groupPermission(userPermission, ['/editar-obras', '/eliminar-insumos']) ? 100 : 0,
+        className: groupPermission(userPermission, ['/editar-obras', '/eliminar-insumos']) ? 'block' : 'hidden',
     }
       
   ];
@@ -129,19 +137,26 @@ const Insumos = () => {
 		setIsModalVisible(false);
         dispatch(clearUploadState())
 	};
-
+    
+    
+    
+    if(!hasPermission(userPermission, '/ver-insumos')) return <Forbidden/>
+    
 
     return ( 
     <>
-    <h1 className='text-dark text-xl text-center font-medium'>Insumos</h1>
-		<div className='py-2 flex justify-between'>
-			<Button type='dark' className='visible sm:invisible' onClick={() => navigate('/acciones')}>Inicio</Button>
-			<div>
-                <Button type='default' onClick={() => showModal()}>Importar Insumos</Button>
-                <Button className='ml-5' type='primary' onClick={() => navigate('create')}>Agregar Nuevo Insumo</Button>
-            </div>
+    <h1 className='text-dark text-2xl text-center font-medium'>Insumos</h1>
+		<div className='py-2 flex justify-end'>
+			{
+                hasPermission(userPermission, '/crear-insumos') ?
+                <div>
+                    <Button type='default' onClick={() => showModal()}>Importar Insumos</Button>
+                    <Button className='ml-5' type='primary' onClick={() => navigate('create')}>Agregar Nuevo Insumo</Button>
+                </div>
+                : null 
+            }
 		</div>
-        <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>
+        <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false} />
 
         <Modal title="Cargar Insumo" visible={isModalVisible} footer={null} onCancel={handleCancel}>
             <UploadFile/>

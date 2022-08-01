@@ -1,11 +1,13 @@
-import { Form, Input, Select, Button, notification } from "antd";
+import { Form, Input, Select, Button } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams} from "react-router-dom";
 import { cleanErrorAction } from "../../actions/globalActions";
 import { getZonaAction, updateZonaAction } from "../../actions/zonaActions";
+import Forbidden from "../../components/Elements/Forbidden";
 import Loading from "../../components/Elements/Loading";
 import openNotificationWithIcon from "../../hooks/useNotification";
+import { hasPermission } from "../../utils/hasPermission";
 
 const EditZonas = () => {
 
@@ -16,6 +18,7 @@ const EditZonas = () => {
     const { Option } = Select;
 
     const { errors, editedZona, isLoading, updated } = useSelector(state => state.zonas);
+    const { userPermission } = useSelector(state => state.permisos);    
 
     const [zona, setZona] = useState({
         nombre: "",
@@ -44,6 +47,7 @@ const EditZonas = () => {
 
     useEffect(() => {
         displayAlert()
+        // eslint-disable-next-line
     }, [errors, updated])
 
     const displayAlert = () => {
@@ -56,7 +60,7 @@ const EditZonas = () => {
             navigate('/zonas')
         }
     }
-    
+    if(!hasPermission(userPermission, '/editar-zonas') && !isLoading ) return <Forbidden/>
     if(isLoading) return <Loading />
     if(!editedZona) return <div>No se encontro la Zona</div>
     return ( 

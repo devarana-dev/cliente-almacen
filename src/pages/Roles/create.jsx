@@ -1,11 +1,13 @@
-import { Form, Input, Select, Button, notification, Checkbox, Divider } from "antd";
+import { Form, Input, Select, Button, Checkbox, Divider } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { cleanErrorAction } from "../../actions/globalActions";
 import { getAllPermisosAction } from "../../actions/permisosActions";
 import { createRoleAction } from "../../actions/roleActions";
+import Forbidden from "../../components/Elements/Forbidden";
 import openNotificationWithIcon from "../../hooks/useNotification";
+import { hasPermission } from "../../utils/hasPermission";
 
 const CreateRoles = () => {
 
@@ -15,7 +17,7 @@ const CreateRoles = () => {
     const { TextArea } = Input;
 
     const { errors, created } = useSelector(state => state.roles);
-    const { permisos } = useSelector( state => state.permisos )
+    const { permisos, userPermission } = useSelector( state => state.permisos )
     
     const [role, setRole] = useState({
         nombre: "",
@@ -42,10 +44,12 @@ const CreateRoles = () => {
 
     useEffect(() => {
         dispatch(getAllPermisosAction())
+        // eslint-disable-next-line
     }, [])
 
     useEffect(() => {
         displayAlert()
+        // eslint-disable-next-line
     }, [errors, created])
 
     const displayAlert = () => {
@@ -65,6 +69,7 @@ const CreateRoles = () => {
         }else{
             setIndeterminate(false)
         }
+        // eslint-disable-next-line
     }, [role.permisos])
  
 
@@ -88,7 +93,7 @@ const CreateRoles = () => {
 
     const onCheckAllChange = (e) => {
 
-        const { value, checked } = e.target
+        const { checked } = e.target
 
         if(checked){
             setRole({
@@ -106,7 +111,7 @@ const CreateRoles = () => {
         }
     }
 
-        
+    if(!hasPermission(userPermission, '/crear-roles')) return <Forbidden/>
     return ( 
         <Form
             className="max-w-screen-md mx-auto"

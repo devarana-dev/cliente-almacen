@@ -1,10 +1,12 @@
-import { Form, Input, Select, Button, notification } from "antd";
+import { Form, Input, Select, Button } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { cleanErrorAction } from "../../actions/globalActions";
 import { createZonaAction } from "../../actions/zonaActions";
+import Forbidden from "../../components/Elements/Forbidden";
 import openNotificationWithIcon from "../../hooks/useNotification";
+import { hasPermission } from "../../utils/hasPermission";
 
 const CreateZonas = () => {
 
@@ -13,6 +15,7 @@ const CreateZonas = () => {
     const { Option } = Select;
 
     const { errors, created } = useSelector(state => state.zonas);
+    const { userPermission } = useSelector(state => state.permisos);    
 
     const [zona, setZona] = useState({
         nombre: "",
@@ -33,6 +36,7 @@ const CreateZonas = () => {
 
     useEffect(() => {
         displayAlert()
+        // eslint-disable-next-line
     }, [errors, created])
 
     const displayAlert = () => {
@@ -45,7 +49,7 @@ const CreateZonas = () => {
             navigate('/zonas')
         }
     }
-    
+    if(!hasPermission(userPermission, '/crear-zonas')) return <Forbidden/>
     return ( 
         <Form
             className="max-w-screen-md mx-auto"

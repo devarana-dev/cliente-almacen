@@ -1,12 +1,13 @@
-import { Form, Input, Select, Button, notification, Divider, Checkbox } from "antd";
+import { Form, Input, Select, Button, Modal, Divider, Checkbox } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams} from "react-router-dom";
 import { cleanErrorAction } from "../../actions/globalActions";
 import { getAllPermisosAction } from "../../actions/permisosActions";
 import { getRoleAction, updateRoleAction } from "../../actions/roleActions";
-import Loading from "../../components/Elements/Loading";
+import Forbidden from "../../components/Elements/Forbidden";
 import openNotificationWithIcon from "../../hooks/useNotification";
+import { hasPermission } from "../../utils/hasPermission";
 
 const EditRoles = () => {
 
@@ -18,7 +19,7 @@ const EditRoles = () => {
     const { TextArea } = Input;
 
     const { errors, editedRole, isLoading , updated} = useSelector(state => state.roles);
-    const { permisos } = useSelector( state => state.permisos )
+    const { permisos, userPermission } = useSelector( state => state.permisos )
 
 
     const [role, setRole] = useState({
@@ -60,8 +61,33 @@ const EditRoles = () => {
         dispatch(updateRoleAction(role));
     }
 
+    const countDown = () => {
+        let secondsToGo = 3;
+      
+        const modal = Modal.success({
+          title: 'Rol Actualizado',
+          content: `El navegador cargará los permisos en ${secondsToGo} segundos.`,
+          okButtonProps:{ style: {display: "none"}}
+        });
+      
+        const timer = setInterval(() => {
+          secondsToGo -= 1;
+          modal.update({
+            content: `El navegador cargará los permisos en ${secondsToGo} segundos.`,
+            okButtonProps:{ style: {display: "none"}}
+          });
+        }, 1000);
+      
+        setTimeout(() => {
+            clearInterval(timer);
+            modal.destroy();
+            window.location.reload(true);
+        }, secondsToGo * 1000);
+    };
+
     useEffect(() => {
         displayAlert()
+        // eslint-disable-next-line
     }, [errors, updated])
 
     const displayAlert = () => {
@@ -70,8 +96,11 @@ const EditRoles = () => {
             dispatch( cleanErrorAction() )
         }
         if(updated){
-            openNotificationWithIcon('success', 'El rol ha sido actualizado correctamente')
+            // openNotificationWithIcon('success', 'El rol ha sido actualizado correctamente')
             navigate('/roles')
+            countDown()
+
+            
         }
     }
 
@@ -86,7 +115,7 @@ const EditRoles = () => {
             setCheckAll(true)
         }
 
-        
+        // eslint-disable-next-line
     }, [role.permisos])
  
 
@@ -110,7 +139,7 @@ const EditRoles = () => {
 
     const onCheckAllChange = (e) => {
 
-        const { value, checked } = e.target
+        const { checked } = e.target
 
         if(checked){
             setRole({
@@ -129,8 +158,11 @@ const EditRoles = () => {
         }
     }
     
-    if(isLoading) return <Loading />
+    // if(isLoading) return <Loading />
+    if(!hasPermission(userPermission, '/editar-roles') && !isLoading ) return <Forbidden/>
     if(!editedRole) return <div>No se encontro el rol</div>
+
+    
     return ( 
         <Form
             className="max-w-screen-md mx-auto"

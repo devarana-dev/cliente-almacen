@@ -5,8 +5,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import { cleanErrorAction } from "../../actions/globalActions";
 import { getAllRolesAction } from "../../actions/roleActions";
 import { getUsuarioAction, updateUsuarioAction } from "../../actions/usuarioActions";
+import Forbidden from "../../components/Elements/Forbidden";
 import Loading from "../../components/Elements/Loading";
 import openNotificationWithIcon from "../../hooks/useNotification";
+import { hasPermission } from "../../utils/hasPermission";
 
 const EditUsuario = () => {
     const dispatch = useDispatch();
@@ -18,6 +20,7 @@ const EditUsuario = () => {
 
     const { editedUsuario, isLoading, errors, updated } = useSelector(state => state.usuarios);
     const { roles } = useSelector(state => state.roles);
+    const { userPermission } = useSelector(state => state.permisos);
 
     useEffect(() => {
         dispatch(getAllRolesAction())
@@ -33,6 +36,7 @@ const EditUsuario = () => {
 
     useEffect(() => {
         displayAlert()
+        // eslint-disable-next-line
     }, [errors, updated])
 
     const displayAlert = () => {
@@ -68,6 +72,8 @@ const EditUsuario = () => {
         dispatch(updateUsuarioAction(usuario));
     }
 
+    if(!hasPermission(userPermission, '/editar-usuarios') && !isLoading ) return <Forbidden/>
+    
     if(isLoading) return <Loading />
     if(!editedUsuario) return <div>No se encontro el personal</div>
 

@@ -43,6 +43,7 @@ export default (state = initialState, action) => {
                 isLoading: false,
                 errors: null,
                 logout: false,
+                token: action.payload.accessToken,
             }
 
         case types.LOGOUT_SUCCESS:
@@ -63,7 +64,7 @@ export default (state = initialState, action) => {
                 userAuth: action.payload.userAuth,
                 isLoading: action.payload.isLoading,
                 isAuthenticated: action.payload.isAuthenticated,
-                token: action.payload.token,
+                token: action.payload.accessToken,
                 errors: null,
                 logout: false,
             }

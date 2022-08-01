@@ -1,6 +1,6 @@
 
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, notification, Popconfirm, Table } from 'antd';
+import { Button, Popconfirm, Table } from 'antd';
 
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
@@ -8,9 +8,10 @@ import { useNavigate } from 'react-router-dom';
 import { deletePersonalAction, getAllPersonalAction } from '../../actions/personalActions';
 import moment from 'moment';
 import { getColumnSearchProps } from '../../hooks/useFilter'
-import { AntdNotification } from '../../components/Elements/Notification';
 import openNotificationWithIcon from '../../hooks/useNotification';
 import { cleanErrorAction } from '../../actions/globalActions';
+import { groupPermission, hasPermission } from '../../utils/hasPermission';
+import Forbidden from '../../components/Elements/Forbidden';
 
 const Personal = () => {
 
@@ -19,6 +20,7 @@ const Personal = () => {
 
     const [ dataSource, setDataSource ] = useState([]);
     const {personal, isLoading, errors, deleted} = useSelector(state => state.personal);
+    const { userPermission } = useSelector(state => state.permisos);
 
     useEffect(() => {
         dispatch(getAllPersonalAction())
@@ -78,12 +80,16 @@ const Personal = () => {
             key: 'acciones',
             render: (id) => 
             <div className='flex justify-around'> 
-            <Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button> 
-            <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
-              <Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
-            </Popconfirm>
-                </div>,
-            width: 150,
+                { hasPermission(userPermission, '/editar-personal') ? <Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button>  : null } 
+                {
+                    hasPermission(userPermission, '/eliminar-personal') ? 
+                <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
+                    <Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
+                </Popconfirm> : null
+                }
+            </div>,
+            width: groupPermission(userPermission, ['/editar-personal', '/eliminar-personal']) ? 150 : 0,
+            className: groupPermission(userPermission, ['/editar-personal', '/eliminar-personal']) ? 'block' : 'hidden',
         }
         
     ];
@@ -94,6 +100,7 @@ const Personal = () => {
 
     useEffect(() => {
         displayAlert()
+        // eslint-disable-next-line
     }, [errors, deleted])
 
     const displayAlert = () => {
@@ -111,12 +118,16 @@ const Personal = () => {
         return <div>Cargando...</div>
     }
 
+    if(!hasPermission(userPermission, '/ver-personal') && !isLoading ) return <Forbidden/>
     return ( 
     <>
         <h1 className='text-dark text-xl text-center font-medium'>Lideres de Cuadrilla</h1>
-        <div className='py-2 flex justify-between'>
-            <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/')}>Inicio</Button>
+        <div className='py-2 flex justify-end'>          
+        {
+            hasPermission(userPermission, '/crear-personal') ?
             <Button type='primary' onClick={() => navigate('create')}>Agregar Nuevo Lider de Cuadrilla</Button>
+            : null 
+        }
         </div>
         <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>
     </>

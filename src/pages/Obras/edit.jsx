@@ -1,4 +1,4 @@
-import { Form, Input, Select, Button, notification, Checkbox, Divider  } from "antd";
+import { Form, Input, Select, Button, Checkbox, Divider  } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams} from "react-router-dom";
@@ -7,6 +7,8 @@ import { getAllNivelesAction } from "../../actions/nivelActions";
 import openNotificationWithIcon from "../../hooks/useNotification";
 import { cleanErrorAction } from "../../actions/globalActions";
 import Loading from "../../components/Elements/Loading";
+import { hasPermission } from "../../utils/hasPermission";
+import Forbidden from "../../components/Elements/Forbidden";
 
 const EditObra = () => {
 
@@ -18,6 +20,7 @@ const EditObra = () => {
 
     const { errors, editedObra, isLoading, updated } = useSelector(state => state.obras);
     const {niveles} = useSelector( state => state.niveles )
+    const { userPermission } = useSelector(state => state.permisos)
 
     const [obra, setObra] = useState({
         nombre: "",
@@ -71,6 +74,7 @@ const EditObra = () => {
 
     useEffect(() => {
         displayAlert()
+        // eslint-disable-next-line
     }, [errors, updated])
 
     const displayAlert = () => {
@@ -84,8 +88,12 @@ const EditObra = () => {
         }
     }
     
+    
+    if(!hasPermission(userPermission, '/editar-obras')) return <Forbidden/>
+    
     if(isLoading) return <Loading />
     if(!editedObra) return <div>No se encontro el centro de costo</div>
+
     return ( 
         <Form
             className="max-w-screen-md mx-auto"

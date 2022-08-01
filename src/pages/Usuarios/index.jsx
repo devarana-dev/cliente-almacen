@@ -1,15 +1,16 @@
 
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, notification, Popconfirm, Table } from 'antd';
+import { Button, Popconfirm, Table } from 'antd';
 
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { cleanErrorAction } from '../../actions/globalActions';
 import { deleteUsuarioAction, getAllUsuariosAction } from '../../actions/usuarioActions';
-import { AntdNotification } from '../../components/Elements/Notification';
+import Forbidden from '../../components/Elements/Forbidden';
 import { getColumnSearchProps } from '../../hooks/useFilter'
 import openNotificationWithIcon from '../../hooks/useNotification';
+import { groupPermission, hasPermission } from '../../utils/hasPermission';
 
 const Usuarios = () => {
 
@@ -18,6 +19,7 @@ const Usuarios = () => {
 
     const [ dataSource, setDataSource ] = useState([]);
     const {usuarios, isLoading, errors, deleted} = useSelector(state => state.usuarios);
+    const { userPermission } = useSelector(state => state.permisos);
 
     useEffect(() => {
         dispatch(getAllUsuariosAction())
@@ -39,6 +41,7 @@ const Usuarios = () => {
 
     useEffect(() => {
         displayAlert()
+        // eslint-disable-next-line
     }, [errors, deleted])
 
     const displayAlert = () => {
@@ -88,8 +91,6 @@ const Usuarios = () => {
             key: 'rol',
             sorter: (a, b) => a.nombre.localeCompare(b.nombre),
             ...getColumnSearchProps('rol'),
-            // render: (text, record) => { return record.role.nombre }
-            // render: (value) => {console.log(value); }
         },
         {
             title: 'Puesto',
@@ -104,27 +105,32 @@ const Usuarios = () => {
             key: 'acciones',
             render: (id) => 
             <div className='flex justify-around'> 
-				<Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button> 
-				<Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
-					<Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
-				</Popconfirm>
-            </div>,
-            width: 150,
+                { hasPermission(userPermission, '/editar-usuarios') ? <Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button>  : null } 
+                {
+                    hasPermission(userPermission, '/eliminar-usuarios') ? 
+                <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
+                    <Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
+                </Popconfirm> : null
+                }
+			</div>,
+            width: groupPermission(userPermission, ['/editar-usuarios', '/eliminar-usuarios']) ? 150 : 0,
+            className: groupPermission(userPermission, ['/editar-usuarios', '/eliminar-usuarios']) ? 'block' : 'hidden',
         }
         
     ];
 
-    if(isLoading) {
-        return <div>Cargando...</div>
-    }
+    if(!hasPermission(userPermission, '/ver-usuarios') && !isLoading ) return <Forbidden/>
 
     return ( 
     <>
 		<h1 className='text-dark text-xl text-center font-medium'>Usuarios</h1>
-		<div className='py-2 flex justify-between'>
-			<Button type='dark' className='visible sm:invisible' onClick={() => navigate('/')}>Inicio</Button>
-			<Button type='primary' onClick={() => navigate('create')}>Agregar Nuevo Usuario</Button>
-		</div>
+        <div className='py-2 flex justify-end'>          
+        {
+            hasPermission(userPermission, '/crear-usuarios') ?
+            <Button type='primary' onClick={() => navigate('create')}>Agregar Nuevo Usuario</Button>
+            : null 
+        }
+        </div>
         <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>
     </>
     );

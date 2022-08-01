@@ -33,12 +33,13 @@ const getAllPermisosError = error => {
     }
 }
 
-export function getPermisoAction(id){
+export function getPermisoAction(){
     return async (dispatch) => {
         dispatch(getPermisoRequest())
-        await clientAxios.get(`/permisos/${id}`)
+        await clientAxios.get(`/permisos/1`)
             .then ( res => {
-                dispatch(getPermisoSuccess(res.data.permiso))
+
+                dispatch(getPermisoSuccess(res.data.permisos))
             }).catch( err => {
                 console.log('Error getPermisoAction', err.response);
                 dispatch(getPermisoError(err.response.data.message))

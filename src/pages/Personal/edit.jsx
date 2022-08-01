@@ -1,12 +1,14 @@
-import { Form, Input, Button, notification, DatePicker } from "antd";
+import { Form, Input, Button, DatePicker } from "antd";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { cleanErrorAction } from "../../actions/globalActions";
 import { getPersonalAction, updatePersonalAction } from "../../actions/personalActions";
+import Forbidden from "../../components/Elements/Forbidden";
 import Loading from "../../components/Elements/Loading";
 import openNotificationWithIcon from "../../hooks/useNotification";
+import { hasPermission } from "../../utils/hasPermission";
 
 const EditPersonal = () => {
     const dispatch = useDispatch();
@@ -16,6 +18,7 @@ const EditPersonal = () => {
     const [form] = Form.useForm();
 
     const { editedPersonal, isLoading, errors, updated } = useSelector(state => state.personal);
+    const { userPermission } = useSelector(state => state.permisos);
 
     const [personal, setPersonal] = useState({
         nombre: "",
@@ -62,6 +65,7 @@ const EditPersonal = () => {
 
     useEffect(() => {
         displayAlert()
+        // eslint-disable-next-line
     }, [errors, updated])
 
     const displayAlert = () => {
@@ -75,6 +79,7 @@ const EditPersonal = () => {
         }
     }
 
+    if(!hasPermission(userPermission, '/editar-personal') && !isLoading ) return <Forbidden/>
     if(isLoading) return <Loading />
     if(!editedPersonal) return <div>No se encontro el personal</div>
     

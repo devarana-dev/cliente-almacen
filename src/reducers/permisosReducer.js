@@ -5,7 +5,7 @@ const initialState = {
     permisos: [],
     isLoading: true,
     errors: null,
-    editedPermiso: null,
+    userPermission: null,
 }
 
 
@@ -18,7 +18,6 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: true,
                 errors: null,
-                editedPermiso: null,
             }
 
         case types.GET_ALL_PERMISOS_SUCCESS:
@@ -34,7 +33,7 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
-                editedPermiso: action.payload
+                userPermission: action.payload
             }
         
         case types.GET_ALL_PERMISOS_ERROR:

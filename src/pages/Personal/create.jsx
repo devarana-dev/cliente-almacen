@@ -1,4 +1,4 @@
-import { Form, Input, Button, notification, DatePicker } from "antd";
+import { Form, Input, Button, DatePicker } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -6,12 +6,16 @@ import { getAllRolesAction } from "../../actions/roleActions";
 import { createPersonalAction } from "../../actions/personalActions";
 import openNotificationWithIcon from "../../hooks/useNotification";
 import { cleanErrorAction } from "../../actions/globalActions";
+import { hasPermission } from "../../utils/hasPermission";
+import Forbidden from "../../components/Elements/Forbidden";
 
 const CreatePersonal = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const { errors, created } = useSelector(state => state.personal);
+    const { userPermission } = useSelector(state => state.permisos);
+
     const [personal, setPersonal] = useState({
         nombre: "",
         apellidoPaterno: "",
@@ -41,6 +45,7 @@ const CreatePersonal = () => {
 
     useEffect(() => {
         displayAlert()
+        // eslint-disable-next-line
     }, [errors, created])
 
     const displayAlert = () => {
@@ -54,6 +59,7 @@ const CreatePersonal = () => {
         }
     }
 
+    if(!hasPermission(userPermission, '/crear-personal')) return <Forbidden/>
     return (
 
         <Form 

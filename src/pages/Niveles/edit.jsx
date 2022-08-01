@@ -1,4 +1,4 @@
-import { Form, Input, Select, Button, notification, Divider, Checkbox } from "antd";
+import { Form, Input, Select, Button, Divider, Checkbox } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams} from "react-router-dom";
@@ -6,8 +6,10 @@ import { getAllActividadAction } from "../../actions/actividadActions";
 import { cleanErrorAction } from "../../actions/globalActions";
 import { getNivelAction, updateNivelAction } from "../../actions/nivelActions";
 import { getAllZonaAction } from "../../actions/zonaActions";
+import Forbidden from "../../components/Elements/Forbidden";
 import Loading from "../../components/Elements/Loading";
 import openNotificationWithIcon from "../../hooks/useNotification";
+import { hasPermission } from "../../utils/hasPermission";
 
 const EditNiveles = () => {
 
@@ -20,6 +22,7 @@ const EditNiveles = () => {
     const { errors, editedNivel, isLoading, updated } = useSelector( state => state.niveles );
     const { zonas } = useSelector( state => state.zonas )
     const { actividades } = useSelector( state => state.actividades )
+    const { userPermission } = useSelector(state => state.permisos)
 
     const [nivel, setNivel] = useState({
         nombre: "",
@@ -94,6 +97,7 @@ const EditNiveles = () => {
 
     useEffect(() => {
         displayAlert()
+        // eslint-disable-next-line
     }, [errors, updated])
 
     const displayAlert = () => {
@@ -106,7 +110,8 @@ const EditNiveles = () => {
             navigate('/niveles')
         }
     }
-    
+
+    if(!hasPermission(userPermission, '/editar-niveles')) return <Forbidden/>
     if(isLoading) return <Loading />
     if(!editedNivel) return <div>No se encontro el nivel</div>
     return ( 

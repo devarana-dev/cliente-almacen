@@ -1,5 +1,5 @@
 
-import { AppstoreAddOutlined, CheckCircleOutlined, DeleteOutlined, FrownOutlined, PieChartFilled, StopOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, DeleteOutlined, FrownOutlined, PieChartFilled, StopOutlined } from '@ant-design/icons';
 import { Button, Table, Tag, Modal, Input } from 'antd';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
@@ -11,6 +11,8 @@ import '../../assets/scss/showVale.scss'
 // import ekIcon from "../../assets/img/Original-EK.png"
 import openNotificationWithIcon from '../../hooks/useNotification';
 import moment from 'moment';
+import { hasPermission } from '../../utils/hasPermission';
+import Forbidden from '../../components/Elements/Forbidden';
 
 const ValesSalida = () => {
 
@@ -18,6 +20,7 @@ const ValesSalida = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const { vales, errors, delivered, updated, isLoading } = useSelector( state => state.vales )
+    const { userPermission } = useSelector(state => state.permisos);
     const [ dataSource, setDataSource ] = useState([]);
     const [ dataNestedSource, setDataNestedSource ] = useState([])
     const [ validarCantidad, setValidarCantidad ] = useState(true)
@@ -120,6 +123,7 @@ const ValesSalida = () => {
             dataIndex: 'actividadInfo',
             key: `actividadInfo-${nanoid()}`,
             ellipsis: true,
+            width: 100,
             sorter: (a, b) => a.actividadInfo.localeCompare(b.actividadInfo),
             ...getColumnSearchProps('actividadInfo'),
         },
@@ -127,7 +131,6 @@ const ValesSalida = () => {
             title: 'Fecha',
             dataIndex: 'fecha',
             key: `fecha-${nanoid()}`,
-            sorter: (a, b) => a.fecha.localeCompare(b.fecha),
             ...getColumnSearchProps('fecha'),
             width: 70,
             render: (text, record) => (
@@ -215,21 +218,24 @@ const ValesSalida = () => {
             render: (text, record) => (
                 <div>
                     { 
-                        record.statusVale === 1 ? 
-                        <div className='flex justify-between'>
-                            <Button type='primary' className='icon' onClick={ () => handleEntrega(record, 3)}> <CheckCircleOutlined className='ml-0 align-middle' /> </Button>
-                            <Button type='danger' className='icon' onClick={() => handleCancel(1, record.id)}> <DeleteOutlined className='ml-0 align-middle' /> </Button>
-                        </div> : 
-                        record.statusVale === 2 || record.statusVale === 4 ? 
-                        <Button type='warning' className='icon' onClick={()=> handleClose(record.id)}> 
-                            {/* <img src={ekIcon} alt="sa" width={16} className="py-0.5" /> */}
-                            {/* <AppstoreAddOutlined className='ml-0 align-middle'/> */}
-                        </Button>
-                        : '-'
+                        hasPermission(userPermission, '/editar-vales') ?
+                            record.statusVale === 1 ? 
+                            <div className='flex justify-between'>
+                                <Button type='primary' className='icon' onClick={ () => handleEntrega(record, 3)}> <CheckCircleOutlined className='ml-0 align-middle' /> </Button>
+                                <Button type='danger' className='icon' onClick={() => handleCancel(1, record.id)}> <DeleteOutlined className='ml-0 align-middle' /> </Button>
+                            </div> : 
+                            record.statusVale === 2 || record.statusVale === 4 ? 
+                            <Button type='warning' className='icon' onClick={()=> handleClose(record.id)}> 
+                                {/* <img src={ekIcon} alt="sa" width={16} className="py-0.5" /> */}
+                                {/* <AppstoreAddOutlined className='ml-0 align-middle'/> */}
+                            </Button>
+                            : '-'
+                        : null
                     }
                 </div>
             ),
-            width: 100
+            width: hasPermission(userPermission, '/editar-vales') ? 150 : 0,
+            className: hasPermission(userPermission, '/editar-vales') ? 'block' : 'hidden',
         },
     ]
 
@@ -286,7 +292,6 @@ const ValesSalida = () => {
                 title: 'Estatus',
                 dataIndex: 'acciones',
                 key: `acciones-${nanoid()}`,
-                width: 200,
                 render: (text, record, index) => (
                     record.status === 1 ?
                     <Tag color="blue"> Nuevo </Tag>
@@ -298,26 +303,28 @@ const ValesSalida = () => {
                     : null
                     
                 ),
-                width: 70
+                width: 100
             },
             {
                 title: 'Acciones',
                 dataIndex: 'acciones',
                 key: `acciones-${nanoid()}`,
-                width: 200,
                 render: (text, record, index) => (
-                    record.status === 1 ?
-                    <div key={index} className="flex justify-between">
-                        <Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 1) } type='primary'> <CheckCircleOutlined className='ml-0 align-middle' /> </Button>
-                        <Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 2) } type='warning'> <FrownOutlined className='ml-0 align-middle' /> </Button>
-                        <Button className="icon" htmlType='button' onClick={ () => handleCancel(2, record.id) } type='danger'> <StopOutlined className='ml-0 align-middle' /> </Button>
-                    </div>
-                    : 
-                    record.status === 2 ?
-                    <Button className="icon" onClick={ () => handleEntrega(record, 2) } type='warning'> <PieChartFilled className='ml-0 align-middle'/> </Button>
-                    : '-'
-                    
-                )
+                    hasPermission(userPermission, '/editar-vales') ?
+                        record.status === 1 ?
+                        <div key={index} className="flex justify-between">
+                            <Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 1) } type='primary'> <CheckCircleOutlined className='ml-0 align-middle' /> </Button>
+                            <Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 2) } type='warning'> <FrownOutlined className='ml-0 align-middle' /> </Button>
+                            <Button className="icon" htmlType='button' onClick={ () => handleCancel(2, record.id) } type='danger'> <StopOutlined className='ml-0 align-middle' /> </Button>
+                        </div>
+                        : 
+                        record.status === 2 ?
+                        <Button className="icon" onClick={ () => handleEntrega(record, 2) } type='warning'> <PieChartFilled className='ml-0 align-middle'/> </Button>
+                        : '-'
+                    : null
+                ),
+                width: hasPermission(userPermission, '/editar-vales') ? 200 : 0,
+                className: hasPermission(userPermission, '/editar-vales') ? 'block' : 'hidden',
             }
         ]
         return <Table bordered  key={nanoid()} scroll={{ x: 'auto' }} columns={columns} dataSource={dataNestedSource} pagination={false} rowKey={nanoid()}  className="nestedTable"/>
@@ -452,6 +459,8 @@ const ValesSalida = () => {
    
         return result.cantidadEntregada
     }
+
+    if(!hasPermission(userPermission, '/ver-vales') && !isLoading ) return <Forbidden/>
     
     return ( 
         <>
@@ -462,9 +471,13 @@ const ValesSalida = () => {
                 <Button className='sm:block hidden' type='primary' onClick={ () => dispatch(searchValeAction({statusVale: 1})) }> Nuevos </Button>
                 <Button className='sm:block hidden' type='dark' onClick={ () => dispatch(searchValeAction({statusVale: 2})) }> Pendientes  </Button>
                 <Button className='sm:block hidden' type='danger' onClick={ () => dispatch(searchValeAction({statusVale: 7})) }> Cerrados  </Button>
-                <Button type='primary' onClick={() => navigate('nuevo')} className="ml-5">Agregar Nuevo Vale</Button>
+                {
+                    hasPermission(userPermission, '/crear-vales') ?
+                    <Button type='primary' onClick={() => navigate('nuevo')} className="ml-5">Agregar Nuevo Vale</Button>
+                    : null 
+                }
             </div>
-            <Table loading={isLoading} scroll={{ x: 'auto' }} key={123} columns={columns} dataSource={dataSource} expandable={{expandedRowRender, defaultExpandedRowKeys: ['0'], expandedRowKeys: activeExpRow,
+            <Table className='tableVales' loading={isLoading} scroll={{ x: 'auto' }} key={123} columns={columns} dataSource={dataSource} expandable={{expandedRowRender, defaultExpandedRowKeys: ['0'], expandedRowKeys: activeExpRow,
             rowExpandable: (record) => true,
             onExpand: (expanded, record) => {
                 const keys = [];

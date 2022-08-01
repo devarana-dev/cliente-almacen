@@ -202,13 +202,10 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                     </Select>
                 </Form.Item>
                         
-                <div className='flex justify-between'>
-                <Button type='dark' htmlType='button' onClick={() => navigate('/')}>
-                    Salir
-                </Button>
-                <Button type='ghost' htmlType='submit'>
-                    Continuar
-                </Button>
+                <div className='flex justify-end'>
+                    <Button type='ghost' htmlType='submit'>
+                        Continuar
+                    </Button>
                 </div>
             </Form>
     );

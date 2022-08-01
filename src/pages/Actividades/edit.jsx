@@ -1,11 +1,13 @@
-import { Form, Input, Select, Button, notification } from "antd";
+import { Form, Input, Select, Button } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams} from "react-router-dom";
 import { getActividadAction, updateActividadAction } from "../../actions/actividadActions";
 import { cleanErrorAction } from "../../actions/globalActions";
+import Forbidden from "../../components/Elements/Forbidden";
 import Loading from "../../components/Elements/Loading";
 import openNotificationWithIcon from "../../hooks/useNotification";
+import { hasPermission } from "../../utils/hasPermission";
 
 const EditActividades = () => {
 
@@ -17,6 +19,7 @@ const EditActividades = () => {
     const { TextArea } = Input;
 
     const { errors, editedActividad, isLoading, updated } = useSelector(state => state.actividades);
+    const { userPermission } = useSelector(state => state.permisos);
 
     const [actividad, setActividad] = useState({
         nombre: "",
@@ -46,6 +49,7 @@ const EditActividades = () => {
 
     useEffect(() => {
         displayAlert()
+        // eslint-disable-next-line
     }, [errors, updated])
 
     const displayAlert = () => {
@@ -58,7 +62,7 @@ const EditActividades = () => {
             navigate('/actividades')
         }
     }
-    
+    if(!hasPermission(userPermission, '/crear-actividades') && !isLoading ) return <Forbidden/>
     if(isLoading) return <Loading />
     if(!editedActividad) return <div>No se encontro la actividad</div>
     return ( 

@@ -7,3 +7,17 @@
         color: $dark!important;
     }
 }
+
+.tableVales{
+
+    
+    .ant-table-cell{
+        font-size: $small-size!important;;   
+    }
+    @media (min-width: $breakpoint-sm) {
+        .ant-table-cell{
+            font-size: $regular-size!important;;
+        }
+    }
+  
+}

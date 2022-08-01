@@ -7,6 +7,7 @@ import { getNotificationesAction, updateNotificationeAction } from '../actions/n
 
 const Socket = () => {
     const dispatch = useDispatch()
+    const { token } = useSelector(state => state.auth)
     const { notificaciones } = useSelector( state => state.notificaciones)
     const [socket, setSocket] = useState(null);
     const [ newNotification, setNewNotification ] = useState(0)
@@ -14,15 +15,9 @@ const Socket = () => {
 
 
     useEffect(() => {
-        const socketIO = io(process.env.REACT_APP_SERVER,
-            {
-                auth: {
-                    token: localStorage.getItem('accessToken')
-                }
-            }
-        );
+        const socketIO = io(process.env.REACT_APP_SERVER, {});
         setSocket(socketIO);
-        socketIO.emit("notificacion")
+        
 
         dispatch(getNotificationesAction())
         // eslint-disable-next-line

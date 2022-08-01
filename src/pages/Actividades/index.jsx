@@ -1,15 +1,16 @@
 
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, notification, Popconfirm, Table } from 'antd';
+import { Button, Popconfirm, Table } from 'antd';
 
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { deleteActividadAction, getAllActividadAction } from '../../actions/actividadActions';
 import { cleanErrorAction } from '../../actions/globalActions';
-import { AntdNotification } from '../../components/Elements/Notification';
+import Forbidden from '../../components/Elements/Forbidden';
 import { getColumnSearchProps } from '../../hooks/useFilter'
 import openNotificationWithIcon from '../../hooks/useNotification';
+import { groupPermission, hasPermission } from '../../utils/hasPermission';
 
 const Actividades = () => {
 
@@ -18,6 +19,7 @@ const Actividades = () => {
 
         const [ dataSource, setDataSource ] = useState([]);
         const {actividades, isLoading, errors, deleted} = useSelector(state => state.actividades);
+        const { userPermission } = useSelector(state => state.permisos);
 
         useEffect(() => {
                 dispatch(getAllActividadAction())
@@ -72,12 +74,16 @@ const Actividades = () => {
                     key: 'acciones',
                     render: (id) => 
                     <div className='flex justify-around'> 
-                    <Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button> 
-                    <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
-                        <Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
-                    </Popconfirm>
+                        { hasPermission(userPermission, '/editar-actividades') ? <Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button>  : null } 
+                        {
+                            hasPermission(userPermission, '/eliminar-actividades') ? 
+                        <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
+                            <Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
+                        </Popconfirm> : null
+                        }
                     </div>,
-                    width: 150,
+                    width: groupPermission(userPermission, ['/editar-actividades', '/eliminar-actividades']) ? 150 : 0,
+                    className: groupPermission(userPermission, ['/editar-actividades', '/eliminar-actividades']) ? 'block' : 'hidden',
                 }
                 
         ];
@@ -88,6 +94,7 @@ const Actividades = () => {
 
         useEffect(() => {
             displayAlert()
+            // eslint-disable-next-line
         }, [errors, deleted])
     
         const displayAlert = () => {
@@ -101,13 +108,18 @@ const Actividades = () => {
             }
         }
 
+        if(!hasPermission(userPermission, '/ver-actividades') && !isLoading ) return <Forbidden/>
+
         return ( 
         <>
             <h1 className='text-dark text-xl text-center font-medium'>Actividades</h1>
-            <div className='py-2 flex justify-between'>
-                <Button type='dark' className='visible sm:invisible' onClick={() => navigate('/')}>Inicio</Button>
-                <Button type='primary' onClick={() => navigate('create')}>Agregar Nueva Actividad</Button>
-            </div>
+            <div className='py-2 flex justify-end'>          
+                {
+                    hasPermission(userPermission, '/crear-actividades') ?
+                    <Button type='primary' onClick={() => navigate('create')}>Agregar Nueva Actividad</Button>
+                    : null 
+                }
+                </div>
             <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>
         </>
         );

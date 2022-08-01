@@ -14,6 +14,7 @@ import {
 
 import { MdLibraryAddCheck } from 'react-icons/md'
 import { BiSearchAlt } from 'react-icons/bi'
+import { IoHome } from 'react-icons/io5'
 import {AiOutlineUserAdd,AiOutlineLogout} from 'react-icons/ai'
 
 import Menu from "../components/layout/Menu";
@@ -24,6 +25,7 @@ import Logotipo from "../assets/img/LogoDevarana.png"
 import { Footer } from "antd/lib/layout/layout";
 
 import { logoutAction } from '../actions/authActions'
+import { getPermisoAction } from "../actions/permisosActions";
 
 export default function LayoutPrivate({children}) {
     const dispatch = useDispatch()
@@ -33,17 +35,20 @@ export default function LayoutPrivate({children}) {
     const [collapsed, setCollapsed] = useState(false);
 
     const isAuth = authProvider()
-    const { isAuthenticated } = useSelector( state => state.auth )
-    const { isLoading, errors,  logout } = useSelector( state => state.auth )
+    const { isAuthenticated, token, isLoading, errors, logout } = useSelector( state => state.auth )
   
-    
-
+    tokenAuth(token)
     useEffect(() => {
         dispatch(validateLoginAction(isAuth))
-        tokenAuth(isAuth.token)
         // eslint-disable-next-line
     }, [isAuth])
 
+    useEffect( () => {
+        dispatch(getPermisoAction())
+        // eslint-disable-next-line
+    }, [])
+    
+    
  
     if( (isAuthenticated || isAuth.isAuthenticated) === false && !isLoading ){
         navigate("/login")
@@ -77,6 +82,7 @@ export default function LayoutPrivate({children}) {
                 description: errors
             })
         }
+        // eslint-disable-next-line
     }, [logout])
    
 
@@ -104,7 +110,8 @@ export default function LayoutPrivate({children}) {
                 <Header className="layout-right__header hidden sm:flex"> 
                     <button onClick={() => setCollapsed(!collapsed)}> {collapsed ? <MenuUnfoldOutlined className="text-2xl sm:text-dark sm:bg-transparent bg-primary text-white pb-1 px-2 rounded "/> : <MenuFoldOutlined className="text-2xl sm:text-dark sm:bg-transparent bg-primary text-white pb-1 px-2 rounded "/>} </button>
                     <div>
-                        <Socket/>
+                        
+                        {isAuth.isAuthenticated ? <Socket/> : null }
                         <Button className="ml-5" type="primary" onClick={showModal }>  <LogoutOutlined /> </Button>
                     </div>
                     
@@ -115,6 +122,12 @@ export default function LayoutPrivate({children}) {
             </Layout>
             <Footer className="block sm:hidden">
                 <div className="footer">
+                    <Link to={'/'} className="block w-full h-auto text-center footer__link">
+                        <div className="footer__link-icon"> 
+                            <IoHome className="m-auto"/> 
+                            <p> Home </p>
+                        </div>
+                    </Link>
                     <Link to={'/vales-salida/nuevo'} className="block w-full h-auto text-center footer__link">
                         <div className="footer__link-icon"> 
                             <MdLibraryAddCheck className="m-auto"/> 

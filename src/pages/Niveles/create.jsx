@@ -1,4 +1,4 @@
-import { Form, Input, Select, Button, notification, Checkbox, Divider } from "antd";
+import { Form, Input, Select, Button, Checkbox, Divider } from "antd";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,7 +7,9 @@ import { getAllActividadAction } from "../../actions/actividadActions";
 import { cleanErrorAction } from "../../actions/globalActions";
 import { createNivelAction } from "../../actions/nivelActions";
 import { getAllZonaAction } from "../../actions/zonaActions";
+import Forbidden from "../../components/Elements/Forbidden";
 import openNotificationWithIcon from "../../hooks/useNotification";
+import { hasPermission } from "../../utils/hasPermission";
 
 const CreateNiveles = () => {
 
@@ -18,6 +20,7 @@ const CreateNiveles = () => {
     const { errors, created } = useSelector(state => state.niveles);
     const { zonas } = useSelector( state => state.zonas )
     const { actividades } = useSelector( state => state.actividades )
+    const { userPermission } = useSelector(state => state.permisos)
 
     const [nivel, setNivel] = useState({
         nombre: "",
@@ -79,6 +82,7 @@ const CreateNiveles = () => {
 
     useEffect(() => {
         displayAlert()
+        // eslint-disable-next-line
     }, [errors, created])
 
     const displayAlert = () => {
@@ -91,7 +95,7 @@ const CreateNiveles = () => {
             navigate('/niveles')
         }
     }
-    
+    if(!hasPermission(userPermission, '/editar-niveles')) return <Forbidden/>
     return ( 
         <Form
             className="max-w-screen-md mx-auto"

@@ -1,10 +1,12 @@
-import { Form, Input, Select, Button, notification } from "antd";
+import { Form, Input, Select, Button } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { createActividadAction } from "../../actions/actividadActions";
 import { cleanErrorAction } from "../../actions/globalActions";
+import Forbidden from "../../components/Elements/Forbidden";
 import openNotificationWithIcon from "../../hooks/useNotification";
+import { hasPermission } from "../../utils/hasPermission";
 
 const CreateActividades = () => {
 
@@ -14,6 +16,7 @@ const CreateActividades = () => {
     const { TextArea } = Input;
 
     const { errors, created } = useSelector(state => state.actividades);
+    const { userPermission } = useSelector(state => state.permisos);
 
     const [actividad, setActividad] = useState({
         nombre: "",
@@ -35,6 +38,7 @@ const CreateActividades = () => {
 
     useEffect(() => {
         displayAlert()
+        // eslint-disable-next-line
     }, [errors, created])
 
     const displayAlert = () => {
@@ -47,6 +51,8 @@ const CreateActividades = () => {
             navigate('/actividades')
         }
     }
+
+    if(!hasPermission(userPermission, '/crear-actividades')) return <Forbidden/>
     
     return ( 
         <Form

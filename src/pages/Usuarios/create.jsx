@@ -1,20 +1,23 @@
-import { Form, Input, Select, Button, notification } from "antd";
+import { Form, Input, Select, Button } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { cleanErrorAction } from "../../actions/globalActions";
 import { getAllRolesAction } from "../../actions/roleActions";
 import { createUsuarioAction } from "../../actions/usuarioActions";
-import { AntdNotification } from "../../components/Elements/Notification";
+import Forbidden from "../../components/Elements/Forbidden";
 import openNotificationWithIcon  from '../../hooks/useNotification'
+import { hasPermission } from "../../utils/hasPermission";
 
 const CreateUsuario = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { Option } = Select;
 
-    const { errors, isLoading, created } = useSelector(state => state.usuarios);
+    const { errors, created } = useSelector(state => state.usuarios);
     const { roles } = useSelector(state => state.roles);
+    const { userPermission } = useSelector(state => state.permisos);
+
     const [usuario, setUsuario] = useState({
         nombre: "",
         apellidoPaterno: "",
@@ -33,6 +36,7 @@ const CreateUsuario = () => {
 
     useEffect(() => {
         displayAlert()
+        // eslint-disable-next-line
     }, [errors, created])
 
     const displayAlert = () => {
@@ -58,9 +62,9 @@ const CreateUsuario = () => {
         dispatch(createUsuarioAction(usuario))
     }
 
-   
-    return (
+    if(!hasPermission(userPermission, '/crear-usuarios')) return <Forbidden/>
 
+    return (
         <>
             <Form 
                 className="max-w-screen-md mx-auto" 
