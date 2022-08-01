@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from 'react-router-dom'
 import authProvider from "../provider/authProvider";
-
 import "../assets/scss/layout.scss"
 
 import {
@@ -35,7 +34,7 @@ export default function LayoutPrivate({children}) {
     const [collapsed, setCollapsed] = useState(false);
 
     const isAuth = authProvider()
-    const { isAuthenticated, token, isLoading, errors, logout } = useSelector( state => state.auth )
+    const { isAuthenticated, token, isLoading, errors, logout, suAdmin } = useSelector( state => state.auth )
   
     tokenAuth(token)
     useEffect(() => {
@@ -46,9 +45,7 @@ export default function LayoutPrivate({children}) {
     useEffect( () => {
         dispatch(getPermisoAction())
         // eslint-disable-next-line
-    }, [])
-    
-    
+    }, [])   
  
     if( (isAuthenticated || isAuth.isAuthenticated) === false && !isLoading ){
         navigate("/login")
@@ -84,7 +81,8 @@ export default function LayoutPrivate({children}) {
         }
         // eslint-disable-next-line
     }, [logout])
-   
+    
+
 
     return (        
         <Layout className="layout">
@@ -166,11 +164,5 @@ export default function LayoutPrivate({children}) {
                 <p>Deseas cerrar sesión?</p>
             </Modal>
         </Layout>
-
-        
-
     )
-
-
-
 };
