@@ -1,12 +1,12 @@
-import { Button, Divider, Form, Input, Popconfirm, Select, Spin, Table, Modal, notification, message} from "antd";
+import { Button, Divider, Form, Input, Popconfirm, Select, Spin, Table, Modal, message} from "antd";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllInsumosAction } from "../../actions/insumoActions";
 import {nanoid} from 'nanoid'
-import {  DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
+import {  CloseCircleOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { createValeAction } from "../../actions/valeActions";
-import '../../assets/scss/createVale.scss'
+import "../../assets/scss/steps.scss"
 import openNotificationWithIcon from "../../hooks/useNotification";
 
 const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
@@ -54,21 +54,23 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
             title: 'Insumo',
             dataIndex: 'nombre',
             key: 'nombre',
+            ellipsis: true,
         },
         {
             title: 'Cantidad',
             dataIndex: 'cantidadSolicitada',
             key: 'cantidadSolicitada',
-            width: 100
+            width: 80
         },
         {
-            title: 'Acciones',
+            title: 'Acción',
             dataIndex: 'acciones',
             key: 'acciones',
-            width: 100,
+            width: 60,
+            className: 'text-center',
             render: (uuid) => 
                 <Popconfirm placement='topRight' onConfirm={ () => handleDelete(uuid) } title="Deseas eliminar este elemento ?"> 
-                    <Button type='danger'> <DeleteOutlined className='font-bold text-sm'/> </Button> 
+                    <Button type='icon-danger'> <CloseCircleOutlined className="text-xl" /></Button> 
                 </Popconfirm>
         }
     ]
@@ -138,6 +140,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
 
     useEffect(() => {
         displayAlert()
+        // eslint-disable-next-line
     }, [errors, created, errorsVale])
 
     const displayAlert = () => {
@@ -158,6 +161,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
         layout="horizontal"
         onFinish={handleSubmit}
         form={form}
+        className="steps-form"
     >
         <Form.Item
             className="w-full"
@@ -207,7 +211,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
             </Form.Item>
         </div>
 
-        <Button type="ghost" className="block mx-auto" htmlType="submit"> Agregar </Button>
+        <Button type="primary" className="block mx-auto" htmlType="submit"> Agregar </Button>
 
     </Form>
     <Divider />
@@ -216,11 +220,11 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
         <Button type='dark' htmlType='button' onClick={ () => setCurrent(0) }>
             Volver
         </Button>     
-        <Button type='primary' htmlType='button' onClick={ async () => { const statusValue = 1; await setVale({ ...vale, statusVale: statusValue }); confirm(1)  }} >
-            Crear
+        <Button type='ghost' htmlType='button' onClick={ async () => { const statusValue = 1; await setVale({ ...vale, statusVale: statusValue }); confirm(1)  }} >
+            Enviar
         </Button>
-        <Button type='danger' htmlType='button' onClick={ () => confirm(2) } className="block sm:hidden">
-            Salir
+        <Button type='danger' htmlType='button' onClick={ () => confirm(2) }>
+            Cancelar
         </Button>
 
     </div>

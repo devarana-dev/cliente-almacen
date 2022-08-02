@@ -110,7 +110,7 @@ export default function LayoutPrivate({children}) {
                     <div>
                         
                         {isAuth.isAuthenticated ? <Socket/> : null }
-                        <Button className="ml-5" type="primary" onClick={showModal }>  <LogoutOutlined /> </Button>
+                        <Button className="ml-5" type="icon-primary" onClick={showModal }>  <LogoutOutlined className="text-xl"/> </Button>
                     </div>
                     
                 </Header>

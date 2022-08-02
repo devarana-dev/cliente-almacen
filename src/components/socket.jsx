@@ -59,8 +59,8 @@ const Socket = () => {
 
         <Dropdown overlay={menu} placement="bottomRight" className='my-auto' trigger={['click']} onVisibleChange={ () => setActive(!active)}>
             <Badge count={newNotification} showZero overflowCount={10}>
-                <Button type='ghost' onClick={  handleVisit }>
-                    <BellOutlined />
+                <Button type='icon-ghost' onClick={  handleVisit }>
+                    <BellOutlined className="text-xl" />
                 </Button>
             </Badge>
         </Dropdown>

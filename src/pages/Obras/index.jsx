@@ -79,15 +79,15 @@ const Obras = () => {
             key: 'acciones',
             render: (id) => 
 			<div className='flex justify-around'> 
-                { hasPermission(userPermission, '/editar-obras') ? <Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button>  : null } 
+                { hasPermission(userPermission, '/editar-obras') ? <Button type='icon-warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='text-xl'/> </Button>  : null } 
                 {
                     hasPermission(userPermission, '/eliminar-obras') ? 
                 <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
-                    <Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
+                    <Button type='icon-danger'> <DeleteOutlined className='text-xl'/> </Button> 
                 </Popconfirm> : null
                 }
 			</div>,
-            width: groupPermission(userPermission, ['/editar-obras', '/eliminar-obras']) ? 150 : 0,
+            width: groupPermission(userPermission, ['/editar-obras', '/eliminar-obras']) ? 100 : 0,
             className: groupPermission(userPermission, ['/editar-obras', '/eliminar-obras']) ? 'block' : 'hidden',
         }
         

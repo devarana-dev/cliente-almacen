@@ -1,5 +1,5 @@
 
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Popconfirm, Table } from 'antd';
 
 import { useEffect, useState } from 'react';
@@ -105,15 +105,15 @@ const Usuarios = () => {
             key: 'acciones',
             render: (id) => 
             <div className='flex justify-around'> 
-                { hasPermission(userPermission, '/editar-usuarios') ? <Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button>  : null } 
+                { hasPermission(userPermission, '/editar-usuarios') ? <Button type='icon-warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='text-xl'/> </Button>  : null } 
                 {
                     hasPermission(userPermission, '/eliminar-usuarios') ? 
                 <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
-                    <Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
+                    <Button type='icon-danger'> <DeleteOutlined className='text-xl'/> </Button> 
                 </Popconfirm> : null
                 }
 			</div>,
-            width: groupPermission(userPermission, ['/editar-usuarios', '/eliminar-usuarios']) ? 150 : 0,
+            width: groupPermission(userPermission, ['/editar-usuarios', '/eliminar-usuarios']) ? 100 : 0,
             className: groupPermission(userPermission, ['/editar-usuarios', '/eliminar-usuarios']) ? 'block' : 'hidden',
         }
         
@@ -127,7 +127,7 @@ const Usuarios = () => {
         <div className='py-2 flex justify-end'>          
         {
             hasPermission(userPermission, '/crear-usuarios') ?
-            <Button type='primary' onClick={() => navigate('create')}>Agregar Nuevo Usuario</Button>
+            <Button type='icon-primary-new' onClick={() => navigate('create')}><PlusCircleOutlined /></Button>
             : null 
         }
         </div>

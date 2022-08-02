@@ -5,13 +5,11 @@ import { getAllObraAction } from '../../actions/obraActions';
 import { getAllNivelesAction } from '../../actions/nivelActions';
 import { getAllPersonalAction } from '../../actions/personalActions';
 import "../../assets/scss/steps.scss"
-import { useNavigate } from 'react-router-dom';
 
 
 const InformacionGral = ({current, setCurrent, setVale, vale}) => {
 
     const dispatch = useDispatch()
-    const navigate = useNavigate()
 
     const { niveles } = useSelector(state => state.niveles);
     const { obra } = useSelector(state => state.obras);
@@ -61,17 +59,18 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                 initialValues={{
                     almacen: 4,
                 }}
+                className="steps-form"
             >
                 
                     
                 <Form.Item
-                    className='mb-3'
+                    className='mb-3 text-sm'
                         rules={[
                             { required: true, message: 'Debes seleccionar un Almacén' },
                         ]}
                         name="almacen"
                         hasFeedback
-                        label="Selecciona un Almacén"
+                        label="Almacén"
                     >
                         <Select 
                             placeholder="Selecciona un Almacén"
@@ -83,12 +82,12 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                 </Form.Item>
 
                 <Form.Item
-                    className='mb-3'
+                    className='mb-3 text-sm'
                     rules={[
                         { required: true, message: 'Debes seleccionar un centro de costo' },
                     ]}
                     name="obraId"
-                    label="Selecciona una obra / centro de costo"
+                    label="Obra / Centro de costo"
                     hasFeedback
                 >
                     <Select 
@@ -106,13 +105,13 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                 </Form.Item>
 
                 <Form.Item
-                    className='mb-3'
+                    className='mb-3 text-sm'
                     rules={[
                         { required: true, message: 'Debes seleccionar un nivel' },
                     ]}
                     name="nivelId"
                     hasFeedback
-                    label="Selecciona un nivel"
+                    label="Nivel"
                 >
                     <Select
                         filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
@@ -131,13 +130,13 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                 </Form.Item>
 
                 <Form.Item
-                    className='mb-3'
+                    className='mb-3 text-sm'
                     rules={[
                         { required: true, message: 'Debes seleccionar una zona / prototipo'},
                     ]}
                     name="zonaId"
                     hasFeedback
-                    label="Selecciona una zona / prototipo"
+                    label="Zona"
                 >
                     <Select 
                         filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
@@ -157,13 +156,13 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                 </Form.Item>
 
                 <Form.Item
-                    className='mb-3'
+                    className='mb-3 text-sm'
                     rules={[
                         { required: true, message: 'Debes seleccionar un tipo de trabajo' },
                     ]}
                     name="actividadId"
                     hasFeedback
-                    label="Selecciona una actividad a realizar"
+                    label="Actividad a realizar"
                 >
                     <Select 
                         filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
@@ -181,13 +180,13 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                 </Form.Item>
 
                 <Form.Item
-                    className='mb-3'
+                    className='mb-3 text-sm'
                     rules={[
                         { required: true, message: 'Debes seleccionar a un jefe de cuadrilla' },
                     ]}
                     name="personalId"
                     hasFeedback
-                    label="Selecciona un jefe de cuadrilla"
+                    label="Jefe de cuadrilla"
                 >
                     <Select 
                         filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
@@ -202,7 +201,7 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                     </Select>
                 </Form.Item>
                         
-                <div className='flex justify-end'>
+                <div className='flex justify-center pt-5'>
                     <Button type='ghost' htmlType='submit'>
                         Continuar
                     </Button>

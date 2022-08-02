@@ -24,7 +24,7 @@
     background: -webkit-linear-gradient(190deg, $primary 0%, $primary-lighter 100%);
     background: linear-gradient(190deg, $primary 0%, $primary-lighter 100%);
     border:1px solid $primary;
-
+    width: 100px!important;
     &:hover, &:focus{
         border:1px solid $primary;
         color:$primary;
@@ -37,7 +37,7 @@
     background: linear-gradient(190deg, $info 0%, $info-lighter 100%);
     border:1px solid $info;
     color: white;
-
+    width: 100px!important;
     &:hover, &:focus{
         border:1px solid $info;
         color:$info;
@@ -50,7 +50,7 @@
     background: linear-gradient(190deg, $secondary 0%, $secondary-lighter 100%);
     border:1px solid $secondary;
     color: white;
-
+    width: 100px!important;
     &:hover, &:focus{
         border:1px solid $secondary;
         color: $secondary;
@@ -63,6 +63,7 @@
     background: linear-gradient(190deg, $danger 0%, $danger-lighter 100%);
     border:1px solid $danger;
     color: white;
+    width: 100px!important;
     &:hover, &:focus{
         border:1px solid $danger;
         color: $danger;
@@ -76,6 +77,7 @@
     background: linear-gradient(190deg, $warning 0%, $warning-lighter 100%);
     border:1px solid $warning;
     color: white;
+    width: 100px!important;
     &:hover, &:focus{
         border:1px solid $warning;
         color:$warning;
@@ -83,19 +85,79 @@
 }
 
 .ant-btn-dark{
+    background: $dark;
+    background: -webkit-linear-gradient(190deg, $dark 0%, $dark-lighter 100%);
+    background: linear-gradient(190deg, $dark 0%, $dark-lighter 100%);
     border:1px solid  $dark;
-    color: $dark;
-    background: none;
-
+    color: white;
+    width: 100px!important;
     &:hover, &:focus{
-        background: $dark;
-        background: -webkit-linear-gradient(190deg, $dark 0%, $dark-lighter 100%);
-        background: linear-gradient(190deg, $dark 0%, $dark-lighter 100%);
+        color: $dark;
+        background: none;
         border:1px solid $dark;
-        color: white;
     }
 }
 
+
+.ant-btn-icon-danger{
+        padding: 0px 2px!important;
+        box-shadow: none!important;
+        border: none!important;
+        color: $danger;
+        &:hover, &:focus{
+            font-weight: bold;
+            color: $danger;
+            opacity: .4;
+    }
+}
+
+.ant-btn-icon-ghost{
+    padding: 0px 2px!important;
+    box-shadow: none!important;
+    border: none!important;
+    color: $secondary;
+    &:hover, &:focus{
+        font-weight: bold;
+        color: $secondary;
+        opacity: .4;
+    }
+}
+
+.ant-btn-icon-primary{
+    padding: 0px 2px!important;
+    box-shadow: none!important;
+    border: none!important;
+    color: $primary;
+    &:hover, &:focus{
+        font-weight: bold;
+        color: $primary;
+        opacity: .4;
+    }
+}
+
+.ant-btn-icon-warning{
+    padding: 0px 2px!important;
+    box-shadow: none!important;
+    border: none!important;
+    color: $warning;
+    &:hover, &:focus{
+        font-weight: bold;
+        color: $warning;
+        opacity: .4;
+    }
+}
+
+.ant-btn-icon-primary-new{
+    background: $primary;
+    background: -webkit-linear-gradient(190deg, $primary 0%, $primary-lighter 100%);
+    background: linear-gradient(190deg, $primary 0%, $primary-lighter 100%);
+    border:1px solid $primary;
+    color: white;
+    &:hover, &:focus{
+        border:1px solid $primary;
+        color:$primary;
+    }
+}
 
 
 // Icons Icons

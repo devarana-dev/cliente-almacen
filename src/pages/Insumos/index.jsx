@@ -98,7 +98,7 @@ const Insumos = () => {
         <div className='flex justify-around'> 
         {   hasPermission(userPermission, '/eliminar-insumos') ? 
             <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
-                <Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
+                <Button type='icon-danger'> <DeleteOutlined className='text-xl'/> </Button> 
             </Popconfirm>
             : '-'
         }
@@ -150,8 +150,8 @@ const Insumos = () => {
 			{
                 hasPermission(userPermission, '/crear-insumos') ?
                 <div>
-                    <Button type='default' onClick={() => showModal()}>Importar Insumos</Button>
-                    <Button className='ml-5' type='primary' onClick={() => navigate('create')}>Agregar Nuevo Insumo</Button>
+                    <Button type='default' onClick={() => showModal()}>Importar</Button>
+                    <Button className='ml-5' type='primary' onClick={() => navigate('create')}>Agregar</Button>
                 </div>
                 : null 
             }

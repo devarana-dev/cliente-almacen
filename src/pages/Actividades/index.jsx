@@ -74,15 +74,15 @@ const Actividades = () => {
                     key: 'acciones',
                     render: (id) => 
                     <div className='flex justify-around'> 
-                        { hasPermission(userPermission, '/editar-actividades') ? <Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button>  : null } 
+                        { hasPermission(userPermission, '/editar-actividades') ? <Button type='icon-warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='text-xl'/> </Button>  : null } 
                         {
                             hasPermission(userPermission, '/eliminar-actividades') ? 
                         <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
-                            <Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
+                            <Button type='icon-danger'> <DeleteOutlined className='text-xl'/> </Button> 
                         </Popconfirm> : null
                         }
                     </div>,
-                    width: groupPermission(userPermission, ['/editar-actividades', '/eliminar-actividades']) ? 150 : 0,
+                    width: groupPermission(userPermission, ['/editar-actividades', '/eliminar-actividades']) ? 100 : 0,
                     className: groupPermission(userPermission, ['/editar-actividades', '/eliminar-actividades']) ? 'block' : 'hidden',
                 }
                 
@@ -116,7 +116,7 @@ const Actividades = () => {
             <div className='py-2 flex justify-end'>          
                 {
                     hasPermission(userPermission, '/crear-actividades') ?
-                    <Button type='primary' onClick={() => navigate('create')}>Agregar Nueva Actividad</Button>
+                    <Button type='primary' onClick={() => navigate('create')}>Agregar</Button>
                     : null 
                 }
                 </div>

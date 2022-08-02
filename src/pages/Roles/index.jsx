@@ -64,15 +64,15 @@ const Roles = () => {
             key: 'acciones',
             render: (id) => 
             <div className='flex justify-around'> 
-                { hasPermission(userPermission, '/editar-roles') ? <Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button>  : null } 
+                { hasPermission(userPermission, '/editar-roles') ? <Button type='icon-warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='text-xl'/> </Button>  : null } 
                 {
                     hasPermission(userPermission, '/eliminar-roles') ? 
                 <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
-                    <Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
+                    <Button type='icon-danger'> <DeleteOutlined className='text-xl'/> </Button> 
                 </Popconfirm> : null
                 }
 			</div>,
-            width: groupPermission(userPermission, ['/editar-roles', '/eliminar-roles']) ? 150 : 0,
+            width: groupPermission(userPermission, ['/editar-roles', '/eliminar-roles']) ? 100 : 0,
             className: groupPermission(userPermission, ['/editar-roles', '/eliminar-roles']) ? 'block' : 'hidden',
         }
         
@@ -106,7 +106,7 @@ const Roles = () => {
             <div className='py-2 flex justify-end'>          
             {
                 hasPermission(userPermission, '/crear-roles') ?
-                <Button type='primary' onClick={() => navigate('create')}>Agregar Nuevo Nivel</Button>
+                <Button type='primary' onClick={() => navigate('create')}>Agregar</Button>
                 : null 
             }
             </div>

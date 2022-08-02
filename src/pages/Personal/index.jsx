@@ -80,15 +80,15 @@ const Personal = () => {
             key: 'acciones',
             render: (id) => 
             <div className='flex justify-around'> 
-                { hasPermission(userPermission, '/editar-personal') ? <Button type='warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='font-bold text-lg'/> </Button>  : null } 
+                { hasPermission(userPermission, '/editar-personal') ? <Button type='icon-warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='text-xl'/> </Button>  : null } 
                 {
                     hasPermission(userPermission, '/eliminar-personal') ? 
                 <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
-                    <Button type='danger'> <DeleteOutlined className='font-bold text-lg'/> </Button> 
+                    <Button type='icon-danger'> <DeleteOutlined className='text-xl'/> </Button> 
                 </Popconfirm> : null
                 }
             </div>,
-            width: groupPermission(userPermission, ['/editar-personal', '/eliminar-personal']) ? 150 : 0,
+            width: groupPermission(userPermission, ['/editar-personal', '/eliminar-personal']) ? 100 : 0,
             className: groupPermission(userPermission, ['/editar-personal', '/eliminar-personal']) ? 'block' : 'hidden',
         }
         
@@ -125,7 +125,7 @@ const Personal = () => {
         <div className='py-2 flex justify-end'>          
         {
             hasPermission(userPermission, '/crear-personal') ?
-            <Button type='primary' onClick={() => navigate('create')}>Agregar Nuevo Lider de Cuadrilla</Button>
+            <Button type='primary' onClick={() => navigate('create')}>Agregar</Button>
             : null 
         }
         </div>
