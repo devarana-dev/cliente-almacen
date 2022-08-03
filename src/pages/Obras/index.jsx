@@ -122,7 +122,7 @@ const Obras = () => {
         <div className='py-2 flex justify-end'>
 			{
                 hasPermission(userPermission, '/crear-obras') ?
-                    <Button type='primary' onClick={() => navigate('create')}>Agregar Nueva Obra/CC</Button>
+                    <Button type='primary' onClick={() => navigate('create')}>Agregar</Button>
                 : null 
             }
 		</div>

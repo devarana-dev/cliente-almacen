@@ -19,7 +19,7 @@ const Insumos = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [ isModalVisible, setIsModalVisible] = useState(false);
     const [ dataSource, setDataSource ] = useState([]);
     const { insumos, isLoading, errors, deleted } = useSelector(state => state.insumos);
     const { userPermission } = useSelector(state => state.permisos);
@@ -140,7 +140,7 @@ const Insumos = () => {
     
     
     
-    if(!hasPermission(userPermission, '/ver-insumos')) return <Forbidden/>
+    if(!hasPermission(userPermission, '/ver-insumos') && !isLoading) return <Forbidden/>
     
 
     return ( 

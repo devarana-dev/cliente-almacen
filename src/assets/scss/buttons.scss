@@ -24,7 +24,7 @@
     background: -webkit-linear-gradient(190deg, $primary 0%, $primary-lighter 100%);
     background: linear-gradient(190deg, $primary 0%, $primary-lighter 100%);
     border:1px solid $primary;
-    width: 100px!important;
+    min-width: 100px!important;
     &:hover, &:focus{
         border:1px solid $primary;
         color:$primary;
@@ -37,7 +37,7 @@
     background: linear-gradient(190deg, $info 0%, $info-lighter 100%);
     border:1px solid $info;
     color: white;
-    width: 100px!important;
+    min-width: 100px!important;
     &:hover, &:focus{
         border:1px solid $info;
         color:$info;
@@ -50,7 +50,7 @@
     background: linear-gradient(190deg, $secondary 0%, $secondary-lighter 100%);
     border:1px solid $secondary;
     color: white;
-    width: 100px!important;
+    min-width: 100px!important;
     &:hover, &:focus{
         border:1px solid $secondary;
         color: $secondary;
@@ -63,7 +63,7 @@
     background: linear-gradient(190deg, $danger 0%, $danger-lighter 100%);
     border:1px solid $danger;
     color: white;
-    width: 100px!important;
+    min-width: 100px!important;
     &:hover, &:focus{
         border:1px solid $danger;
         color: $danger;
@@ -77,7 +77,7 @@
     background: linear-gradient(190deg, $warning 0%, $warning-lighter 100%);
     border:1px solid $warning;
     color: white;
-    width: 100px!important;
+    min-width: 100px!important;
     &:hover, &:focus{
         border:1px solid $warning;
         color:$warning;
@@ -90,7 +90,7 @@
     background: linear-gradient(190deg, $dark 0%, $dark-lighter 100%);
     border:1px solid  $dark;
     color: white;
-    width: 100px!important;
+    min-width: 100px!important;
     &:hover, &:focus{
         color: $dark;
         background: none;
