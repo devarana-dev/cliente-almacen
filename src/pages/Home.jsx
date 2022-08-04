@@ -2,56 +2,57 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllValesAction } from '../actions/valeActions';
+import { getAllValesAction, getCountValeSalidaAction } from '../actions/valeActions';
 
 export default function Home() {
 
     const dispatch = useDispatch()
-    const { vales, isLoading } = useSelector( state => state.vales)
+    const { count, isLoading } = useSelector( state => state.vales)
     const [ dataValues, setDataValues ] = useState({})
     ChartJS.register(ArcElement, Tooltip, Legend);
     
 
     useEffect(() => {
-        if(vales.length ===  0 || !vales){
-            dispatch(getAllValesAction())
+        if(count.length ===  0 || !count){
+            dispatch(getCountValeSalidaAction())
         }else{
-            const result = vales.reduce(( prev, curr) => (( prev[curr.statusVale] = prev[curr.statusVale]  +1 || 1 ), prev), {} )
+
             setDataValues({
-                ...(result[1] ? {'Sin Entregar': result[1] } : null),
-                ...(result[2] ? {'Parcial Abierto': result[2] } : null),
-                ...(result[3] ? {'Parcial Cerrado': result[3] } : null),
-                ...(result[4] ? {'Entregado': result[4] } : null),
-                ...(result[5] ? {'Cancelado': result[5] } : null),
-                ...(result[7] ? {'Cerrado': result[7] } : null),
+                "Nuevos": count.nuevo,
+                "Parciales": count.parcialAbierto,
+                "Entregado": count.entregado,
+                "Cancelado": count.cancelado,
+                "Cerrado": count.cerrado
             })
+            console.log(count);
+
+
         }
 
-    }, [vales])
+    }, [count])
 
     const data = {
         labels: Object.keys(dataValues),
         datasets: [
             {
                 label: '# de vales',
-                data: vales ? Object.values(vales.reduce(( prev, curr) => (( prev[curr.statusVale] = prev[curr.statusVale] + 1 || 1 ), prev), {})) : [],
+                data: count ? Object.values(dataValues) : [],
                 backgroundColor: [
-                    'rgba(0, 160, 93, 0.8)',
-                    'rgba(233, 196, 20, 0.8)',
-                    'rgba(251, 84, 37, 0.8)',
+                    'rgba(169, 192, 228, 0.8)',
+                    'rgba(214, 71, 103, 0.8)',
                     'rgba(86, 115, 155, 0.8)',
-                    'rgba(234, 31, 3, 0.8)',
+                    'rgba(247, 37, 0, 0.8)',
                     'rgba(255, 107, 44, 0.8)',
                 ],
-                borderColor: [
-                    'rgba(0, 160, 93, 1)',
-                    'rgba(233, 196, 20, 1)',
-                    'rgba(251, 84, 37, 1)',
-                    'rgba(86, 115, 155, 1)',
-                    'rgba(234, 31, 3, 1)',
-                    'rgba(255, 107, 44, 1)',
-                ],
-                borderWidth: 1,
+                borderColor: '#ffff',
+                // borderColor: [
+                //     'rgba(169, 192, 228, 1)',
+                //     'rgba(214, 71, 103, 1)',
+                //     'rgba(86, 115, 155, 1)',
+                //     'rgba(247, 37, 0, 1)',
+                //     'rgba(255, 107, 44, 1)',
+                // ],
+                borderWidth: 2,
             },
         ],
     }
@@ -65,7 +66,7 @@ export default function Home() {
         },
         centerText: {
             display: true,
-            text: vales.length
+            text: count.todos || 0
         },
         doughnutlabel: {
             labels: [{
@@ -99,7 +100,6 @@ export default function Home() {
     }]
 
     return (
-
         <div className='max-w-screen-md mx-auto'>
             <Doughnut data={data} options={options} plugins={plugins}/>
         </div>

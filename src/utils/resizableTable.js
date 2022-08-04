@@ -9,7 +9,6 @@ export const ResizableTitle = (props) => {
   return (
     <Resizable
       width={width}
-      height={0}
       handle={
         <span
           className="react-resizable-handle"

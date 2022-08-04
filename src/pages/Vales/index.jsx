@@ -1,6 +1,6 @@
 
-import { CheckCircleOutlined, DeleteOutlined, FrownOutlined, PieChartFilled, PlusCircleOutlined, StopOutlined } from '@ant-design/icons';
-import { cancelDetalleAction, cancelValeAction, closeValeAction, completeValeSalida, deliverValeAction, getAllValesAction, searchValeAction } from '../../actions/valeActions';
+import { CheckCircleOutlined, DeleteOutlined, FrownOutlined, PieChartOutlined, PlusCircleOutlined, StopOutlined } from '@ant-design/icons';
+import { cancelDetalleAction, cancelValeAction, closeValeAction, completeValeSalida, deliverValeAction, getAllValesAction, getCountValeSalidaAction, searchValeAction } from '../../actions/valeActions';
 import { Button, Table, Tag, Modal, Input, Badge } from 'antd';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
@@ -8,27 +8,29 @@ import { useNavigate } from 'react-router-dom';
 import { getColumnSearchProps } from '../../hooks/useFilter'
 import { nanoid } from 'nanoid'
 import '../../assets/scss/showVale.scss'
-// import ekIcon from "../../assets/img/Original-EK.png"
+import ekIcon from "../../assets/img/Original-EK.png"
 import openNotificationWithIcon from '../../hooks/useNotification';
 import moment from 'moment';
 import { hasPermission } from '../../utils/hasPermission';
 import Forbidden from '../../components/Elements/Forbidden';
 import { ResizableTitle } from "../../utils/resizableTable";
+import Loading from '../../components/Elements/Loading';
 
 const ValesSalida = () => {
 
     const { TextArea } = Input;
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { vales, errors, delivered, updated, isLoading } = useSelector( state => state.vales )
+    const { vales, errors, delivered, updated, isLoading, count } = useSelector( state => state.vales )
     const { userPermission } = useSelector(state => state.permisos);
     const [ dataSource, setDataSource ] = useState([]);
     const [ dataNestedSource, setDataNestedSource ] = useState([])
     const [ validarCantidad, setValidarCantidad ] = useState(true)
     const [activeExpRow, setActiveExpRow] = useState();
+    const [ loadedColumn , setLoad ] = useState(false)
 
 
-    const [visible, setVisible] = useState(
+    const [ visible, setVisible] = useState(
         {
             entrega: false,
             cancelar: false,
@@ -56,7 +58,6 @@ const ValesSalida = () => {
         id:0
     })
 
-
     const showModal = (props) => {
         setVisible(props);
     };
@@ -74,9 +75,37 @@ const ValesSalida = () => {
         })
     };
 
+    const actionColumn = {
+        title: 'Acciones',
+        dataIndex: 'statusValue',
+        key: `statusVale`,
+        render: (text, record) => (
+            <div>
+                { 
+                    record.statusVale === 1 ? 
+                    <div className='flex justify-between'>
+                        { hasPermission(userPermission, '/editar-vales') ? 
+                            <Button type='icon-primary' className='icon' onClick={ () => handleEntrega(record, 3)}> <CheckCircleOutlined className='ml-0 align-middle text-xl' /> </Button> : null
+                        }
+                        {
+                            hasPermission(userPermission, '/eliminar-vales') ? <Button type='icon-danger' className='icon' onClick={() => handleCancel(1, record.id)}> <DeleteOutlined className='ml-0 align-middle text-xl' /> </Button> : null
+                        }
+                    </div> : 
+                    record.statusVale === 2 || record.statusVale === 4 ? 
+                    <Button type='icon-warning' className='icon' onClick={()=> handleClose(record.id)}> 
+                        <img src={ekIcon} alt="sa" width={16} className="py-0.5" />
+                    </Button>
+                    : <div className="h-6"> - </div>
+                }
+            </div>
+        ),
+        width: 80
+    }
 
     useEffect(() => {
-        dispatch(getAllValesAction())
+            dispatch(getAllValesAction())
+            dispatch(getCountValeSalidaAction())
+            
         // eslint-disable-next-line
     }, [])
     
@@ -93,6 +122,13 @@ const ValesSalida = () => {
                 }
 			))
 		)
+
+        if((hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ) && !loadedColumn){
+            setLoad(true)
+            setColumns([...columns, actionColumn])
+
+        }
+   
     }, [vales])
 
     const [columns, setColumns] = useState([
@@ -100,6 +136,7 @@ const ValesSalida = () => {
             title: 'Folio',
             dataIndex: 'id',
             key: `id-${nanoid()}`,
+            responsive: ['md'],
             sorter: (a, b) => a.id - b.id,
             ...getColumnSearchProps('id'),
             width: 100
@@ -111,15 +148,16 @@ const ValesSalida = () => {
             key: `residente-${nanoid()}`,
             sorter: (a, b) => a.residente.localeCompare(b.residente),
             ...getColumnSearchProps('residente'),
-            width: 500
+            // width: 450
         },
         {
-            title: 'Entregar A',
+            title: 'Lider',
             dataIndex: 'personalInfo',
             key: `personalInfo-${nanoid()}`,
+            ellipsis: true,
             sorter: (a, b) => a.personalInfo.localeCompare(b.personalInfo),
             ...getColumnSearchProps('personalInfo'),
-            width: 500
+            // width: 450
         },
         {
             title: 'Actividad',
@@ -135,6 +173,7 @@ const ValesSalida = () => {
             dataIndex: 'fecha',
             key: `fecha-${nanoid()}`,
             ...getColumnSearchProps('fecha'),
+            responsive: ['md'],
             width: 70,
             render: (text, record) => (
                 <div>
@@ -167,27 +206,27 @@ const ValesSalida = () => {
             render: (text, record, index) => ( 
                 record.statusVale === 1 ? 
                     <div className='w-full justify-center text-center flex'>
-                        <Tag className='m-auto' key={nanoid(4)} color="blue">Nuevo</Tag>
+                        <Tag className='m-auto w-full' key={nanoid(4)} color="blue">Nuevo</Tag>
                     </div>
                 :
                 record.statusVale === 2 ? 
                     <div className='w-full justify-center text-center flex'>
-                        <Tag className='m-auto' key={nanoid(4)} color="orange">Parcial</Tag> 
+                        <Tag className='m-auto w-full' key={nanoid(4)} color="orange">Parcial</Tag> 
                     </div>
                 :
                 record.statusVale === 3 ? 
                     <div className='w-full justify-center text-center flex'>
-                        <Tag className='m-auto' key={nanoid(4)} color="orange">Parcial</Tag> 
+                        <Tag className='m-auto w-full' key={nanoid(4)} color="orange">Parcial</Tag> 
                     </div>
                 :
                 record.statusVale === 4 ? 
                     <div className='w-full justify-center text-center flex'>
-                        <Tag className='m-auto' key={nanoid(4)} color="green">Entregado</Tag>
+                        <Tag className='m-auto w-full' key={nanoid(4)} color="green">Entregado</Tag>
                     </div>
                 :
                 record.statusVale === 5 ? 
                     <div className='w-full justify-center text-center flex'>
-                        <Tag className='m-auto' key={nanoid(4)} color="red">Cancelado</Tag> 
+                        <Tag className='m-auto w-full' key={nanoid(4)} color="red">Cancelado</Tag> 
                     </div>
                 :
                 record.statusVale === 6 ? 
@@ -195,7 +234,7 @@ const ValesSalida = () => {
                 :
                 record.statusVale === 7 ? 
                     <div className='w-full justify-center text-center flex'>
-                        <Tag className='m-auto' key={nanoid(4)} color="green">Enkontrol</Tag>
+                        <Tag className='m-auto w-full' key={nanoid(4)} color="green">Enkontrol</Tag>
                     </div>
                 : ''
             ),
@@ -229,35 +268,10 @@ const ValesSalida = () => {
                     value: 7
                 },
             ],
-            onFilter: (value, record) => record.statusVale === value
+            onFilter: (value, record) => record.statusVale === value,
+            width: 100
         },
-        {
-            title: 'Acciones',
-            dataIndex: 'statusValue',
-            key: `statusVale-${nanoid()}`,
-            render: (text, record) => (
-                <div>
-                    { 
-                        hasPermission(userPermission, '/editar-vales') ?
-                            record.statusVale === 1 ? 
-                            <div className='flex justify-between'>
-                                <Button type='icon-primary' className='icon' onClick={ () => handleEntrega(record, 3)}> <CheckCircleOutlined className='ml-0 align-middle text-xl' /> </Button>
-                                <Button type='icon-danger' className='icon' onClick={() => handleCancel(1, record.id)}> <DeleteOutlined className='ml-0 align-middle text-xl' /> </Button>
-                            </div> : 
-                            record.statusVale === 2 || record.statusVale === 4 ? 
-                            <Button type='icon-warning' className='icon' onClick={()=> handleClose(record.id)}> 
-                                {/* <img src={ekIcon} alt="sa" width={16} className="py-0.5" /> */}
-                                {/* <AppstoreAddOutlined className='ml-0 align-middle text-xl'/> */}
-                            </Button>
-                            : '-'
-                        : null
-                    }
-                </div>
-            ),
-            width: hasPermission(userPermission, '/editar-vales') ? '10%' : 0,
-            className: hasPermission(userPermission, '/editar-vales') ? 'block' : 'hidden',
-        },
-    ])
+    ])  
 
     const expandedRowRender = (record, index, indent, expanded) => {
 
@@ -271,6 +285,7 @@ const ValesSalida = () => {
                 dataIndex: 'insumo',
                 key: `clave-${nanoid()}`,
                 render: item =>  item.claveEnk,
+                responsive: ['md'],
                 width: 100
             },
             {
@@ -299,7 +314,8 @@ const ValesSalida = () => {
                 dataIndex: 'cantidadEntregada',
                 key: `cantidadEntregada-${nanoid()}`,
                 render: item => Number(item),
-                width: 100
+                width: 100,
+                responsive: ['md']
             },
             {
                 title: 'Pendiente',
@@ -314,14 +330,14 @@ const ValesSalida = () => {
                 key: `acciones-${nanoid()}`,
                 render: (text, record, index) => (
                     record.status === 1 ?
-                    <Tag color="blue"> Nuevo </Tag>
+                    <Tag color="blue" className='w-full text-center'> Nuevo </Tag>
                     : 
                     record.status === 2 ?
-                        <Tag key={index} color="orange">Parcial</Tag> 
-                    : record.status === 3 ? <Tag key={index} color="green">Entregado</Tag> 
-                    : record.status === 4 ? <Tag key={index} color="volcano">Cerrado</Tag>
+                        <Tag key={index} className='w-full text-center' color="orange">Parcial</Tag> 
+                    : record.status === 3 ? <Tag key={index} className='w-full text-center' color="green">Entregado</Tag> 
+                    : record.status === 4 ? <Tag key={index} className='w-full text-center' color="volcano">Cerrado</Tag>
+                    : record.status === 5 ? <Tag key={index} className='w-full text-center' color="green">Cerrado Enk</Tag>
                     : null
-                    
                 ),
                 width: 100
             },
@@ -330,24 +346,33 @@ const ValesSalida = () => {
                 dataIndex: 'acciones',
                 key: `acciones-${nanoid()}`,
                 render: (text, record, index) => (
-                    hasPermission(userPermission, '/editar-vales') ?
+                    hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ?
                         record.status === 1 ?
                         <div key={index} className="flex justify-between">
-                            <Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 1) } type='icon-primary'> <CheckCircleOutlined className='ml-0 align-middle text-xl' /> </Button>
-                            <Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 2) } type='icon-warning'> <FrownOutlined className='ml-0 align-middle text-xl' /> </Button>
-                            <Button className="icon" htmlType='button' onClick={ () => handleCancel(2, record.id) } type='icon-danger'> <StopOutlined className='ml-0 align-middle text-xl' /> </Button>
+                            {
+                                hasPermission(userPermission, '/editar-vales') ? 
+                                <>
+                                    <Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 1) } type='icon-primary'> <CheckCircleOutlined className='ml-0 align-middle text-xl' /> </Button>
+                                    <Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 2) } type='icon-warning'> <FrownOutlined className='ml-0 align-middle text-xl' /> </Button> 
+                                </>
+                                : null
+                            }
+                            {
+                                hasPermission(userPermission, '/eliminar-vales') ? <Button className="icon" htmlType='button' onClick={ () => handleCancel(2, record.id) } type='icon-danger'> <StopOutlined className='ml-0 align-middle text-xl' /> </Button> : null
+                            }
+                            
                         </div>
                         : 
                         record.status === 2 ?
-                        <Button className="icon" onClick={ () => handleEntrega(record, 2) } type='warning'> <PieChartFilled className='ml-0 align-middle text-xl'/> </Button>
-                        : '-'
+                        <Button className="icon" onClick={ () => handleEntrega(record, 2) } type='icon-warning'> <PieChartOutlined className='ml-0 align-middle text-xl'/> </Button>
+                        : <div className="h-6"> - </div>
                     : null
                 ),
-                width: hasPermission(userPermission, '/editar-vales') ? 120: 0,
-                className: hasPermission(userPermission, '/editar-vales') ? 'block' : 'hidden',
+                width: hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ? 80: 0,
+                className: hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ? 'block' : 'hidden',
             }
         ]
-        return <Table bordered  key={nanoid()} scroll={{ x: 'auto' }} columns={columns} dataSource={dataNestedSource} pagination={false} rowKey={nanoid()}  className="nestedTable"/>
+        return <Table bordered  key={record => record.id} scroll={{ x: 'auto' }} columns={columns} dataSource={dataNestedSource} pagination={false} rowKey={nanoid()}  className="nestedTable"/>
     }
 
     const handleEntrega = (record, type) => {
@@ -402,17 +427,15 @@ const ValesSalida = () => {
     }
 
     const handleSubmitClose = () => {
-        console.log('Close Vale', enkontrol);
         dispatch(closeValeAction(enkontrol))
     }
 
     const handleSubmitCancel = () => {
         if (cancel.type === 1 ) {
-            console.log('Cancel Vale', cancel)
             dispatch(cancelValeAction(cancel))
         }
         if( cancel.type === 2){
-            console.log('Cancel Detalle', cancel)
+           
             dispatch(cancelDetalleAction(cancel))
         }
     }
@@ -477,20 +500,22 @@ const ValesSalida = () => {
    
         return result.cantidadEntregada
     }
-    const handleResize = (index) =>
-    (_, { size }) => {
-        const newColumns = [...columns];
-        newColumns[index] = { ...newColumns[index], width: size.width };
-        setColumns(newColumns);
-    };
 
-  const mergeColumns = columns.map((col, index) => ({
-    ...col,
-    onHeaderCell: (column) => ({
-      width: column.width,
-      onResize: handleResize(index),
-    }),
-  }));
+    // const handleResize = (index) =>
+    // (_, { size }) => {
+    //     const newColumns = [...columns];
+    //     newColumns[index] = { ...newColumns[index], width: size.width };
+    //     setColumns(newColumns);
+    // };
+
+    // const mergeColumns = columns.map((col, index) => ({
+    //     ...col,
+    //     onHeaderCell: (column) => ({
+    //     width: column.width,
+    //     onResize: handleResize(index),
+    //     }),
+    // }));
+
 
     if(!hasPermission(userPermission, '/ver-vales') && !isLoading ) return <Forbidden/>
     
@@ -499,59 +524,59 @@ const ValesSalida = () => {
             <h1 className='text-dark text-xl text-center font-medium py-2'>Vales</h1>
             {
                 hasPermission(userPermission, '/crear-vales') ?
-                <Button type='icon-primary-new' onClick={() => navigate('nuevo')} className="ml-5 absolute right-10 bottom-8 hidden sm:block"><PlusCircleOutlined /></Button>
+                <Button type='icon-primary-new' onClick={() => navigate('nuevo')} className="ml-5 absolute right-10 bottom-8 hidden lg:block z-50"><PlusCircleOutlined /></Button>
                 : null 
             }
                 <div className="grid grid-cols-4 gap-10 py-5">
-                    <div className="p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({})) }>
+                    <div className="p-3 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({})) }>
                         <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
-                            <div className="text-white bg-gradient-to-tr from-dark to-dark-lighter w-16 h-16  -mt-10 p-4 rounded-md shadow align-middle flex">
-                                <div className="text-3xl  w-full justify-center flex m-auto">
-                                    <PieChartFilled className='align-middle'/>
+                            <div className="text-white bg-gradient-to-tr from-dark to-dark-lighter sm:w-16 sm:h-16 w-10 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
+                                <div className="text-sm sm:text-3xl  w-full justify-center flex m-auto">
+                                    <PieChartOutlined className='align-middle'/>
                                 </div>
                             </div>
-                                <div className="sm:text-right text-center sm:py-0 pt-">
-                                <p className="text-custom-dark2 font-light">Todos</p>
-                                <h1 className="text-2xl text-custom-dark">{vales.length}</h1>
+                                <div className="sm:text-right text-center sm:py-0 pt-2">
+                                <p className="text-custom-dark2 font-light sm:text-base text-sm">Todos</p>
+                                <h1 className="lg:text-2xl text-lg text-custom-dark">{count.todos}</h1>
                             </div>
                         </div>
                     </div>
-                    <div className="p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({statusVale: 1})) }>
+                    <div className="p-3 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({statusVale: 1})) }>
                         <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
-                            <div className="text-white bg-gradient-to-tr from-primary to-primary-lighter w-16 h-16  -mt-10 p-4 rounded-md shadow align-middle flex">
-                                <div className="text-3xl  w-full justify-center flex m-auto">
-                                    <PieChartFilled className='align-middle'/>
+                            <div className="text-white bg-gradient-to-tr from-primary to-primary-lighter sm:w-16 sm:h-16 w-10 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
+                                <div className="text-sm sm:text-3xl w-full justify-center flex m-auto">
+                                    <PieChartOutlined className='align-middle'/>
                                 </div>
                             </div>
-                                <div className="sm:text-right text-center sm:py-0 pt-">
-                                <p className="text-custom-dark2 font-light">Nuevos</p>
-                                <h1 className="text-2xl text-custom-dark">{vales.length}</h1>
+                                <div className="sm:text-right text-center sm:py-0 pt-2">
+                                <p className="text-custom-dark2 font-light sm:text-base text-sm">Nuevos</p>
+                                <h1 className="lg:text-2xl text-lg text-custom-dark">{count.nuevo}</h1>
                             </div>
                         </div>
                     </div>
-                    <div className="p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({statusVale: 2})) }>
+                    <div className="p-3 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({statusVale: 2})) }>
                         <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
-                            <div className="text-white bg-gradient-to-tr from-secondary to-secondary-lighter w-16 h-16  -mt-10 p-4 rounded-md shadow align-middle flex">
-                                <div className="text-3xl  w-full justify-center flex m-auto">
-                                    <PieChartFilled className='align-middle'/>
+                            <div className="text-white bg-gradient-to-tr from-secondary to-secondary-lighter sm:w-16 sm:h-16 w-10 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
+                                <div className="text-sm sm:text-3xl  w-full justify-center flex m-auto">
+                                    <PieChartOutlined className='align-middle'/>
                                 </div>
                             </div>
-                                <div className="sm:text-right text-center sm:py-0 pt-">
-                                <p className="text-custom-dark2 font-light">Pendientes</p>
-                                <h1 className="text-2xl text-custom-dark">{vales.length}</h1>
+                                <div className="sm:text-right text-center sm:py-0 pt-2">
+                                <p className="text-custom-dark2 font-light sm:text-base text-sm">Pendientes</p>
+                                <h1 className="lg:text-2xl text-lg text-custom-dark">{count.parcialAbierto}</h1>
                             </div>
                         </div>
                     </div>
-                    <div className="p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({statusVale: 7})) }>
+                    <div className="p-3 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({statusVale: 7})) }>
                         <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
-                            <div className="text-white bg-gradient-to-tr from-info to-info-lighter w-16 h-16  -mt-10 p-4 rounded-md shadow align-middle flex">
-                                <div className="text-3xl  w-full justify-center flex m-auto">
-                                    <PieChartFilled className='align-middle'/>
+                            <div className="text-white bg-gradient-to-tr from-info to-info-lighter sm:w-16 sm:h-16 w-10 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
+                                <div className="text-sm sm:text-3xl  w-full justify-center flex m-auto">
+                                    <PieChartOutlined className='align-middle'/>
                                 </div>
                             </div>
-                                <div className="sm:text-right text-center sm:py-0 pt-">
-                                <p className="text-custom-dark2 font-light">Cerrados</p>
-                                <h1 className="text-2xl text-custom-dark">{vales.length}</h1>
+                                <div className="sm:text-right text-center sm:py-0 pt-2">
+                                <p className="text-custom-dark2 font-light sm:text-base text-sm">Cerrados</p>
+                                <h1 className="lg:text-2xl text-lg text-custom-dark">{count.cerrado}</h1>
                             </div>
                         </div>
                     </div>
@@ -560,9 +585,10 @@ const ValesSalida = () => {
             <Table 
             className='tableVales' 
             loading={isLoading} 
+            render={true}
             scroll={{ x: 'auto' }} 
             key={123} 
-            columns={mergeColumns} 
+            columns={columns} 
             dataSource={dataSource} 
             expandable={{
                 expandedRowRender, 
@@ -577,11 +603,11 @@ const ValesSalida = () => {
                     setActiveExpRow(keys);
                 }
             }}
-            components={{
-                header: {
-                    cell: ResizableTitle,
-                },
-            }}  
+            // components={{
+            //     header: {
+            //         cell: ResizableTitle,
+            //     },
+            // }}  
 
             />
 

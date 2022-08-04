@@ -28,7 +28,7 @@
         color: $dark!important;
     }
 
-    @media (min-width: $breakpoint-sm) {
+    @media (min-width: $breakpoint-lg) {
         label{
             font-size: $regular-size!important;
         }
@@ -47,7 +47,7 @@
             font-size: $small-size!important;
         }
 
-        @media (min-width: $breakpoint-sm) {
+        @media (min-width: $breakpoint-lg) {
             .ant-table-cell{
                 font-size: $regular-size!important;
             }

@@ -63,6 +63,39 @@ const getAllValesError = error => {
     }
 }
 
+
+export function getCountValeSalidaAction(){
+    return async (dispatch) => {
+        dispatch(getCountValeSalidaRequest())
+        await clientAxios.get('/vales/countVales')
+            .then ( res => {
+                dispatch(getCountValeSalidaSuccess(res.data.countValeSalida))
+            }).catch( err => {
+                console.log('Error getCountValeSalidaAction', err.response);
+                dispatch(getCountValeSalidaError(err.response.data))
+            } )
+    }
+}
+const getCountValeSalidaRequest = () => {
+    return {
+        type: types.COUNT_VALE_SALIDA
+    }
+}
+
+const getCountValeSalidaSuccess = payload => {
+    return {
+        type: types.COUNT_VALE_SALIDA_SUCCESS,
+        payload
+    }
+}
+const getCountValeSalidaError = error => {
+    return {
+        type: types.COUNT_VALE_SALIDA_ERROR,
+        payload: error
+    }
+}
+
+
 export function deliverValeAction(vale){
     return async (dispatch) => {
         dispatch(deliverValeRequest())

@@ -26,10 +26,16 @@
     }
 
     .ant-table-cell{
-        font-size: $small-size!important;;   
+        font-size: $smallest-size!important;
     }
-    @media (min-width: $breakpoint-sm) {
+    .ant-tag{
+        font-size: $smallest-size!important;
+    }
+    @media (min-width: $breakpoint-lg) {
         .ant-table-cell{
+            font-size: $regular-size!important;;
+        }
+        .ant-tag{
             font-size: $regular-size!important;;
         }
     }

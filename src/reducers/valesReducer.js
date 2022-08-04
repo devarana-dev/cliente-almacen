@@ -10,6 +10,7 @@ const initialState = {
     updated: false,
     delivered: false,
     deleted: false,
+    count: []
 }
 
 // eslint-disable-next-line
@@ -22,6 +23,7 @@ export default (state = initialState, action) => {
         case types.CLOSE_VALE:
         case types.CLOSE_DETALLE:
         case types.DELIVER_VALE:
+        case types.COUNT_VALE_SALIDA:
             return {
                 ...state,
                 isLoading: true,
@@ -114,6 +116,7 @@ export default (state = initialState, action) => {
         case types.UPDATE_VALE_ERROR:
         case types.CLOSE_VALE_ERROR:
         case types.CLOSE_DETALLE_ERROR:
+        case types.COUNT_VALE_SALIDA_ERROR:
             return {
                 ...state,
                 isLoading: false,
@@ -152,6 +155,15 @@ export default (state = initialState, action) => {
                     return vale
                 })
             }
+
+        case types.COUNT_VALE_SALIDA_SUCCESS:
+            return { 
+                ...state,
+                isLoading: false,
+                errors: null,
+                count: action.payload
+            }
+        
         default:
             return state
     }

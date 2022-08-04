@@ -147,7 +147,6 @@ const CreateUsuario = () => {
                         placeholder="Selecciona un tipo de usuario"
                         filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                         showSearch
-                        size='large'
                         value={tipoUsuario_id}
                         onChange={ (value) => { setUsuario({...usuario, tipoUsuario_id:value})} }
                     >

@@ -20,6 +20,7 @@ module.exports = {
             "danger-lighter": "#f72500",
             "warning-lighter": "#f0c200",
             "dark-lighter": "#646375",
+            "orange" : "#ff6b2c",
 		},
 		backgroundImage:{
 			'royalview' : "url('assets/img/royalview.jpg')",

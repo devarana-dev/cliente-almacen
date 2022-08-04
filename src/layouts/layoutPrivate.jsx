@@ -118,7 +118,7 @@ export default function LayoutPrivate({children}) {
                     {children} 
                 </Content>
             </Layout>
-            <Footer className="block sm:hidden">
+            <Footer className="block lg:hidden">
                 <div className="footer">
                     <Link to={'/'} className="block w-full h-auto text-center footer__link">
                         <div className="footer__link-icon"> 

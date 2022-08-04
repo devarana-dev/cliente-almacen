@@ -18,7 +18,7 @@ const Socket = () => {
         const socketIO = io(process.env.REACT_APP_SERVER, {});
         setSocket(socketIO);
         
-
+        
         dispatch(getNotificationesAction())
         // eslint-disable-next-line
     }, []);

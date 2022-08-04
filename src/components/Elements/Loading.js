@@ -6,7 +6,7 @@ export default function Loading() {
     return (
         <div className="loading">
             <div className="loading__spinner">
-                <div class="loader">
+                <div className="loader">
                     <span>L</span>
                     <span>O</span>
                     <span>A</span>

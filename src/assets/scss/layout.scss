@@ -7,7 +7,7 @@
     background-color: $background !important;
     min-height: 100vh !important;
     // media
-    @media (min-width: $breakpoint-sm) {
+    @media (min-width: $breakpoint-lg) {
         min-width: calc(100vh - 48px)!important;
     }
 
