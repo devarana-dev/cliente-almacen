@@ -1,5 +1,5 @@
 
-import { CheckCircleOutlined, DeleteOutlined, FrownOutlined, PieChartOutlined, PlusCircleOutlined, StopOutlined } from '@ant-design/icons';
+import { BellOutlined, CheckCircleOutlined, DeleteOutlined, FileTextOutlined, FrownOutlined, PieChartOutlined, PlusCircleOutlined, StopOutlined } from '@ant-design/icons';
 import { cancelDetalleAction, cancelValeAction, closeValeAction, completeValeSalida, deliverValeAction, getAllValesAction, getCountValeSalidaAction, searchValeAction } from '../../actions/valeActions';
 import { Button, Table, Tag, Modal, Input, Badge } from 'antd';
 import { useEffect, useState } from 'react';
@@ -91,7 +91,7 @@ const ValesSalida = () => {
                             hasPermission(userPermission, '/eliminar-vales') ? <Button type='icon-danger' className='icon' onClick={() => handleCancel(1, record.id)}> <DeleteOutlined className='ml-0 align-middle text-xl' /> </Button> : null
                         }
                     </div> : 
-                    record.statusVale === 2 || record.statusVale === 4 ? 
+                    record.statusVale === 2 || record.statusVale === 4 || record.statusVale === 3 ? 
                     <Button type='icon-warning' className='icon' onClick={()=> handleClose(record.id)}> 
                         <img src={ekIcon} alt="sa" width={16} className="py-0.5" />
                     </Button>
@@ -189,13 +189,22 @@ const ValesSalida = () => {
             className: 'text-center',
             render: (text, record) => (
             record.statusVale === 1 || record.statusVale === 2? 
-                <Badge color={'green'}  className="align-middle justify-center items-center text-center mx-auto" />
+                <div className='flex items-center justify-end'>
+                    <Badge color={'green'}  className="align-middle justify-center items-center text-center mx-auto" />
+                    <p className='text-xs w-16'> Abierto </p>
+                </div>
             :
             record.statusVale === 3 || record.statusVale === 4 || record.statusVale === 5? 
-                <Badge color={'red'}  className="align-middle justify-center items-center text-center mx-auto" />
+                <div className='flex items-center justify-end'>
+                    <Badge color={'red'}  className="align-middle justify-center items-center text-center mx-auto" />
+                    <p className='text-xs w-16'> Cerrado </p>
+                </div>
             :
-            record.statusVale === 7 ? 
-                <Badge color={'orange'}  className="align-middle justify-center items-center text-center mx-auto" />
+            record.statusVale === 7 || record.statusVale === 6 ? 
+                <div className='flex items-center justify-end'>
+                    <Badge color={'orange'}  className="align-middle justify-center items-center text-center mx-auto" />
+                    <p className='text-xs w-16'> Registrado </p>
+                </div>
             : ''
             ),
         },
@@ -230,11 +239,13 @@ const ValesSalida = () => {
                     </div>
                 :
                 record.statusVale === 6 ? 
-                    <Tag className='mx-auto' key={nanoid(4)} color="geekblue">Borrador</Tag> 
+                    <div className='w-full justify-center text-center flex'>
+                        <Tag className='m-auto w-full' key={nanoid(4)} color="orange">Parcial</Tag> 
+                    </div>
                 :
                 record.statusVale === 7 ? 
                     <div className='w-full justify-center text-center flex'>
-                        <Tag className='m-auto w-full' key={nanoid(4)} color="green">Enkontrol</Tag>
+                        <Tag className='m-auto w-full' key={nanoid(4)} color="green">Entregado</Tag>
                     </div>
                 : ''
             ),
@@ -325,6 +336,7 @@ const ValesSalida = () => {
                 width: 100
             },
             {
+
                 title: 'Estatus',
                 dataIndex: 'acciones',
                 key: `acciones-${nanoid()}`,
@@ -333,15 +345,17 @@ const ValesSalida = () => {
                     <Tag color="blue" className='w-full text-center'> Nuevo </Tag>
                     : 
                     record.status === 2 ?
-                        <Tag key={index} className='w-full text-center' color="orange">Parcial</Tag> 
+                    <Tag key={index} className='w-full text-center' color="orange">Parcial</Tag> 
                     : record.status === 3 ? <Tag key={index} className='w-full text-center' color="green">Entregado</Tag> 
-                    : record.status === 4 ? <Tag key={index} className='w-full text-center' color="volcano">Cerrado</Tag>
-                    : record.status === 5 ? <Tag key={index} className='w-full text-center' color="green">Cerrado Enk</Tag>
+                    : record.status === 4 ? <Tag key={index} className='w-full text-center' color="red">Cancelado</Tag>
+                    : record.status === 5 ? <Tag key={index} className='w-full text-center' color="magenta">Cerrado</Tag>
+                    : record.status === 6 ? <Tag key={index} className='w-full text-center' color="orange">Parcial</Tag>
                     : null
                 ),
                 width: 100
             },
             {
+                // Detalle Estatus / Acciones
                 title: 'Acciones',
                 dataIndex: 'acciones',
                 key: `acciones-${nanoid()}`,
@@ -532,20 +546,20 @@ const ValesSalida = () => {
                         <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
                             <div className="text-white bg-gradient-to-tr from-dark to-dark-lighter sm:w-16 sm:h-16 w-10 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
                                 <div className="text-sm sm:text-3xl  w-full justify-center flex m-auto">
-                                    <PieChartOutlined className='align-middle'/>
+                                    <FileTextOutlined className='align-middle'/>
                                 </div>
                             </div>
                                 <div className="sm:text-right text-center sm:py-0 pt-2">
-                                <p className="text-custom-dark2 font-light sm:text-base text-sm">Todos</p>
+                                <p className="text-custom-dark2 font-light sm:text-base text-sm">Todos los Vales</p>
                                 <h1 className="lg:text-2xl text-lg text-custom-dark">{count.todos}</h1>
                             </div>
                         </div>
                     </div>
                     <div className="p-3 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({statusVale: 1})) }>
                         <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
-                            <div className="text-white bg-gradient-to-tr from-primary to-primary-lighter sm:w-16 sm:h-16 w-10 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
+                            <div className="text-white bg-gradient-to-tr from-info to-info-lighter sm:w-16 sm:h-16 w-10 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
                                 <div className="text-sm sm:text-3xl w-full justify-center flex m-auto">
-                                    <PieChartOutlined className='align-middle'/>
+                                    <BellOutlined className='align-middle'/>
                                 </div>
                             </div>
                                 <div className="sm:text-right text-center sm:py-0 pt-2">
@@ -556,7 +570,7 @@ const ValesSalida = () => {
                     </div>
                     <div className="p-3 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({statusVale: 2})) }>
                         <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
-                            <div className="text-white bg-gradient-to-tr from-secondary to-secondary-lighter sm:w-16 sm:h-16 w-10 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
+                            <div className="text-white bg-gradient-to-tr from-warning to-warning-lighter sm:w-16 sm:h-16 w-10 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
                                 <div className="text-sm sm:text-3xl  w-full justify-center flex m-auto">
                                     <PieChartOutlined className='align-middle'/>
                                 </div>
@@ -569,9 +583,9 @@ const ValesSalida = () => {
                     </div>
                     <div className="p-3 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({statusVale: 7})) }>
                         <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
-                            <div className="text-white bg-gradient-to-tr from-info to-info-lighter sm:w-16 sm:h-16 w-10 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
+                            <div className="text-white bg-gradient-to-tr from-primary to-primary-lighter sm:w-16 sm:h-16 w-10 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
                                 <div className="text-sm sm:text-3xl  w-full justify-center flex m-auto">
-                                    <PieChartOutlined className='align-middle'/>
+                                    <img src={ekIcon} alt="" />
                                 </div>
                             </div>
                                 <div className="sm:text-right text-center sm:py-0 pt-2">
