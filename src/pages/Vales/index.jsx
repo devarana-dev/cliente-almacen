@@ -561,7 +561,7 @@ const ValesSalida = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({statusVale: 1})) }>
+                    <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction( {statusVale: 1} )) }>
                         <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
                             <div className="text-white bg-gradient-to-tr from-info to-info-lighter sm:w-16 sm:h-16 w-12 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
                                 <div className="text-base sm:text-3xl w-full justify-center flex m-auto">
@@ -569,12 +569,12 @@ const ValesSalida = () => {
                                 </div>
                             </div>
                                 <div className="sm:text-right text-center sm:py-0 pt-2">
-                                <p className="text-custom-dark2 font-light sm:text-base text-sm">Nuevos</p>
-                                <h1 className="lg:text-2xl text-lg text-custom-dark">{count.nuevo}</h1>
+                                <p className="text-custom-dark2 font-light sm:text-base text-sm">Pendientes</p>
+                                <h1 className="lg:text-2xl text-lg text-custom-dark">{count.nuevo + count.parcialAbierto}</h1>
                             </div>
                         </div>
                     </div>
-                    <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({statusVale: 2})) }>
+                    <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction( {statusVale: 2} )) }>
                         <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
                             <div className="text-white bg-gradient-to-tr from-warning to-warning-lighter sm:w-16 sm:h-16 w-12 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
                                 <div className="text-base sm:text-3xl  w-full justify-center flex m-auto">
@@ -582,12 +582,12 @@ const ValesSalida = () => {
                                 </div>
                             </div>
                                 <div className="sm:text-right text-center sm:py-0 pt-2">
-                                <p className="text-custom-dark2 font-light sm:text-base text-sm">Pendientes</p>
+                                <p className="text-custom-dark2 font-light sm:text-base text-sm">Entregados</p>
                                 <h1 className="lg:text-2xl text-lg text-custom-dark">{count.parcialAbierto}</h1>
                             </div>
                         </div>
                     </div>
-                    <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({statusVale: 7})) }>
+                    <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({statusVale: 5})) }>
                         <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
                             <div className="text-white bg-gradient-to-tr from-primary to-primary-lighter sm:w-16 sm:h-16 w-12 h-12 -mt-10 p-5 rounded-md shadow align-middle flex">
                                 <div className="text-base sm:text-3xl  w-full justify-center flex m-auto">
@@ -595,8 +595,8 @@ const ValesSalida = () => {
                                 </div>
                             </div>
                                 <div className="sm:text-right text-center sm:py-0 pt-2">
-                                <p className="text-custom-dark2 font-light sm:text-base text-sm">Cerrados</p>
-                                <h1 className="lg:text-2xl text-lg text-custom-dark">{count.cerrado}</h1>
+                                <p className="text-custom-dark2 font-light sm:text-base text-sm">Cancelados</p>
+                                <h1 className="lg:text-2xl text-lg text-custom-dark">{count.cancelado}</h1>
                             </div>
                         </div>
                     </div>

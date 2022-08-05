@@ -1,4 +1,5 @@
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { useDispatch, useSelector } from 'react-redux';
@@ -57,10 +58,10 @@ export default function Home() {
     const options = {
         layout: {
             padding: {
-                left: 50,
-                right: 50,
-                top: 0,
-                bottom: 0
+                left: 70,
+                right: 70,
+                top: 20,
+                bottom: 20
             }
         },
 
@@ -197,10 +198,13 @@ export default function Home() {
 
 
     return (
-        <div className='max-w-screen-md mx-auto'>
+        <div className='max-w-screen-md m-auto h-full'>
             <img src={Logotipo} alt="" className='mx-auto block md:hidden max-w-full'/>
-            <h1 className='text-center text-dark text-3xl font-bold pt-5 uppercase hidden md:block'> Total de vales </h1>
-            <Doughnut data={data} options={options} plugins={plugins}/>
+            <div className='flex align-middle h-full flex-col justify-center'>
+                <h1 className='text-center text-dark text-3xl font-bold uppercase hidden md:block'> Estatus de Vales de Salida de Almacén </h1>
+                <p className='uppercase text-center text-dark text-2xl font-medium hidden md:block'>  { moment().format('DD MMMM YY') }  </p>
+                <Doughnut data={data} options={options} plugins={plugins} />
+            </div>
         </div>
     )
 };

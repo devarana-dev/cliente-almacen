@@ -54,6 +54,7 @@ const Insumos = () => {
         key: 'nombre',
         sorter: (a, b) => a.nombre.localeCompare(b.nombre),
         ...getColumnSearchProps('nombre'),
+        ellipsis:true,
     },
     {
         title: 'Centro Costo',
@@ -151,12 +152,12 @@ const Insumos = () => {
                 hasPermission(userPermission, '/crear-insumos') ?
                 <div>
                     <Button type='default' onClick={() => showModal()}>Importar</Button>
-                    <Button type='icon-secondary-new' onClick={() => navigate('create')} className="fixed right-10 bottom-8 z-50 items-center"><PlusCircleOutlined /></Button>
+                    <Button type='icon-secondary-new' onClick={() => navigate('create')} className="fixed right-10 bottom-8 z-50 items-center lg:block hidden"><PlusCircleOutlined /></Button>
                 </div>
                 : null 
             }
 		</div>
-        <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false} />
+        <Table scroll={{ x: 'auto'}} columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false} />
 
         <Modal title="Cargar Insumo" visible={isModalVisible} footer={null} onCancel={handleCancel}>
             <UploadFile/>

@@ -127,11 +127,11 @@ const Usuarios = () => {
         <div className='py-2 flex justify-end'>          
         {
             hasPermission(userPermission, '/crear-usuarios') ?
-           <Button type='icon-secondary-new' onClick={() => navigate('create')} className="fixed right-10 bottom-8 z-50 items-center"><PlusCircleOutlined /></Button>
+           <Button type='icon-secondary-new' onClick={() => navigate('create')} className="fixed right-10 bottom-8 z-50 items-center lg:block hidden"><PlusCircleOutlined /></Button>
             : null 
         }
         </div>
-        <Table columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>
+        <Table scroll={{ x: 'auto'}} columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>
     </>
     );
 }
