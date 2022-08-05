@@ -1,7 +1,7 @@
 
 import { BellOutlined, CheckCircleOutlined, DeleteOutlined, FileTextOutlined, FrownOutlined, PieChartOutlined, PlusCircleOutlined, StopOutlined } from '@ant-design/icons';
 import { cancelDetalleAction, cancelValeAction, closeValeAction, completeValeSalida, deliverValeAction, getAllValesAction, getCountValeSalidaAction, searchValeAction } from '../../actions/valeActions';
-import { Button, Table, Tag, Modal, Input, Badge } from 'antd';
+import { Button, Table, Tag, Modal, Input, Badge, Avatar, Image } from 'antd';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
@@ -115,6 +115,7 @@ const ValesSalida = () => {
 				{ 
                     key: i, 
                     residente:`${item.user.nombre} ${item.user.apellidoPaterno}`,
+                    residentePicture: item.user.picture,
                     personalInfo: `${item.personal.nombre} ${item.personal.apellidoPaterno}`,
                     actividadInfo: item.actividad.nombre,
                     aciones:item.id, 
@@ -140,13 +141,19 @@ const ValesSalida = () => {
             width: 100
         },
         {
-            title: 'Elaborado Por',
+            title: 'Solicitante',
             dataIndex: 'residente',
             responsive: ['md'],
             key: `residente-${nanoid()}`,
             sorter: (a, b) => a.residente.localeCompare(b.residente),
             ...getColumnSearchProps('residente'),
-            // width: 450
+            // width: 450,
+            render: (text, record) => (
+                <div className='flex flex-row items-center'>
+                    <Avatar crossOrigin='anonymous' src={ <Image src={record.residentePicture} /> || '' } />
+                    <p className='ml-4'> { record.residente} </p>
+                </div>
+            )
         },
         {
             title: 'Lider',
@@ -526,7 +533,7 @@ const ValesSalida = () => {
     //     width: column.width,
     //     onResize: handleResize(index),
     //     }),
-    // }));
+    // }));+
 
 
     if(!hasPermission(userPermission, '/ver-vales') && !isLoading ) return <Forbidden/>
