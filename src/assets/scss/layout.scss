@@ -6,7 +6,7 @@
 
     background-color: $background !important;
     // media
-    min-height: calc(100vh - 48px)!important;
+    min-height: calc(100vh - 70px)!important;
     @media (min-width: $breakpoint-lg) {
         min-height: 100vh !important;
     }
@@ -154,7 +154,7 @@
     bottom: 0;
     width: 100%;
     background: $primary!important;
-    height: 45px;
+    height: 65px;
     box-shadow: 0 0 5px rgba(0,0,0,.1);
     padding: 0 !important;
 
