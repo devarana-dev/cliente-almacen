@@ -177,7 +177,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
                 notFoundContent={isLoading ? <Spin size="small" /> : null}
                 filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                 showSearch
-                onChange={ (e) => {searchUnidad(e); setInsumo({  id: e }); } }
+                onChange={ (e) => {searchUnidad(e); setInsumo({  id: e, cantidadSolicitada: 0 }); } }
             > 
                 {
                     insumos.filter( item => item.centroCosto === vale.centroCosto ).map( item => (
@@ -195,11 +195,11 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
                 name="cantidadSolicitada"
                 hasFeedback
                 rules={[
-                    { required: true, message: "Digita una cantidadSolicitada", min: 0  }
+                    { required: true, message: "Digita una cantidad", min: 0  }
                 ]}
                 
             >
-                <Input min={ 0 } type="tel" name="cantidadSolicitada" onChange={ handleChange }/>
+                <Input min={ 0 } type="tel" name="cantidadSolicitada" value={insumo.cantidadSolicitada} onChange={ handleChange }/>
             </Form.Item>
             <Form.Item 
                 className=" w-full col-span-1"

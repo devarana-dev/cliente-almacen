@@ -1,9 +1,20 @@
 export default function Forbidden() {
-    return(
-        <>
-            <div className="w-full h-full flex justify-center items-center">
-                <h1 className="text-gray-600 text-2xl font-bold"> Error 401: No tienes permiso de ver el contenido</h1>
+
+    setTimeout(() => {
+        return(
+            <div className="forbidden">
+                <div className="forbidden__content">
+                    <div className="forbidden__content__title">
+                        <h1>403</h1>
+                    </div>
+                    <div className="forbidden__content__text">
+                        <h2>Prohibido</h2>
+                        <p>No Tienes permiso de acceder</p>
+                    </div>
+                </div>
             </div>
-        </>
-    )
+
+        )
+    } , 100);
+   
 };

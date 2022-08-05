@@ -26,6 +26,6 @@ export default function LayoutPublic({children}) {
     
 
     return (
-        <div className="w-full flex flex-col sm:bg-light sm:bg-none bg-royalview bg-cover bg-no-repeat bg-center h-screen"> {children} </div>
+        <div className="w-full flex flex-col sm:bg-light sm:bg-homeLogin bg-royalview bg-cover bg-no-repeat bg-center h-screen"> {children} </div>
     )
 };

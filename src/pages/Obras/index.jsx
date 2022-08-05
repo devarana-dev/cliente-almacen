@@ -1,5 +1,5 @@
 
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Table, Popconfirm } from 'antd';
 
 import { useEffect, useState } from 'react';
@@ -118,11 +118,11 @@ const Obras = () => {
 
     return ( 
     <>
-        <h1 className='text-dark text-2xl text-center font-medium'>Obra / CC</h1>
+        <h1 className='text-dark text-3xl text-center font-bold'>Obra / CC</h1>
         <div className='py-2 flex justify-end'>
 			{
                 hasPermission(userPermission, '/crear-obras') ?
-                    <Button type='primary' onClick={() => navigate('create')}>Agregar</Button>
+                  <Button type='icon-secondary-new' onClick={() => navigate('create')} className="fixed right-10 bottom-8 z-50 items-center"><PlusCircleOutlined /></Button>
                 : null 
             }
 		</div>

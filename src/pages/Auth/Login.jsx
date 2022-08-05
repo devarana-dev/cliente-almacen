@@ -1,8 +1,8 @@
-import { Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserAction } from '../../actions/authActions';
-import Box from "../../components/Elements/Box";
 import { AntdNotification } from '../../components/Elements/Notification';
+import {FcGoogle} from 'react-icons/fc'
+import Logotipo from "../../assets/img/Logotipo Devarana_blanco.png"
 
 export default function Login() {
 
@@ -29,11 +29,14 @@ export default function Login() {
     return (
         <>
         {errors ?  <AntdNotification type='error' description={errors} /> : null }
-        <div className='m-auto bg-glassmorphism p-3 rounded-md'>
-            <h1 className="text-center text-3xl font-bold  m-auto drop-shadow-lg text-light " >Sistema de Gestión de Obra</h1>
-            <Box className="w-full max-w-screen-sm bg-transparent mb-10 mx-auto text-center">
-                <Button type='primary' onClick={redirectToGoogleSSO}> Entrar con Google </Button>
-            </Box>
+        <div className='mx-auto p-3 rounded-md align-middle h-screen flex flex-col px-5'>
+            <img src={Logotipo} className="max-w-xs w-full mx-auto my-auto drop-shadow"/>
+            <button 
+                className='flex items-center rounded-3xl border text-dark font-bold px-4 py-1 bg-white justify-center my-auto mx-auto
+                hover:opacity-70' 
+                onClick={redirectToGoogleSSO}>  
+                <FcGoogle className='mx-2 text-lg'/> Continuar con Google 
+            </button>
         </div>
         </>
     )

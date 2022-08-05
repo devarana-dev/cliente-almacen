@@ -144,12 +144,12 @@ export default function LayoutPrivate({children}) {
                             <p> Personal </p>
                         </div>
                     </Link>
-                    <Link to={'/'} className="block w-full h-auto text-center footer__link">
-                        <div className="footer__link-icon"> 
-                            <AiOutlineLogout className="m-auto" onClick={showModal }/>
+                    <div className="block w-full h-auto text-center footer__link cursor-pointer">
+                        <div className="footer__link-icon" onClick={showModal }> 
+                            <AiOutlineLogout className="m-auto" />
                             <p> Salir </p>
                         </div>
-                    </Link>
+                    </div>
                 </div>
             </Footer>
 

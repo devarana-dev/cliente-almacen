@@ -123,11 +123,11 @@ const Usuarios = () => {
 
     return ( 
     <>
-		<h1 className='text-dark text-xl text-center font-medium'>Usuarios</h1>
+		<h1 className='text-dark text-3xl text-center font-bold'>Usuarios</h1>
         <div className='py-2 flex justify-end'>          
         {
             hasPermission(userPermission, '/crear-usuarios') ?
-            <Button type='icon-primary-new' onClick={() => navigate('create')}><PlusCircleOutlined /></Button>
+           <Button type='icon-secondary-new' onClick={() => navigate('create')} className="fixed right-10 bottom-8 z-50 items-center"><PlusCircleOutlined /></Button>
             : null 
         }
         </div>

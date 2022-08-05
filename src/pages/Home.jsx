@@ -2,7 +2,8 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllValesAction, getCountValeSalidaAction } from '../actions/valeActions';
+import { getCountValeSalidaAction } from '../actions/valeActions';
+import Logotipo from "../assets/img/LogoDevarana.png"
 
 export default function Home() {
 
@@ -22,13 +23,9 @@ export default function Home() {
                 "Parciales": count.parcialAbierto,
                 "Entregado": count.entregado,
                 "Cancelado": count.cancelado,
-                "Cerrado": count.cerrado
+                // "Cerrado": count.cerrado
             })
-            console.log(count);
-
-
         }
-
     }, [count])
 
     const data = {
@@ -58,27 +55,30 @@ export default function Home() {
     }
 
     const options = {
+        layout: {
+            padding: {
+                left: 50,
+                right: 50,
+                top: 0,
+                bottom: 0
+            }
+        },
+
         plugins: {
             legend: {
-                position: 'top',
+                position: 'bottm',
                 align: 'center',
+                display: false
             },
+            tooltip: {
+                enabled: false
+            }
         },
         centerText: {
             display: true,
             text: count.todos || 0
         },
-        doughnutlabel: {
-            labels: [{
-              text: '550',
-              font: {
-                size: 20,
-                weight: 'bold'
-              }
-            }, {
-              text: 'total'
-            }]
-          }
+       
     }
 
     const plugins = [{
@@ -96,11 +96,110 @@ export default function Home() {
             const textY = ((chart.chartArea.top + chart.chartArea.bottom) / 2);
             ctx.fillText(text, textX, textY);
             ctx.save();
+        },
+        afterDraw: (chart, args, options) => {
+            const { ctx, chartArea: {top, bottom, left, right, width, height } } = chart
+            CanvasRenderingContext2D.prototype.wrapText = function (text, x, y, maxWidth, lineHeight) {
+
+                var lines = text.split("\n");
+            
+                for (var i = 0; i < lines.length; i++) {
+            
+                    var words = lines[i].split(' ');
+                    var line = '';
+            
+                    for (var n = 0; n < words.length; n++) {
+                        var testLine = line + words[n] + ' ';
+                        var metrics = this.measureText(testLine);
+                        var testWidth = metrics.width;
+                        if (testWidth > maxWidth && n > 0) {
+                            this.fillText(line, x, y);
+                            line = words[n] + ' ';
+                            y += lineHeight;
+                        } else {
+                            line = testLine;
+                        }
+                    }
+            
+                    this.fillText(line, x, y);
+                    y += lineHeight;
+                }
+            };
+            chart.data.datasets.forEach( (dataset, i) => {
+                chart.getDatasetMeta(i).data.forEach((datapoint, index) => {
+
+                   
+                    const { x, y } = datapoint.tooltipPosition()
+
+                    // DrawLine 
+                    const halfHeight = chart.chartArea.top + chart.chartArea.bottom / 2
+                    const halfWidth = chart.chartArea.left + chart.chartArea.right / 2
+                    const xLine = x >= halfWidth ? x + (height / 7) : x - (height / 7)
+                    const yLine = y >= halfHeight ? y + (height / 7) : y - (height / 7)
+                    // Line 
+                    // ctx.beginPath()
+                    // ctx.moveTo(x, y)
+                    // ctx.lineTo(xLine, yLine)
+                    // ctx.lineTo(xLine + extraLine, yLine)
+                    // ctx.strokeStyle = dataset.backgroundColor[index]
+                    // ctx.stroke()
+
+
+                    // Text
+                    const textWidth = ctx.measureText(chart.data.labels[index]).width
+
+                    const fontSize = (height / 36).toFixed(2);
+                    ctx.font = `bold ${fontSize}px Roboto`;
+                    
+
+                    // Control Position
+                    const textXpositon = x >= halfWidth ? 'left' : 'right'
+                    const plusFivePx = x >= halfWidth ? 2 : - 2
+                    ctx.textAlign = 'center'
+                    ctx.textBaseline = 'middle'
+                    
+                    ctx.fillStyle = dataset.backgroundColor[index]
+                    const textData = chart.data.datasets[0].data[index] + '\n' + chart.data.labels[index]
+            
+                    ctx.wrapText(textData, xLine + plusFivePx, yLine, 160, 16)
+                })
+            })
         }
     }]
 
+    CanvasRenderingContext2D.prototype.wrapText = function (text, x, y, maxWidth, lineHeight) {
+
+        var lines = text.split("\n");
+    
+        for (var i = 0; i < lines.length; i++) {
+    
+            var words = lines[i].split(' ');
+            var line = '';
+    
+            for (var n = 0; n < words.length; n++) {
+                var testLine = line + words[n] + ' ';
+                var metrics = this.measureText(testLine);
+                var testWidth = metrics.width;
+                if (testWidth > maxWidth && n > 0) {
+                    this.fillText(line, x, y);
+                    line = words[n] + ' ';
+                    y += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+    
+            this.fillText(line, x, y);
+            y += lineHeight;
+        }
+    };
+    
+
+
     return (
         <div className='max-w-screen-md mx-auto'>
+            <img src={Logotipo} alt="" className='mx-auto block md:hidden max-w-full'/>
+            <h1 className='text-center text-dark text-3xl font-bold pt-5 uppercase hidden md:block'> Total de vales </h1>
             <Doughnut data={data} options={options} plugins={plugins}/>
         </div>
     )

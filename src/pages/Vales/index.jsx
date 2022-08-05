@@ -9,12 +9,13 @@ import { getColumnSearchProps } from '../../hooks/useFilter'
 import { nanoid } from 'nanoid'
 import '../../assets/scss/showVale.scss'
 import ekIcon from "../../assets/img/Original-EK.png"
+import ekIcon2 from "../../assets/img/Original-EK2.png"
+import Logotipo from "../../assets/img/LogoDevarana.png"
 import openNotificationWithIcon from '../../hooks/useNotification';
 import moment from 'moment';
 import { hasPermission } from '../../utils/hasPermission';
 import Forbidden from '../../components/Elements/Forbidden';
 import { ResizableTitle } from "../../utils/resizableTable";
-import Loading from '../../components/Elements/Loading';
 
 const ValesSalida = () => {
 
@@ -105,7 +106,6 @@ const ValesSalida = () => {
     useEffect(() => {
             dispatch(getAllValesAction())
             dispatch(getCountValeSalidaAction())
-            
         // eslint-disable-next-line
     }, [])
     
@@ -126,9 +126,7 @@ const ValesSalida = () => {
         if((hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ) && !loadedColumn){
             setLoad(true)
             setColumns([...columns, actionColumn])
-
         }
-   
     }, [vales])
 
     const [columns, setColumns] = useState([
@@ -191,19 +189,19 @@ const ValesSalida = () => {
             record.statusVale === 1 || record.statusVale === 2? 
                 <div className='flex items-center justify-end'>
                     <Badge color={'green'}  className="align-middle justify-center items-center text-center mx-auto" />
-                    <p className='text-xs w-16'> Abierto </p>
+                    <p className='text-xs w-16 hidden sm:block'> Abierto </p>
                 </div>
             :
             record.statusVale === 3 || record.statusVale === 4 || record.statusVale === 5? 
                 <div className='flex items-center justify-end'>
                     <Badge color={'red'}  className="align-middle justify-center items-center text-center mx-auto" />
-                    <p className='text-xs w-16'> Cerrado </p>
+                    <p className='text-xs w-16 hidden sm:block'> Cerrado </p>
                 </div>
             :
             record.statusVale === 7 || record.statusVale === 6 ? 
                 <div className='flex items-center justify-end'>
                     <Badge color={'orange'}  className="align-middle justify-center items-center text-center mx-auto" />
-                    <p className='text-xs w-16'> Registrado </p>
+                    <p className='text-xs w-16 hidden sm:block'> Registrado </p>
                 </div>
             : ''
             ),
@@ -535,30 +533,31 @@ const ValesSalida = () => {
     
     return ( 
         <>
-            <h1 className='text-dark text-xl text-center font-medium py-2'>Vales</h1>
+            <img src={Logotipo} alt="" className='mx-auto block md:hidden max-w-full py-2'/>
+            <h1 className='text-center text-dark text-3xl font-bold pt-5 uppercase hidden md:block py-2'> Vales </h1>
             {
                 hasPermission(userPermission, '/crear-vales') ?
-                <Button type='icon-primary-new' onClick={() => navigate('nuevo')} className="ml-5 absolute right-10 bottom-8 hidden lg:block z-50"><PlusCircleOutlined /></Button>
+                <Button type='icon-secondary-new' onClick={() => navigate('nuevo')} className="fixed right-10 bottom-8 hidden lg:block z-50 items-center"><PlusCircleOutlined /></Button>
                 : null 
             }
-                <div className="grid grid-cols-4 gap-10 py-5">
-                    <div className="p-3 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({})) }>
+                <div className="md:grid hidden grid-cols-4 gap-10 py-5 ">
+                    <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction()) }>
                         <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
-                            <div className="text-white bg-gradient-to-tr from-dark to-dark-lighter sm:w-16 sm:h-16 w-10 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
-                                <div className="text-sm sm:text-3xl  w-full justify-center flex m-auto">
+                            <div className="text-white bg-gradient-to-tr from-dark to-dark-lighter sm:w-16 sm:h-16 w-12 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
+                                <div className="text-base sm:text-3xl  w-full justify-center flex m-auto">
                                     <FileTextOutlined className='align-middle'/>
                                 </div>
                             </div>
                                 <div className="sm:text-right text-center sm:py-0 pt-2">
-                                <p className="text-custom-dark2 font-light sm:text-base text-sm">Todos los Vales</p>
+                                <p className="text-custom-dark2 font-light sm:text-base text-sm">Todos</p>
                                 <h1 className="lg:text-2xl text-lg text-custom-dark">{count.todos}</h1>
                             </div>
                         </div>
                     </div>
-                    <div className="p-3 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({statusVale: 1})) }>
+                    <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({statusVale: 1})) }>
                         <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
-                            <div className="text-white bg-gradient-to-tr from-info to-info-lighter sm:w-16 sm:h-16 w-10 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
-                                <div className="text-sm sm:text-3xl w-full justify-center flex m-auto">
+                            <div className="text-white bg-gradient-to-tr from-info to-info-lighter sm:w-16 sm:h-16 w-12 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
+                                <div className="text-base sm:text-3xl w-full justify-center flex m-auto">
                                     <BellOutlined className='align-middle'/>
                                 </div>
                             </div>
@@ -568,10 +567,10 @@ const ValesSalida = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="p-3 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({statusVale: 2})) }>
+                    <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({statusVale: 2})) }>
                         <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
-                            <div className="text-white bg-gradient-to-tr from-warning to-warning-lighter sm:w-16 sm:h-16 w-10 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
-                                <div className="text-sm sm:text-3xl  w-full justify-center flex m-auto">
+                            <div className="text-white bg-gradient-to-tr from-warning to-warning-lighter sm:w-16 sm:h-16 w-12 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
+                                <div className="text-base sm:text-3xl  w-full justify-center flex m-auto">
                                     <PieChartOutlined className='align-middle'/>
                                 </div>
                             </div>
@@ -581,11 +580,11 @@ const ValesSalida = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="p-3 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({statusVale: 7})) }>
+                    <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({statusVale: 7})) }>
                         <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
-                            <div className="text-white bg-gradient-to-tr from-primary to-primary-lighter sm:w-16 sm:h-16 w-10 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
-                                <div className="text-sm sm:text-3xl  w-full justify-center flex m-auto">
-                                    <img src={ekIcon} alt="" />
+                            <div className="text-white bg-gradient-to-tr from-primary to-primary-lighter sm:w-16 sm:h-16 w-12 h-12 -mt-10 p-5 rounded-md shadow align-middle flex">
+                                <div className="text-base sm:text-3xl  w-full justify-center flex m-auto">
+                                    <img src={ekIcon2} alt="" />
                                 </div>
                             </div>
                                 <div className="sm:text-right text-center sm:py-0 pt-2">

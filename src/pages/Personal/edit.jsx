@@ -79,7 +79,7 @@ const EditPersonal = () => {
         }
     }
 
-    if(!hasPermission(userPermission, '/editar-personal') && !isLoading ) return <Forbidden/>
+    if(!hasPermission(userPermission, '/editar-personal')) return <Forbidden/>
     if(isLoading) return <Loading />
     if(!editedPersonal) return <div>No se encontro el personal</div>
     

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import InformacionGral from './create_step_one';
 import ListaInsumos from './create_step_two';
-
+import Logotipo from "../../assets/img/LogoDevarana.png"
 
 const CreateValesSalida = () => {
 
@@ -13,8 +13,9 @@ const CreateValesSalida = () => {
     });
 
     return ( 
-        <div className="max-w-2xl w-full mx-auto px-10">
-            <h1 className="text-center text-2xl font-bold text-dark pb-3">Vale de salida</h1>
+        <div className="max-w-2xl w-full mx-auto sm:px-10 px-1">
+            <img src={Logotipo} alt="" className='mx-auto block md:hidden max-w-full py-2'/>
+            <h1 className='text-center text-dark text-3xl font-bold pt-5 uppercase hidden md:block'> Vales de Salida</h1>
             
                 
             <div className={`${current !== 0 ? 'hidden' : 'block '}`}>

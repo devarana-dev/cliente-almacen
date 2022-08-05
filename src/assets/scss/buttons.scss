@@ -158,6 +158,17 @@
         color:$primary;
     }
 }
+.ant-btn-icon-secondary-new{
+    background: $secondary;
+    background: -webkit-linear-gradient(190deg, $secondary 0%, $secondary-lighter 100%);
+    background: linear-gradient(190deg, $secondary 0%, $secondary-lighter 100%);
+    border:1px solid $secondary;
+    color: white;
+    &:hover, &:focus{
+        border:1px solid $secondary;
+        color:$secondary;
+    }
+}
 
 
 // Icons Icons

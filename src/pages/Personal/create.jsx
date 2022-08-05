@@ -8,6 +8,7 @@ import openNotificationWithIcon from "../../hooks/useNotification";
 import { cleanErrorAction } from "../../actions/globalActions";
 import { hasPermission } from "../../utils/hasPermission";
 import Forbidden from "../../components/Elements/Forbidden";
+import Logotipo from "../../assets/img/LogoDevarana.png"
 
 const CreatePersonal = () => {
     const dispatch = useDispatch();
@@ -67,8 +68,8 @@ const CreatePersonal = () => {
             onFinish={handleSubmit}
             layout="vertical"
             >
-            <h1 className="text-center text-2xl font-bold text-dark"> Nuevo Lider de Cuadrilla </h1>
-
+            <img src={Logotipo} alt="" className='mx-auto block md:hidden max-w-full py-2'/>
+            <h1 className='text-center text-dark text-3xl font-bold pt-5 uppercase hidden md:block'> Nuevo Lider de Cuadrilla </h1>
             <Form.Item 
                 label="Nombre" 
                 name="nombre" 

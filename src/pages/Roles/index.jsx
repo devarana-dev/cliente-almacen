@@ -1,5 +1,5 @@
 
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Popconfirm, Table } from 'antd';
 
 import { useEffect, useState } from 'react';
@@ -102,11 +102,11 @@ const Roles = () => {
 
     return ( 
     <>
-        <h1 className='text-dark text-xl text-center font-medium'>Roles</h1>
+        <h1 className='text-dark text-3xl text-center font-bold'>Roles</h1>
             <div className='py-2 flex justify-end'>          
             {
                 hasPermission(userPermission, '/crear-roles') ?
-                <Button type='primary' onClick={() => navigate('create')}>Agregar</Button>
+                <Button type='icon-secondary-new' onClick={() => navigate('create')} className="fixed right-10 bottom-8 z-50 items-center"><PlusCircleOutlined /></Button>
                 : null 
             }
             </div>

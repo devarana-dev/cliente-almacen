@@ -1,5 +1,5 @@
 
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Popconfirm, Table } from 'antd';
 
 import { useEffect, useState } from 'react';
@@ -114,18 +114,15 @@ const Personal = () => {
         }
     }
 
-    if(isLoading) {
-        return <div>Cargando...</div>
-    }
 
-    if(!hasPermission(userPermission, '/ver-personal') && !isLoading ) return <Forbidden/>
+    if(!hasPermission(userPermission, '/ver-personal')) return <Forbidden />
     return ( 
     <>
         <h1 className='text-dark text-xl text-center font-medium'>Lideres de Cuadrilla</h1>
         <div className='py-2 flex justify-end'>          
         {
             hasPermission(userPermission, '/crear-personal') ?
-            <Button type='primary' onClick={() => navigate('create')}>Agregar</Button>
+          <Button type='icon-secondary-new' onClick={() => navigate('create')} className="fixed right-10 bottom-8 z-50 items-center"><PlusCircleOutlined /></Button>
             : null 
         }
         </div>
