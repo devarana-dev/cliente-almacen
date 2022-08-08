@@ -10,7 +10,7 @@ import Logotipo from "../assets/img/LogoDevarana.png"
 export default function Home() {
 
     const dispatch = useDispatch()
-    const { count, isLoading } = useSelector( state => state.vales)
+    const { count } = useSelector( state => state.vales)
     const [ dataValues, setDataValues ] = useState({})
 
     const [filter, setFilter] = useState("")
@@ -107,7 +107,7 @@ export default function Home() {
             ctx.save();
         },
         afterDraw: (chart, args, options) => {
-            const { ctx, chartArea: { height } } = chart
+            const { ctx, chartArea: { height, width } } = chart
             CanvasRenderingContext2D.prototype.wrapText = function (text, x, y, maxWidth, lineHeight) {
 
                 var lines = text.split("\n");
@@ -138,57 +138,60 @@ export default function Home() {
 
                 chart.getDatasetMeta(i).data.forEach((datapoint, index) => {
                     const { x, y } = datapoint.tooltipPosition()
+
+
                     // DrawLine 
                     const halfHeight = chart.chartArea.top + chart.chartArea.bottom / 2
                     const halfWidth = chart.chartArea.left + chart.chartArea.right / 2
-                    const xLine = x >= halfWidth ? x + (height / 6) : x - (height / 6)
-                    const yLine = y >= halfHeight ? y + (height / 6) : y - (height / 6)
+                    const xLine = x >= halfWidth ? x + 0 : x - 0
+                    const yLine = y >= halfHeight ? y + 0 : y - 0
                     // Line 
                     // ctx.beginPath()
                     // ctx.moveTo(x, y)
                     // ctx.lineTo(xLine, yLine)
-                    // ctx.lineTo(xLine + extraLine, yLine)
+                    // ctx.lineTo(xLine, yLine)
                     // ctx.strokeStyle = dataset.backgroundColor[index]
                     // ctx.stroke()
 
 
                     // Text
-                    const textWidth = ctx.measureText(chart.data.labels[index]).width
+                    // const textWidth = ctx.measureText(chart.data.labels[index]).width
 
-                    const fontSize = (height / 36).toFixed(2);
+                    const fontSize = (height / 38).toFixed(2);
                     ctx.font = `bold ${fontSize}px Roboto`;
+                    
                     
 
                     // Control Position
                     // const textXpositon = x >= halfWidth ? 'left' : 'right'
-                    const plusFivePx = x >= halfWidth ? 2 : - 2
+                    const plusFivePx = x >= halfWidth ? 0 : - 0
                     ctx.textAlign = 'center'
                     ctx.textBaseline = 'middle'
                     
-                    ctx.fillStyle = dataset.backgroundColor[index]
-
+                    ctx.fillStyle = "#ffffff"
+                    // ctx.fillStyle = dataset.backgroundColor[index]
+                    
                     const textData = chart.data.datasets[0].data[index] > 0 ? chart.data.datasets[0].data[index] + '\n' + chart.data.labels[index]  : '' 
             
-                    ctx.wrapText(textData, xLine + plusFivePx, yLine, 160, 16)
+                    ctx.wrapText(textData, xLine + plusFivePx, yLine, 250, 16)
                 })
             })
         },
-        formatter: function (value, context) { return value || null }
     }]
 
     CanvasRenderingContext2D.prototype.wrapText = function (text, x, y, maxWidth, lineHeight) {
 
-        var lines = text.split("\n");
+        let lines = text.split("\n");
     
-        for (var i = 0; i < lines.length; i++) {
+        for (let i = 0; i < lines.length; i++) {
     
-            var words = lines[i].split(' ');
-            var line = '';
+            let words = lines[i].split(' ');
+            let line = '';
     
-            for (var n = 0; n < words.length; n++) {
-                var testLine = line + words[n] + ' ';
-                var metrics = this.measureText(testLine);
-                var testWidth = metrics.width;
+            for (let n = 0; n < words.length; n++) {
+                let testLine = line + words[n] + ' ';
+                let metrics = this.measureText(testLine);
+                let testWidth = metrics.width;
                 if (testWidth > maxWidth && n > 0) {
                     this.fillText(line, x, y);
                     line = words[n] + ' ';
@@ -225,7 +228,7 @@ export default function Home() {
 
     return (
        <> 
-        <div className="max-w-screen-md grid grid-cols-12 m-auto">
+        <div className="max-w-screen-md grid grid-cols-12 m-auto md:h-auto h-full">
             <div className="col-span-12">
                 <img src={Logotipo} alt="" className='mx-auto block md:hidden max-w-full'/>
                 <h1 className='text-center text-dark text-3xl font-bold uppercase hidden md:block'> Estatus de Vales de Salida de Almacén </h1>

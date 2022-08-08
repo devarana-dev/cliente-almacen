@@ -210,21 +210,23 @@ const EditRoles = () => {
 
             <>
             <Divider/>
-                <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}> 
-                    Seleccionar Todos
-                </Checkbox>
+                <div className="block">
+                    <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}> 
+                        Seleccionar Todos
+                    </Checkbox>
+                </div>
                 <div className="grid grid-cols-4">
                     <>
-                        <div className="col-span-1 py-3">
+                        <div className="col-span-1 py-2">
                             <h2 className="font-bold text-dark text-xl ml-3">Ver</h2>
                         </div>
-                        <div className="col-span-1">
+                        <div className="col-span-1 py-2">
                             <h2 className="font-bold text-dark text-xl ml-3">Crear</h2>
                         </div>
-                        <div className="col-span-1">
+                        <div className="col-span-1 py-2">
                             <h2 className="font-bold text-dark text-xl ml-3">Editar</h2>
                         </div>
-                        <div className="col-span-1">
+                        <div className="col-span-1 py-2">
                             <h2 className="font-bold text-dark text-xl ml-3">Borrar</h2>
                         </div>
                     </>

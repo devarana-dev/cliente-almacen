@@ -36,18 +36,12 @@ export default (state = initialState, action) => {
             }   
             
         case types.UPDATE_NOTIFICATION_SUCCESS:
-            console.log(action.payload);
             return {
                 ...state,
                 isLoading: false,
                 errors: null,
                 updated: true,
-                // buscar en el state todas las notificaciones que vienen en el array de objetos del payload y actualizarlas
-                notificaciones: state.notificaciones.map(notificacion => (
-                    action.payload.map(notificacionUpdate => (
-                        notificacion.id === notificacionUpdate.id ? notificacionUpdate : notificacion
-                    ))
-                )).flat()
+                notificaciones: action.payload
                     
             }
         case types.UPDATE_NOTIFICATION_ERROR:

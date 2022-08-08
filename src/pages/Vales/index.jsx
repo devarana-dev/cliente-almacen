@@ -15,7 +15,7 @@ import openNotificationWithIcon from '../../hooks/useNotification';
 import moment from 'moment';
 import { hasPermission } from '../../utils/hasPermission';
 import Forbidden from '../../components/Elements/Forbidden';
-import { ResizableTitle } from "../../utils/resizableTable";
+// import { ResizableTitle } from "../../utils/resizableTable";
 
 const ValesSalida = () => {
 
@@ -128,6 +128,7 @@ const ValesSalida = () => {
             setLoad(true)
             setColumns([...columns, actionColumn])
         }
+        // eslint-disable-next-line
     }, [vales])
 
     const [columns, setColumns] = useState([
@@ -391,7 +392,7 @@ const ValesSalida = () => {
                 className: hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ? 'block' : 'hidden',
             }
         ]
-        return <Table bordered  key={record => record.id} scroll={{ x: 'auto' }} columns={columns} dataSource={dataNestedSource} pagination={false} rowKey={nanoid()}  className="nestedTable"/>
+        return <Table bordered key={record => record.id} scroll={{ x: 'auto' }} columns={columns} dataSource={dataNestedSource} pagination={false} rowKey={nanoid()}  className="nestedTable"/>
     }
 
     const handleEntrega = (record, type) => {

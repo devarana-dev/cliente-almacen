@@ -18,7 +18,7 @@ import {AiOutlineUserAdd,AiOutlineLogout} from 'react-icons/ai'
 
 import Menu from "../components/layout/Menu";
 import { validateLoginAction } from "../actions/authActions";
-import Socket from "../components/socket";
+import Notificaciones from "../components/notificaciones";
 import tokenAuth from "../config/tokenAuth";
 import Logotipo from "../assets/img/LogoDevarana.png"
 import { Footer } from "antd/lib/layout/layout";
@@ -109,7 +109,7 @@ export default function LayoutPrivate({children}) {
                     <button onClick={() => setCollapsed(!collapsed)}> {collapsed ? <MenuUnfoldOutlined className="text-2xl sm:text-dark sm:bg-transparent bg-primary text-white pb-1 px-2 rounded "/> : <MenuFoldOutlined className="text-2xl sm:text-dark sm:bg-transparent bg-primary text-white pb-1 px-2 rounded "/>} </button>
                     <div>
                         
-                        {isAuth.isAuthenticated ? <Socket/> : null }
+                        {isAuth.isAuthenticated ? <Notificaciones/> : null }
                         <Button className="ml-5" type="icon-primary" onClick={showModal }>  <LogoutOutlined className="text-xl"/> </Button>
                     </div>
                     

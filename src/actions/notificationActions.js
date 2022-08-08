@@ -34,7 +34,6 @@ export function updateNotificationeAction(){
     return async (dispatch) => {
         dispatch( updateNotificationRequest())
         await clientAxios.put(`/notificaciones`).then(res => {
-            console.log(res.data.notificaciones);
             dispatch(updateNotificationSuccess(res.data.notificaciones))
         }
         ).catch(err => {
