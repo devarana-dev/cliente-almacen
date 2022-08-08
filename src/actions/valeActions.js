@@ -64,10 +64,10 @@ const getAllValesError = error => {
 }
 
 
-export function getCountValeSalidaAction(){
+export function getCountValeSalidaAction(params){
     return async (dispatch) => {
         dispatch(getCountValeSalidaRequest())
-        await clientAxios.get('/vales/countVales')
+        await clientAxios.get('/vales/countVales', {params})
             .then ( res => {
                 dispatch(getCountValeSalidaSuccess(res.data.countValeSalida))
             }).catch( err => {

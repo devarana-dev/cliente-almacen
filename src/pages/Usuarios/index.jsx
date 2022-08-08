@@ -131,7 +131,7 @@ const Usuarios = () => {
             : null 
         }
         </div>
-        <Table scroll={{ x: 'auto'}} columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>
+        <Table scroll={{ x: 'auto' }} columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>
     </>
     );
 }

@@ -1,3 +1,4 @@
+import { FilterOutlined } from '@ant-design/icons';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
@@ -11,6 +12,9 @@ export default function Home() {
     const dispatch = useDispatch()
     const { count, isLoading } = useSelector( state => state.vales)
     const [ dataValues, setDataValues ] = useState({})
+
+    const [filter, setFilter] = useState("")
+    const [filterDate, setFilterDate ] = useState("Todos")
     ChartJS.register(ArcElement, Tooltip, Legend);
     
 
@@ -19,13 +23,17 @@ export default function Home() {
             dispatch(getCountValeSalidaAction())
         }else{
 
+
+            
             setDataValues({
                 "Nuevos": count.nuevo,
                 "Parciales": count.parcialAbierto,
                 "Entregado": count.entregado,
                 "Cancelado": count.cancelado,
-                // "Cerrado": count.cerrado
+                "Cerrado": count.cerrado
             })
+
+
         }
     }, [count])
 
@@ -58,10 +66,10 @@ export default function Home() {
     const options = {
         layout: {
             padding: {
-                left: 70,
-                right: 70,
-                top: 20,
-                bottom: 20
+                left: 80,
+                right: 80,
+                top: 50,
+                bottom: 50
             }
         },
 
@@ -79,7 +87,7 @@ export default function Home() {
             display: true,
             text: count.todos || 0
         },
-       
+        aspectRatio: 1.1,
     }
 
     const plugins = [{
@@ -99,7 +107,7 @@ export default function Home() {
             ctx.save();
         },
         afterDraw: (chart, args, options) => {
-            const { ctx, chartArea: {top, bottom, left, right, width, height } } = chart
+            const { ctx, chartArea: { height } } = chart
             CanvasRenderingContext2D.prototype.wrapText = function (text, x, y, maxWidth, lineHeight) {
 
                 var lines = text.split("\n");
@@ -127,16 +135,14 @@ export default function Home() {
                 }
             };
             chart.data.datasets.forEach( (dataset, i) => {
+
                 chart.getDatasetMeta(i).data.forEach((datapoint, index) => {
-
-                   
                     const { x, y } = datapoint.tooltipPosition()
-
                     // DrawLine 
                     const halfHeight = chart.chartArea.top + chart.chartArea.bottom / 2
                     const halfWidth = chart.chartArea.left + chart.chartArea.right / 2
-                    const xLine = x >= halfWidth ? x + (height / 7) : x - (height / 7)
-                    const yLine = y >= halfHeight ? y + (height / 7) : y - (height / 7)
+                    const xLine = x >= halfWidth ? x + (height / 6) : x - (height / 6)
+                    const yLine = y >= halfHeight ? y + (height / 6) : y - (height / 6)
                     // Line 
                     // ctx.beginPath()
                     // ctx.moveTo(x, y)
@@ -154,18 +160,20 @@ export default function Home() {
                     
 
                     // Control Position
-                    const textXpositon = x >= halfWidth ? 'left' : 'right'
+                    // const textXpositon = x >= halfWidth ? 'left' : 'right'
                     const plusFivePx = x >= halfWidth ? 2 : - 2
                     ctx.textAlign = 'center'
                     ctx.textBaseline = 'middle'
                     
                     ctx.fillStyle = dataset.backgroundColor[index]
-                    const textData = chart.data.datasets[0].data[index] + '\n' + chart.data.labels[index]
+
+                    const textData = chart.data.datasets[0].data[index] > 0 ? chart.data.datasets[0].data[index] + '\n' + chart.data.labels[index]  : '' 
             
                     ctx.wrapText(textData, xLine + plusFivePx, yLine, 160, 16)
                 })
             })
-        }
+        },
+        formatter: function (value, context) { return value || null }
     }]
 
     CanvasRenderingContext2D.prototype.wrapText = function (text, x, y, maxWidth, lineHeight) {
@@ -195,16 +203,52 @@ export default function Home() {
         }
     };
     
+    const handleFilter = ( type ) => {
+        setFilter(type)
+        dispatch(getCountValeSalidaAction({type}))
 
+        switch (type) {
+            case "hoy":
+                setFilterDate(moment().format('DD MMMM'))
+            break;
+            case "semana":
+                setFilterDate(moment().startOf('week').format('DD MMMM') + ' - ' + moment().endOf('week').format('DD MMMM'))
+            break;
+            case "mes":
+                setFilterDate(moment().startOf('month').format('DD MMMM') + ' - ' + moment().endOf('month').format('DD MMMM'))
+            break;
+            default:
+                setFilterDate("Todos")
+            break;
+        }
+    }
 
     return (
-        <div className='max-w-screen-md m-auto h-full'>
-            <img src={Logotipo} alt="" className='mx-auto block md:hidden max-w-full'/>
-            <div className='flex align-middle h-full flex-col justify-center'>
+       <> 
+        <div className="max-w-screen-md grid grid-cols-12 m-auto">
+            <div className="col-span-12">
+                <img src={Logotipo} alt="" className='mx-auto block md:hidden max-w-full'/>
                 <h1 className='text-center text-dark text-3xl font-bold uppercase hidden md:block'> Estatus de Vales de Salida de Almacén </h1>
-                <p className='uppercase text-center text-dark text-2xl font-medium hidden md:block'>  { moment().format('DD MMMM YY') }  </p>
+                <p className='uppercase text-center text-dark text-2xl font-medium hidden md:block'>  { filterDate }  </p>
+            </div>
+            <div className="col-span-12 md:col-span-10">
                 <Doughnut data={data} options={options} plugins={plugins} />
             </div>
+            <div className="col-span-0 md:col-span-2 md:block hidden">
+                <div className='flex'>
+                    <div>
+                        <p className='inline-flex items-center text-dark font-medium'><FilterOutlined className='text-2xl mr-2'/> Filtrar </p>
+                        <ul>
+                            <li className={`pl-8 cursor-pointer ${!filter? 'font-bold': ''}`} onClick={() => dispatch(handleFilter())}> <p>Todos</p></li>
+                            <li className={`pl-8 cursor-pointer ${filter === 'hoy' ? 'font-bold': ''}`} onClick={() => dispatch(handleFilter("hoy"))}> <p>Hoy</p></li>
+                            <li className={`pl-8 cursor-pointer ${filter === 'semana' ? 'font-bold': ''}`} onClick={() => dispatch(handleFilter("semana"))}><p>Esta Semana</p></li>
+                            <li className={`pl-8 cursor-pointer ${filter === 'mes' ? 'font-bold': ''}`} onClick={() => dispatch(handleFilter("mes"))}><p>Este mes</p></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
+        </>
+
     )
 };

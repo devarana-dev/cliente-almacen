@@ -541,10 +541,10 @@ const ValesSalida = () => {
     return ( 
         <>
             <img src={Logotipo} alt="" className='mx-auto block md:hidden max-w-full py-2'/>
-            <h1 className='text-center text-dark text-3xl font-bold pt-5 uppercase hidden md:block py-2'> Vales </h1>
+            <h1 className='text-center text-dark text-3xl font-bold uppercase hidden md:block py-2'> Vales </h1>
             {
                 hasPermission(userPermission, '/crear-vales') ?
-                <Button type='icon-secondary-new' onClick={() => navigate('nuevo')} className="fixed right-10 bottom-8 hidden lg:block z-50 items-center"><PlusCircleOutlined /></Button>
+                <Button type='icon-secondary-new' onClick={() => navigate('nuevo')} className="fixed right-3 bottom-3 hidden lg:block z-50 items-center"><PlusCircleOutlined /></Button>
                 : null 
             }
                 <div className="md:grid hidden grid-cols-4 gap-10 py-5 ">
