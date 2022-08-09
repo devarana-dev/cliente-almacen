@@ -220,11 +220,11 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
         <Button type='dark' htmlType='button' onClick={ () => setCurrent(0) }>
             Volver
         </Button>     
-        <Button type='ghost' htmlType='button' onClick={ async () => { const statusValue = 1; await setVale({ ...vale, statusVale: statusValue }); confirm(1)  }} >
-            Enviar
-        </Button>
         <Button type='danger' htmlType='button' onClick={ () => confirm(2) }>
             Cancelar
+        </Button>
+        <Button type='ghost' htmlType='button' onClick={ async () => { const statusValue = 1; await setVale({ ...vale, statusVale: statusValue }); confirm(1)  }} >
+            Enviar
         </Button>
 
     </div>

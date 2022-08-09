@@ -102,7 +102,6 @@ const Roles = () => {
 
     return ( 
     <>
-        <h1 className='text-dark text-3xl text-center font-bold'>Roles</h1>
             <div className='py-2 flex justify-end'>          
             {
                 hasPermission(userPermission, '/crear-roles') ?

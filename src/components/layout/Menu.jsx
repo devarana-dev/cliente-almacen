@@ -25,9 +25,7 @@ export default function LayoutMenu ({collapsed, setCollapsed}) {
 
 
 	const validateCollapsed = () => {
-		if(window.innerWidth < 768){
-			setCollapsed(!collapsed)
-		}
+        setCollapsed(!collapsed)
 	}
 
     const items = [

@@ -63,8 +63,6 @@ const CreateInsumos = () => {
             onFinish={() => handleSubmit()}
             layout="vertical"
         >
-            <h1 className="text-center text-2xl font-bold text-dark"> Nuevo Insumo </h1>
-
             <Form.Item
                 label="Nombre"
                 name="nombre"

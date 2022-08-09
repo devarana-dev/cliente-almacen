@@ -102,7 +102,6 @@ const CreateNiveles = () => {
             onFinish={() => handleSubmit()}
             layout="vertical"
         >
-            <h1 className="text-center text-2xl font-bold text-dark"> Nuevo Nivel </h1>
 
             <Form.Item
                 label="Nombre"

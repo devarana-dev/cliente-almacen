@@ -146,7 +146,6 @@ const Insumos = () => {
 
     return ( 
     <>
-    <h1 className='text-dark text-3xl text-center font-bold'>Insumos</h1>
 		<div className='py-2 flex justify-end'>
 			{
                 hasPermission(userPermission, '/crear-insumos') ?

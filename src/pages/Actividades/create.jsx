@@ -61,8 +61,6 @@ const CreateActividades = () => {
             layout="vertical"
             onChange={handleChange}
         >
-            <h1 className="text-center text-2xl font-bold text-dark"> Nueva Actividad / Prototipo </h1>
-
             <Form.Item
                 label="Nombre"
                 name="nombre"

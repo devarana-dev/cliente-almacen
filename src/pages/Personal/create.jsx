@@ -69,7 +69,6 @@ const CreatePersonal = () => {
             layout="vertical"
             >
             <img src={Logotipo} alt="" className='mx-auto block md:hidden max-w-full py-2'/>
-            <h1 className='text-center text-dark text-3xl font-bold pt-5 uppercase hidden md:block'> Nuevo Lider de Cuadrilla </h1>
             <Form.Item 
                 label="Nombre" 
                 name="nombre" 

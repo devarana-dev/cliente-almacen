@@ -87,7 +87,6 @@ const EditUsuario = () => {
             onChange={handleChange}
             form={form}
             >
-            <h1 className="text-center text-2xl font-bold text-dark"> Editar Usuario </h1>
 
             <Form.Item 
                 label="Nombre" 

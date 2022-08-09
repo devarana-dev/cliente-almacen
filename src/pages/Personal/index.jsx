@@ -118,7 +118,6 @@ const Personal = () => {
     if(!hasPermission(userPermission, '/ver-personal')) return <Forbidden />
     return ( 
     <>
-        <h1 className='text-dark text-xl text-center font-medium'>Lideres de Cuadrilla</h1>
         <div className='py-2 flex justify-end'>          
         {
             hasPermission(userPermission, '/crear-personal') ?

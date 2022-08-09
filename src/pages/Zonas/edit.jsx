@@ -71,7 +71,6 @@ const EditZonas = () => {
             onChange={handleChange}
             form={form}
         >
-            <h1 className="text-center text-2xl font-bold text-dark"> Editar Zona </h1>
 
             <Form.Item
                 label="Nombre"

@@ -145,7 +145,7 @@ export function searchValeAction(params){
 export function closeValeAction(vale){
     return async (dispatch) => {
         dispatch(closeValeRequest())
-        await clientAxios.post('/vales/closeVale', vale)
+        await clientAxios.post('/vales/registrarVale', vale)
             .then ( res => {
                 dispatch(closeValeSuccess(res.data))
             }).catch( err => {

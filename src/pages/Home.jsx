@@ -22,18 +22,11 @@ export default function Home() {
         if(count.length ===  0 || !count){
             dispatch(getCountValeSalidaAction())
         }else{
-
-
-            
             setDataValues({
-                "Nuevos": count.nuevo,
-                "Parciales": count.parcialAbierto,
-                "Entregado": count.entregado,
-                "Cancelado": count.cancelado,
-                "Cerrado": count.cerrado
+                "Pendientes": count.nuevo + count.parcialAbierto,
+                "Entregado": count.entregado + count.parcialCerrado,
+                "Cancelado": count.cancelado
             })
-
-
         }
     }, [count])
 
@@ -85,7 +78,7 @@ export default function Home() {
         },
         centerText: {
             display: true,
-            text: count.todos || 0
+            text: count.entregado + count.parcialCerrado + count.nuevo + count.parcialAbierto + count.cancelado || 0
         },
         aspectRatio: 1.1,
     }

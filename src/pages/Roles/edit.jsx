@@ -171,7 +171,6 @@ const EditRoles = () => {
             
             form={form}
         >
-            <h1 className="text-center text-2xl font-bold text-dark"> Editar Rol </h1>
 
             <Form.Item
                 label="Nombre"

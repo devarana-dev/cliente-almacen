@@ -1,5 +1,5 @@
 
-import { BellOutlined, CheckCircleOutlined, DeleteOutlined, FileTextOutlined, FrownOutlined, PieChartOutlined, PlusCircleOutlined, StopOutlined } from '@ant-design/icons';
+import { BellOutlined, CheckCircleOutlined, DeleteOutlined, FileTextOutlined, PieChartOutlined, PlusCircleOutlined, StopOutlined } from '@ant-design/icons';
 import { cancelDetalleAction, cancelValeAction, closeValeAction, completeValeSalida, deliverValeAction, getAllValesAction, getCountValeSalidaAction, searchValeAction } from '../../actions/valeActions';
 import { Button, Table, Tag, Modal, Input, Badge, Avatar, Image } from 'antd';
 import { useEffect, useState } from 'react';
@@ -89,7 +89,7 @@ const ValesSalida = () => {
                             <Button type='icon-primary' className='icon' onClick={ () => handleEntrega(record, 3)}> <CheckCircleOutlined className='ml-0 align-middle text-xl' /> </Button> : null
                         }
                         {
-                            hasPermission(userPermission, '/eliminar-vales') ? <Button type='icon-danger' className='icon' onClick={() => handleCancel(1, record.id)}> <DeleteOutlined className='ml-0 align-middle text-xl' /> </Button> : null
+                            hasPermission(userPermission, '/eliminar-vales') ? <Button type='icon-danger' className='icon' onClick={() => handleCancel(1, record.id)}> <StopOutlined className='ml-0 align-middle text-xl' /> </Button> : null
                         }
                     </div> : 
                     record.statusVale === 2 || record.statusVale === 4 || record.statusVale === 3 ? 
@@ -375,7 +375,7 @@ const ValesSalida = () => {
                                 hasPermission(userPermission, '/editar-vales') ? 
                                 <>
                                     <Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 1) } type='icon-primary'> <CheckCircleOutlined className='ml-0 align-middle text-xl' /> </Button>
-                                    <Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 2) } type='icon-warning'> <FrownOutlined className='ml-0 align-middle text-xl' /> </Button> 
+                                    <Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 2) } type='icon-warning'> <PieChartOutlined className='ml-0 align-middle text-xl' /> </Button> 
                                 </>
                                 : null
                             }
@@ -390,7 +390,7 @@ const ValesSalida = () => {
                         : <div className="h-6"> - </div>
                     : null
                 ),
-                width: hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ? 80: 0,
+                width: hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ? 90: 0,
                 className: hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ? 'block' : 'hidden',
             }
         ]
@@ -544,7 +544,6 @@ const ValesSalida = () => {
     return ( 
         <>
             <img src={Logotipo} alt="" className='mx-auto block md:hidden max-w-full py-2'/>
-            <h1 className='text-center text-dark text-3xl font-bold uppercase hidden md:block py-2'> Vales </h1>
             {
                 hasPermission(userPermission, '/crear-vales') ?
                 <Button type='icon-secondary-new' onClick={() => navigate('nuevo')} className="fixed right-3 bottom-3 hidden lg:block z-50 items-center"><PlusCircleOutlined /></Button>

@@ -73,8 +73,6 @@ const EditActividades = () => {
             onChange={handleChange}
             form={form}
         >
-            <h1 className="text-center text-2xl font-bold text-dark"> Editar Actividad </h1>
-
             <Form.Item
                 label="Nombre"
                 name="nombre"

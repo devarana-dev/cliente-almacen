@@ -112,7 +112,6 @@ const Actividades = () => {
 
         return ( 
         <>
-            <h1 className='text-dark text-xl text-center font-medium'>Actividades</h1>
             <div className='py-2 flex justify-end'>          
                 {
                     hasPermission(userPermission, '/crear-actividades') ?

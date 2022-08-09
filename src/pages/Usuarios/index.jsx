@@ -123,7 +123,6 @@ const Usuarios = () => {
 
     return ( 
     <>
-		<h1 className='text-dark text-3xl text-center font-bold'>Usuarios</h1>
         <div className='py-2 flex justify-end'>          
         {
             hasPermission(userPermission, '/crear-usuarios') ?
