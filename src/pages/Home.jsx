@@ -37,11 +37,11 @@ export default function Home() {
                 label: '# de vales',
                 data: count ? Object.values(dataValues) : [],
                 backgroundColor: [
-                    'rgba(169, 192, 228, 0.8)',
                     'rgba(214, 71, 103, 0.8)',
                     'rgba(86, 115, 155, 0.8)',
-                    'rgba(247, 37, 0, 0.8)',
-                    'rgba(255, 107, 44, 0.8)',
+                    'rgba(169, 192, 228, 0.8)',
+                    // 'rgba(247, 37, 0, 0.8)',
+                    // 'rgba(255, 107, 44, 0.8)',
                 ],
                 borderColor: '#ffff',
                 // borderColor: [
