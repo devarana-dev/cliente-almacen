@@ -1,10 +1,13 @@
 @import './variables';
 
-
+.ant-table-thead > tr > th {
+    background-color: $primary!important;
+    color: white!important;
+}
 .nestedTable{
     .ant-table-thead > tr > th{
-        background-color: $light!important;
-        color: $dark!important;
+        background-color: $info-lighter!important;
+        color: white!important;
     }
 }
 

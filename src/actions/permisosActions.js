@@ -36,7 +36,7 @@ const getAllPermisosError = error => {
 export function getPermisoAction(){
     return async (dispatch) => {
         dispatch(getPermisoRequest())
-        await clientAxios.get(`/permisos/1`)
+        await clientAxios.get(`/permisos`)
             .then ( res => {
 
                 dispatch(getPermisoSuccess(res.data.permisos))

@@ -34,7 +34,7 @@ export default function LayoutPrivate({children}) {
     const [collapsed, setCollapsed] = useState(false);
 
     const isAuth = authProvider()
-    const { isAuthenticated, token, isLoading, errors, logout, suAdmin } = useSelector( state => state.auth )
+    const { isAuthenticated, token, isLoading, errors, logout, suAdmin, userAuth } = useSelector( state => state.auth )
   
     tokenAuth(token)
     useEffect(() => {

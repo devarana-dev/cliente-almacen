@@ -234,10 +234,10 @@ export default function Home() {
                 <h1 className='text-center text-dark text-3xl font-bold uppercase hidden md:block'> Estatus de Vales de Salida de Almacén </h1>
                 <p className='uppercase text-center text-dark text-2xl font-medium hidden md:block'>  { filterDate }  </p>
             </div>
-            <div className="col-span-12 md:col-span-10">
+            <div className="md:col-span-10">
                 <Doughnut data={data} options={options} plugins={plugins} />
             </div>
-            <div className="col-span-0 md:col-span-2 md:block hidden">
+            <div className="md:col-span-2">
                 <div className='flex'>
                     <div>
                         <p className='inline-flex items-center text-dark font-medium'><FilterOutlined className='text-2xl mr-2'/> Filtrar </p>

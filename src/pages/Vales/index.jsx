@@ -139,40 +139,7 @@ const ValesSalida = () => {
             responsive: ['md'],
             sorter: (a, b) => a.id - b.id,
             ...getColumnSearchProps('id'),
-            width: 100
-        },
-        {
-            title: 'Solicitante',
-            dataIndex: 'residente',
-            responsive: ['md'],
-            key: `residente-${nanoid()}`,
-            sorter: (a, b) => a.residente.localeCompare(b.residente),
-            ...getColumnSearchProps('residente'),
-            // width: 450,
-            render: (text, record) => (
-                <div className='flex flex-row items-center'>
-                    <Avatar crossOrigin='anonymous' src={ <Image src={record.residentePicture} /> || '' } />
-                    <p className='ml-4'> { record.residente} </p>
-                </div>
-            )
-        },
-        {
-            title: 'Lider',
-            dataIndex: 'personalInfo',
-            key: `personalInfo-${nanoid()}`,
-            ellipsis: true,
-            sorter: (a, b) => a.personalInfo.localeCompare(b.personalInfo),
-            ...getColumnSearchProps('personalInfo'),
-            // width: 450
-        },
-        {
-            title: 'Actividad',
-            dataIndex: 'actividadInfo',
-            key: `actividadInfo-${nanoid()}`,
-            ellipsis: true,
-            sorter: (a, b) => a.actividadInfo.localeCompare(b.actividadInfo),
-            ...getColumnSearchProps('actividadInfo'),
-            width: 200
+            width: 50
         },
         {
             title: 'Fecha',
@@ -288,6 +255,40 @@ const ValesSalida = () => {
             onFilter: (value, record) => record.statusVale === value,
             width: 100
         },
+        {
+            title: 'Solicitante',
+            dataIndex: 'residente',
+            responsive: ['md'],
+            key: `residente-${nanoid()}`,
+            sorter: (a, b) => a.residente.localeCompare(b.residente),
+            ...getColumnSearchProps('residente'),
+            // width: 450,
+            render: (text, record) => (
+                <div className='flex flex-row items-center'>
+                    <Avatar crossOrigin='anonymous' src={ <Image src={record.residentePicture} /> || '' } />
+                    <p className='ml-4'> { record.residente} </p>
+                </div>
+            )
+        },
+        {
+            title: 'Lider',
+            dataIndex: 'personalInfo',
+            key: `personalInfo-${nanoid()}`,
+            ellipsis: true,
+            sorter: (a, b) => a.personalInfo.localeCompare(b.personalInfo),
+            ...getColumnSearchProps('personalInfo'),
+            // width: 450
+        },
+        {
+            title: 'Actividad',
+            dataIndex: 'actividadInfo',
+            key: `actividadInfo-${nanoid()}`,
+            ellipsis: true,
+            sorter: (a, b) => a.actividadInfo.localeCompare(b.actividadInfo),
+            ...getColumnSearchProps('actividadInfo'),
+            width: 200
+        },
+        
     ])  
 
     const expandedRowRender = (record, index, indent, expanded) => {
@@ -310,6 +311,7 @@ const ValesSalida = () => {
                 dataIndex: 'insumo',
                 key: `nombre-${nanoid()}`,
                 render: item => item.nombre,
+                ellipsis: true,
             },
             {
                 title: 'U.Medida',
@@ -570,8 +572,8 @@ const ValesSalida = () => {
                                 </div>
                             </div>
                                 <div className="sm:text-right text-center sm:py-0 pt-2">
-                                <p className="text-custom-dark2 font-light sm:text-base text-sm">Pendientes</p>
-                                <h1 className="lg:text-2xl text-lg text-custom-dark">{count.nuevo + count.parcialAbierto}</h1>
+                                <p className="text-custom-dark2 font-light sm:text-base text-sm">Nuevos</p>
+                                <h1 className="lg:text-2xl text-lg text-custom-dark">{count.nuevo}</h1>
                             </div>
                         </div>
                     </div>
@@ -583,12 +585,12 @@ const ValesSalida = () => {
                                 </div>
                             </div>
                                 <div className="sm:text-right text-center sm:py-0 pt-2">
-                                <p className="text-custom-dark2 font-light sm:text-base text-sm">Entregados</p>
+                                <p className="text-custom-dark2 font-light sm:text-base text-sm">Parciales</p>
                                 <h1 className="lg:text-2xl text-lg text-custom-dark">{count.parcialAbierto}</h1>
                             </div>
                         </div>
                     </div>
-                    <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({statusVale: 5})) }>
+                    <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({statusVale: 4})) }>
                         <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
                             <div className="text-white bg-gradient-to-tr from-primary to-primary-lighter sm:w-16 sm:h-16 w-12 h-12 -mt-10 p-5 rounded-md shadow align-middle flex">
                                 <div className="text-base sm:text-3xl  w-full justify-center flex m-auto">
@@ -596,8 +598,8 @@ const ValesSalida = () => {
                                 </div>
                             </div>
                                 <div className="sm:text-right text-center sm:py-0 pt-2">
-                                <p className="text-custom-dark2 font-light sm:text-base text-sm">Cancelados</p>
-                                <h1 className="lg:text-2xl text-lg text-custom-dark">{count.cancelado}</h1>
+                                <p className="text-custom-dark2 font-light sm:text-base text-sm">Sin Registro EK</p>
+                                <h1 className="lg:text-2xl text-lg text-custom-dark">{count.entregado}</h1>
                             </div>
                         </div>
                     </div>
