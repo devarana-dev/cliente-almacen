@@ -22,8 +22,9 @@ const CreatePersonal = () => {
         apellidoPaterno: "",
         apellidoMaterno: "",
         fechaIngreso: "",
+        especialidad: ""
     });
-    const {nombre, apellidoPaterno, apellidoMaterno, fechaIngreso} = personal
+    const {nombre, apellidoPaterno, apellidoMaterno, fechaIngreso, especialidad} = personal
 
 
     useEffect(() => {
@@ -99,6 +100,16 @@ const CreatePersonal = () => {
                 <Input name="apellidoMaterno" value={apellidoMaterno} onChange={handleChange}/>
             </Form.Item>
 
+
+            <Form.Item 
+                label="Especialidad" 
+                name="especialidad" 
+                rules={[
+                    { required: true, message: 'Debes ingresar una especialidad' },
+                ]} 
+                hasFeedback>   
+                <Input name="especialidad" value={especialidad} onChange={handleChange}/>
+            </Form.Item>
 
             <Form.Item 
                 label="Fecha Ingreso" 
