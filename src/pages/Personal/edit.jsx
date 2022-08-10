@@ -25,6 +25,7 @@ const EditPersonal = () => {
         apellidoPaterno: "",
         apellidoMaterno: "",
         fechaIngreso: "",
+        especialidad: ""
     });
 
 
@@ -121,6 +122,16 @@ const EditPersonal = () => {
                 ]} 
                 hasFeedback>   
                 <Input name="apellidoMaterno" onChange={handleChange}/>
+            </Form.Item>
+
+            <Form.Item 
+                label="Especialidad" 
+                name="especialidad" 
+                rules={[
+                    { required: true, message: 'Debes ingresar una especialidad' },
+                ]} 
+                hasFeedback>   
+                <Input name="especialidad" onChange={handleChange}/>
             </Form.Item>
 
             <Form.Item 
