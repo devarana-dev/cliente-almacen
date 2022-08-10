@@ -2,7 +2,7 @@
 import { BellOutlined, CheckCircleOutlined, FileTextOutlined, PieChartOutlined, PlusCircleOutlined, StopOutlined } from '@ant-design/icons';
 import { cancelDetalleAction, cancelValeAction, closeValeAction, completeValeSalida, deliverValeAction, getAllValesAction, getCountValeSalidaAction, searchValeAction } from '../../actions/valeActions';
 import {BsChatLeftDots} from 'react-icons/bs'
-import { Button, Table, Tag, Modal, Input, Badge, Avatar, Image } from 'antd';
+import { Button, Table, Tag, Modal, Input, Badge, Avatar, Image, Tooltip } from 'antd';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
@@ -24,6 +24,7 @@ const ValesSalida = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const { vales, errors, delivered, updated, isLoading, count, deleted} = useSelector( state => state.vales )
+    const { userAuth } = useSelector( state => state.auth )
     const { userPermission } = useSelector(state => state.permisos);
     const [ dataSource, setDataSource ] = useState([]);
     const [ dataNestedSource, setDataNestedSource ] = useState([])
@@ -32,7 +33,7 @@ const ValesSalida = () => {
     const [ loadedColumn , setLoad ] = useState(false)
     const [ comentarios, setComentarios ] = useState('')
 
-
+    
     const [ visible, setVisible] = useState(
         {
             entrega: false,
@@ -78,7 +79,7 @@ const ValesSalida = () => {
             type: 1
         })
     };
-
+    ;
     const actionColumn = {
         title: 'Acciones',
         dataIndex: 'statusValue',
@@ -90,18 +91,45 @@ const ValesSalida = () => {
                     record.statusVale === 1 ? 
                     <div className='flex justify-between'>
                         { hasPermission(userPermission, '/editar-vales') ? 
-                            <Button type='icon-primary' className='icon' onClick={ () => handleEntrega(record, 3)}> <CheckCircleOutlined className='ml-0 align-middle text-xl' /> </Button> : null
+                            <Tooltip title="Entrega Completa" placement='topRight'>
+                                <Button type='icon-primary' className='icon' onClick={ () => handleEntrega(record, 3)}> <CheckCircleOutlined className='ml-0 align-middle text-xl' /> </Button>
+                            </Tooltip> 
+                            : null
                         }
                         {
-                            hasPermission(userPermission, '/eliminar-vales') ? <Button type='icon-danger' className='icon' onClick={() => handleCancel(1, record.id)}> <StopOutlined className='ml-0 align-middle text-xl' /> </Button> : null
+                            hasPermission(userPermission, '/eliminar-vales') ? 
+                            <Tooltip title="Cancelar Entrega" placement='topRight'>
+                                <Button type='icon-danger' className='icon' onClick={() => handleCancel(1, record.id)}> <StopOutlined className='ml-0 align-middle text-xl' /> </Button> 
+                            </Tooltip>
+                            : null
                         }
                     </div> : 
                     record.statusVale === 2 || record.statusVale === 4 || record.statusVale === 3 ? 
-                    <Button type='icon-warning' className='icon' onClick={()=> handleClose(record.id)}> 
-                        <img src={ekIcon} alt="sa" width={16} className="py-0.5" />
-                    </Button>
+                    <>
+                        { hasPermission(userPermission, '/editar-vales') ? 
+                        <Tooltip title="Registro Enkontrol" placement='topRight'>
+                            <Button type='icon-warning' className='icon' onClick={()=> handleClose(record.id)}> 
+                                <img src={ekIcon} alt="sa" width={16} className="py-0.5" />
+                            </Button>
+                        </Tooltip>
+                        : null
+                        }
+                    </>
                     : 
-                    <div className="h-6"> <div className="h-6"> { record.salidaEnkontrol? <Button type='icon-warning'><BsChatLeftDots onClick={() => { setComentarios(`Clave Enkontrol: ${record.salidaEnkontrol}`); showModal({...visible, comentarios: true}) }}/></Button> : null } </div> </div>
+                   <div className="h-6">
+                        { record.salidaEnkontrol? 
+                            <Tooltip title="Ver Comentarios" placement='topRight'>
+                                <Button type='icon-danger'><BsChatLeftDots onClick={() => { setComentarios(`${record.salidaEnkontrol}`); showModal({...visible, comentarios: true}) }}/></Button> 
+                            </Tooltip>
+                            : null 
+                        }
+                        { record.comentarios? 
+                            <Tooltip title="Ver Comentarios" placement='topRight'>
+                                <Button type='icon-warning'><BsChatLeftDots onClick={() => { setComentarios(`Clave Enkontrol: ${record.comentarios}`); showModal({...visible, comentarios: true}) }}/></Button> 
+                            </Tooltip>
+                            : null 
+                        }
+                    </div>
                 }
             </div>
         ),
@@ -379,13 +407,15 @@ const ValesSalida = () => {
                             {
                                 hasPermission(userPermission, '/editar-vales') ? 
                                 <>
-                                    <Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 1) } type='icon-primary'> <CheckCircleOutlined className='ml-0 align-middle text-xl' /> </Button>
-                                    <Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 2) } type='icon-warning'> <PieChartOutlined className='ml-0 align-middle text-xl' /> </Button> 
+                                    <Tooltip placement='topRight' title="Entrega Completa"><Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 1) } type='icon-primary'> <CheckCircleOutlined className='ml-0 align-middle text-xl' /> </Button></Tooltip>
+                                    <Tooltip placement='topRight' title="Entrega Parcial"><Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 2) } type='icon-warning'> <PieChartOutlined className='ml-0 align-middle text-xl' /> </Button> </Tooltip>
                                 </>
                                 : null
                             }
                             {
-                                hasPermission(userPermission, '/eliminar-vales') ? <Button className="icon" htmlType='button' onClick={ () => handleCancel(2, record.id) } type='icon-danger'> <StopOutlined className='ml-0 align-middle text-xl' /> </Button> : null
+                                hasPermission(userPermission, '/eliminar-vales') ? 
+                                <Tooltip placement='topRight' title="Cerrar Insumo"> <Button className="icon" htmlType='button' onClick={ () => handleCancel(2, record.id) } type='icon-danger'> <StopOutlined className='ml-0 align-middle text-xl' /> </Button> </Tooltip>
+                                : null
                             }
 
                             
@@ -395,7 +425,9 @@ const ValesSalida = () => {
                         // record.status === 2 ?
                         // <Button className="icon" onClick={ () => handleEntrega(record, 2) } type='icon-warning'> <PieChartOutlined className='ml-0 align-middle text-xl'/> </Button>
                         // : 
-                        <div className="h-6"> { record.comentarios? <Button type='icon-ghost'><BsChatLeftDots onClick={() => { setComentarios(record.comentarios); showModal({...visible, comentarios: true}) }}/></Button> : null } </div>
+                        <div className="h-6"> { record.comentarios? 
+                         <Tooltip placement='topRight' title="Ver Comentarios"> <Button type='icon-ghost'><BsChatLeftDots onClick={() => { setComentarios(record.comentarios); showModal({...visible, comentarios: true}) }}/></Button> </Tooltip>
+                        : null } </div>
                     : null
                 ),
                 width: hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ? 90: 0,
