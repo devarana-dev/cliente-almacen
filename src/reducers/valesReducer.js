@@ -142,6 +142,7 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
+                deleted: true,
                 vales: state.vales.map(vale => {
                     if(vale.id === action.payload.detalleSalida.valeSalidaId) {
                         vale.detalle_salidas.map(detalle => {

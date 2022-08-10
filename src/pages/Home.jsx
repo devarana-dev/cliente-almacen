@@ -1,4 +1,5 @@
 import { FilterOutlined } from '@ant-design/icons';
+import { Button, Dropdown, Menu } from 'antd';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
@@ -58,12 +59,7 @@ export default function Home() {
 
     const options = {
         layout: {
-            padding: {
-                left: 80,
-                right: 80,
-                top: 50,
-                bottom: 50
-            }
+            padding: 10
         },
 
         plugins: {
@@ -164,7 +160,7 @@ export default function Home() {
                     ctx.fillStyle = "#ffffff"
                     // ctx.fillStyle = dataset.backgroundColor[index]
                     
-                    const textData = chart.data.datasets[0].data[index] > 0 ? chart.data.datasets[0].data[index] + '\n' + chart.data.labels[index]  : '' 
+                    const textData = chart.data.datasets[0].data[index] + '\n' + chart.data.labels[index]
             
                     ctx.wrapText(textData, xLine + plusFivePx, yLine, 250, 16)
                 })
@@ -219,27 +215,54 @@ export default function Home() {
         }
     }
 
+    const menu = (
+        <Menu
+          items={[
+            {
+              key: '1',
+              label: (
+                <p className={`pl-8 cursor-pointer ${!filter? 'font-bold': ''}`} onClick={() => dispatch(handleFilter())}>Todos</p>
+              ),
+            },
+            {
+              key: '2',
+              label: (
+                <p className={`pl-8 cursor-pointer ${filter === 'hoy' ? 'font-bold': ''}`} onClick={() => dispatch(handleFilter("hoy"))}>Hoy</p>
+              ),
+            },
+            {
+              key: '3',
+              label: (
+                <p className={`pl-8 cursor-pointer ${filter === 'semana' ? 'font-bold': ''}`} onClick={() => dispatch(handleFilter("semana"))}>Esta Semana</p>
+              ),
+            },
+            {
+              key: '4',
+              label: (
+                <p className={`pl-8 cursor-pointer ${filter === 'mes' ? 'font-bold': ''}`} onClick={() => dispatch(handleFilter("mes"))}>Este mes</p>
+              ),
+            },
+          ]}
+        />
+      );
+
     return (
        <> 
         <div className="max-w-screen-md grid grid-cols-12 m-auto md:h-auto h-full">
             <div className="col-span-12">
                 <img src={Logotipo} alt="" className='mx-auto block md:hidden max-w-full'/>
                 <h1 className='text-center text-dark text-3xl font-bold uppercase hidden md:block'> Estatus de Vales de Salida de Almacén </h1>
-                <p className='uppercase text-center text-dark text-2xl font-medium hidden md:block'>  { filterDate }  </p>
+                <p className='uppercase text-center text-dark text-2xl font-medium'>  { filterDate }  </p>
             </div>
-            <div className="md:col-span-10">
+            <div className="lg:col-span-10 lg:order-1 col-span-12 order-2">
                 <Doughnut data={data} options={options} plugins={plugins} />
             </div>
-            <div className="md:col-span-2">
+            <div className="lg:col-span-2 lg:order-2 col-span-12 order-1">
                 <div className='flex'>
                     <div>
-                        <p className='inline-flex items-center text-dark font-medium'><FilterOutlined className='text-2xl mr-2'/> Filtrar </p>
-                        <ul>
-                            <li className={`pl-8 cursor-pointer ${!filter? 'font-bold': ''}`} onClick={() => dispatch(handleFilter())}> <p>Todos</p></li>
-                            <li className={`pl-8 cursor-pointer ${filter === 'hoy' ? 'font-bold': ''}`} onClick={() => dispatch(handleFilter("hoy"))}> <p>Hoy</p></li>
-                            <li className={`pl-8 cursor-pointer ${filter === 'semana' ? 'font-bold': ''}`} onClick={() => dispatch(handleFilter("semana"))}><p>Esta Semana</p></li>
-                            <li className={`pl-8 cursor-pointer ${filter === 'mes' ? 'font-bold': ''}`} onClick={() => dispatch(handleFilter("mes"))}><p>Este mes</p></li>
-                        </ul>
+                    <Dropdown overlay={menu} placement="bottomRight">
+                        <Button type='dashed' className="inline-flex items-center text-dark font-medium"><FilterOutlined className='text-2xl mr-2'/> Filtrar</Button>
+                    </Dropdown>
                     </div>
                 </div>
             </div>

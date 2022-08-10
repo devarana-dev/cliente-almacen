@@ -177,7 +177,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
                 notFoundContent={isLoading ? <Spin size="small" /> : null}
                 filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                 showSearch
-                onChange={ (e) => {searchUnidad(e); setInsumo({  id: e, cantidadSolicitada: 0 }); } }
+                onChange={ (e) => {searchUnidad(e); setInsumo({...insumo, id: e }) } }
             > 
                 {
                     insumos.filter( item => item.centroCosto === vale.centroCosto ).map( item => (

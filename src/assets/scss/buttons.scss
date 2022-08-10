@@ -111,6 +111,18 @@
     }
 }
 
+.ant-btn-icon-warning{
+        padding: 0px 2px!important;
+        box-shadow: none!important;
+        border: none!important;
+        color: $warning;
+        &:hover, &:focus{
+            font-weight: bold;
+            color: $warning;
+            opacity: .4;
+    }
+}
+
 .ant-btn-icon-ghost{
     padding: 0px 2px!important;
     box-shadow: none!important;

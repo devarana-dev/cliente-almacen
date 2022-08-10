@@ -6,7 +6,7 @@ import { hasPermission, groupPermission} from "../../utils/hasPermission";
 import { useSelector } from "react-redux";
 
 
-export default function LayoutMenu ({collapsed, setCollapsed}) {
+export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
 
     const { userPermission } = useSelector(state => state.permisos);
     
@@ -25,7 +25,7 @@ export default function LayoutMenu ({collapsed, setCollapsed}) {
 
 
 	const validateCollapsed = () => {
-        setCollapsed(!collapsed)
+        if(!hiddeable) setCollapsed(!collapsed)
 	}
 
     const items = [

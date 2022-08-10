@@ -1,4 +1,4 @@
-import { Layout, Button, Modal, notification } from "antd";
+import { Layout, Button, Modal, notification, Switch } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from 'react-router-dom'
@@ -35,6 +35,7 @@ export default function LayoutPrivate({children}) {
 
     const isAuth = authProvider()
     const { isAuthenticated, token, isLoading, errors, logout, suAdmin, userAuth } = useSelector( state => state.auth )
+    const [hiddeable, setHiddeable] = useState(false)
   
     tokenAuth(token)
     useEffect(() => {
@@ -101,12 +102,15 @@ export default function LayoutPrivate({children}) {
             <div className="h-14 p-2 text-center">
                 <img src={Logotipo} alt="Logotipo" className="max-w-full p-2" />
             </div>
-            <Menu collapsed={collapsed} setCollapsed={setCollapsed}/>
+            <Menu collapsed={collapsed} setCollapsed={setCollapsed} hiddeable={hiddeable} />
             
             </Sider>
             <Layout className="layout-right">
                 <Header className="layout-right__header hidden lg:flex"> 
+                    <div>
+                    <Switch className="bg-dark" checkedChildren="On" unCheckedChildren="Off" onChange={() => setHiddeable(!hiddeable)}/>
                     <button onClick={() => setCollapsed(!collapsed)}> {collapsed ? <MenuUnfoldOutlined className="text-2xl sm:text-dark sm:bg-transparent bg-primary text-white pb-1 px-2 rounded "/> : <MenuFoldOutlined className="text-2xl sm:text-dark sm:bg-transparent bg-primary text-white pb-1 px-2 rounded "/>} </button>
+                    </div>
                     <div>
                         
                         {isAuth.isAuthenticated ? <Notificaciones/> : null }

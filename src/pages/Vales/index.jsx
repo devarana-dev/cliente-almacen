@@ -1,6 +1,7 @@
 
-import { BellOutlined, CheckCircleOutlined, DeleteOutlined, FileTextOutlined, PieChartOutlined, PlusCircleOutlined, StopOutlined } from '@ant-design/icons';
+import { BellOutlined, CheckCircleOutlined, FileTextOutlined, PieChartOutlined, PlusCircleOutlined, StopOutlined } from '@ant-design/icons';
 import { cancelDetalleAction, cancelValeAction, closeValeAction, completeValeSalida, deliverValeAction, getAllValesAction, getCountValeSalidaAction, searchValeAction } from '../../actions/valeActions';
+import {BsChatLeftDots} from 'react-icons/bs'
 import { Button, Table, Tag, Modal, Input, Badge, Avatar, Image } from 'antd';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
@@ -22,13 +23,14 @@ const ValesSalida = () => {
     const { TextArea } = Input;
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { vales, errors, delivered, updated, isLoading, count } = useSelector( state => state.vales )
+    const { vales, errors, delivered, updated, isLoading, count, deleted} = useSelector( state => state.vales )
     const { userPermission } = useSelector(state => state.permisos);
     const [ dataSource, setDataSource ] = useState([]);
     const [ dataNestedSource, setDataNestedSource ] = useState([])
     const [ validarCantidad, setValidarCantidad ] = useState(true)
     const [activeExpRow, setActiveExpRow] = useState();
     const [ loadedColumn , setLoad ] = useState(false)
+    const [ comentarios, setComentarios ] = useState('')
 
 
     const [ visible, setVisible] = useState(
@@ -36,7 +38,8 @@ const ValesSalida = () => {
             entrega: false,
             cancelar: false,
             cerrar: false,
-            enktrl:false
+            enktrl:false,
+            comentarios:false,
         }
     );
 	
@@ -55,7 +58,7 @@ const ValesSalida = () => {
     })
 
     const [ enkontrol, setEnkontrol ] = useState({
-        comentarios: '',
+        salidaEnkontrol: '',
         id:0
     })
 
@@ -80,6 +83,7 @@ const ValesSalida = () => {
         title: 'Acciones',
         dataIndex: 'statusValue',
         key: `statusVale`,
+        className:"text-center",
         render: (text, record) => (
             <div>
                 { 
@@ -96,7 +100,8 @@ const ValesSalida = () => {
                     <Button type='icon-warning' className='icon' onClick={()=> handleClose(record.id)}> 
                         <img src={ekIcon} alt="sa" width={16} className="py-0.5" />
                     </Button>
-                    : <div className="h-6"> - </div>
+                    : 
+                    <div className="h-6"> <div className="h-6"> { record.salidaEnkontrol? <Button type='icon-warning'><BsChatLeftDots onClick={() => { setComentarios(`Clave Enkontrol: ${record.salidaEnkontrol}`); showModal({...visible, comentarios: true}) }}/></Button> : null } </div> </div>
                 }
             </div>
         ),
@@ -233,7 +238,7 @@ const ValesSalida = () => {
                 },
                 { 
                     text: 'Parcialmente Entregado Cerrado',
-                    value: 3
+                    value: 6
                 },
                 { 
                     text: 'Entregado',
@@ -369,7 +374,7 @@ const ValesSalida = () => {
                 key: `acciones-${nanoid()}`,
                 render: (text, record, index) => (
                     hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ?
-                        record.status === 1 ?
+                        record.status === 1 || record.status === 2?
                         <div key={index} className="flex justify-between">
                             {
                                 hasPermission(userPermission, '/editar-vales') ? 
@@ -382,12 +387,15 @@ const ValesSalida = () => {
                             {
                                 hasPermission(userPermission, '/eliminar-vales') ? <Button className="icon" htmlType='button' onClick={ () => handleCancel(2, record.id) } type='icon-danger'> <StopOutlined className='ml-0 align-middle text-xl' /> </Button> : null
                             }
+
+                            
                             
                         </div>
                         : 
-                        record.status === 2 ?
-                        <Button className="icon" onClick={ () => handleEntrega(record, 2) } type='icon-warning'> <PieChartOutlined className='ml-0 align-middle text-xl'/> </Button>
-                        : <div className="h-6"> - </div>
+                        // record.status === 2 ?
+                        // <Button className="icon" onClick={ () => handleEntrega(record, 2) } type='icon-warning'> <PieChartOutlined className='ml-0 align-middle text-xl'/> </Button>
+                        // : 
+                        <div className="h-6"> { record.comentarios? <Button type='icon-ghost'><BsChatLeftDots onClick={() => { setComentarios(record.comentarios); showModal({...visible, comentarios: true}) }}/></Button> : null } </div>
                     : null
                 ),
                 width: hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ? 90: 0,
@@ -405,7 +413,7 @@ const ValesSalida = () => {
             valeSalidaId: record.valeSalidaId,
             insumoId: record.insumoId,
             type: type,
-            cantidadEntregada: type === 1? Number(record.cantidadSolicitada) : Number(entrega.cantidadEntregada),
+            cantidadEntregada: type === 1? Number(record.cantidadSolicitada) - Number(record.cantidadEntregada) : Number(entrega.cantidadEntregada),
             cantidadSolicitada: Number(record.cantidadSolicitada)
         })
 
@@ -414,7 +422,8 @@ const ValesSalida = () => {
             entrega: true,
             cancelar: false,
             cerrar: false,
-            enktrl: false
+            enktrl: false,
+            comentarios: false
         })
 
     }
@@ -424,7 +433,8 @@ const ValesSalida = () => {
             entrega: false,
             cancelar: true,
             cerrar: false,
-            enktrl: false
+            enktrl: false,
+            comentarios: false
         })
 
         setCancel({
@@ -439,7 +449,8 @@ const ValesSalida = () => {
             entrega: false,
             cancelar: false,
             cerrar: false,
-            enktrl: true
+            enktrl: true,
+            comentarios: false
         })
 
         setEnkontrol({
@@ -457,7 +468,6 @@ const ValesSalida = () => {
             dispatch(cancelValeAction(cancel))
         }
         if( cancel.type === 2){
-           
             dispatch(cancelDetalleAction(cancel))
         }
     }
@@ -473,7 +483,7 @@ const ValesSalida = () => {
     useEffect(() => {
         displayAlert()
         // eslint-disable-next-line
-    }, [errors, delivered, updated])
+    }, [errors, delivered, updated, deleted])
 
     const displayAlert = () => {
         if(errors){
@@ -500,6 +510,15 @@ const ValesSalida = () => {
             })
             hideModal()
         }
+        if(deleted){
+            openNotificationWithIcon('success', 'Se ha cancelado correctamente')
+            setCancel({
+                type: 0,
+                comentarios: '',
+                id:0
+            })
+            hideModal()
+         }
     }
 
     const handleChange = (e) => {
@@ -522,21 +541,6 @@ const ValesSalida = () => {
    
         return result.cantidadEntregada
     }
-
-    // const handleResize = (index) =>
-    // (_, { size }) => {
-    //     const newColumns = [...columns];
-    //     newColumns[index] = { ...newColumns[index], width: size.width };
-    //     setColumns(newColumns);
-    // };
-
-    // const mergeColumns = columns.map((col, index) => ({
-    //     ...col,
-    //     onHeaderCell: (column) => ({
-    //     width: column.width,
-    //     onResize: handleResize(index),
-    //     }),
-    // }));+
 
 
     if(!hasPermission(userPermission, '/ver-vales') && !isLoading ) return <Forbidden/>
@@ -625,11 +629,6 @@ const ValesSalida = () => {
                     setActiveExpRow(keys);
                 }
             }}
-            // components={{
-            //     header: {
-            //         cell: ResizableTitle,
-            //     },
-            // }}  
 
             />
 
@@ -690,10 +689,19 @@ const ValesSalida = () => {
                 onCancel={hideModal}
                 okText="Enviar"
                 cancelText="Cancelar"
-                okButtonProps={{ disabled: !enkontrol.comentarios }}
+                okButtonProps={{ disabled: !enkontrol.salidaEnkontrol }}
                 >
                     <p>Ingresa el folio de enkontrol una vez generado</p>
-                    <TextArea className='my-3' value={enkontrol.comentarios} onChange={ (e) => setEnkontrol({ ...enkontrol,  comentarios: e.target.value})}/>
+                    <TextArea className='my-3' value={enkontrol.salidaEnkontrol} onChange={ (e) => setEnkontrol({ ...enkontrol,  salidaEnkontrol: e.target.value})}/>
+            </Modal>
+
+            <Modal 
+                title="Información" 
+                visible={visible.comentarios}
+                onCancel={hideModal}
+                footer={false}
+            > 
+                { comentarios }
             </Modal>
         </>    
     );
