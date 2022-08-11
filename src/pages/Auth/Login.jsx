@@ -33,7 +33,7 @@ export default function Login() {
             <img src={Logotipo} className="max-w-md mt-10 w-full px-2 m-auto drop-shadow" alt='Logo Devarana'/>
             <button 
                 className='flex items-center rounded-3xl border 
-                text-dark font-bold px-4 py-1 bg-white justify-around  m-auto mt-5 shadow-md hover:opacity-70' 
+                text-dark font-bold px-4 py-1 bg-white justify-around m-auto shadow-md hover:opacity-70' 
                 onClick={redirectToGoogleSSO}>  
                 <FcGoogle className='mx-2 text-lg'/> Ingresar con Google 
             </button>

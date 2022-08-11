@@ -15,13 +15,13 @@ export default function Home() {
     const [ dataValues, setDataValues ] = useState({})
 
     const [filter, setFilter] = useState("")
-    const [filterDate, setFilterDate ] = useState("Todos")
+    const [filterDate, setFilterDate ] = useState("Hoy")
     ChartJS.register(ArcElement, Tooltip, Legend);
     
 
     useEffect(() => {
         if(count.length ===  0 || !count){
-            dispatch(getCountValeSalidaAction())
+            dispatch(getCountValeSalidaAction({type: "hoy"}))
         }else{
             setDataValues({
                 "Pendientes": count.nuevo + count.parcialAbierto,
@@ -76,7 +76,7 @@ export default function Home() {
             display: true,
             text: count.entregado + count.parcialCerrado + count.nuevo + count.parcialAbierto + count.cancelado || 0
         },
-        aspectRatio: 1.1,
+        aspectRatio: 1,
     }
 
     const plugins = [{
@@ -146,14 +146,14 @@ export default function Home() {
                     // Text
                     // const textWidth = ctx.measureText(chart.data.labels[index]).width
 
-                    const fontSize = (height / 38).toFixed(2);
+                    const fontSize = (height / 26).toFixed(2);
                     ctx.font = `bold ${fontSize}px Roboto`;
                     
                     
 
                     // Control Position
                     // const textXpositon = x >= halfWidth ? 'left' : 'right'
-                    const plusFivePx = x >= halfWidth ? 0 : - 0
+                    const plusFivePx = x >= halfWidth ? 3 : 0
                     ctx.textAlign = 'center'
                     ctx.textBaseline = 'middle'
                     
@@ -162,7 +162,7 @@ export default function Home() {
                     
                     const textData = chart.data.datasets[0].data[index] + '\n' + chart.data.labels[index]
             
-                    ctx.wrapText(textData, xLine + plusFivePx, yLine, 250, 16)
+                    ctx.wrapText(textData, xLine + plusFivePx, yLine, 250, 28)
                 })
             })
         },
@@ -178,12 +178,12 @@ export default function Home() {
             let line = '';
     
             for (let n = 0; n < words.length; n++) {
-                let testLine = line + words[n] + ' ';
+                let testLine = line + words[n] + '  ';
                 let metrics = this.measureText(testLine);
                 let testWidth = metrics.width;
                 if (testWidth > maxWidth && n > 0) {
                     this.fillText(line, x, y);
-                    line = words[n] + ' ';
+                    line = words[n] + '  ';
                     y += lineHeight;
                 } else {
                     line = testLine;
@@ -248,11 +248,11 @@ export default function Home() {
 
     return (
        <> 
-        <div className="max-w-screen-md flex content-center align-middle m-auto  h-full">
-            <div className='grid grid-cols-12 m-auto'>
+        <div className="flex content-center align-middle m-auto h-full w-full sm:max-w-screen-md">
+            <div className='grid grid-cols-12 m-auto w-full'>
             <div className="col-span-12">
-                <h1 className='text-center text-dark text-3xl font-bold uppercase hidden lg:block py-2'> Estatus de Vales de Salida de Almacén </h1>
-                <p className='uppercase text-center text-dark text-2xl font-medium'>  { filterDate }  </p>
+                <h1 className='text-center text-dark lg:text-3xl text-base font-bold py-2'> Estatus de Vales de Salida de Almacén </h1>
+                <p className='uppercase text-center text-dark lg:text-2xl text-base font-medium'>  { filterDate }  </p>
             </div>
             <div className="col-span-12 order-2">
                 <Doughnut data={data} options={options} plugins={plugins} />
@@ -261,7 +261,7 @@ export default function Home() {
                 <div className='flex justify-end'>
                     <div>
                     <Dropdown overlay={menu} placement="bottomRight">
-                        <Button type='dashed' className="inline-flex items-center text-dark font-medium"><FilterOutlined className='text-2xl mr-2'/> Filtrar </Button>
+                        <Button type='link' className="inline-flex items-center text-dark font-medium"><FilterOutlined className='text-xl mr-2'/> Filtrar </Button>
                     </Dropdown>
                     </div>
                 </div>

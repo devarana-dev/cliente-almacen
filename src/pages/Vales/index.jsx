@@ -92,7 +92,7 @@ const ValesSalida = () => {
             <div>
                 { 
                     record.statusVale === 1 ? 
-                    <div className='flex justify-between'>
+                    <div className='flex justify-center text-center'>
                         { hasPermission(userPermission, '/editar-vales') ? 
                             <Tooltip title="Entrega Completa" placement='topRight'>
                                 <Button type='icon-primary' className='icon' onClick={ () => handleEntrega(record, 3)}> <CheckCircleOutlined className='ml-0 align-middle text-xl' /> </Button>
@@ -122,7 +122,7 @@ const ValesSalida = () => {
                    <div className="h-6">
                         { record.salidaEnkontrol || record.comentarios ? 
                             <Tooltip title="Ver Información" placement='topRight'>
-                                <Button type='icon-danger'><BsInfoCircle className='text-xl' onClick={() => { setComentarios(record); showModal({...visible, comentarios: true}); console.log(record) }}/></Button> 
+                                <Button type='icon-danger'><BsInfoCircle className='text-xl' onClick={() => { setComentarios(record); showModal({...visible, comentarios: true}); }}/></Button> 
                             </Tooltip>
                             : null 
                         }
@@ -130,7 +130,7 @@ const ValesSalida = () => {
                 }
             </div>
         ),
-        width: 80
+        width: '8%'
     }
 
     useEffect(() => {
@@ -169,7 +169,7 @@ const ValesSalida = () => {
             responsive: ['lg'],
             sorter: (a, b) => a.id - b.id,
             ...getColumnSearchProps('id'),
-            width: 50
+            width: '5%'
         },
         {
             title: 'Fecha',
@@ -177,7 +177,7 @@ const ValesSalida = () => {
             key: `fecha-${nanoid()}`,
             ...getColumnSearchProps('fecha'),
             responsive: ['lg'],
-            width: 70,
+            width: '5%',
             render: (text, record) => (
                 <div>
                     { moment(record.fecha).format('D MMM') }
@@ -188,7 +188,7 @@ const ValesSalida = () => {
             title: 'Fase',
             dataIndex: 'statusVale',
             key: `statusVale-${nanoid()}`,
-            width: 70,
+            width: '5%',
             className: 'text-center',
             render: (text, record) => (
             record.statusVale === 1 || record.statusVale === 2? 
@@ -256,7 +256,7 @@ const ValesSalida = () => {
                 },
             ],
             onFilter: (value, record) => record.statusVale === value,
-            width: 100
+            width: '5%'
         },
         {
             title: 'Solicitante',
@@ -271,7 +271,8 @@ const ValesSalida = () => {
                     <Avatar crossOrigin='anonymous' src={ <Image src={record.residentePicture} /> || '' } />
                     <p className='ml-4'> { record.residente} </p>
                 </div>
-            )
+            ),
+            width: '25%'
         },
         {
             title: 'Lider',
@@ -280,7 +281,7 @@ const ValesSalida = () => {
             ellipsis: true,
             sorter: (a, b) => a.personalInfo.localeCompare(b.personalInfo),
             ...getColumnSearchProps('personalInfo'),
-            // width: 450
+            width: '22%',
         },
         {
             title: 'Actividad',
@@ -289,7 +290,7 @@ const ValesSalida = () => {
             ellipsis: true,
             sorter: (a, b) => a.actividadInfo.localeCompare(b.actividadInfo),
             ...getColumnSearchProps('actividadInfo'),
-            width: 200
+            width: '25%',
         },
         
     ])  
@@ -307,7 +308,7 @@ const ValesSalida = () => {
                 key: `clave-${nanoid()}`,
                 render: item =>  item.claveEnk,
                 responsive: ['lg'],
-                width: 100
+                width: '7%'
             },
             {
                 title: 'Estatus',
@@ -325,7 +326,7 @@ const ValesSalida = () => {
                     : record.status === 6 ? <Tag key={index} className='w-full text-center' color="volcano">Parcial</Tag>
                     : null
                 ),
-                width: 100,
+                width: '6%'
             },
             {
                 title: 'Nombre',
@@ -333,13 +334,14 @@ const ValesSalida = () => {
                 key: `nombre-${nanoid()}`,
                 render: item => item.nombre,
                 ellipsis: true,
+                width: '39%'
             },
             {
                 title: 'U.Medida',
                 dataIndex: 'insumo',
                 key: `unidad-${nanoid()}`,
                 render: item => item.unidadMedida,
-                width: 100,
+                width: '10%',
                 responsive: ['lg']
             },
             {
@@ -347,14 +349,14 @@ const ValesSalida = () => {
                 dataIndex: 'cantidadSolicitada',
                 key: `cantidadSolicitada-${nanoid()}`,
                 render: item => Number(item),
-                width: 100
+                width: '10%'
             },
             {
                 title: 'Entregado',
                 dataIndex: 'cantidadEntregada',
                 key: `cantidadEntregada-${nanoid()}`,
                 render: item => Number(item),
-                width: 100,
+                width: '10%',
                 responsive: ['lg']
             },
             {
@@ -362,7 +364,7 @@ const ValesSalida = () => {
                 dataIndex: 'detalle_salidas',
                 key: `detalle_salidas-${nanoid()}`,
                 render: (text, record) => (record.cantidadSolicitada - record.cantidadEntregada ),
-                width: 100
+                width: '10%'
             },
             {
                 // Detalle Estatus / Acciones
@@ -372,31 +374,31 @@ const ValesSalida = () => {
                 render: (text, record, index) => (
                     hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ?
                         record.status === 1 || record.status === 2?
-                        <div key={index} className="flex justify-between">
+                        <div key={index} className="flex justify-center">
                             {
                                 hasPermission(userPermission, '/editar-vales') ? 
                                 <>
-                                    <Tooltip placement='topRight' title="Entrega Completa"><Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 1) } type='icon-primary'> <CheckCircleOutlined className='ml-0 align-middle text-xl' /> </Button></Tooltip>
-                                    <Tooltip placement='topRight' title="Entrega Parcial"><Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 2) } type='icon-warning'> <PieChartOutlined className='ml-0 align-middle text-xl' /> </Button> </Tooltip>
+                                    <Tooltip placement='topRight' title="Entrega Completa"><Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 1) } type='icon-primary'> <CheckCircleOutlined className='align-middle text-xl' /> </Button></Tooltip>
+                                    <Tooltip placement='topRight' title="Entrega Parcial"><Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 2) } type='icon-warning'> <PieChartOutlined className='align-middle text-xl' /> </Button> </Tooltip>
                                 </>
                                 : null
                             }
                             {
                                 hasPermission(userPermission, '/eliminar-vales') ? 
-                                <Tooltip placement='topRight' title="Cerrar Insumo"> <Button className="icon" htmlType='button' onClick={ () => handleCancel(2, record.id) } type='icon-danger'> <StopOutlined className='ml-0 align-middle text-xl' /> </Button> </Tooltip>
+                                <Tooltip placement='topRight' title="Cerrar Insumo"> <Button className="icon" htmlType='button' onClick={ () => handleCancel(2, record.id) } type='icon-danger'> <StopOutlined className='align-middle text-xl' /> </Button> </Tooltip>
                                 : null
                             }
                         </div>
                         : 
-                        <div className="h-6" key={index}> 
+                        <div className="flex justify-center h-6" key={index}> 
                         { userAuth.tipoUsuario_id !== 3 ?
-                            <Button type='icon-ghost'><BsInfoCircle className='text-xl' onClick={ () => { setDisplayInsumo(record); showModal({...visible, insumoInfo: true}); } }/> </Button>
+                        <Button type='icon-warning' onClick={ () => { setDisplayInsumo(record); showModal({...visible, insumoInfo: true}); } } htmlType='button' className='icon'><BsInfoCircle className='text-xl align-middle' /> </Button>
                             : null
                         }
                         </div>
                     : null
                 ),
-                width: hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ? 90: 0,
+                width: hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ? '8%': 0,
                 className: hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ? 'block' : 'hidden',
             },
  
@@ -550,10 +552,10 @@ const ValesSalida = () => {
         <>
             {
                 hasPermission(userPermission, '/crear-vales') ?
-                <Button type='icon-secondary-new' onClick={() => navigate('nuevo')} className="fixed right-3 bottom-3 hidden lg:block z-50 items-center"><PlusCircleOutlined /></Button>
+                <Button type='icon-secondary-new' onClick={() => navigate('nuevo')} className="fixed right-3 bottom-8 hidden lg:block z-50 items-center"><PlusCircleOutlined /></Button>
                 : null 
             }
-                <div className="md:grid hidden grid-cols-4 gap-10 py-5 ">
+                <div className="lg:grid hidden grid-cols-4 gap-10 py-5 ">
                     <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction()) }>
                         <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
                             <div className="text-white bg-gradient-to-tr from-dark to-dark-lighter sm:w-16 sm:h-16 w-12 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
