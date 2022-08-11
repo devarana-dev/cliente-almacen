@@ -10,6 +10,7 @@ const Notificaciones = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const { notificaciones } = useSelector( state => state.notificaciones)
+    const { userAuth } = useSelector( state => state.auth)
     const [socket, setSocket] = useState(null);
     const [active, setActive] = useState(true)
 
@@ -20,13 +21,44 @@ const Notificaciones = () => {
     }])
 
     useEffect(() => {
-        const socketIO = io(process.env.REACT_APP_SERVER, {});
-        setSocket(socketIO);
+        
+        const socket = io(process.env.REACT_APP_SERVER, {});
+        
+        //enviar usuario userAuth
+        socket.emit('user', userAuth);
+        socket.on('user', (data) => {
+            console.log(data)
+        } )
+  
+
+        socket.on('connect_error', () => {
+            setTimeout( () => socket.connect(), 5000)
+        })
+        socket.on('notificacion', (data) => {
+            dispatch(getNotificationesAction())
+            data.map( item => {
+                notification.open({
+                    message: "Nueva Notificación",
+                    description: item.label,
+                    key: item.uuid,
+                    type: 'info',
+                    onClick: () => {
+                        navigate('/vales-salida');
+                        notification.close(2);
+                    }
+                }, 1000)
+            })
+        })
+        socket.on('disconnect', () => console.log("Server disconnected"))
+        
+
         
         
         dispatch(getNotificationesAction())
         // eslint-disable-next-line
-    }, []);
+    }, [userAuth]);
+
+   
 
     useEffect(() => {
         setOptions(
@@ -35,33 +67,6 @@ const Notificaciones = () => {
             ))
         )
 
-        if(notificaciones.length > 0) {
-            if( notificaciones.length === 1) {
-                notification.open({
-                    message: "Nueva Notificación",
-                    description: notificaciones[0].mensaje + 'Has click para verla',
-                    key: 2,
-                    type: 'info',
-                    onClick: () => {
-                        navigate('/vales-salida');
-                        notification.close(2);
-                    }
-                }, 1000)
-            }else {
-                notification.open({
-                    message: "Nuevas Notificaciones",
-                    description: notificaciones.length + " notificaciones, has click para verlas",
-                    key: 1,
-                    type: 'info',
-                    className: 'cursor-pointer',
-                    onClick: () => {
-                        navigate('/vales-salida');
-                        notification.close(1);
-                    }
-                }, 1000)
-            }
-            
-        }
     }, [notificaciones])
 
     const getNotificacionesCount = () => {

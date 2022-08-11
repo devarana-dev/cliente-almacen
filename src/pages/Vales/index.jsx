@@ -1,7 +1,7 @@
 
 import { BellOutlined, CheckCircleOutlined, FileTextOutlined, PieChartOutlined, PlusCircleOutlined, StopOutlined } from '@ant-design/icons';
 import { cancelDetalleAction, cancelValeAction, closeValeAction, completeValeSalida, deliverValeAction, getAllValesAction, getCountValeSalidaAction, searchValeAction } from '../../actions/valeActions';
-import {BsChatLeftDots} from 'react-icons/bs'
+import { BsInfoCircle } from 'react-icons/bs'
 import { Button, Table, Tag, Modal, Input, Badge, Avatar, Image, Tooltip } from 'antd';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
@@ -11,7 +11,6 @@ import { nanoid } from 'nanoid'
 import '../../assets/scss/showVale.scss'
 import ekIcon from "../../assets/img/Original-EK.png"
 import ekIcon2 from "../../assets/img/Original-EK2.png"
-import Logotipo from "../../assets/img/LogoDevarana.png"
 import openNotificationWithIcon from '../../hooks/useNotification';
 import moment from 'moment';
 import { hasPermission } from '../../utils/hasPermission';
@@ -23,7 +22,7 @@ const ValesSalida = () => {
     const { TextArea } = Input;
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { vales, errors, delivered, updated, isLoading, count, deleted} = useSelector( state => state.vales )
+    const { vales, errors, delivered, updated, isLoading, count, deleted } = useSelector( state => state.vales )
     const { userAuth } = useSelector( state => state.auth )
     const { userPermission } = useSelector(state => state.permisos);
     const [ dataSource, setDataSource ] = useState([]);
@@ -31,7 +30,10 @@ const ValesSalida = () => {
     const [ validarCantidad, setValidarCantidad ] = useState(true)
     const [activeExpRow, setActiveExpRow] = useState();
     const [ loadedColumn , setLoad ] = useState(false)
-    const [ comentarios, setComentarios ] = useState('')
+    const [ displayComentarios, setComentarios ] = useState('')
+    const [ displayInsumo, setDisplayInsumo ] = useState({
+        
+    })
 
     
     const [ visible, setVisible] = useState(
@@ -41,6 +43,7 @@ const ValesSalida = () => {
             cerrar: false,
             enktrl:false,
             comentarios:false,
+            insumoInfo:false
         }
     );
 	
@@ -104,7 +107,7 @@ const ValesSalida = () => {
                             : null
                         }
                     </div> : 
-                    record.statusVale === 2 || record.statusVale === 4 || record.statusVale === 3 ? 
+                   record.statusVale === 3 || record.statusVale === 4  ? 
                     <>
                         { hasPermission(userPermission, '/editar-vales') ? 
                         <Tooltip title="Registro Enkontrol" placement='topRight'>
@@ -117,15 +120,9 @@ const ValesSalida = () => {
                     </>
                     : 
                    <div className="h-6">
-                        { record.salidaEnkontrol? 
-                            <Tooltip title="Ver Comentarios" placement='topRight'>
-                                <Button type='icon-danger'><BsChatLeftDots onClick={() => { setComentarios(`${record.salidaEnkontrol}`); showModal({...visible, comentarios: true}) }}/></Button> 
-                            </Tooltip>
-                            : null 
-                        }
-                        { record.comentarios? 
-                            <Tooltip title="Ver Comentarios" placement='topRight'>
-                                <Button type='icon-warning'><BsChatLeftDots onClick={() => { setComentarios(`Clave Enkontrol: ${record.comentarios}`); showModal({...visible, comentarios: true}) }}/></Button> 
+                        { record.salidaEnkontrol || record.comentarios ? 
+                            <Tooltip title="Ver Información" placement='topRight'>
+                                <Button type='icon-danger'><BsInfoCircle className='text-xl' onClick={() => { setComentarios(record); showModal({...visible, comentarios: true}); console.log(record) }}/></Button> 
                             </Tooltip>
                             : null 
                         }
@@ -169,7 +166,7 @@ const ValesSalida = () => {
             title: 'Folio',
             dataIndex: 'id',
             key: `id-${nanoid()}`,
-            responsive: ['md'],
+            responsive: ['lg'],
             sorter: (a, b) => a.id - b.id,
             ...getColumnSearchProps('id'),
             width: 50
@@ -179,7 +176,7 @@ const ValesSalida = () => {
             dataIndex: 'fecha',
             key: `fecha-${nanoid()}`,
             ...getColumnSearchProps('fecha'),
-            responsive: ['md'],
+            responsive: ['lg'],
             width: 70,
             render: (text, record) => (
                 <div>
@@ -219,41 +216,18 @@ const ValesSalida = () => {
             dataIndex: 'statusVale',
             key: 'statusVale',
             render: (text, record, index) => ( 
-                record.statusVale === 1 ? 
-                    <div className='w-full justify-center text-center flex'>
-                        <Tag className='m-auto w-full' key={nanoid(4)} color="blue">Nuevo</Tag>
-                    </div>
-                :
-                record.statusVale === 2 ? 
-                    <div className='w-full justify-center text-center flex'>
-                        <Tag className='m-auto w-full' key={nanoid(4)} color="orange">Parcial</Tag> 
-                    </div>
-                :
-                record.statusVale === 3 ? 
-                    <div className='w-full justify-center text-center flex'>
-                        <Tag className='m-auto w-full' key={nanoid(4)} color="orange">Parcial</Tag> 
-                    </div>
-                :
-                record.statusVale === 4 ? 
-                    <div className='w-full justify-center text-center flex'>
-                        <Tag className='m-auto w-full' key={nanoid(4)} color="green">Entregado</Tag>
-                    </div>
-                :
-                record.statusVale === 5 ? 
-                    <div className='w-full justify-center text-center flex'>
-                        <Tag className='m-auto w-full' key={nanoid(4)} color="red">Cancelado</Tag> 
-                    </div>
-                :
-                record.statusVale === 6 ? 
-                    <div className='w-full justify-center text-center flex'>
-                        <Tag className='m-auto w-full' key={nanoid(4)} color="orange">Parcial</Tag> 
-                    </div>
-                :
-                record.statusVale === 7 ? 
-                    <div className='w-full justify-center text-center flex'>
-                        <Tag className='m-auto w-full' key={nanoid(4)} color="green">Entregado</Tag>
-                    </div>
-                : ''
+                <div className='w-full justify-center text-center flex'>
+                { 
+                    record.statusVale === 1 ? <Tag className='m-auto w-full' key={nanoid(4)} color="blue">Nuevo</Tag> :
+                    record.statusVale === 2 ? <Tag className='m-auto w-full' key={nanoid(4)} color="orange">Parcial</Tag> :
+                    record.statusVale === 3 ? <Tag className='m-auto w-full' key={nanoid(4)} color="orange">Parcial</Tag> :
+                    record.statusVale === 4 ? <Tag className='m-auto w-full' key={nanoid(4)} color="green">Entregado</Tag> :
+                    record.statusVale === 5 ? <Tag className='m-auto w-full' key={nanoid(4)} color="red">Cancelado</Tag> :
+                    record.statusVale === 6 ? <Tag className='m-auto w-full' key={nanoid(4)} color="orange">Parcial</Tag> :
+                    record.statusVale === 7 ? <Tag className='m-auto w-full' key={nanoid(4)} color="green">Entregado</Tag> :
+                    null
+                }
+            </div>
             ),
             filters: [
                 { 
@@ -261,11 +235,11 @@ const ValesSalida = () => {
                     value: 1
                 },
                 { 
-                    text: 'Parcial Entregado Abierto',
+                    text: 'Parcial Abierto',
                     value: 2
                 },
                 { 
-                    text: 'Parcialmente Entregado Cerrado',
+                    text: 'Parcial Cerrado',
                     value: 6
                 },
                 { 
@@ -275,10 +249,6 @@ const ValesSalida = () => {
                 { 
                     text: 'Cancelado',
                     value: 5
-                },
-                { 
-                    text: 'Borrador',
-                    value: 6
                 },
                 { 
                     text: 'Enkontrol',
@@ -291,7 +261,7 @@ const ValesSalida = () => {
         {
             title: 'Solicitante',
             dataIndex: 'residente',
-            responsive: ['md'],
+            responsive: ['lg'],
             key: `residente-${nanoid()}`,
             sorter: (a, b) => a.residente.localeCompare(b.residente),
             ...getColumnSearchProps('residente'),
@@ -336,8 +306,26 @@ const ValesSalida = () => {
                 dataIndex: 'insumo',
                 key: `clave-${nanoid()}`,
                 render: item =>  item.claveEnk,
-                responsive: ['md'],
+                responsive: ['lg'],
                 width: 100
+            },
+            {
+                title: 'Estatus',
+                dataIndex: 'acciones',
+                key: `acciones-${nanoid()}`,
+                render: (text, record, index) => (
+                    record.status === 1 ?
+                    <Tag color="blue" className='w-full text-center'> Nuevo </Tag>
+                    : 
+                    record.status === 2 ?
+                    <Tag key={index} className='w-full text-center' color="orange">Parcial</Tag> 
+                    : record.status === 3 ? <Tag key={index} className='w-full text-center' color="green">Entregado</Tag> 
+                    : record.status === 4 ? <Tag key={index} className='w-full text-center' color="red">Cancelado</Tag>
+                    : record.status === 5 ? <Tag key={index} className='w-full text-center' color="magenta">Cerrado</Tag>
+                    : record.status === 6 ? <Tag key={index} className='w-full text-center' color="volcano">Parcial</Tag>
+                    : null
+                ),
+                width: 100,
             },
             {
                 title: 'Nombre',
@@ -352,7 +340,7 @@ const ValesSalida = () => {
                 key: `unidad-${nanoid()}`,
                 render: item => item.unidadMedida,
                 width: 100,
-                responsive: ['md']
+                responsive: ['lg']
             },
             {
                 title: 'Solicitado',
@@ -367,32 +355,13 @@ const ValesSalida = () => {
                 key: `cantidadEntregada-${nanoid()}`,
                 render: item => Number(item),
                 width: 100,
-                responsive: ['md']
+                responsive: ['lg']
             },
             {
                 title: 'Pendiente',
                 dataIndex: 'detalle_salidas',
                 key: `detalle_salidas-${nanoid()}`,
                 render: (text, record) => (record.cantidadSolicitada - record.cantidadEntregada ),
-                width: 100
-            },
-            {
-
-                title: 'Estatus',
-                dataIndex: 'acciones',
-                key: `acciones-${nanoid()}`,
-                render: (text, record, index) => (
-                    record.status === 1 ?
-                    <Tag color="blue" className='w-full text-center'> Nuevo </Tag>
-                    : 
-                    record.status === 2 ?
-                    <Tag key={index} className='w-full text-center' color="orange">Parcial</Tag> 
-                    : record.status === 3 ? <Tag key={index} className='w-full text-center' color="green">Entregado</Tag> 
-                    : record.status === 4 ? <Tag key={index} className='w-full text-center' color="red">Cancelado</Tag>
-                    : record.status === 5 ? <Tag key={index} className='w-full text-center' color="magenta">Cerrado</Tag>
-                    : record.status === 6 ? <Tag key={index} className='w-full text-center' color="orange">Parcial</Tag>
-                    : null
-                ),
                 width: 100
             },
             {
@@ -417,24 +386,22 @@ const ValesSalida = () => {
                                 <Tooltip placement='topRight' title="Cerrar Insumo"> <Button className="icon" htmlType='button' onClick={ () => handleCancel(2, record.id) } type='icon-danger'> <StopOutlined className='ml-0 align-middle text-xl' /> </Button> </Tooltip>
                                 : null
                             }
-
-                            
-                            
                         </div>
                         : 
-                        // record.status === 2 ?
-                        // <Button className="icon" onClick={ () => handleEntrega(record, 2) } type='icon-warning'> <PieChartOutlined className='ml-0 align-middle text-xl'/> </Button>
-                        // : 
-                        <div className="h-6"> { record.comentarios? 
-                         <Tooltip placement='topRight' title="Ver Comentarios"> <Button type='icon-ghost'><BsChatLeftDots onClick={() => { setComentarios(record.comentarios); showModal({...visible, comentarios: true}) }}/></Button> </Tooltip>
-                        : null } </div>
+                        <div className="h-6" key={index}> 
+                        { userAuth.tipoUsuario_id !== 3 ?
+                            <Button type='icon-ghost'><BsInfoCircle className='text-xl' onClick={ () => { setDisplayInsumo(record); showModal({...visible, insumoInfo: true}); } }/> </Button>
+                            : null
+                        }
+                        </div>
                     : null
                 ),
                 width: hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ? 90: 0,
                 className: hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ? 'block' : 'hidden',
-            }
+            },
+ 
         ]
-        return <Table bordered key={record => record.id} scroll={{ x: 'auto' }} columns={columns} dataSource={dataNestedSource} pagination={false} rowKey={nanoid()}  className="nestedTable"/>
+        return <Table bordered key={record => record.id + nanoid()} scroll={{ x: 'auto' }} columns={columns} dataSource={dataNestedSource} pagination={false} rowKey={nanoid()}  className="nestedTable"/>
     }
 
     const handleEntrega = (record, type) => {
@@ -455,7 +422,8 @@ const ValesSalida = () => {
             cancelar: false,
             cerrar: false,
             enktrl: false,
-            comentarios: false
+            comentarios: false,
+            insumoInfo: false
         })
 
     }
@@ -482,7 +450,8 @@ const ValesSalida = () => {
             cancelar: false,
             cerrar: false,
             enktrl: true,
-            comentarios: false
+            comentarios: false,
+            insumoInfo: false
         })
 
         setEnkontrol({
@@ -579,7 +548,6 @@ const ValesSalida = () => {
     
     return ( 
         <>
-            <img src={Logotipo} alt="" className='mx-auto block md:hidden max-w-full py-2'/>
             {
                 hasPermission(userPermission, '/crear-vales') ?
                 <Button type='icon-secondary-new' onClick={() => navigate('nuevo')} className="fixed right-3 bottom-3 hidden lg:block z-50 items-center"><PlusCircleOutlined /></Button>
@@ -645,7 +613,7 @@ const ValesSalida = () => {
             loading={isLoading} 
             render={true}
             scroll={{ x: 'auto' }} 
-            key={123} 
+            key={record => record.id}
             columns={columns} 
             dataSource={dataSource} 
             expandable={{
@@ -710,7 +678,12 @@ const ValesSalida = () => {
                 cancelText="Cancelar"
                 okButtonProps={{ disabled: !cancel.comentarios }}
                 >
-                    <p>No se entregará <span className='font-bold'>NINGÚN</span> insumo, explica porqué </p>
+                    {
+                        userAuth && userAuth.tipoUsuario_id === 3 ?
+                        <p>No se entregará <span className='font-bold'>NINGÚN</span> insumo, explica porqué </p>
+                        :
+                        <p>Estás seguro que quieres cancelar este insumo? Añade algún comentario </p>
+                    }
                     <TextArea className='my-3' value={cancel.comentarios} onChange={ (e) => setCancel({ ...cancel,  comentarios: e.target.value})}/>
             </Modal> 
 
@@ -728,12 +701,94 @@ const ValesSalida = () => {
             </Modal>
 
             <Modal 
-                title="Información" 
                 visible={visible.comentarios}
                 onCancel={hideModal}
                 footer={false}
             > 
-                { comentarios }
+                {displayComentarios.id ?
+                <>
+                    <div className='inline-flex pb-5'>
+                        <p className='pr-2'>Estatus:</p>
+                        { 
+                        displayComentarios.statusVale === 1 ? <Tag className='m-auto w-full' key={nanoid(4)} color="blue">Nuevo</Tag> :
+                        displayComentarios.statusVale === 2 ? <Tag className='m-auto w-full' key={nanoid(4)} color="orange">Parcial</Tag> :
+                        displayComentarios.statusVale === 3 ? <Tag className='m-auto w-full' key={nanoid(4)} color="orange">Parcial</Tag> :
+                        displayComentarios.statusVale === 4 ? <Tag className='m-auto w-full' key={nanoid(4)} color="green">Entregado</Tag> :
+                        displayComentarios.statusVale === 5 ? <Tag className='m-auto w-full' key={nanoid(4)} color="red">Cancelado</Tag> :
+                        displayComentarios.statusVale === 6 ? <Tag className='m-auto w-full' key={nanoid(4)} color="orange">Parcial</Tag> :
+                        displayComentarios.statusVale === 7 ? <Tag className='m-auto w-full' key={nanoid(4)} color="green">Entregado</Tag> :
+                        null }
+                    </div>
+                    <h2> Folio: </h2>
+                    <p className='font-bold'> {displayComentarios.id } </p>
+                    <h2> Actividad: </h2>
+                    <p className='font-bold'> {displayComentarios.actividadInfo } </p>
+                    { displayComentarios.comentarios ? 
+                        <> 
+                            <h2> Comentarios: </h2>
+                            <p className='font-bold'> {displayComentarios.comentarios } </p> 
+                        </>
+                    : 
+                    null }
+                    { displayComentarios.salidaEnkontrol ? 
+                        <> 
+                            <h2> Clave Enkontrol: </h2>
+                            <p className='font-bold'> {displayComentarios.salidaEnkontrol } </p> 
+                        </>
+                    : 
+                    null }
+
+                </>
+                : null
+                }
+            </Modal>
+
+
+
+            <Modal
+                visible={visible.insumoInfo}
+                onCancel={hideModal}
+                footer={false}
+            >
+                <div>
+                    {displayInsumo.insumo ? 
+                    <>
+                        <div className='inline-flex pb-5'>
+                        <p className='pr-2'>Estatus:</p>
+                        {  
+                            displayInsumo.status === 1 ?<Tag className='text-center' color="blue"> Nuevo </Tag> :
+                            displayInsumo.status === 2 ?<Tag className='text-center' color="orange">Parcial</Tag>  :
+                            displayInsumo.status === 3 ? <Tag className='text-center' color="green">Entregado</Tag>  :
+                            displayInsumo.status === 4 ? <Tag className='text-center' color="red">Cancelado</Tag> :
+                            displayInsumo.status === 5 ? <Tag className='text-center' color="magenta">Cerrado</Tag> :
+                            displayInsumo.status === 6 ? <Tag className='text-center' color="volcano">Parcial</Tag>
+                        : null
+                        }
+                        </div>
+                        <h2> Insumo: </h2>
+                        <p className='font-bold'> { displayInsumo.insumo.nombre } </p>
+                        <h2> Unidad:  </h2>
+                        <p className='font-bold'>{ displayInsumo.insumo.unidadMedida }</p>
+                        <h2> Cantidad Solicitada: </h2>
+                        <p className='font-bold text-dark'>{ Number(displayInsumo.cantidadSolicitada) }</p>
+                        <h2> Cantidad Entregada: </h2>
+                        <p className='font-bold text-green-500'>{ Number(displayInsumo.cantidadEntregada) }</p>
+                        <h2> Cantidad Pendiente: </h2>
+                        <p className='font-bold text-red-500'>{ Number(displayInsumo.cantidadSolicitada) - Number(displayInsumo.cantidadEntregada) }</p>
+                        {
+                            displayInsumo.comentarios?
+                            <> 
+                                <h2> Observaciones: </h2>
+                                <p>{ displayInsumo.comentarios }</p>
+                            </>
+                        : null }   
+                    </>
+            : null }
+
+                    
+
+                    
+                </div>                
             </Modal>
         </>    
     );

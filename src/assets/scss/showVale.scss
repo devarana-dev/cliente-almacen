@@ -9,10 +9,29 @@
         background-color: $info-lighter!important;
         color: white!important;
     }
+
+    .ant-table-cell {
+        padding: 6px 8px !important;
+    }
+}
+
+.nestedTable{
+    .ant-table-tbody{
+        tr{
+            td:nth-child(1)::before{
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 4px;
+                background-color: $info-lighter!important;
+                height: 100%;
+            }
+        }
+    }
 }
 
 // .tableVales{
-
     .react-resizable {
         position: relative;
         background-clip: padding-box;

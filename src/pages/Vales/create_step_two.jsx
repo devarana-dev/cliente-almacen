@@ -199,7 +199,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
                 ]}
                 
             >
-                <Input min={ 0 } type="tel" name="cantidadSolicitada" value={insumo.cantidadSolicitada} onChange={ handleChange }/>
+                <Input min={ 0 } type="number" name="cantidadSolicitada" value={insumo.cantidadSolicitada} onChange={ handleChange }/>
             </Form.Item>
             <Form.Item 
                 className=" w-full col-span-1"

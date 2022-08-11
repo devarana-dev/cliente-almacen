@@ -129,7 +129,6 @@ const deliverValeError = error => {
 }
 
 export function searchValeAction(params){
-    console.log(params);
     return async (dispatch) => {
         dispatch(getAllValesRequest())
         await clientAxios.get('/vales/search', {params})

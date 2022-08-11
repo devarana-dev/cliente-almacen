@@ -8,7 +8,6 @@ import openNotificationWithIcon from "../../hooks/useNotification";
 import { cleanErrorAction } from "../../actions/globalActions";
 import { hasPermission } from "../../utils/hasPermission";
 import Forbidden from "../../components/Elements/Forbidden";
-import Logotipo from "../../assets/img/LogoDevarana.png"
 
 const CreatePersonal = () => {
     const dispatch = useDispatch();
@@ -69,7 +68,6 @@ const CreatePersonal = () => {
             onFinish={handleSubmit}
             layout="vertical"
             >
-            <img src={Logotipo} alt="" className='mx-auto block md:hidden max-w-full py-2'/>
             <Form.Item 
                 label="Nombre" 
                 name="nombre" 

@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCountValeSalidaAction } from '../actions/valeActions';
-import Logotipo from "../assets/img/LogoDevarana.png"
+
 
 export default function Home() {
 
@@ -248,23 +248,24 @@ export default function Home() {
 
     return (
        <> 
-        <div className="max-w-screen-md grid grid-cols-12 m-auto md:h-auto h-full">
+        <div className="max-w-screen-md flex content-center align-middle m-auto  h-full">
+            <div className='grid grid-cols-12 m-auto'>
             <div className="col-span-12">
-                <img src={Logotipo} alt="" className='mx-auto block md:hidden max-w-full'/>
-                <h1 className='text-center text-dark text-3xl font-bold uppercase hidden md:block'> Estatus de Vales de Salida de Almacén </h1>
+                <h1 className='text-center text-dark text-3xl font-bold uppercase hidden lg:block py-2'> Estatus de Vales de Salida de Almacén </h1>
                 <p className='uppercase text-center text-dark text-2xl font-medium'>  { filterDate }  </p>
             </div>
-            <div className="lg:col-span-10 lg:order-1 col-span-12 order-2">
+            <div className="col-span-12 order-2">
                 <Doughnut data={data} options={options} plugins={plugins} />
             </div>
-            <div className="lg:col-span-2 lg:order-2 col-span-12 order-1">
-                <div className='flex'>
+            <div className="col-span-12 order-1">
+                <div className='flex justify-end'>
                     <div>
                     <Dropdown overlay={menu} placement="bottomRight">
-                        <Button type='dashed' className="inline-flex items-center text-dark font-medium"><FilterOutlined className='text-2xl mr-2'/> Filtrar</Button>
+                        <Button type='dashed' className="inline-flex items-center text-dark font-medium"><FilterOutlined className='text-2xl mr-2'/> Filtrar </Button>
                     </Dropdown>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
         </>

@@ -127,6 +127,7 @@ export default function LayoutPrivate({children}) {
                     
                 </Header>
                 <Content className="layout-right__content"> 
+                    <img src={Logotipo} alt="" className='mx-auto block lg:hidden max-w-full pb-3'/>
                     {children} 
                 </Content>
             </Layout>
@@ -150,7 +151,7 @@ export default function LayoutPrivate({children}) {
                             <p> Consultar </p>
                         </div>
                     </Link>
-                    <Link to={'/personal/create'} className="block w-full h-auto text-center footer__link">
+                    <Link to={'/personal'} className="block w-full h-auto text-center footer__link">
                         <div className="footer__link-icon"> 
                             <AiOutlineUserAdd className="m-auto"/> 
                             <p> Personal </p>

@@ -121,7 +121,7 @@ const Personal = () => {
         <div className='py-2 flex justify-end'>          
         {
             hasPermission(userPermission, '/crear-personal') ?
-          <Button type='icon-secondary-new' onClick={() => navigate('create')} className="fixed right-10 bottom-8 z-50 items-center lg:block hidden"><PlusCircleOutlined /></Button>
+          <Button type='icon-secondary-new' onClick={() => navigate('create')} className="fixed right-10 lg:bottom-8 bottom-28 z-50 items-center"><PlusCircleOutlined /></Button>
             : null 
         }
         </div>

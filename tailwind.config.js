@@ -23,8 +23,7 @@ module.exports = {
             "orange" : "#ff6b2c",
 		},
 		backgroundImage:{
-			'royalview' : "url('assets/img/royalview.jpg')",
-			'homeLogin' : "url('assets/img/HomeLogin.png')",
+			'homeLogin' : "url('assets/img/HomeLogin.jpg')",
 		},
     },
   },
