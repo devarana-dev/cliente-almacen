@@ -20,7 +20,7 @@ const Notificaciones = () => {
     }])
 
     useEffect(() => {
-        const accessToken = userAuth.token || localStorage.getItem('accessToken')
+        const accessToken = localStorage.getItem('accessToken')
        if(accessToken){
             const socket = io(process.env.REACT_APP_SERVER, {
                 auth: { accessToken: accessToken },
