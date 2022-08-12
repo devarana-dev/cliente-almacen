@@ -11,7 +11,6 @@ const Notificaciones = () => {
     const navigate = useNavigate()
     const { notificaciones } = useSelector( state => state.notificaciones)
     const { userAuth } = useSelector( state => state.auth)
-    const [socket, setSocket] = useState(null);
     const [active, setActive] = useState(true)
 
 
@@ -21,41 +20,42 @@ const Notificaciones = () => {
     }])
 
     useEffect(() => {
-        
-        const socket = io(process.env.REACT_APP_SERVER, {});
-        
-        //enviar usuario userAuth
-        socket.emit('user', userAuth);
-        socket.on('user', (data) => {
-            console.log(data)
-        } )
-  
+        const accessToken = userAuth.token || localStorage.getItem('accessToken')
+       if(accessToken){
+            const socket = io(process.env.REACT_APP_SERVER, {
+                auth: { accessToken: accessToken },
+            });
+            
+            //enviar usuario userAuth
+            socket.emit('user', userAuth);
+            socket.on('user', (data) => {
+                console.log(data)
+            } )
+    
 
-        socket.on('connect_error', () => {
-            setTimeout( () => socket.connect(), 5000)
-        })
-        socket.on('notificacion', (data) => {
-            dispatch(getNotificationesAction())
-            data.map( item => {
-                notification.open({
-                    message: "Nueva Notificación",
-                    description: item.label,
-                    key: item.uuid,
-                    type: 'info',
-                    onClick: () => {
-                        navigate('/vales-salida');
-                        notification.close(2);
-                    }
-                }, 1000)
+            socket.on('connect_error', () => {
+                setTimeout( () => socket.connect(), 5000)
             })
-        })
-        socket.on('disconnect', () => console.log("Server disconnected"))
-        
-
-        
-        
-        dispatch(getNotificationesAction())
+            socket.on('notificacion', (data) => {
+                dispatch(getNotificationesAction())
+                data.map( item => {
+                    notification.open({
+                        message: "Nueva Notificación",
+                        description: item.label,
+                        key: item.uuid,
+                        type: 'info',
+                        onClick: () => {
+                            navigate('/vales-salida');
+                            notification.close(2);
+                        }
+                    }, 1000)
+                })
+            })
+            socket.on('disconnect', () => console.log("Server disconnected"))
+            
+            dispatch(getNotificationesAction())
         // eslint-disable-next-line
+       }
     }, [userAuth]);
 
    
