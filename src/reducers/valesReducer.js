@@ -129,7 +129,7 @@ export default (state = initialState, action) => {
             }
 
         case types.CLOSE_VALE_SUCCESS:
-            console.log(action.payload.valeSalida);
+            console.log(action.payload);
             return {
                 ...state,
                 isLoading: false,

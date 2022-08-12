@@ -21,17 +21,15 @@ const Notificaciones = () => {
 
     useEffect(() => {
         const accessToken = localStorage.getItem('accessToken')
-       if(accessToken){
+        // if(accessToken){
             const socket = io(process.env.REACT_APP_SERVER, {
                 auth: { accessToken: accessToken },
             });
             
-            //enviar usuario userAuth
-            socket.emit('user', userAuth);
-            socket.on('user', (data) => {
-                console.log(data)
-            } )
-    
+            if(userAuth && userAuth.tipoUsuario_id === 3){
+                console.log('join', userAuth.id);
+                socket.emit('join', { room: 'almacen' });
+            }
 
             socket.on('connect_error', () => {
                 setTimeout( () => socket.connect(), 5000)
@@ -55,7 +53,7 @@ const Notificaciones = () => {
             
             dispatch(getNotificationesAction())
         // eslint-disable-next-line
-       }
+    //    }
     }, [userAuth]);
 
    

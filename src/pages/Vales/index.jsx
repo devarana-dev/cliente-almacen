@@ -734,7 +734,7 @@ const ValesSalida = () => {
                     null }
                     { displayComentarios.salidaEnkontrol ? 
                         <> 
-                            <h2> Clave Enkontrol: </h2>
+                            <h2> Folio de salida Enkontrol: </h2>
                             <p className='font-bold'> {displayComentarios.salidaEnkontrol } </p> 
                         </>
                     : 
