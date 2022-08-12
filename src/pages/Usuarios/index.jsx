@@ -70,6 +70,7 @@ const Usuarios = () => {
           key: 'apellidoPaterno',
           sorter: (a, b) => a.nombre.localeCompare(b.nombre),
           ...getColumnSearchProps('apellidoPaterno'),
+          ellipsis: true,
         },
         {
           title: 'Apellido Materno',
@@ -77,6 +78,7 @@ const Usuarios = () => {
           key: 'apellidoMaterno',
           sorter: (a, b) => a.nombre.localeCompare(b.nombre),
           ...getColumnSearchProps('apellidoMaterno'),
+          ellipsis: true,
         },
         {
             title: 'Email',
@@ -91,6 +93,7 @@ const Usuarios = () => {
             key: 'rol',
             sorter: (a, b) => a.nombre.localeCompare(b.nombre),
             ...getColumnSearchProps('rol'),
+            ellipsis: true,
         },
         {
             title: 'Puesto',

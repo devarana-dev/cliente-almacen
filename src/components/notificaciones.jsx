@@ -81,7 +81,7 @@ const Notificaciones = () => {
         return <Menu items={options} /> 
     }
     const handleVisit = () => {
-        if(active){
+        if(active && notificaciones.length > 0){
             dispatch(updateNotificationeAction())
         }
     }

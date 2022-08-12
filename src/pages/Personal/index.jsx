@@ -51,6 +51,7 @@ const Personal = () => {
           key: 'apellidoPaterno',
           sorter: (a, b) => a.nombre.localeCompare(b.nombre),
           ...getColumnSearchProps('apellidoPaterno'),
+          ellipsis: true,
         },
         {
           title: 'Apellido Materno',
@@ -58,6 +59,7 @@ const Personal = () => {
           key: 'apellidoMaterno',
           sorter: (a, b) => a.nombre.localeCompare(b.nombre),
           ...getColumnSearchProps('apellidoMaterno'),
+          ellipsis: true,
         },
         {
           title: 'Fecha Ingreso',
@@ -65,6 +67,7 @@ const Personal = () => {
           key: 'fechaIngreso',
           sorter: (a, b) => a.nombre.localeCompare(b.nombre),
           render: (text, record) => ( moment(record.fechaIngreso).format('DD/MM/YYYY') ),
+          ellipsis: true,
         },
         {
           title: 'Dirigido Por',
@@ -72,7 +75,7 @@ const Personal = () => {
           key: 'residente',
           sorter: (a, b) => a.residente.localeCompare(b.nombre),
           ...getColumnSearchProps('residente'),
-
+          ellipsis: true,
         },
         {
             title: 'Acciones',

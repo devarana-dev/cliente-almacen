@@ -70,7 +70,8 @@ const Insumos = () => {
         key: 'unidadMedida',
         sorter: (a, b) => a.unidadMedida.localeCompare(b.unidadMedida),
         ...getColumnSearchProps('unidadMedida'),
-        width: 200
+        width: 200,
+        ellipsis: true,
     },
     {
         title: 'Estatus',

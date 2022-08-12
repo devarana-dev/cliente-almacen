@@ -248,7 +248,7 @@ export default function Home() {
 
     return (
        <> 
-        <div className="flex content-center align-middle m-auto h-full w-full sm:max-w-screen-md">
+        <div className="flex content-center align-middle m-auto h-full w-full sm:max-w-screen-sm">
             <div className='grid grid-cols-12 m-auto w-full'>
             <div className="col-span-12">
                 <h1 className='text-center text-dark lg:text-3xl text-base font-bold py-2'> Estatus de Vales de Salida de Almacén </h1>
