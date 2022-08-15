@@ -134,7 +134,11 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
     };
     
     const handleSubmitVale = () => {
-        dispatch(createValeAction(vale))
+        if(vale.listaInsumos > 0) {
+            dispatch(createValeAction(vale))
+        }else {
+            message.error('Debes agregar al menos un insumo')
+        }
     }
 
 
@@ -155,7 +159,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
     return ( 
     <>
 
-    <Table columns={columns} dataSource={dataSource} scroll={{ y: 150 }} style={{height: 250}} className="create-vale"/>
+    <Table columns={columns} dataSource={dataSource} scroll={{ y: 150 }} style={{height: 250}} className="create-vale" loading={isLoading} />
 
     <Form
         layout="horizontal"
@@ -223,7 +227,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
         <Button type='danger' htmlType='button' onClick={ () => confirm(2) }>
             Cancelar
         </Button>
-        <Button type='ghost' htmlType='button' onClick={ async () => { const statusValue = 1; await setVale({ ...vale, statusVale: statusValue }); confirm(1)  }} >
+        <Button type='ghost' htmlType='button' onClick={ async () => { const statusValue = 1; await setVale({ ...vale, statusVale: statusValue }); confirm(1)  }} disabled={ !listaInsumos.length > 0 } >
             Enviar
         </Button>
 

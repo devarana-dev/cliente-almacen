@@ -61,7 +61,7 @@ export default (state = initialState, action) => {
                 errors: null,
                 editedPersonal: null,
                 personal: state.personal.map(item => ( item.id === action.payload.id ? action.payload : item )),
-                updated: true
+                updated: true,
             }
             
         case types.DELETE_PERSONAL_SUCCESS:

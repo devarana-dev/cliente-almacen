@@ -91,7 +91,7 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                     hasFeedback
                 >
                     <Select 
-                        filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
+                        filterOption={(input, option) => option.children.toString().toLowerCase().includes(input.toLowerCase())}
                         showSearch
                         onChange= { (e) => { handleChangeObra(e);  } }
                         name="obraId"         

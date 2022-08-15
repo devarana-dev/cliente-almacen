@@ -50,7 +50,8 @@ export default (state = initialState, action) => {
                 isLoading: false,
                 errors: null,
                 niveles: state.niveles.map(nivel => nivel.id === action.payload.id ? action.payload : nivel),
-                updated: true
+                updated: true,
+                editedNivel: null,
             }
         case types.GET_NIVEL_SUCCESS:
             return {

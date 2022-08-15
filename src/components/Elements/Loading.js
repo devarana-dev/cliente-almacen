@@ -7,13 +7,14 @@ export default function Loading() {
         <div className="loading">
             <div className="loading__spinner">
                 <div className="loader">
-                    <span>L</span>
-                    <span>O</span>
+                    <span>C</span>
                     <span>A</span>
-                    <span>D</span>
-                    <span>I</span>
-                    <span>N</span>
+                    <span>R</span>
                     <span>G</span>
+                    <span>A</span>
+                    <span>N</span>
+                    <span>D</span>
+                    <span>O</span>
                 </div>
             </div>
         </div>

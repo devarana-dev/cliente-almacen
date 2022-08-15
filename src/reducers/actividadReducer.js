@@ -63,7 +63,8 @@ export default (state = initialState, action) => {
                 isLoading: false,
                 errors: null,
                 actividades: state.actividades.map(actividad => actividad.id === action.payload.id ? action.payload : actividad),
-                updated: true
+                updated: true,
+                editedActividad: null,
             }
         
         case types.DELETE_ACTIVIDAD_SUCCESS:

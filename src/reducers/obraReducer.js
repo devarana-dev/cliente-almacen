@@ -56,7 +56,8 @@ export default (state = initialState, action) => {
                 isLoading: false,
                 errors: null,
                 obra: state.obra.map(obra => ( obra._id === action.payload._id ? action.payload : obra )),
-                updated: true
+                updated: true,
+                editedObra: null,
             }
         case types.DELETE_OBRA_SUCCESS:
             return {

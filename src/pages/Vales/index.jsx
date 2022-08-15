@@ -2,7 +2,7 @@
 import { BellOutlined, CheckCircleOutlined, FileTextOutlined, PieChartOutlined, PlusCircleOutlined, StopOutlined } from '@ant-design/icons';
 import { cancelDetalleAction, cancelValeAction, closeValeAction, completeValeSalida, deliverValeAction, getAllValesAction, getCountValeSalidaAction, searchValeAction } from '../../actions/valeActions';
 import { BsInfoCircle } from 'react-icons/bs'
-import { Button, Table, Tag, Modal, Input, Badge, Avatar, Image, Tooltip } from 'antd';
+import { Button, Table, Tag, Modal, Input, Badge, Avatar, Image, Tooltip, Spin } from 'antd';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
@@ -25,34 +25,31 @@ const ValesSalida = () => {
     const { vales, errors, delivered, updated, isLoading, count, deleted } = useSelector( state => state.vales )
     const { userAuth } = useSelector( state => state.auth )
     const { userPermission } = useSelector(state => state.permisos);
+    const [ tableReady , setTableReady ] = useState(false)
     const [ dataSource, setDataSource ] = useState([]);
     const [ dataNestedSource, setDataNestedSource ] = useState([])
     const [ validarCantidad, setValidarCantidad ] = useState(true)
     const [activeExpRow, setActiveExpRow] = useState();
     const [ loadedColumn , setLoad ] = useState(false)
     const [ displayComentarios, setComentarios ] = useState('')
-    const [ displayInsumo, setDisplayInsumo ] = useState({
-        
-    })
-
+    const [ displayInsumo, setDisplayInsumo ] = useState({ })
     
-    const [ visible, setVisible] = useState(
-        {
+    const [ visible, setVisible] = useState({
             entrega: false,
             cancelar: false,
             cerrar: false,
             enktrl:false,
             comentarios:false,
             insumoInfo:false
-        }
-    );
+    });
 	
     const [ entrega, setEntrega ] = useState({
         id: 0,
         valeSalidaId: 0,
         insumoId: 0,
         cantidadEntregada: 0,
-        type: 1
+        type: 1,
+        comentarios: ''
     })
 
     const [ cancel, setCancel ] = useState({
@@ -154,10 +151,12 @@ const ValesSalida = () => {
 			))
 		)
 
-        if((hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ) && !loadedColumn){
+        if((hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ) && !loadedColumn ){
             setLoad(true)
             setColumns([...columns, actionColumn])
         }
+
+        setTableReady(true)
         // eslint-disable-next-line
     }, [vales])
 
@@ -317,13 +316,11 @@ const ValesSalida = () => {
                 render: (text, record, index) => (
                     record.status === 1 ?
                     <Tag color="blue" className='w-full text-center'> Nuevo </Tag>
-                    : 
-                    record.status === 2 ?
-                    <Tag key={index} className='w-full text-center' color="orange">Parcial</Tag> 
+                    : record.status === 2 ? <Tag key={index} className='w-full text-center' color="orange">Parcial</Tag> 
+                    : record.status === 6 ? <Tag key={index} className='w-full text-center' color="volcano">Parcial</Tag>
                     : record.status === 3 ? <Tag key={index} className='w-full text-center' color="green">Entregado</Tag> 
                     : record.status === 4 ? <Tag key={index} className='w-full text-center' color="red">Cancelado</Tag>
                     : record.status === 5 ? <Tag key={index} className='w-full text-center' color="magenta">Cerrado</Tag>
-                    : record.status === 6 ? <Tag key={index} className='w-full text-center' color="volcano">Parcial</Tag>
                     : null
                 ),
                 width: '6%'
@@ -385,7 +382,7 @@ const ValesSalida = () => {
                             }
                             {
                                 hasPermission(userPermission, '/eliminar-vales') ? 
-                                <Tooltip placement='topRight' title="Cerrar Insumo"> <Button className="icon" htmlType='button' onClick={ () => handleCancel(2, record.id) } type='icon-danger'> <StopOutlined className='align-middle text-xl' /> </Button> </Tooltip>
+                                <Tooltip placement='topRight' title="Cancelar Insumo"> <Button className="icon" htmlType='button' onClick={ () => handleCancel(2, record.id) } type='icon-danger'> <StopOutlined className='align-middle text-xl' /> </Button> </Tooltip>
                                 : null
                             }
                         </div>
@@ -547,7 +544,7 @@ const ValesSalida = () => {
 
 
     if(!hasPermission(userPermission, '/ver-vales') && !isLoading ) return <Forbidden/>
-    
+    if( !tableReady ) return <Spin tip='Cargando...' size='large' className='mt-5 mx-auto'/>
     return ( 
         <>
             {
@@ -635,10 +632,10 @@ const ValesSalida = () => {
             />
 
             <Modal
-                title="Confirmación"
+                title={`${entrega.type === 1 ? 'Entrega Completa' : 'Entrega Parcial' }`}
                 visible={visible.entrega}
                 onOk={ () => handleSubmit() }
-                onCancel={hideModal}
+                onCancel={ hideModal }
                 okText="Enviar"
                 cancelText="Cancelar"
                 okButtonProps={{ disabled: !validarCantidad }}
@@ -652,9 +649,11 @@ const ValesSalida = () => {
                     :
                     entrega.type === 2 ?
                     <>
-                        <p>Estás seguro que harás una entrega parcial, solo tienes 24h para completar la entrega. </p>
-                        <p>Cúantos entregarás?</p>
+                        <p>Estás seguro que harás una entrega parcial, solo tienes este día para completar la entrega. </p>
+                        <label>Cúantos entregarás?</label>
                         <Input className='my-3' type="number" value={entrega.cantidadEntregada} name="cantidadEntrega" onChange={ handleChange } status={ !validarCantidad ? 'error' : null }/>
+                       <label htmlFor="">Explica por qué?</label>
+                        <Input className='my-3' type="text" value={entrega.comentarios} name="comentarios" onChange={ (e) => setEntrega({ ...entrega, comentarios: e.target.value  }) }  />
                         <span className='py-2 text-danger'>
                             { !validarCantidad ? 
                                 `No puede ser mayor a ${ entrega.cantidadSolicitada - buscarEntregado(entrega.valeSalidaId, entrega.id) } `
@@ -672,7 +671,7 @@ const ValesSalida = () => {
             </Modal>
 
             <Modal
-                title="Confirmación"
+                title="Cancelación de Vale"
                 visible={visible.cancelar}
                 onOk={ () => handleSubmitCancel() }
                 onCancel={hideModal}
@@ -690,7 +689,7 @@ const ValesSalida = () => {
             </Modal> 
 
             <Modal
-                title="Subir Enkontrol"
+                title="Registro de vale"
                 visible={visible.enktrl}
                 onOk={ () => handleSubmitClose() }
                 onCancel={hideModal}
@@ -699,7 +698,7 @@ const ValesSalida = () => {
                 okButtonProps={{ disabled: !enkontrol.salidaEnkontrol }}
                 >
                     <p>Ingresa el folio de enkontrol una vez generado</p>
-                    <TextArea className='my-3' value={enkontrol.salidaEnkontrol} onChange={ (e) => setEnkontrol({ ...enkontrol,  salidaEnkontrol: e.target.value})}/>
+                    <Input type="text" className='my-3' value={enkontrol.salidaEnkontrol} onChange={ (e) => setEnkontrol({ ...enkontrol,  salidaEnkontrol: e.target.value})} />
             </Modal>
 
             <Modal 
@@ -785,11 +784,7 @@ const ValesSalida = () => {
                             </>
                         : null }   
                     </>
-            : null }
-
-                    
-
-                    
+                : null }
                 </div>                
             </Modal>
         </>    

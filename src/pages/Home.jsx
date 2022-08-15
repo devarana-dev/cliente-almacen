@@ -14,7 +14,7 @@ export default function Home() {
     const { count } = useSelector( state => state.vales)
     const [ dataValues, setDataValues ] = useState({})
 
-    const [filter, setFilter] = useState("")
+    const [filter, setFilter] = useState("hoy")
     const [filterDate, setFilterDate ] = useState("Hoy")
     ChartJS.register(ArcElement, Tooltip, Legend);
     
@@ -59,7 +59,7 @@ export default function Home() {
 
     const options = {
         layout: {
-            padding: 10
+            padding: 20
         },
 
         plugins: {

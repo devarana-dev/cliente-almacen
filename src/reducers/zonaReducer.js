@@ -59,7 +59,7 @@ export default (state = initialState, action) => {
                 isLoading: false,
                 errors: null,
                 zonas: state.zonas.filter(zona => zona.id !== action.payload.id),
-                deleted: true
+                deleted: true,
             }
 
         case types.DELETE_ZONA_ERROR:
