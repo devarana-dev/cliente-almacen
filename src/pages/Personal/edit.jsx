@@ -110,9 +110,6 @@ const EditPersonal = () => {
             <Form.Item 
                 label="Apellido Materno" 
                 name="apellidoMaterno" 
-                rules={[
-                    { required: true, message: 'Debes ingresar un apellido materno' },
-                ]} 
                 hasFeedback>   
                 <Input name="apellidoMaterno" onChange={handleChange}/>
             </Form.Item>

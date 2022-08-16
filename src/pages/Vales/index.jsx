@@ -84,12 +84,12 @@ const ValesSalida = () => {
         title: 'Acciones',
         dataIndex: 'statusValue',
         key: `statusVale`,
-        className:"text-center",
+        className:"",
         render: (text, record) => (
             <div>
                 { 
                     record.statusVale === 1 ? 
-                    <div className='flex justify-center text-center'>
+                    <div className='flex justify-start'>
                         { hasPermission(userPermission, '/editar-vales') ? 
                             <Tooltip title="Entrega Completa" placement='topRight'>
                                 <Button type='icon-primary' className='icon' onClick={ () => handleEntrega(record, 3)}> <CheckCircleOutlined className='ml-0 align-middle text-xl' /> </Button>
@@ -116,10 +116,10 @@ const ValesSalida = () => {
                         }
                     </>
                     : 
-                   <div className="h-6">
+                   <div className="h-6 justify-start flex">
                         { record.salidaEnkontrol || record.comentarios || record.salidaEnkontrol !== null || record.comentarios !== null ? 
                             <Tooltip title="Ver Información" placement='topRight'>
-                                <Button type='icon-danger'><BsInfoCircle className='text-xl' onClick={() => { setComentarios(record); showModal({...visible, comentarios: true}); }}/></Button> 
+                                <Button type='icon-danger' className='px-2'><BsInfoCircle className='text-xl' onClick={() => { setComentarios(record); showModal({...visible, comentarios: true}); }}/></Button> 
                             </Tooltip>
                             : null 
                         }
@@ -371,7 +371,7 @@ const ValesSalida = () => {
                 render: (text, record, index) => (
                     hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ?
                         record.status === 1 || record.status === 2?
-                        <div key={index} className="flex justify-center">
+                        <div key={index} className="">
                             {
                                 hasPermission(userPermission, '/editar-vales') ? 
                                 <>
@@ -387,7 +387,7 @@ const ValesSalida = () => {
                             }
                         </div>
                         : 
-                        <div className="flex justify-center h-6" key={index}> 
+                        <div className="flex justify-start h-6" key={index}> 
                        
                         <Button type='icon-warning' onClick={ () => { setDisplayInsumo(record); showModal({...visible, insumoInfo: true}); } } htmlType='button' className='icon'><BsInfoCircle className='text-xl align-middle' /> </Button>
                         

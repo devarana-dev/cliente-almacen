@@ -90,9 +90,6 @@ const CreatePersonal = () => {
             <Form.Item 
                 label="Apellido Materno" 
                 name="apellidoMaterno" 
-                rules={[
-                    { required: true, message: 'Debes ingresar un apellido materno' },
-                ]} 
                 hasFeedback>   
                 <Input name="apellidoMaterno" value={apellidoMaterno} onChange={handleChange}/>
             </Form.Item>
