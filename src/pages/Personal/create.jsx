@@ -20,10 +20,9 @@ const CreatePersonal = () => {
         nombre: "",
         apellidoPaterno: "",
         apellidoMaterno: "",
-        fechaIngreso: "",
         especialidad: ""
     });
-    const {nombre, apellidoPaterno, apellidoMaterno, fechaIngreso, especialidad} = personal
+    const {nombre, apellidoPaterno, apellidoMaterno, especialidad} = personal
 
 
     useEffect(() => {
@@ -108,17 +107,6 @@ const CreatePersonal = () => {
                 hasFeedback>   
                 <Input name="especialidad" value={especialidad} onChange={handleChange}/>
             </Form.Item>
-
-            <Form.Item 
-                label="Fecha Ingreso" 
-                name="fechaIngreso" 
-                rules={[
-                    { required: true, message: 'Debes seleccionar una fecha de ingreso', type: 'date' },
-                ]} 
-                hasFeedback> 
-
-               <DatePicker name="fechaIngreso" format={'DD-MM-YYYY'} type="date" value={fechaIngreso} className ="w-full" onChange={ (text, dateString) => setPersonal({...personal, fechaIngreso: dateString}) }/>
-            </Form.Item>               
 
 
             <Form.Item className="py-5">

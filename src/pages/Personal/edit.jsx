@@ -24,7 +24,6 @@ const EditPersonal = () => {
         nombre: "",
         apellidoPaterno: "",
         apellidoMaterno: "",
-        fechaIngreso: "",
         especialidad: ""
     });
 
@@ -37,14 +36,8 @@ const EditPersonal = () => {
         
 
         if(editedPersonal){
-            setPersonal({
-                ...editedPersonal,
-                fechaIngreso: moment(editedPersonal.fechaIngreso),
-            })
-            form.setFieldsValue({
-                ...editedPersonal,
-                fechaIngreso: moment(editedPersonal.fechaIngreso)
-            })
+            setPersonal({ ...editedPersonal, })
+            form.setFieldsValue({ ...editedPersonal, })
         }
         // eslint-disable-next-line
     }, [editedPersonal])
@@ -133,20 +126,7 @@ const EditPersonal = () => {
                 hasFeedback>   
                 <Input name="especialidad" onChange={handleChange}/>
             </Form.Item>
-
-            <Form.Item 
-                label="Fecha Ingreso" 
-                name="fechaIngreso" 
-                rules={[
-                    { required: true, message: 'Debes seleccionar fecha de ingreso', },
-                ]} 
-                hasFeedback> 
-
-               <DatePicker name="fechaIngreso" format={'DD-MM-YYYY'} className="w-full" onChange={ (text, dateString) => setPersonal({...personal, fechaIngreso: dateString}) }/>                   
-            </Form.Item>
-
-
-                
+              
             
 
             <Form.Item className="py-5">
