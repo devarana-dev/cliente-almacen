@@ -34,7 +34,8 @@ export default (state = initialState, action) => {
                 ...state,
                 usuarios: action.payload,
                 isLoading: false,
-                errors: null
+                errors: null,
+                editedUsuario: action.payload,
             }
         
         case types.GET_USER_SUCCESS:

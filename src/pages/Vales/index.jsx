@@ -49,7 +49,7 @@ const ValesSalida = () => {
         insumoId: 0,
         cantidadEntregada: 0,
         type: 1,
-        comentarios: ''
+        comentarios: null
     })
 
     const [ cancel, setCancel ] = useState({
@@ -117,7 +117,7 @@ const ValesSalida = () => {
                     </>
                     : 
                    <div className="h-6">
-                        { record.salidaEnkontrol || record.comentarios ? 
+                        { record.salidaEnkontrol || record.comentarios || record.salidaEnkontrol !== null || record.comentarios !== null ? 
                             <Tooltip title="Ver Información" placement='topRight'>
                                 <Button type='icon-danger'><BsInfoCircle className='text-xl' onClick={() => { setComentarios(record); showModal({...visible, comentarios: true}); }}/></Button> 
                             </Tooltip>
@@ -388,10 +388,9 @@ const ValesSalida = () => {
                         </div>
                         : 
                         <div className="flex justify-center h-6" key={index}> 
-                        { userAuth.tipoUsuario_id !== 3 ?
+                       
                         <Button type='icon-warning' onClick={ () => { setDisplayInsumo(record); showModal({...visible, insumoInfo: true}); } } htmlType='button' className='icon'><BsInfoCircle className='text-xl align-middle' /> </Button>
-                            : null
-                        }
+                        
                         </div>
                     : null
                 ),
@@ -545,6 +544,7 @@ const ValesSalida = () => {
 
     if(!hasPermission(userPermission, '/ver-vales') && !isLoading ) return <Forbidden/>
     if( !tableReady ) return <Spin tip='Cargando...' size='large' className='mt-5 mx-auto'/>
+
     return ( 
         <>
             {
@@ -607,6 +607,7 @@ const ValesSalida = () => {
                     </div>
                 </div>               
            
+           { tableReady ?
             <Table 
             className='tableVales' 
             loading={isLoading} 
@@ -630,6 +631,7 @@ const ValesSalida = () => {
             }}
 
             />
+            :null }
 
             <Modal
                 title={`${entrega.type === 1 ? 'Entrega Completa' : 'Entrega Parcial' }`}
@@ -652,8 +654,8 @@ const ValesSalida = () => {
                         <p>Estás seguro que harás una entrega parcial, solo tienes este día para completar la entrega. </p>
                         <label>Cúantos entregarás?</label>
                         <Input className='my-3' type="number" value={entrega.cantidadEntregada} name="cantidadEntrega" onChange={ handleChange } status={ !validarCantidad ? 'error' : null }/>
-                       <label htmlFor="">Explica por qué?</label>
-                        <Input className='my-3' type="text" value={entrega.comentarios} name="comentarios" onChange={ (e) => setEntrega({ ...entrega, comentarios: e.target.value  }) }  />
+                       {/* <label htmlFor="">Explica por qué?</label>
+                        <Input className='my-3' type="text" value={entrega.comentarios} name="comentarios" onChange={ (e) => setEntrega({ ...entrega, comentarios: e.target.value  }) }  /> */}
                         <span className='py-2 text-danger'>
                             { !validarCantidad ? 
                                 `No puede ser mayor a ${ entrega.cantidadSolicitada - buscarEntregado(entrega.valeSalidaId, entrega.id) } `
@@ -743,8 +745,6 @@ const ValesSalida = () => {
                 : null
                 }
             </Modal>
-
-
 
             <Modal
                 visible={visible.insumoInfo}

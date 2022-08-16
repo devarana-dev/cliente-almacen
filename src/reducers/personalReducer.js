@@ -34,7 +34,8 @@ export default (state = initialState, action) => {
                 ...state,
                 personal: action.payload,
                 isLoading: false,
-                errors: null
+                errors: null,
+                editedPersonal: null,
             }
         
         case types.GET_PERSONAL_SUCCESS:

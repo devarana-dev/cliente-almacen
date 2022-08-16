@@ -33,7 +33,8 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
-                actividades: action.payload
+                actividades: action.payload,
+                editedActividad: null
             }
 
         case types.GET_ACTIVIDAD_SUCCESS:

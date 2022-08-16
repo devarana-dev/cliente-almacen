@@ -33,7 +33,8 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
-                zonas: action.payload
+                zonas: action.payload,
+                editedZona: null,
             }
 
         case types.GET_ZONA_SUCCESS:

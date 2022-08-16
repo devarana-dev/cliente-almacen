@@ -134,11 +134,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
     };
     
     const handleSubmitVale = () => {
-        if(vale.listaInsumos > 0) {
-            dispatch(createValeAction(vale))
-        }else {
-            message.error('Debes agregar al menos un insumo')
-        }
+        dispatch(createValeAction(vale))
     }
 
 

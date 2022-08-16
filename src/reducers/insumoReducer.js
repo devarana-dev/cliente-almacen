@@ -49,7 +49,8 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
-                insumos: action.payload
+                insumos: action.payload,
+                editedInsumo: null,
             }
         case types.CREATE_INSUMO_SUCCESS:
             return {

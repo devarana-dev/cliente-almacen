@@ -33,7 +33,8 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
-                obra: action.payload
+                obra: action.payload,
+                editedObra: null,
             }
         case types.GET_OBRA_SUCCESS:
             return {

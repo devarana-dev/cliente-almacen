@@ -34,7 +34,8 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
-                niveles: action.payload
+                niveles: action.payload,
+                editedNivel: null,
             }
         case types.CREATE_NIVEL_SUCCESS:
             return {

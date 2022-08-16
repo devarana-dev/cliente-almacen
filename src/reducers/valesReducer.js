@@ -134,7 +134,7 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
-                vales: state.vales.map(vale => ( vale.id === action.payload.valeSalida.id ? action.payload.valeSalida : vale )),
+                vales: state.vales.map( vale => ( vale.id === action.payload.valeSalida.id ? action.payload.valeSalida : vale ) ),
                 updated: true
             }
         case types.CLOSE_DETALLE_SUCCESS:

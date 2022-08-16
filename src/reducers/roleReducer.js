@@ -45,7 +45,8 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 roles: action.payload,
-                isLoading: false
+                isLoading: false,
+                editedRole: null,
             }
 
         case types.UPDATE_ROLE_SUCCESS:

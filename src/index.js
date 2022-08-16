@@ -11,11 +11,9 @@ moment.locale('es-mx')
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <StrictMode>
-        <ConfigProvider locale={es_ES}>
+    <ConfigProvider locale={es_ES}>
         <App />
-        </ConfigProvider>
-    </StrictMode>
+    </ConfigProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function
