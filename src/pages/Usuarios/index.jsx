@@ -27,11 +27,13 @@ const Usuarios = () => {
     }, [])
 
     useEffect(() => {
-		setDataSource(
-			usuarios.map( (item, i) => (
-				{ key: i, acciones:item.id, rol: item.role.nombre, ...item }
-			))
-		)
+		if(usuarios){
+            setDataSource(
+                usuarios.map( (item, i) => (
+                    { key: i, acciones:item.id, rol: item.role.nombre, ...item }
+                ))
+            )
+        }
     },[usuarios])
 
 

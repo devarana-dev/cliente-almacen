@@ -634,7 +634,7 @@ const ValesSalida = () => {
             :null }
 
             <Modal
-                title={`${entrega.type === 1 ? 'Entrega Completa' : 'Entrega Parcial' }`}
+                title={`${entrega.type === 1 || entrega.type === 3 ? 'Entrega Completa' : 'Entrega Parcial' }`}
                 visible={visible.entrega}
                 onOk={ () => handleSubmit() }
                 onCancel={ hideModal }
@@ -645,17 +645,15 @@ const ValesSalida = () => {
                 {
                     entrega.type === 1 ?
                     <>
-                        <p> Estás seguro que has entregado esto? </p>
-                        <p>No se podrá modificar después</p>
+                        <p> ¿Estás seguro de realizar una entrega <span className='underline'>total del insumo solicitado</span>? </p>
+                        <p> No podrá modificarse posteriormente. </p>
                     </>
                     :
                     entrega.type === 2 ?
                     <>
-                        <p>Estás seguro que harás una entrega parcial, solo tienes este día para completar la entrega. </p>
-                        <label>Cúantos entregarás?</label>
+                        <p>Estás a punto de realizar una entrega <span className='underline'>parcial del insumo solicitado</span>, solo tienes este día para completar la entrega. </p>
+                        <label>Por favor indica qué cantidad entregarás ahora:</label>
                         <Input className='my-3' type="number" value={entrega.cantidadEntregada} name="cantidadEntrega" onChange={ handleChange } status={ !validarCantidad ? 'error' : null }/>
-                       {/* <label htmlFor="">Explica por qué?</label>
-                        <Input className='my-3' type="text" value={entrega.comentarios} name="comentarios" onChange={ (e) => setEntrega({ ...entrega, comentarios: e.target.value  }) }  /> */}
                         <span className='py-2 text-danger'>
                             { !validarCantidad ? 
                                 `No puede ser mayor a ${ entrega.cantidadSolicitada - buscarEntregado(entrega.valeSalidaId, entrega.id) } `
@@ -665,15 +663,15 @@ const ValesSalida = () => {
                     : 
                     entrega.type === 3 ?
                     <>
-                        <p> Estás seguro que se ha entregado todos los insumos del vale? </p>
-                        <p>No se podrá modificar después</p>
+                        <p> ¿Estás seguro de realizar una entrega <span className='underline'>total de este vale</span>? </p>
+                        <p> No podrá modificarse posteriormente. </p>
                     </>
                     : null
                 }
             </Modal>
 
             <Modal
-                title="Cancelación de Vale"
+                title="Entrega Cancelada"
                 visible={visible.cancelar}
                 onOk={ () => handleSubmitCancel() }
                 onCancel={hideModal}
@@ -682,10 +680,20 @@ const ValesSalida = () => {
                 okButtonProps={{ disabled: !cancel.comentarios }}
                 >
                     {
-                        userAuth && userAuth.tipoUsuario_id === 3 ?
-                        <p>No se entregará <span className='font-bold'>NINGÚN</span> insumo, explica porqué </p>
+                        cancel.type === 1 ?
+                        <>
+                            <p> ¿ stás seguro de realizar la <span className='underline'>cancelación-cierre</span> de este vale ? </p>
+                            <label htmlFor="">Describe el motivo</label>
+                        </>
                         :
-                        <p>Estás seguro que quieres cancelar este insumo? Añade algún comentario </p>
+                        cancel.type === 2 ?
+                        <>
+                            <p> ¿Estás seguro de realizar la <span className='underline'>cancelación de entrega del insumo</span> solicitado ? </p>
+                            <label htmlFor="">Describe el motivo</label>
+                        </>
+                        :
+                        null 
+
                     }
                     <TextArea className='my-3' value={cancel.comentarios} onChange={ (e) => setCancel({ ...cancel,  comentarios: e.target.value})}/>
             </Modal> 
@@ -699,7 +707,7 @@ const ValesSalida = () => {
                 cancelText="Cancelar"
                 okButtonProps={{ disabled: !enkontrol.salidaEnkontrol }}
                 >
-                    <p>Ingresa el folio de enkontrol una vez generado</p>
+                    <p>Ingresa el folio de Enkontrol una vez generado</p>
                     <Input type="text" className='my-3' value={enkontrol.salidaEnkontrol} onChange={ (e) => setEnkontrol({ ...enkontrol,  salidaEnkontrol: e.target.value})} />
             </Modal>
 
