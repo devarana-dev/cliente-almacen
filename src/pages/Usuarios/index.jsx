@@ -27,7 +27,8 @@ const Usuarios = () => {
     }, [])
 
     useEffect(() => {
-		if(usuarios){
+        if(usuarios.length > 0){
+            console.log(usuarios);            
             setDataSource(
                 usuarios.map( (item, i) => (
                     { key: i, acciones:item.id, rol: item.role.nombre, ...item }
@@ -70,7 +71,7 @@ const Usuarios = () => {
           title: 'Apellido Paterno',
           dataIndex: 'apellidoPaterno',
           key: 'apellidoPaterno',
-          sorter: (a, b) => a.nombre.localeCompare(b.nombre),
+          sorter: (a, b) => a.apellidoPaterno.localeCompare(b.apellidoPaterno),
           ...getColumnSearchProps('apellidoPaterno'),
           ellipsis: true,
         },
@@ -78,7 +79,7 @@ const Usuarios = () => {
           title: 'Apellido Materno',
           dataIndex: 'apellidoMaterno',
           key: 'apellidoMaterno',
-          sorter: (a, b) => a.nombre.localeCompare(b.nombre),
+          sorter: (a, b) => a.apellidoMaterno.localeCompare(b.apellidoMaterno),
           ...getColumnSearchProps('apellidoMaterno'),
           ellipsis: true,
         },
@@ -86,14 +87,14 @@ const Usuarios = () => {
             title: 'Email',
             dataIndex: 'email',
             key: 'email',
-            sorter: (a, b) => a.nombre.localeCompare(b.nombre),
+            sorter: (a, b) => a.email.localeCompare(b.email),
             ...getColumnSearchProps('email'),
         },
         {
             title: 'Rol Usuario',
             dataIndex: 'rol',
             key: 'rol',
-            sorter: (a, b) => a.nombre.localeCompare(b.nombre),
+            sorter: (a, b) => a.rol.localeCompare(b.rol),
             ...getColumnSearchProps('rol'),
             ellipsis: true,
         },
@@ -101,7 +102,7 @@ const Usuarios = () => {
             title: 'Puesto',
             dataIndex: 'puesto',
             key: 'puesto',
-            sorter: (a, b) => a.nombre.localeCompare(b.nombre),
+            sorter: (a, b) => a.puesto.localeCompare(b.puesto),
             ...getColumnSearchProps('puesto'),
         },
         {
