@@ -10,15 +10,10 @@ export default function Forbidden() {
 
     return(
         visible?
-            <div className="forbidden">
-                <div className="forbidden__content">
-                    <div className="forbidden__content__title">
-                        <h1>403</h1>
-                    </div>
-                    <div className="forbidden__content__text">
-                        <h2>Prohibido</h2>
-                        <p>No Tienes permiso de acceder</p>
-                    </div>
+            <div className="flex h-full">
+                <div className="max-w-md m-auto text-center">
+                    <h1 className="text-3xl md:text-5xl font-bold text-dark">Error 403: <span className="text-xl md:text-3xl"> No tienes autorización </span> </h1>
+                    <p className="text-base md:text-2xl font-normal text-dark">No tienes permiso de acceder</p>
                 </div>
             </div>
         : null
