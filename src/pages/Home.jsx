@@ -29,6 +29,7 @@ export default function Home() {
                 "Cancelado": count.cancelado
             })
         }
+        // eslint-disable-next-line 
     }, [count])
 
     const data = {
@@ -96,7 +97,7 @@ export default function Home() {
             ctx.save();
         },
         afterDraw: (chart, args, options) => {
-            const { ctx, chartArea: { height, width } } = chart
+            const { ctx, chartArea: { height } } = chart
             CanvasRenderingContext2D.prototype.wrapText = function (text, x, y, maxWidth, lineHeight) {
 
                 var lines = text.split("\n");

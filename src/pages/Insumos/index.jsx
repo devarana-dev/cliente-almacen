@@ -1,6 +1,6 @@
  
-import { DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Table, Popconfirm, Modal, Switch } from 'antd';
+import {PlusCircleOutlined } from '@ant-design/icons';
+import { Button, Table, Modal, Switch } from 'antd';
 
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';

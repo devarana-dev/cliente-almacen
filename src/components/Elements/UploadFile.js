@@ -38,6 +38,7 @@ export default function UploadFile(params) {
 
     useEffect(() => {
         uploadedState()
+        // eslint-disable-next-line
     }, [upload])
 
   const props = {

@@ -1,5 +1,3 @@
-import { Spin } from "antd";
-
 import "../../assets/scss/loading.scss";
 
 export default function Loading() {

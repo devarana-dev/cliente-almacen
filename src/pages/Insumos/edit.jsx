@@ -1,4 +1,4 @@
-import { Form, Input, Select, Button, notification } from "antd";
+import { Form, Input, Select, Button } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams} from "react-router-dom";
@@ -54,6 +54,7 @@ const EditInsumos = () => {
 
     useEffect(() => {
         displayAlert()
+        // eslint-disable-next-line 
     }, [errors, updated])
 
     const displayAlert = () => {
