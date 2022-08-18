@@ -49,7 +49,7 @@ const CreateZonas = () => {
             navigate('/zonas')
         }
     }
-    if(!hasPermission(userPermission, '/crear-zonas')) return <Forbidden/>
+    if(!hasPermission(userPermission, 'crear zonas')) return <Forbidden/>
     return ( 
         <Form
             className="max-w-screen-md mx-auto"

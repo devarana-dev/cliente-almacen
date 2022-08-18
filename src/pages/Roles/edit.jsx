@@ -159,9 +159,7 @@ const EditRoles = () => {
     }
     
     // if(isLoading) return <Loading />
-    if(!hasPermission(userPermission, '/editar-roles') && !isLoading ) return <Forbidden/>
-    if(!editedRole) return <div>No se encontro el rol</div>
-
+    if(!hasPermission(userPermission, 'editar roles') && !isLoading ) return <Forbidden/>
     
     return ( 
         <Form

@@ -111,7 +111,7 @@ const CreateRoles = () => {
         }
     }
 
-    if(!hasPermission(userPermission, '/crear-roles')) return <Forbidden/>
+    if(!hasPermission(userPermission, 'crear roles')) return <Forbidden/>
     return ( 
         <Form
             className="max-w-screen-md mx-auto"

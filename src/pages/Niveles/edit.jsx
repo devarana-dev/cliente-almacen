@@ -111,7 +111,7 @@ const EditNiveles = () => {
         }
     }
 
-    if(!hasPermission(userPermission, '/editar-niveles')) return <Forbidden/>
+    if(!hasPermission(userPermission, 'editar niveles')) return <Forbidden/>
     if(isLoading) return <Loading />
     if(!editedNivel) return <div>No se encontro el nivel</div>
     return ( 

@@ -64,16 +64,16 @@ const Roles = () => {
             key: 'acciones',
             render: (id) => 
             <div className='flex justify-around'> 
-                { hasPermission(userPermission, '/editar-roles') ? <Button type='icon-warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='text-xl'/> </Button>  : null } 
+                { hasPermission(userPermission, 'editar roles') ? <Button type='icon-warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='text-xl'/> </Button>  : null } 
                 {
-                    hasPermission(userPermission, '/eliminar-roles') ? 
+                    hasPermission(userPermission, 'eliminar roles') ? 
                 <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
                     <Button type='icon-danger'> <DeleteOutlined className='text-xl'/> </Button> 
                 </Popconfirm> : null
                 }
 			</div>,
-            width: groupPermission(userPermission, ['/editar-roles', '/eliminar-roles']) ? 100 : 0,
-            className: groupPermission(userPermission, ['/editar-roles', '/eliminar-roles']) ? 'block' : 'hidden',
+            width: groupPermission(userPermission, ['editar roles', 'eliminar roles']) ? 100 : 0,
+            className: groupPermission(userPermission, ['editar roles', 'eliminar roles']) ? 'block' : 'hidden',
         }
         
     ];
@@ -98,13 +98,13 @@ const Roles = () => {
         }
     }
 
-    if(!hasPermission(userPermission, '/ver-roles') && !isLoading ) return <Forbidden/>
+    if(!hasPermission(userPermission, 'ver roles') && !isLoading ) return <Forbidden/>
 
     return ( 
     <>
             <div className='py-2 flex justify-end'>          
             {
-                hasPermission(userPermission, '/crear-roles') ?
+                hasPermission(userPermission, 'crear roles') ?
                 <Button type='icon-secondary-new' onClick={() => navigate('create')} className="fixed right-10 bottom-8 z-50 items-center lg:block hidden"><PlusCircleOutlined /></Button>
                 : null 
             }

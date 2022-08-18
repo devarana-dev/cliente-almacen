@@ -76,7 +76,7 @@ const CreateObra = () => {
     }
 
     
-    if(!hasPermission(userPermission, '/crear-obras')) return <Forbidden/>
+    if(!hasPermission(userPermission, 'crear obras')) return <Forbidden/>
     
     return ( 
         <Form

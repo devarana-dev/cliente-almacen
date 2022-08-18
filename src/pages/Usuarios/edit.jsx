@@ -72,7 +72,7 @@ const EditUsuario = () => {
         dispatch(updateUsuarioAction(usuario));
     }
 
-    if(!hasPermission(userPermission, '/editar-usuarios') && !isLoading ) return <Forbidden/>
+    if(!hasPermission(userPermission, 'editar usuarios') && !isLoading ) return <Forbidden/>
     
     if(isLoading) return <Loading />
     if(!editedUsuario) return <div>No se encontro el personal</div>

@@ -111,27 +111,27 @@ const Usuarios = () => {
             key: 'acciones',
             render: (id) => 
             <div className='flex justify-around'> 
-                { hasPermission(userPermission, '/editar-usuarios') ? <Button type='icon-warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='text-xl'/> </Button>  : null } 
+                { hasPermission(userPermission, 'editar usuarios') ? <Button type='icon-warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='text-xl'/> </Button>  : null } 
                 {
-                    hasPermission(userPermission, '/eliminar-usuarios') ? 
+                    hasPermission(userPermission, 'eliminar usuarios') ? 
                 <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
                     <Button type='icon-danger'> <DeleteOutlined className='text-xl'/> </Button> 
                 </Popconfirm> : null
                 }
 			</div>,
-            width: groupPermission(userPermission, ['/editar-usuarios', '/eliminar-usuarios']) ? 100 : 0,
-            className: groupPermission(userPermission, ['/editar-usuarios', '/eliminar-usuarios']) ? 'block' : 'hidden',
+            width: groupPermission(userPermission, ['editar usuarios', 'eliminar usuarios']) ? 100 : 0,
+            className: groupPermission(userPermission, ['editar usuarios', 'eliminar usuarios']) ? 'block' : 'hidden',
         }
         
     ];
 
-    if(!hasPermission(userPermission, '/ver-usuarios') && !isLoading ) return <Forbidden/>
+    if(!hasPermission(userPermission, 'ver usuarios') && !isLoading ) return <Forbidden/>
 
     return ( 
     <>
         <div className='py-2 flex justify-end'>          
         {
-            hasPermission(userPermission, '/crear-usuarios') ?
+            hasPermission(userPermission, 'crear usuarios') ?
            <Button type='icon-secondary-new' onClick={() => navigate('create')} className="fixed right-10 bottom-8 z-50 items-center lg:block hidden"><PlusCircleOutlined /></Button>
             : null 
         }

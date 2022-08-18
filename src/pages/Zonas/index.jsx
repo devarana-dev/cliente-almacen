@@ -75,16 +75,16 @@ const Zonas = () => {
             key: 'acciones',
             render: (id) => 
             <div className='flex justify-around'> 
-            { hasPermission(userPermission, '/editar-zonas') ? <Button type='icon-warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='text-xl'/> </Button>  : null } 
+            { hasPermission(userPermission, 'editar zonas') ? <Button type='icon-warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='text-xl'/> </Button>  : null } 
             {
-                hasPermission(userPermission, '/eliminar-zonas') ? 
+                hasPermission(userPermission, 'eliminar zonas') ? 
             <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
                 <Button type='icon-danger'> <DeleteOutlined className='text-xl'/> </Button> 
             </Popconfirm> : null
             }
         </div>,
-        width: groupPermission(userPermission, ['/editar-zonas', '/eliminar-zonas']) ? 100 : 0,
-        className: groupPermission(userPermission, ['/editar-zonas', '/eliminar-zonas']) ? 'block' : 'hidden',
+        width: groupPermission(userPermission, ['editar zonas', 'eliminar zonas']) ? 100 : 0,
+        className: groupPermission(userPermission, ['editar zonas', 'eliminar zonas']) ? 'block' : 'hidden',
         }
         
     ];
@@ -109,13 +109,13 @@ const Zonas = () => {
         }
     }
 
-    if(!hasPermission(userPermission, '/ver-zonas') && !isLoading ) return <Forbidden/>
+    if(!hasPermission(userPermission, 'ver zonas') && !isLoading ) return <Forbidden/>
 
     return ( 
     <>
         <div className='py-2 flex justify-end'>          
             {
-            hasPermission(userPermission, '/crear-niveles') ?
+            hasPermission(userPermission, 'crear zonas') ?
               <Button type='icon-secondary-new' onClick={() => navigate('create')} className="fixed right-10 bottom-8 z-50 items-center lg:block hidden"><PlusCircleOutlined /></Button>
                 : null 
             }

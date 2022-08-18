@@ -98,15 +98,15 @@ const Insumos = () => {
         key: 'acciones',
         render: (id) => 
         <div className='flex justify-around'> 
-        {   hasPermission(userPermission, '/eliminar-insumos') ? 
+        {   hasPermission(userPermission, 'eliminar insumos') ? 
             <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
                 <Button type='icon-danger'> <DeleteOutlined className='text-xl'/> </Button> 
             </Popconfirm>
             : '-'
         }
         </div>,
-        width: groupPermission(userPermission, ['/editar-obras', '/eliminar-insumos']) ? 100 : 0,
-        className: groupPermission(userPermission, ['/editar-obras', '/eliminar-insumos']) ? 'block' : 'hidden',
+        width: groupPermission(userPermission, ['/editar-obras', 'eliminar insumos']) ? 100 : 0,
+        className: groupPermission(userPermission, ['/editar-obras', 'eliminar insumos']) ? 'block' : 'hidden',
     }
       
   ];
@@ -142,14 +142,14 @@ const Insumos = () => {
     
     
     
-    if(!hasPermission(userPermission, '/ver-insumos') && !isLoading) return <Forbidden/>
+    if(!hasPermission(userPermission, 'ver insumos') && !isLoading) return <Forbidden/>
     
 
     return ( 
     <>
 		<div className='py-2 flex justify-end'>
 			{
-                hasPermission(userPermission, '/crear-insumos') ?
+                hasPermission(userPermission, 'crear insumos') ?
                 <div>
                     <Button type='default' onClick={() => showModal()}>Importar</Button>
                     <Button type='icon-secondary-new' onClick={() => navigate('create')} className="fixed right-10 bottom-8 z-50 items-center lg:block hidden"><PlusCircleOutlined /></Button>

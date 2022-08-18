@@ -13,7 +13,7 @@ import ekIcon from "../../assets/img/Original-EK.png"
 import ekIcon2 from "../../assets/img/Original-EK2.png"
 import openNotificationWithIcon from '../../hooks/useNotification';
 import moment from 'moment';
-import { hasPermission } from '../../utils/hasPermission';
+import { groupPermission, hasPermission } from '../../utils/hasPermission';
 import Forbidden from '../../components/Elements/Forbidden';
 // import { ResizableTitle } from "../../utils/resizableTable";
 
@@ -23,13 +23,12 @@ const ValesSalida = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const { vales, errors, delivered, updated, isLoading, count, deleted } = useSelector( state => state.vales )
-    const { userAuth } = useSelector( state => state.auth )
     const { userPermission } = useSelector(state => state.permisos);
     const [ tableReady , setTableReady ] = useState(false)
     const [ dataSource, setDataSource ] = useState([]);
     const [ dataNestedSource, setDataNestedSource ] = useState([])
     const [ validarCantidad, setValidarCantidad ] = useState(true)
-    const [activeExpRow, setActiveExpRow] = useState();
+    const [ activeExpRow, setActiveExpRow] = useState();
     const [ loadedColumn , setLoad ] = useState(false)
     const [ displayComentarios, setComentarios ] = useState('')
     const [ displayInsumo, setDisplayInsumo ] = useState({ })
@@ -90,14 +89,14 @@ const ValesSalida = () => {
                 { 
                     record.statusVale === 1 ? 
                     <div className='flex justify-start'>
-                        { hasPermission(userPermission, '/editar-vales') ? 
+                        { hasPermission(userPermission, 'entregar vales') ? 
                             <Tooltip title="Entrega Completa" placement='topRight'>
                                 <Button type='icon-primary' className='icon' onClick={ () => handleEntrega(record, 3)}> <CheckCircleOutlined className='ml-0 align-middle text-xl' /> </Button>
                             </Tooltip> 
                             : null
                         }
                         {
-                            hasPermission(userPermission, '/eliminar-vales') ? 
+                            hasPermission(userPermission, 'eliminar vales') ? 
                             <Tooltip title="Cancelar Entrega" placement='topRight'>
                                 <Button type='icon-danger' className='icon' onClick={() => handleCancel(1, record.id)}> <StopOutlined className='ml-0 align-middle text-xl' /> </Button> 
                             </Tooltip>
@@ -106,7 +105,7 @@ const ValesSalida = () => {
                     </div> : 
                    record.statusVale === 3 || record.statusVale === 4  ? 
                     <>
-                        { hasPermission(userPermission, '/editar-vales') ? 
+                        { hasPermission(userPermission, 'registrar vales') ? 
                         <Tooltip title="Registro Enkontrol" placement='topRight'>
                             <Button type='icon-warning' className='icon' onClick={()=> handleClose(record.id)}> 
                                 <img src={ekIcon} alt="sa" width={16} className="py-0.5" />
@@ -117,9 +116,9 @@ const ValesSalida = () => {
                     </>
                     : 
                    <div className="h-6 justify-start flex">
-                        { record.salidaEnkontrol || record.comentarios || record.salidaEnkontrol !== null || record.comentarios !== null ? 
+                        { record.salidaEnkontrol || record.comentarios  ? 
                             <Tooltip title="Ver Información" placement='topRight'>
-                                <Button type='icon-danger' className='px-2'><BsInfoCircle className='text-xl' onClick={() => { setComentarios(record); showModal({...visible, comentarios: true}); }}/></Button> 
+                                <Button type='icon-danger' className='px-2' onClick={() => { setComentarios(record); showModal({...visible, comentarios: true}); }}><BsInfoCircle className='text-xl'/></Button> 
                             </Tooltip>
                             : null 
                         }
@@ -151,7 +150,7 @@ const ValesSalida = () => {
 			))
 		)
 
-        if((hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ) && !loadedColumn ){
+        if((groupPermission(userPermission, ['entregar vales', 'registrar vales', 'eliminar vales', 'ver vales']) ) && !loadedColumn ){
             setLoad(true)
             setColumns([...columns, actionColumn])
         }
@@ -209,6 +208,13 @@ const ValesSalida = () => {
                 </div>
             : ''
             ),
+            onFilter: (value, record) => record.statusVale === value,
+            filterMode: 'tree',
+            filters: [
+                { text: 'Abierto', value: 'Abierto', children: [{ text: 'Nuevo', value: 1 }, {text: 'Parcial', value: 2}] },
+                { text: 'Cerrado', value: 'Cerrado', children: [{ text: 'Parcial', value: 3 }, {text: 'Entregado', value: 4}, {text: 'Cancelado', value: 5 }] },
+                { text: 'Registrado', value: 'Parcial', children: [{ text: 'Entregado', value: 6 }, {text: 'Parcial', value: 7}] },
+            ]
         },
         {
             title: 'Estatus',
@@ -369,33 +375,27 @@ const ValesSalida = () => {
                 dataIndex: 'acciones',
                 key: `acciones-${nanoid()}`,
                 render: (text, record, index) => (
-                    hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ?
-                        record.status === 1 || record.status === 2?
-                        <div key={index} className="">
-                            {
-                                hasPermission(userPermission, '/editar-vales') ? 
-                                <>
-                                    <Tooltip placement='topRight' title="Entrega Completa"><Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 1) } type='icon-primary'> <CheckCircleOutlined className='align-middle text-xl' /> </Button></Tooltip>
-                                    <Tooltip placement='topRight' title="Entrega Parcial"><Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 2) } type='icon-warning'> <PieChartOutlined className='align-middle text-xl' /> </Button> </Tooltip>
-                                </>
-                                : null
-                            }
-                            {
-                                hasPermission(userPermission, '/eliminar-vales') ? 
-                                <Tooltip placement='topRight' title="Cancelar Insumo"> <Button className="icon" htmlType='button' onClick={ () => handleCancel(2, record.id) } type='icon-danger'> <StopOutlined className='align-middle text-xl' /> </Button> </Tooltip>
-                                : null
-                            }
-                        </div>
-                        : 
-                        <div className="flex justify-start h-6" key={index}> 
-                       
+                    record.status === 1 || record.status === 2?
+                    <div key={index} className="">
+                        {
+                            hasPermission(userPermission, 'entregar vales') ? 
+                            <>
+                                <Tooltip placement='topRight' title="Entrega Completa"><Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 1) } type='icon-primary'> <CheckCircleOutlined className='align-middle text-xl' /> </Button></Tooltip>
+                                <Tooltip placement='topRight' title="Entrega Parcial"><Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 2) } type='icon-warning'> <PieChartOutlined className='align-middle text-xl' /> </Button> </Tooltip>
+                            </>
+                            : null
+                        }
+                        {
+                            hasPermission(userPermission, 'eliminar vales') ? 
+                            <Tooltip placement='topRight' title="Cancelar Insumo"> <Button className="icon" htmlType='button' onClick={ () => handleCancel(2, record.id) } type='icon-danger'> <StopOutlined className='align-middle text-xl' /> </Button> </Tooltip>
+                            : null
+                        }
+                    </div>
+                    :  
+                    <div className="flex justify-start h-6" key={index}> 
                         <Button type='icon-warning' onClick={ () => { setDisplayInsumo(record); showModal({...visible, insumoInfo: true}); } } htmlType='button' className='icon'><BsInfoCircle className='text-xl align-middle' /> </Button>
-                        
-                        </div>
-                    : null
+                    </div>
                 ),
-                width: hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ? '8%': 0,
-                className: hasPermission(userPermission, '/editar-vales') || hasPermission(userPermission, '/eliminar-vales') ? 'block' : 'hidden',
             },
  
         ]
@@ -542,13 +542,13 @@ const ValesSalida = () => {
     }
 
 
-    if(!hasPermission(userPermission, '/ver-vales') && !isLoading ) return <Forbidden/>
+    if(!hasPermission(userPermission, 'ver vale') && !isLoading ) return <Forbidden/>
     if( !tableReady ) return <Spin tip='Cargando...' size='large' className='mt-5 mx-auto'/>
 
     return ( 
         <>
             {
-                hasPermission(userPermission, '/crear-vales') ?
+                hasPermission(userPermission, 'crear vales') ?
                 <Button type='icon-secondary-new' onClick={() => navigate('nuevo')} className="fixed right-3 bottom-8 hidden lg:block z-50 items-center"><PlusCircleOutlined /></Button>
                 : null 
             }

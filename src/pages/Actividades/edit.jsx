@@ -62,9 +62,8 @@ const EditActividades = () => {
             navigate('/actividades')
         }
     }
-    if(!hasPermission(userPermission, '/crear-actividades') && !isLoading ) return <Forbidden/>
+    if(!hasPermission(userPermission, 'editar actividades') && !isLoading ) return <Forbidden/>
     if(isLoading) return <Loading />
-    if(!editedActividad) return <div>No se encontro la actividad</div>
     return ( 
         <Form
             className="max-w-screen-md mx-auto"

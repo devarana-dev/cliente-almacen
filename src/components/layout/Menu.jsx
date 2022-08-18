@@ -30,28 +30,28 @@ export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
 
     const items = [
 	getItem('Inicio', '/', <AppstoreOutlined />),
-    groupPermission( userPermission, ['/crear-vales', '/ver-vales']) ?
+    groupPermission( userPermission, ['crear vales', 'ver vales', 'ver vale' ]) ?
     getItem('Vales', 'sub1', <LogoutOutlined />, [
-        hasPermission(userPermission, '/crear-vales') ? getItem('Generar', '/vales-salida/nuevo') : null,
-        hasPermission(userPermission, '/ver-vales') ? getItem('Consultar', '/vales-salida') : null,
+        hasPermission(userPermission, 'crear vales') ? getItem('Generar', '/vales-salida/nuevo') : null,
+        groupPermission(userPermission, ['ver vales', 'ver vale']) ? getItem('Consultar', '/vales-salida') : null,
     ]) 
     : null,
-    groupPermission( userPermission, ['/ver-usuarios', '/ver-roles', '/ver-insumos', '/ver-obras', '/ver-niveles', '/ver-zonas', '/ver-actividades', '/ver-personal']) ?
+    groupPermission( userPermission, ['ver usuarios', 'ver roles', 'ver insumos', 'ver obras', 'ver niveles', 'ver zonas', 'ver actividades', 'ver personal']) ?
         getItem('Gestión', 'sub3', <SettingOutlined />, [
-            groupPermission( userPermission, ['/ver-usuarios', '/ver-roles']) ?
+            groupPermission( userPermission, ['ver usuarios', 'ver roles']) ?
                 getItem('Usuarios', 'subsub1', <UserOutlined />, [
-                    hasPermission(userPermission, '/ver-usuarios') ? getItem('Usuario', '/usuarios'): null,
-                    hasPermission(userPermission, '/ver-roles') ? getItem('Roles', '/roles') : null,
+                    hasPermission(userPermission, 'ver usuarios') ? getItem('Usuario', '/usuarios'): null,
+                    hasPermission(userPermission, 'ver roles') ? getItem('Roles', '/roles') : null,
                 ], 'group')
             : null,
-            groupPermission( userPermission, ['/ver-insumos', '/ver-obras', '/ver-niveles', '/ver-zonas', '/ver-actividades', '/ver-personal']) ?
+            groupPermission( userPermission, ['ver insumos', 'ver obras', 'ver niveles', 'ver zonas', 'ver actividades', 'ver personal']) ?
                 getItem('Generales', 'subsub2', <UserOutlined />, [
-                    hasPermission(userPermission, '/ver-insumos') ? getItem('Insumos', '/insumos') : null,
-                    hasPermission(userPermission, '/ver-obras') ? getItem('Obras', '/obra') : null,
-                    hasPermission(userPermission, '/ver-niveles') ? getItem('Niveles', '/niveles') : null,
-                    hasPermission(userPermission, '/ver-zonas') ? getItem('Zonas', '/zonas') : null,
-                    hasPermission(userPermission, '/ver-actividades') ? getItem('Actividades', '/actividades') : null,
-                    hasPermission(userPermission, '/ver-personal') ? getItem('Trabajadores', '/personal') : null,
+                    hasPermission(userPermission, 'ver insumos') ? getItem('Insumos', '/insumos') : null,
+                    hasPermission(userPermission, 'ver obras') ? getItem('Obras', '/obra') : null,
+                    hasPermission(userPermission, 'ver niveles') ? getItem('Niveles', '/niveles') : null,
+                    hasPermission(userPermission, 'ver zonas') ? getItem('Zonas', '/zonas') : null,
+                    hasPermission(userPermission, 'ver actividades') ? getItem('Actividades', '/actividades') : null,
+                    hasPermission(userPermission, 'ver personal') ? getItem('Trabajadores', '/personal') : null,
                 ], 'group')
             : null,		
         ])

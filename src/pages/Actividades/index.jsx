@@ -74,16 +74,16 @@ const Actividades = () => {
                     key: 'acciones',
                     render: (id) => 
                     <div className='flex justify-around'> 
-                        { hasPermission(userPermission, '/editar-actividades') ? <Button type='icon-warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='text-xl'/> </Button>  : null } 
+                        { hasPermission(userPermission, 'editar actividades') ? <Button type='icon-warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='text-xl'/> </Button>  : null } 
                         {
-                            hasPermission(userPermission, '/eliminar-actividades') ? 
+                            hasPermission(userPermission, 'eliminar actividades') ? 
                         <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
                             <Button type='icon-danger'> <DeleteOutlined className='text-xl'/> </Button> 
                         </Popconfirm> : null
                         }
                     </div>,
-                    width: groupPermission(userPermission, ['/editar-actividades', '/eliminar-actividades']) ? 100 : 0,
-                    className: groupPermission(userPermission, ['/editar-actividades', '/eliminar-actividades']) ? 'block' : 'hidden',
+                    width: groupPermission(userPermission, ['editar actividades', 'eliminar actividades']) ? 100 : 0,
+                    className: groupPermission(userPermission, ['editar actividades', 'eliminar actividades']) ? 'block' : 'hidden',
                 }
                 
         ];
@@ -108,13 +108,15 @@ const Actividades = () => {
             }
         }
 
-        if(!hasPermission(userPermission, '/ver-actividades') && !isLoading ) return <Forbidden/>
+        console.log(!hasPermission(userPermission, 'ver actividades') && !isLoading);
+
+        if(!hasPermission(userPermission, 'ver actividades') && !isLoading ) return <Forbidden/>
 
         return ( 
         <>
             <div className='py-2 flex justify-end'>          
                 {
-                    hasPermission(userPermission, '/crear-actividades') ?
+                    hasPermission(userPermission, 'crear actividades') ?
                   <Button type='icon-secondary-new' onClick={() => navigate('create')} className="fixed right-10 bottom-8 z-50 items-center lg:block hidden"><PlusCircleOutlined /></Button>
                     : null 
                 }

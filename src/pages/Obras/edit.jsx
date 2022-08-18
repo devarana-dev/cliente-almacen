@@ -89,7 +89,7 @@ const EditObra = () => {
     }
     
     
-    if(!hasPermission(userPermission, '/editar-obras')) return <Forbidden/>
+    if(!hasPermission(userPermission, 'editar obras')) return <Forbidden/>
     
     if(isLoading) return <Loading />
     if(!editedObra) return <div>No se encontro el centro de costo</div>

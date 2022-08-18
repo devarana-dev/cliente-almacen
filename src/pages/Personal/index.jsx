@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { deletePersonalAction, getAllPersonalAction } from '../../actions/personalActions';
-import moment from 'moment';
 import { getColumnSearchProps } from '../../hooks/useFilter'
 import openNotificationWithIcon from '../../hooks/useNotification';
 import { cleanErrorAction } from '../../actions/globalActions';
@@ -82,16 +81,16 @@ const Personal = () => {
             key: 'acciones',
             render: (id) => 
             <div className='flex justify-around'> 
-                { hasPermission(userPermission, '/editar-personal') ? <Button type='icon-warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='text-xl'/> </Button>  : null } 
+                { hasPermission(userPermission, 'editar personal') ? <Button type='icon-warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='text-xl'/> </Button>  : null } 
                 {
-                    hasPermission(userPermission, '/eliminar-personal') ? 
+                    hasPermission(userPermission, 'eliminar personal') ? 
                 <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
                     <Button type='icon-danger'> <DeleteOutlined className='text-xl'/> </Button> 
                 </Popconfirm> : null
                 }
             </div>,
-            width: groupPermission(userPermission, ['/editar-personal', '/eliminar-personal']) ? 100 : 0,
-            className: groupPermission(userPermission, ['/editar-personal', '/eliminar-personal']) ? 'block' : 'hidden',
+            width: groupPermission(userPermission, ['editar personal', 'eliminar personal']) ? 100 : 0,
+            className: groupPermission(userPermission, ['editar personal', 'eliminar personal']) ? 'block' : 'hidden',
         }
         
     ];
@@ -117,12 +116,12 @@ const Personal = () => {
     }
 
 
-    if(!hasPermission(userPermission, '/ver-personal')) return <Forbidden />
+    if(!hasPermission(userPermission, 'ver personal')) return <Forbidden />
     return ( 
     <>
         <div className='py-2 flex justify-end'>          
         {
-            hasPermission(userPermission, '/crear-personal') ?
+            hasPermission(userPermission, 'crear personal') ?
           <Button type='icon-secondary-new' onClick={() => navigate('create')} className="fixed right-10 lg:bottom-8 bottom-28 z-50 items-center"><PlusCircleOutlined /></Button>
             : null 
         }

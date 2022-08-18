@@ -55,7 +55,7 @@ const CreateInsumos = () => {
     }
 
     const { userPermission } = useSelector(state => state.permisos);
-    if(!hasPermission(userPermission, '/crear-insumos')) return <Forbidden/>
+    if(!hasPermission(userPermission, 'crear insumos')) return <Forbidden/>
     
     return ( 
         <Form

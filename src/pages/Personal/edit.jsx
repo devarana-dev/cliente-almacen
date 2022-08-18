@@ -1,5 +1,4 @@
-import { Form, Input, Button, DatePicker } from "antd";
-import moment from "moment";
+import { Form, Input, Button } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
@@ -73,7 +72,7 @@ const EditPersonal = () => {
         }
     }
 
-    if(!hasPermission(userPermission, '/editar-personal')) return <Forbidden/>
+    if(!hasPermission(userPermission, 'editar personal')) return <Forbidden/>
     if(isLoading) return <Loading />
     if(!editedPersonal) return <div>No se encontro el personal</div>
     

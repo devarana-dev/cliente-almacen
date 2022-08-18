@@ -95,7 +95,7 @@ const CreateNiveles = () => {
             navigate('/niveles')
         }
     }
-    if(!hasPermission(userPermission, '/editar-niveles')) return <Forbidden/>
+    if(!hasPermission(userPermission, 'editar niveles')) return <Forbidden/>
     return ( 
         <Form
             className="max-w-screen-md mx-auto"

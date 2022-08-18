@@ -1,6 +1,6 @@
 export const hasPermission = (userPermission, route) => {
     if(userPermission) {
-        return userPermission.find(permission => permission.permiso === route) ? true : false
+        return userPermission.find(permission => permission.permisos === route) ? true : false
     }
 }
 

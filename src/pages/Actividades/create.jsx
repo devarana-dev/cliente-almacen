@@ -52,7 +52,7 @@ const CreateActividades = () => {
         }
     }
 
-    if(!hasPermission(userPermission, '/crear-actividades')) return <Forbidden/>
+    if(!hasPermission(userPermission, 'crear actividades')) return <Forbidden/>
     
     return ( 
         <Form

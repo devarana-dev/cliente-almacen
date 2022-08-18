@@ -1,4 +1,4 @@
-import { Form, Input, Button, DatePicker } from "antd";
+import { Form, Input, Button } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -59,7 +59,7 @@ const CreatePersonal = () => {
         }
     }
 
-    if(!hasPermission(userPermission, '/crear-personal')) return <Forbidden/>
+    if(!hasPermission(userPermission, 'crear personal')) return <Forbidden/>
     return (
 
         <Form 

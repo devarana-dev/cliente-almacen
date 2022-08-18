@@ -60,7 +60,7 @@ const EditZonas = () => {
             navigate('/zonas')
         }
     }
-     if(!hasPermission(userPermission, '/editar-personal')) return <Forbidden/>
+     if(!hasPermission(userPermission, 'editar zonas')) return <Forbidden/>
     if(isLoading) return <Loading />
     if(!editedZona) return <div>No se encontro la Zona</div>
     return ( 

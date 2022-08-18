@@ -62,7 +62,7 @@ const CreateUsuario = () => {
         dispatch(createUsuarioAction(usuario))
     }
 
-    if(!hasPermission(userPermission, '/crear-usuarios')) return <Forbidden/>
+    if(!hasPermission(userPermission, 'crear usuarios')) return <Forbidden/>
 
     return (
         <>
