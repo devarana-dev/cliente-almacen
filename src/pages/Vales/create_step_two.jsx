@@ -116,7 +116,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
             break;
             case 2:
                 content = "¿Estás seguro que deseas cancelar? Esto borrará lo que has registrado"
-                fn = () => navigate('/acciones')
+                fn = () => navigate('/vales-salida')
             break;
                 
             default:
