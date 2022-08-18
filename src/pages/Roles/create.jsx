@@ -157,24 +157,10 @@ const CreateRoles = () => {
 
             <>
             <Divider/>
-                <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}> 
-                    Seleccionar Todos
-                </Checkbox>
-                <div className="grid grid-cols-4">
-                    <>
-                        <div className="col-span-1 py-3">
-                            <h2 className="font-bold text-dark text-xl ml-3">Ver</h2>
-                        </div>
-                        <div className="col-span-1">
-                            <h2 className="font-bold text-dark text-xl ml-3">Crear</h2>
-                        </div>
-                        <div className="col-span-1">
-                            <h2 className="font-bold text-dark text-xl ml-3">Editar</h2>
-                        </div>
-                        <div className="col-span-1">
-                            <h2 className="font-bold text-dark text-xl ml-3">Borrar</h2>
-                        </div>
-                    </>
+                <div className="block pb-6">
+                    <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}> 
+                        Seleccionar Todos
+                    </Checkbox>
                 </div>
                 <Checkbox.Group defaultValue={role.permisos} value={role.permisos} className="w-full"> 
                     <div className="grid grid-cols-4 gap-y-1">

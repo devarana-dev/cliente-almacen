@@ -1,4 +1,4 @@
-import { Button, Divider, Form, Input, Popconfirm, Select, Spin, Table, Modal, message} from "antd";
+import { Button, Divider, Form, Input, Popconfirm, Select, Spin, Table, Modal, message, InputNumber } from "antd";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
@@ -83,7 +83,8 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
     }
 
     const handleSubmit = () => {
-        if(insumo.cantidadSolicitada > 0 && insumo.cantidadSolicitada !== ''){
+        
+        if(Number(insumo.cantidadSolicitada ) > 0 && insumo.cantidadSolicitada !== ''){
             const [result] = insumos.filter( item => item.id === insumo.id )
 
             setVale({
@@ -181,7 +182,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
             > 
                 {
                     insumos.filter( item => item.centroCosto === vale.centroCosto && item.status === true ).map( item => (
-                        <Option key={item.id} value={item.id}>{`${item.nombre}`}</Option>
+                        <Option key={item.id} value={item.id}>{`${item.nombre}  |  ${item.unidadMedida}`}</Option>
                     ))
                 }
             </Select>
@@ -195,11 +196,11 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
                 name="cantidadSolicitada"
                 hasFeedback
                 rules={[
-                    { required: true, message: "Digita una cantidad", min: 0  }
+                    { required: true, message: "Digita una cantidad"  }
                 ]}
                 
             >
-                <Input min={ 0 } type="number" name="cantidadSolicitada" value={insumo.cantidadSolicitada} onChange={ handleChange }/>
+                <Input type="number" step={0.01} className="w-full" name="cantidadSolicitada" value={insumo.cantidadSolicitada} onChange={ handleChange }/>
             </Form.Item>
             <Form.Item 
                 className=" w-full col-span-1"
