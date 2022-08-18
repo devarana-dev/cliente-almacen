@@ -45,3 +45,11 @@ html{
     backdrop-filter: blur(1px);
     border: 1px solid rgba(255,255,255,0.15);
 }
+
+.ant-switch:not(.ant-switch-checked){
+    background-color: $info !important;
+}
+
+.ant-switch-checked{
+    background-color: $primary !important;
+}

@@ -106,7 +106,7 @@ const ValesSalida = () => {
                    record.statusVale === 3 || record.statusVale === 4  ? 
                     <>
                         { hasPermission(userPermission, 'registrar vales') ? 
-                        <Tooltip title="Registro Enkontrol" placement='topRight'>
+                        <Tooltip title="Registrar Enkontrol" placement='topRight'>
                             <Button type='icon-warning' className='icon' onClick={()=> handleClose(record.id)}> 
                                 <img src={ekIcon} alt="sa" width={16} className="py-0.5" />
                             </Button>
@@ -376,7 +376,7 @@ const ValesSalida = () => {
                 key: `acciones-${nanoid()}`,
                 render: (text, record, index) => (
                     record.status === 1 || record.status === 2?
-                    <div key={index} className="">
+                    <div key={index} className="inline-flex">
                         {
                             hasPermission(userPermission, 'entregar vales') ? 
                             <>
@@ -682,7 +682,7 @@ const ValesSalida = () => {
                     {
                         cancel.type === 1 ?
                         <>
-                            <p> ¿ stás seguro de realizar la <span className='underline'>cancelación-cierre</span> de este vale ? </p>
+                            <p> ¿Estás seguro de realizar la <span className='underline'>cancelación-cierre</span> de este vale ? </p>
                             <label htmlFor="">Describe el motivo</label>
                         </>
                         :

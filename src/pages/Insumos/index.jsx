@@ -1,6 +1,6 @@
  
 import { DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Table, Popconfirm, Modal } from 'antd';
+import { Button, Table, Popconfirm, Modal, Switch } from 'antd';
 
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
@@ -33,7 +33,7 @@ const Insumos = () => {
     useEffect(() => {
         setDataSource(
             insumos.map( (item, i) => (
-                { key: i, acciones:item.id, ...item }
+                { key: i, ...item }
             ))
 		)
     },[insumos])
@@ -96,12 +96,13 @@ const Insumos = () => {
         title: 'Acciones',
         dataIndex: 'acciones',
         key: 'acciones',
-        render: (id) => 
+        render: (text, record ) =>  
         <div className='flex justify-around'> 
         {   hasPermission(userPermission, 'eliminar insumos') ? 
-            <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
-                <Button type='icon-danger'> <DeleteOutlined className='text-xl'/> </Button> 
-            </Popconfirm>
+            // <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
+                // <Button type='icon-danger'> <DeleteOutlined className='text-xl'/> </Button> 
+                <Switch checkedChildren="On" unCheckedChildren="Off" defaultChecked={record.status} onChange={() => handleDelete(record.id) }  />
+            // </Popconfirm>
             : '-'
         }
         </div>,
@@ -127,7 +128,7 @@ const Insumos = () => {
             
         }
         if(deleted){
-            openNotificationWithIcon('success', 'El insumo se ha eliminado')
+            openNotificationWithIcon('success', 'El insumo se ha actualizado')
         }
     }
 

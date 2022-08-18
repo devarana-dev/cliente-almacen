@@ -93,7 +93,7 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 errors: null,
-                insumos: state.insumos.filter(insumo => insumo.id !== action.payload.id),
+                insumos: state.insumos.map(insumo => insumo.id === action.payload.id ? action.payload : insumo),
                 deleted: true
             }
 

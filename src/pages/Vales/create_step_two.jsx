@@ -180,7 +180,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
                 onChange={ (e) => {searchUnidad(e); setInsumo({...insumo, id: e }) } }
             > 
                 {
-                    insumos.filter( item => item.centroCosto === vale.centroCosto ).map( item => (
+                    insumos.filter( item => item.centroCosto === vale.centroCosto && item.status === true ).map( item => (
                         <Option key={item.id} value={item.id}>{`${item.nombre}`}</Option>
                     ))
                 }

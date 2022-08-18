@@ -27,7 +27,12 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
     const handleChangeObra =  (id) => {
         const [result] = obra.filter( item => item.id === id)
         const centroCosto = result.clave.split('-')[1].trim();
-        setVale({...vale, obraId: id, centroCosto})
+        setVale({
+            ...vale,
+            obraId: id,
+            centroCosto,
+            nivelId: 0
+        })
         setSelectedNivel(result.niveles)
     }
     
@@ -112,6 +117,7 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                     name="nivelId"
                     hasFeedback
                     label="Nivel"
+                    
                 >
                     <Select
                         filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
