@@ -33,21 +33,22 @@ export default function LayoutPrivate({children}) {
     const { Header, Sider, Content } = Layout
     const [collapsed, setCollapsed] = useState(false);
 
-    const isAuth = authProvider()
+
     const { isAuthenticated, token, isLoading, errors, logout } = useSelector( state => state.auth )
     const [hiddeable, setHiddeable] = useState(localStorage.getItem('sideBar') || false)
+    const [visible, setVisible] = useState(false);
   
     tokenAuth(token)
+    const isAuth = authProvider()    
     useEffect(() => {
         setHiddeable(localStorage.getItem('sideBar') || false)
         dispatch(validateLoginAction(isAuth))
         // eslint-disable-next-line
-    }, [isAuth])
+        return () => {
+            dispatch(getPermisoAction())
+        }
+    }, [dispatch, isAuth])
 
-    useEffect( () => {
-        dispatch(getPermisoAction())
-        // eslint-disable-next-line
-    }, [])   
  
     if( (isAuthenticated || isAuth.isAuthenticated) === false && !isLoading ){
         navigate("/login")
@@ -56,25 +57,11 @@ export default function LayoutPrivate({children}) {
     const handleSidebar = () => {
         hiddeable ? localStorage.removeItem('sideBar') : localStorage.setItem('sideBar', true)
         setHiddeable(!hiddeable)
-        
-        
     }
-
     
-    const [visible, setVisible] = useState(false);
-
-    const showModal = () => {
-        setVisible(true);
-    };
-
-    const hideModal = () => {
-        setVisible(false);
-    };
-
-    const handleLogout = () => {
-        dispatch(logoutAction())
-    }
-
+    const showModal = () => setVisible(true);
+    const hideModal = () => setVisible(false); 
+    const handleLogout = () => dispatch(logoutAction())
 
     useEffect(() => {
         if(logout && !isLoading){
@@ -88,6 +75,10 @@ export default function LayoutPrivate({children}) {
                 description: errors
             })
         }
+        return () => {
+            dispatch(getPermisoAction())
+        }
+        
         // eslint-disable-next-line
     }, [logout])
     

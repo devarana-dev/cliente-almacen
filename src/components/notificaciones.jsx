@@ -5,12 +5,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import { getNotificationesAction, updateNotificationeAction } from '../actions/notificationActions';
+import { hasPermission } from '../utils/hasPermission';
 
 const Notificaciones = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const { notificaciones } = useSelector( state => state.notificaciones)
-    const { userAuth } = useSelector( state => state.auth)
+    const { userPermission } = useSelector(state => state.permisos);
     const [active, setActive] = useState(true)
 
 
@@ -22,39 +23,40 @@ const Notificaciones = () => {
     useEffect(() => {
         const accessToken = localStorage.getItem('accessToken')
         // if(accessToken){
-            const socket = io(process.env.REACT_APP_SERVER, {
-                auth: { accessToken: accessToken },
+            const socket = io( process.env.REACT_APP_SERVER, {
+                auth: { accessToken },
             });
             
-            if(userAuth && userAuth.tipoUsuario_id === 3){
-                console.log('join', userAuth.id);
-                socket.emit('join', { room: 'almacen' });
-            }
+            
 
-            socket.on('connect_error', () => {
-                setTimeout( () => socket.connect(), 5000)
+            socket.on('connect', () =>{
+                console.log('Conectado al servidor')
+               socket.emit('join', { room: 'notificaciones' })
             })
-            socket.on('notificacion', (data) => {
-                dispatch(getNotificationesAction())
-                data.map( item => {
-                    notification.open({
-                        message: "Nueva Notificación",
-                        description: item.label,
-                        key: item.uuid,
-                        type: 'info',
-                        onClick: () => {
-                            navigate('/vales-salida');
-                            notification.close(2);
-                        }
-                    }, 1000)
-                })
-            })
+
+
+            socket.on('connect_error', () => setTimeout( () => socket.connect(), 5000) )
+            // socket.on('notificacion', (data) => {
+            //     dispatch(getNotificationesAction())
+            //     data.map( item => (
+            //         notification.open({
+            //             message: "Nueva Notificación",
+            //             description: item.label,
+            //             key: item.uuid,
+            //             type: 'info',
+            //             onClick: () => {
+            //                 navigate('/vales-salida');
+            //                 notification.close(2);
+            //             }
+            //         }, 1000)
+            //     ))
+            // })
             socket.on('disconnect', () => console.log("Server disconnected"))
             
             dispatch(getNotificationesAction())
-        // eslint-disable-next-line
+
     //    }
-    }, [userAuth]);
+    }, []);
 
    
 

@@ -76,6 +76,11 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                 form={form}
                 initialValues={{
                     almacen: 4,
+                    obraId: 0,
+                    nivelId: 0,
+                    actividadId: 0,
+                    zonaId: 0,
+                    personalId: 0,
                 }}
                 className="steps-form"
             >
@@ -114,6 +119,7 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                         onChange= { (e) => { handleChangeObra(e);  } }
                         name="obraId"   
                     >
+                        <Option key={nanoid()} value={0} disabled>{ `Selecciona una opción` }</Option>
                         {
                             obra.map(item => (
                                 <Option key={item.id} value={item.id}>{item.nombre} | { item.clave }</Option>
@@ -142,7 +148,6 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                         showSearch
                         onChange={ (e) => { handleChangeNivel(e) }}
                         name="nivelId"
-                        defaultValue={0}
                     >
                         <Option key={nanoid()} value={0} disabled>{ `Selecciona una opción` }</Option>
                         {
@@ -174,7 +179,6 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                         showSearch
                         name="zonaId"
                         onChange={ (e) => { setVale({...vale, zonaId: e})}}
-                        defaultValue={0}                        
                         >
                         <Option key={nanoid()} value={0} disabled>{ `Selecciona una opción` }</Option>
                         {
@@ -206,7 +210,6 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                         disabled={selectedActividad.length === 0}
                         showSearch
                         onChange={ (e) => { setVale({...vale, actividadId: e})}}
-                        defaultValue={0}
                         >
                             <Option key={nanoid()} value={0} disabled>{ `Selecciona una opción` }</Option>
                         {
@@ -232,6 +235,7 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                         showSearch
                         onChange={ (e) => { setVale({...vale, personalId: e})}}
                         >
+                            <Option key={nanoid()} value={0} disabled>{ `Selecciona una opción` }</Option>
                         {
                             personal.map(item => (
                                 <Option key={item.id} value={item.id}>{`${item.nombre} ${item.apellidoPaterno} ${item.apellidoMaterno}`}</Option>

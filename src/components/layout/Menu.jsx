@@ -34,6 +34,7 @@ export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
     getItem('Vales', 'sub1', <LogoutOutlined />, [
         hasPermission(userPermission, 'crear vales') ? getItem('Generar', '/vales-salida/nuevo') : null,
         groupPermission(userPermission, ['ver vales', 'ver vale']) ? getItem('Consultar', '/vales-salida') : null,
+        getItem('Préstamos', '/prestamos')
     ]) 
     : null,
     groupPermission( userPermission, ['ver usuarios', 'ver roles', 'ver insumos', 'ver obras', 'ver niveles', 'ver zonas', 'ver actividades', 'ver personal']) ?

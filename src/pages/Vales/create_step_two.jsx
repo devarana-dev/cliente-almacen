@@ -1,4 +1,4 @@
-import { Button, Divider, Form, Input, Popconfirm, Select, Spin, Table, Modal, message, InputNumber } from "antd";
+import { Button, Divider, Form, Input, Popconfirm, Select, Spin, Table, Modal, message } from "antd";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,6 +8,7 @@ import {  CloseCircleOutlined, ExclamationCircleOutlined } from "@ant-design/ico
 import { createValeAction } from "../../actions/valeActions";
 import "../../assets/scss/steps.scss"
 import openNotificationWithIcon from "../../hooks/useNotification";
+import { getAllUsuariosAction } from "../../actions/usuarioActions";
 
 const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
 
@@ -18,12 +19,14 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
     const [ form ] = Form.useForm();
     const { insumos, isLoading, errors } = useSelector( state => state.insumos )
     const { created, errors:errorsVale } = useSelector(state => state.vales)
+    const { usuarios } = useSelector( state => state.usuarios)
     
     const [ dataSource, setDataSource ] = useState([]);
     const [ unidad, setUnidad ] = useState('')
     const [ insumo, setInsumo ] = useState({
         id: '',
-        cantidadSolicitada: 0
+        cantidadSolicitada: 0,
+        residentePrestamo: null
     })
 
     const { listaInsumos } = vale
@@ -31,6 +34,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
 
     useEffect(() => {
         dispatch(getAllInsumosAction())
+        dispatch(getAllUsuariosAction())
         // eslint-disable-next-line
     }, [])
 
@@ -54,6 +58,12 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
             title: 'Insumo',
             dataIndex: 'nombre',
             key: 'nombre',
+            ellipsis: true,
+        },
+        {
+            title: 'Unidad',
+            dataIndex: 'unidadMedida',
+            key: 'unidadMedida',
             ellipsis: true,
         },
         {
@@ -211,6 +221,27 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
                 <Input name="unidad" readOnly placeholder={unidad} />
             </Form.Item>
         </div>
+
+        <Divider />
+
+        <Form.Item
+            className="w-full"
+            label="Prestamo"
+            name="residentePrestamo"
+        >
+             <Select
+                notFoundContent={isLoading ? <Spin size="small" /> : null}
+                filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
+                showSearch
+                onChange={ (e) => {searchUnidad(e); setInsumo({...insumo, residentePrestamo: e }) } }
+            > 
+                {
+                   usuarios.filter( item => item.tipoUsuario_id === 5 ).map( item => (
+                        <Option key={item.id} value={item.id}>{`${item.nombre} ${item.apellidoPaterno} `}</Option>
+                    ))
+                }
+            </Select>
+        </Form.Item>
 
         <Button type="primary" className="block mx-auto" htmlType="submit"> Agregar </Button>
 

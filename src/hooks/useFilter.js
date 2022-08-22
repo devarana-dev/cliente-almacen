@@ -1,3 +1,4 @@
+import { SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Space, } from 'antd';
 import { createRef } from 'react';
 let searchText = null
@@ -5,7 +6,7 @@ let searchedColumn = null
 const searchInput = createRef();
 
 const handleSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm();
+    // confirm();
     searchText = selectedKeys[0];
     searchedColumn = dataIndex;
 };
@@ -47,6 +48,13 @@ export const getColumnSearchProps = (dataIndex) => ({
             </Button>
         </Space>
         </div>
+    ),
+    filterIcon: (filtered) => (
+        <SearchOutlined
+          style={{
+            color: filtered ? '#1890ff' : undefined,
+          }}
+        /> 
     ),
     onFilter: (value, record) =>
         record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
