@@ -1,5 +1,5 @@
 
-import { CheckCircleOutlined, EditOutlined, PlusCircleOutlined, StopOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, EditOutlined, PlusCircleOutlined, ScheduleOutlined, StopOutlined, SwapOutlined, WarningOutlined } from '@ant-design/icons';
 import { Button, Table } from 'antd';
 
 import { useEffect, useState } from 'react';
@@ -76,13 +76,55 @@ const Prestamo = () => {
             )
         },
         {
+            title: 'Estatus',
+            dataIndex: 'status',
+            key: 'status',
+            render: (text, record) => (
+            <>
+                {
+                    record.status ===  1 ? // Nuevo
+                        'Nuevo'
+                    : record.status ===  2 ? // Autorizado
+                        'Autorizado'
+                    : record.status ===  3 ? // Rechazado
+                        'Rechazado'
+                    : record.status ===  4 ? // Devuelto
+                        'Devuelto'
+                    : record.status ===  5 ? // Entregado
+                        'Entregado'
+                    : record.status ===  5 ? // Verificado
+                        'Verificado'
+                    : null
+                }
+            </>
+            )
+        },
+        {
             title: 'Acciones',
             dataIndex: 'acciones',
             key: 'acciones',
-            render: (id) => 
+            render: (text, record) => 
             <div className='flex justify-start'> 
-                <Button type='icon-primary' onClick={ () => navigate(`${id}`) }> <CheckCircleOutlined className='text-xl'/> </Button> 
-                <Button type='icon-danger' onClick={ () => navigate(`${id}`) }> <StopOutlined className='text-xl'/> </Button> 
+                {   
+                record.status ===  1 ? // nuevo
+                    record.belongsTo === userAuth.id ? 
+                    <>
+                        <Button type='icon-danger' onClick={ () => navigate(``) }> <StopOutlined className='text-xl'/> </Button> 
+                    </>    
+                    : 
+                    <>
+                        <Button type='icon-primary' onClick={ () => navigate(``) }> <CheckCircleOutlined className='text-xl'/> </Button> 
+                        <Button type='icon-danger' onClick={ () => navigate(``) }> <StopOutlined className='text-xl'/> </Button> 
+                    </>
+                : record.status === 2 ? // autorizado
+                    <Button type='icon-primary' onClick={ () => navigate(``) }> <ScheduleOutlined className='text-xl'/> </Button>
+                : record.status === 4 ? // devuelto
+                    <Button type='icon-danger' onClick={ () => navigate(``) }> <SwapOutlined className='text-xl'/> </Button>
+                : record.status === 5 ? // 
+                    <Button type='icon-danger' onClick={ () => navigate(``) }> <WarningOutlined className='text-xl'/> </Button>
+                : null
+                }
+                
             </div>,
             width: '5%',
         }

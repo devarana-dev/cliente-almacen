@@ -1,10 +1,10 @@
-import { Button, Divider, Form, Input, Popconfirm, Select, Spin, Table, Modal, message } from "antd";
+import { Button, Divider, Form, Input, Popconfirm, Select, Spin, Table, Modal, message, Tooltip } from "antd";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllInsumosAction } from "../../actions/insumoActions";
 import {nanoid} from 'nanoid'
-import {  CloseCircleOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
+import {  CloseCircleOutlined, ExclamationCircleOutlined, ShrinkOutlined } from "@ant-design/icons";
 import { createValeAction } from "../../actions/valeActions";
 import "../../assets/scss/steps.scss"
 import openNotificationWithIcon from "../../hooks/useNotification";
@@ -59,6 +59,14 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
             dataIndex: 'nombre',
             key: 'nombre',
             ellipsis: true,
+            render:(text, record) => (
+                <div className="flex items-center text-dark"> 
+                { record.residentePrestamo ? 
+                    <Tooltip title={ `Prestamo de ${usuarios.map( item => item.id === record.residentePrestamo? `${item.nombre} ${item.apellidoPaterno}` : null  )}`  }><ShrinkOutlined className="mx-1"/></Tooltip>
+                : null } 
+                { record.nombre } 
+                </div>
+            )
         },
         {
             title: 'Unidad',
@@ -103,6 +111,9 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
             })
             form.resetFields()
             setUnidad('')
+            setInsumo({
+                residentePrestamo: null
+            })
         }else {
             message.error('El insumo debe ser mayor a 0');
         }

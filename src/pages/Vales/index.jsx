@@ -134,10 +134,10 @@ const ValesSalida = () => {
             dispatch(getCountValeSalidaAction())
         // eslint-disable-next-line
     }, [])
-    
+
     useEffect(() => {
 		setDataSource(
-			vales.map( (item, i) => (
+			vales.filter( item => item.detalle_salidas.length > 0).map( (item, i) => (
 				{ 
                     key: i, 
                     residente:`${item.user.nombre} ${item.user.apellidoPaterno}`,
