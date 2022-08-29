@@ -4,29 +4,29 @@ import { types } from '../types';
 
 export function getAllPrestamosAction(){
     return async (dispatch) => {
-        dispatch(getAllPersonalRequest())
+        dispatch(getAllPrestamoRequest())
         await clientAxios.get('/prestamos')
             .then ( res => {
-                dispatch(getAllPersonalSuccess(res.data.prestamos))
+                dispatch(getAllPrestamoSuccess(res.data.prestamos))
             })
             .catch( err => {
                 console.log('Error getAllPrestamosAction', err.response);
-                dispatch(getAllPersonalError(err.response.data.message))
+                dispatch(getAllPrestamoError(err.response.data.message))
             })
     }
 }
-const getAllPersonalRequest = () => {
+const getAllPrestamoRequest = () => {
     return {
         type: types.GET_ALL_PRESTAMO
     }
 }
-const getAllPersonalSuccess = payload => {
+const getAllPrestamoSuccess = payload => {
     return {
         type: types.GET_ALL_PRESTAMO_SUCCESS,
         payload
     }
 }
-const getAllPersonalError = error => {
+const getAllPrestamoError = error => {
     return {
         type: types.GET_ALL_PRESTAMO_ERROR,
         payload: error
@@ -34,32 +34,31 @@ const getAllPersonalError = error => {
 }
 
 
-
-export function createPersonalAction(prestamo){
+export function createPrestamoAction(prestamo){
     return async (dispatch) => {
-        dispatch(createPersonalRequest())
+        dispatch(createPrestamoRequest())
         await clientAxios.post('/prestamo', prestamo)
             .then ( res => {
-                dispatch(createPersonalSuccess(res.data.prestamos))
+                dispatch(createPrestamoSuccess(res.data.prestamos))
             })
             .catch( err => {
-                console.log('Error createPersonalAction', err.response);
-                dispatch(createPersonalError(err.response.data.message))
+                console.log('Error createPrestamoAction', err.response);
+                dispatch(createPrestamoError(err.response.data.message))
             })
     }
 }
-const createPersonalRequest = () => {
+const createPrestamoRequest = () => {
     return {
         type: types.CREATE_PRESTAMO
     }
 }
-const createPersonalSuccess = payload => {
+const createPrestamoSuccess = payload => {
     return {
         type: types.CREATE_PRESTAMO_SUCCESS,
         payload
     }
 }
-const createPersonalError = error => {
+const createPrestamoError = error => {
     return {
         type: types.CREATE_PRESTAMO_ERROR,
         payload: error
@@ -67,33 +66,34 @@ const createPersonalError = error => {
 }
 
 
-export function updatePersonalAction(prestamo){
+export function updatePrestamoAction(prestamo){
     return async (dispatch) => {
-        dispatch(updatePersonalRequest())
-        await clientAxios.put(`/prestamo/${prestamo.id}`, prestamo)
+        dispatch(updatePrestamoRequest())
+        await clientAxios.put(`/prestamos`, prestamo)
             .then ( res => {
-                dispatch(updatePersonalSuccess(res.data.prestamos))
+                dispatch(updatePrestamoSuccess(res.data.prestamo))
             })
             .catch( err => {
-                console.log('Error updatePersonalAction', err.response);
-                dispatch(updatePersonalError(err.response.data.message))
+                console.log('Error updatePrestamoAction', err.response);
+                dispatch(updatePrestamoError(err.response))
             })
     }
 }
-const updatePersonalRequest = () => {
+const updatePrestamoRequest = () => {
     return {
         type: types.UPDATE_PRESTAMO
     }
 }
-const updatePersonalSuccess = payload => {
+const updatePrestamoSuccess = payload => {
     return {
         type: types.UPDATE_PRESTAMO_SUCCESS,
         payload
     }
 }
-const updatePersonalError = error => {
+const updatePrestamoError = error => {
     return {
         type: types.UPDATE_PRESTAMO_ERROR,
         payload: error
     }
 }
+

@@ -136,8 +136,9 @@ const ValesSalida = () => {
     }, [])
 
     useEffect(() => {
-		setDataSource(
-			vales.filter( item => item.detalle_salidas.length > 0).map( (item, i) => (
+
+        const result = vales.filter( item => 
+            item.detalle_salidas.every( item => item.prestamo?.status !== 1 ) ?? item ).filter( item => item.detalle_salidas.length > 0).map( (item, i) => (
 				{ 
                     key: i, 
                     residente:`${item.user.nombre} ${item.user.apellidoPaterno}`,
@@ -148,6 +149,9 @@ const ValesSalida = () => {
                     ...item 
                 }
 			))
+
+		setDataSource(
+			result
 		)
 
         if((groupPermission(userPermission, ['entregar vales', 'registrar vales', 'eliminar vales', 'ver vales']) ) && !loadedColumn ){
@@ -636,10 +640,10 @@ const ValesSalida = () => {
             <Modal
                 title={`${entrega.type === 1 || entrega.type === 3 ? 'Entrega Completa' : 'Entrega Parcial' }`}
                 visible={visible.entrega}
-                onOk={ () => handleSubmit() }
-                onCancel={ hideModal }
-                okText="Enviar"
-                cancelText="Cancelar"
+                footer={[
+                    <Button type='default' onClick={hideModal}> Cancelar </Button>,
+                    <Button type='ghost' onClick={handleSubmit}> Enviar</Button>
+                ]}
                 okButtonProps={{ disabled: !validarCantidad }}
             >
                 {
@@ -673,10 +677,10 @@ const ValesSalida = () => {
             <Modal
                 title="Entrega Cancelada"
                 visible={visible.cancelar}
-                onOk={ () => handleSubmitCancel() }
-                onCancel={hideModal}
-                okText="Enviar"
-                cancelText="Cancelar"
+                footer={[
+                    <Button type='default' onClick={hideModal}> Cancelar </Button>,
+                    <Button type='ghost' onClick={handleSubmitCancel}> Enviar </Button>
+                ]}
                 okButtonProps={{ disabled: !cancel.comentarios }}
                 >
                     {
@@ -701,11 +705,11 @@ const ValesSalida = () => {
             <Modal
                 title="Registro de vale"
                 visible={visible.enktrl}
-                onOk={ () => handleSubmitClose() }
-                onCancel={hideModal}
-                okText="Enviar"
-                cancelText="Cancelar"
                 okButtonProps={{ disabled: !enkontrol.salidaEnkontrol }}
+                footer={[
+                    <Button type='default' onClick={hideModal}> Cancelar </Button>,
+                    <Button type='ghost' onClick={handleSubmitClose}> Enviar</Button>
+                ]}
                 >
                     <p>Ingresa el folio de Enkontrol una vez generado</p>
                     <Input type="text" className='my-3' value={enkontrol.salidaEnkontrol} onChange={ (e) => setEnkontrol({ ...enkontrol,  salidaEnkontrol: e.target.value})} />

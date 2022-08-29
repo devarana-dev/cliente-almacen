@@ -162,10 +162,10 @@ const CreateUsuario = () => {
 
                 <Form.Item className="py-5">
                     <div className="flex justify-between">
-                        <Button type="dark" onClick={ () => navigate(-1)}>
+                        <Button type="default" onClick={ () => navigate(-1)}>
                             Cancelar
                         </Button>  
-                        <Button type="primary" className="" htmlType="submit">
+                        <Button type="ghost" className="" htmlType="submit">
                             Guardar
                         </Button>  
                     </div>

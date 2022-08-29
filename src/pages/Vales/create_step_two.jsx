@@ -73,6 +73,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
             dataIndex: 'unidadMedida',
             key: 'unidadMedida',
             ellipsis: true,
+            width: 80
         },
         {
             title: 'Cantidad',

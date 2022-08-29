@@ -120,10 +120,10 @@ const CreateInsumos = () => {
 
             <Form.Item className="py-5">
                 <div className="flex justify-between">
-                    <Button type="dark" onClick={ () => navigate(-1)}>
+                    <Button type="default" onClick={ () => navigate(-1)}>
                         Cancelar
                     </Button>  
-                    <Button type="primary" htmlType="submit">
+                    <Button type="ghost" htmlType="submit">
                         Guardar
                     </Button>  
                 </div>

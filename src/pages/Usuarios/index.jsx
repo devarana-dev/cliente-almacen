@@ -27,14 +27,13 @@ const Usuarios = () => {
     }, [])
 
     useEffect(() => {
-        if(usuarios.length > 0){
-            console.log(usuarios);            
+     
             setDataSource(
                 usuarios.map( (item, i) => (
                     { key: i, acciones:item.id, rol: item.role.nombre, ...item }
                 ))
             )
-        }
+        
     },[usuarios])
 
 

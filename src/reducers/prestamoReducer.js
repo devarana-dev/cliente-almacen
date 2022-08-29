@@ -41,11 +41,12 @@ export default (state = initialState, action) => {
             }
 
         case types.UPDATE_PRESTAMO_SUCCESS:
+            console.log(action.payload);
             return {
                 ...state,
                 isLoading: false,
                 errors: null,
-                prestamos: state.prestamos.map(item => ( item.id === action.payload.id ? action.payload : item )),
+                prestamos: state.prestamos.map(item => item.id === action.payload.id ? action.payload : item ),
                 updated: true,
             }
             

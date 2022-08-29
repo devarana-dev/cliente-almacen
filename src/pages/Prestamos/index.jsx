@@ -1,26 +1,37 @@
 
-import { CheckCircleOutlined, EditOutlined, PlusCircleOutlined, ScheduleOutlined, StopOutlined, SwapOutlined, WarningOutlined } from '@ant-design/icons';
-import { Button, Table } from 'antd';
+import { CheckCircleOutlined, ScheduleOutlined, StopOutlined, SwapOutlined } from '@ant-design/icons';
+import { Button, Modal, Table, Tag } from 'antd';
 
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { getAllPrestamosAction } from '../../actions/prestamoActions.js';
+import { getAllPrestamosAction, updatePrestamoAction } from '../../actions/prestamoActions.js';
 import { getColumnSearchProps } from '../../hooks/useFilter'
 import openNotificationWithIcon from '../../hooks/useNotification';
 import { cleanErrorAction } from '../../actions/globalActions';
-// import { groupPermission, hasPermission } from '../../utils/hasPermission';
-// import Forbidden from '../../components/Elements/Forbidden';
 
 const Prestamo = () => {
 
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     const [ dataSource, setDataSource ] = useState([]);
-    const { prestamos, isLoading, errors, deleted} = useSelector(state => state.prestamos);
+    const { prestamos, isLoading, errors, updated} = useSelector(state => state.prestamos);
     const { userAuth } = useSelector(state => state.auth)
-    // const { userPermission } = useSelector(state => state.permisos);
+
+    const [visible, setVisible] = useState(false);
+
+    const showModal = () => {
+      setVisible(true);
+    };
+  
+    const hideModal = () => {
+      setVisible(false);
+    };
+
+    const [ options, setOptions ] = useState({
+        id: 0,
+        action: '',
+        title: ''
+    })
 
     useEffect(() => {
         dispatch(getAllPrestamosAction())
@@ -28,9 +39,8 @@ const Prestamo = () => {
     }, [])
 
     useEffect(() => {
-
 		setDataSource( prestamos )
-    },[prestamos])
+    }, [prestamos])
 
 
     const columns = [
@@ -83,17 +93,16 @@ const Prestamo = () => {
             <>
                 {
                     record.status ===  1 ? // Nuevo
-                        'Nuevo'
+                        
+                        <Tag color={'blue'}> Nuevo </Tag>
                     : record.status ===  2 ? // Autorizado
-                        'Autorizado'
+                        <Tag color={'green'}>Autorizado</Tag>
                     : record.status ===  3 ? // Rechazado
-                        'Rechazado'
+                        <Tag color={"red"}>Rechazado</Tag>
                     : record.status ===  4 ? // Devuelto
-                        'Devuelto'
+                        <Tag color={"yellow"}>Devuelto</Tag>
                     : record.status ===  5 ? // Entregado
-                        'Entregado'
-                    : record.status ===  5 ? // Verificado
-                        'Verificado'
+                        <Tag color={"cyan"}>Entregado</Tag>
                     : null
                 }
             </>
@@ -109,19 +118,18 @@ const Prestamo = () => {
                 record.status ===  1 ? // nuevo
                     record.belongsTo === userAuth.id ? 
                     <>
-                        <Button type='icon-danger' onClick={ () => navigate(``) }> <StopOutlined className='text-xl'/> </Button> 
+                        <Button type='icon-danger' onClick={ () => handleAction(record.id, 'cancel') }> <StopOutlined className='text-xl'/> </Button> 
                     </>    
                     : 
                     <>
-                        <Button type='icon-primary' onClick={ () => navigate(``) }> <CheckCircleOutlined className='text-xl'/> </Button> 
-                        <Button type='icon-danger' onClick={ () => navigate(``) }> <StopOutlined className='text-xl'/> </Button> 
+                        <Button type='icon-primary' onClick={ () => handleAction(record.id, 'approve') }> <CheckCircleOutlined className='text-xl'/> </Button> 
+                        <Button type='icon-danger' onClick={ () =>  handleAction(record.id, 'cancel') }> <StopOutlined className='text-xl'/> </Button> 
                     </>
-                : record.status === 2 ? // autorizado
-                    <Button type='icon-primary' onClick={ () => navigate(``) }> <ScheduleOutlined className='text-xl'/> </Button>
-                : record.status === 4 ? // devuelto
-                    <Button type='icon-danger' onClick={ () => navigate(``) }> <SwapOutlined className='text-xl'/> </Button>
-                : record.status === 5 ? // 
-                    <Button type='icon-danger' onClick={ () => navigate(``) }> <WarningOutlined className='text-xl'/> </Button>
+
+                    : record.status === 2 && record.belongsTo === userAuth.id ? // autorizado
+                        <Button type='icon-primary' onClick={ () =>  handleAction(record.id, 'return') }> <SwapOutlined className='text-xl'/> </Button>
+                    : record.status === 4 && record.belongsTo !== userAuth.id ? // devuelto
+                        <Button type='icon-danger' onClick={ () =>  handleAction(record.id, 'verify') }> <ScheduleOutlined className='text-xl'/> </Button>
                 : null
                 }
                 
@@ -136,7 +144,7 @@ const Prestamo = () => {
     useEffect(() => {
         displayAlert()
         // eslint-disable-next-line
-    }, [errors, deleted])
+    }, [errors, updated])
 
     const displayAlert = () => {
         if(errors){
@@ -144,21 +152,72 @@ const Prestamo = () => {
             dispatch( cleanErrorAction() )
             
         }
-        if(deleted){
-            openNotificationWithIcon('success', 'El insumo se ha eliminado')
+        if(updated){
+            openNotificationWithIcon('success', 'El insumo se ha actualizado')
         }
     }
+
+
+    const handleAction = (id, action) => {
+        let title = ''
+        switch (action) {
+            case 'approve':
+                title = '¿Estás seguro que quieres aprovarlo?'
+            break;
+            case 'cancel':
+                title = '¿Estás seguro que quieres cancelarlo?'
+            break;
+            case 'return':
+                title = '¿Estás seguro que lo has devuelto?'
+            break;
+            case 'verify':
+                title = '¿Estás seguro que te lo han devuelto?'
+            break;
+            default:
+                break;
+        }
+
+        setOptions({
+            id, 
+            action,
+            title
+        })
+        showModal()
+        
+    }
+
+    const handleSubmit = () => {
+        dispatch(updatePrestamoAction(options))
+        hideModal()
+        setOptions({
+            id: 0,
+            action: '',
+            title: ''
+        })
+    }
+    
+    
 
 
     return ( 
     <>
         <div className='py-2 flex justify-end'>          
-            {
-                <Button type='icon-secondary-new' onClick={() => navigate('create')} className="fixed right-10 lg:bottom-8 bottom-28 z-50 items-center"><PlusCircleOutlined /></Button>
-            }
         </div>
 
-        <Table scroll={{ x: 'auto'}}  columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>
+        <Table scroll={{ x: 'auto'}} rowKey={record => record.id} columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>
+        <Modal
+        visible={visible}
+        okText="Si"
+        cancelText="Cancelar"
+        title="Confirmación"
+        footer={[
+            <Button type='default' onClick={hideModal}> Cancelar </Button>,
+            <Button type='ghost' onClick={handleSubmit}> Guardar</Button>
+        ]}
+        
+      >
+        <p>{options.title}</p>
+      </Modal>
     </>
     );
 }
