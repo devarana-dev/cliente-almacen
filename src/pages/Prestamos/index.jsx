@@ -54,7 +54,7 @@ const Prestamo = () => {
             render: (text, record) => (
                 <>
                  <div className='flex flex-row items-center'>
-                 <Avatar crossOrigin='anonymous' src={ <Image src={record.owner.picture || record.residente.picture } /> } />
+                 <Avatar crossOrigin='anonymous' src={ <Image src={ record.belongsTo !== userAuth.id ? record.residente.picture : record.owner.picture  } /> } />
                  <p className='ml-4'> {record.belongsTo === userAuth.id ? record.residente.nombre : record.owner.nombre}  </p>
                 </div>
                 </>

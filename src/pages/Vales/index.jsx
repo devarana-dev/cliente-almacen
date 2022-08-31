@@ -1,5 +1,5 @@
 
-import { BellOutlined, CheckCircleOutlined, FileTextOutlined, PieChartOutlined, PlusCircleOutlined, ShrinkOutlined, StopOutlined } from '@ant-design/icons';
+import { BellOutlined, CheckCircleOutlined, FileTextOutlined, PieChartOutlined, PlusCircleOutlined, ShrinkOutlined, StopOutlined, SwapOutlined } from '@ant-design/icons';
 import { cancelDetalleAction, cancelValeAction, closeValeAction, completeValeSalida, deliverValeAction, getAllValesAction, getCountValeSalidaAction, searchValeAction } from '../../actions/valeActions';
 import { BsInfoCircle } from 'react-icons/bs'
 import { Button, Table, Tag, Modal, Input, Badge, Avatar, Image, Tooltip, Spin } from 'antd';
@@ -15,7 +15,6 @@ import openNotificationWithIcon from '../../hooks/useNotification';
 import moment from 'moment';
 import { groupPermission, hasPermission } from '../../utils/hasPermission';
 import Forbidden from '../../components/Elements/Forbidden';
-// import { ResizableTitle } from "../../utils/resizableTable";
 
 const ValesSalida = () => {
 
@@ -32,6 +31,10 @@ const ValesSalida = () => {
     const [ loadedColumn , setLoad ] = useState(false)
     const [ displayComentarios, setComentarios ] = useState('')
     const [ displayInsumo, setDisplayInsumo ] = useState({ })
+
+
+
+    // TODO: Optimizar Modals
     
     const [ visible, setVisible] = useState({
             entrega: false,
@@ -324,8 +327,7 @@ const ValesSalida = () => {
                 dataIndex: 'acciones',
                 key: `acciones-${nanoid()}`,
                 render: (text, record, index) => (
-                    record.status === 1 ?
-                    <Tag color="blue" className='w-full text-center'> Nuevo </Tag>
+                      record.status === 1 ? <Tag key={index} className='w-full text-center' color="blue"> Nuevo </Tag>
                     : record.status === 2 ? <Tag key={index} className='w-full text-center' color="orange">Parcial</Tag> 
                     : record.status === 6 ? <Tag key={index} className='w-full text-center' color="volcano">Parcial</Tag>
                     : record.status === 3 ? <Tag key={index} className='w-full text-center' color="green">Entregado</Tag> 
@@ -341,7 +343,7 @@ const ValesSalida = () => {
                 key: `nombre-${nanoid()}`,
                 // render: item => item.nombre,
                 render: (text, record) => (
-                    <div className='flex items-center align-middle'>
+                    <div className='flex items-center align-middle' key={record.id}>
                         { record.prestamo? 
                             <Tooltip  title={ `Prestamo de ${record.prestamo.residente.nombre} ${record.prestamo.residente.apellidoPaterno}` }><ShrinkOutlined className="mx-1 text-blue-500" /></Tooltip>
                             : null 
@@ -407,7 +409,11 @@ const ValesSalida = () => {
                     :  
                     <div className="flex justify-start h-6" key={index}> 
                         <Button type='icon-warning' onClick={ () => { setDisplayInsumo(record); showModal({...visible, insumoInfo: true}); } } htmlType='button' className='icon'><BsInfoCircle className='text-xl align-middle' /> </Button>
+                        {record.status === 3? 
+                        <Button type='icon-primary' htmlType='button' className='icon'> <SwapOutlined className='text-xl align-middle'/> </Button>
+                        : null}
                     </div>
+
                 ),
             },
  
@@ -626,7 +632,7 @@ const ValesSalida = () => {
             loading={isLoading} 
             render={true}
             scroll={{ x: 'auto' }} 
-            key={record => record.id}
+            key={record => record.id + nanoid()}
             columns={columns} 
             dataSource={dataSource} 
             expandable={{
@@ -682,7 +688,6 @@ const ValesSalida = () => {
                     : null
                 }
             </Modal>
-
             <Modal
                 title="Entrega Cancelada"
                 visible={visible.cancelar}
@@ -710,7 +715,6 @@ const ValesSalida = () => {
                     }
                     <TextArea className='my-3' value={cancel.comentarios} onChange={ (e) => setCancel({ ...cancel,  comentarios: e.target.value})}/>
             </Modal> 
-
             <Modal
                 title="Registro de vale"
                 visible={visible.enktrl}
@@ -723,7 +727,6 @@ const ValesSalida = () => {
                     <p>Ingresa el folio de Enkontrol una vez generado</p>
                     <Input type="text" className='my-3' value={enkontrol.salidaEnkontrol} onChange={ (e) => setEnkontrol({ ...enkontrol,  salidaEnkontrol: e.target.value})} />
             </Modal>
-
             <Modal 
                 visible={visible.comentarios}
                 onCancel={hideModal}
@@ -766,7 +769,6 @@ const ValesSalida = () => {
                 : null
                 }
             </Modal>
-
             <Modal
                 visible={visible.insumoInfo}
                 onCancel={hideModal}

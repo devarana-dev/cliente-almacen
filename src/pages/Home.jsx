@@ -198,6 +198,7 @@ export default function Home() {
     
     const handleFilter = ( type ) => {
         setFilter(type)
+        console.log(type);
         dispatch(getCountValeSalidaAction({type}))
 
         switch (type) {

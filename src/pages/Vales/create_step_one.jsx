@@ -107,7 +107,12 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                 <Form.Item
                     className='mb-3 text-sm'
                     rules={[
-                        { required: true, message: 'Debes seleccionar un centro de costo' },
+                       { required: true, message: 'Debes seleccionar un centro de costo', validator: (rule, value) => {
+                            if(value === 0){
+                                return Promise.reject('Debes seleccionar un centro de costo')
+                            }
+                            return Promise.resolve()
+                        }},
                     ]}
                     name="obraId"
                     label="Obra / Centro de costo"
@@ -224,7 +229,12 @@ const InformacionGral = ({current, setCurrent, setVale, vale}) => {
                 <Form.Item
                     className='mb-3 text-sm'
                     rules={[
-                        { required: true, message: 'Debes seleccionar a un jefe de cuadrilla' },
+                        { required:true, validator: (rule, value) => {
+                            if(value === 0){
+                                return Promise.reject('Debes seleccionar un jefe de cuadrilla')
+                            }
+                            return Promise.resolve()
+                        }},
                     ]}
                     name="personalId"
                     hasFeedback
