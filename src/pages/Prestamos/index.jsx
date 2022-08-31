@@ -1,6 +1,6 @@
 
 import { CheckCircleOutlined, ScheduleOutlined, StopOutlined, SwapOutlined } from '@ant-design/icons';
-import { Button, Modal, Table, Tag } from 'antd';
+import { Avatar, Badge, Button, Image, Modal, Table, Tag } from 'antd';
 
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
@@ -53,7 +53,10 @@ const Prestamo = () => {
             ellipsis: true,
             render: (text, record) => (
                 <>
-                {   record.belongsTo === userAuth.id ? record.residente.nombre : record.owner.nombre  }
+                 <div className='flex flex-row items-center'>
+                 <Avatar crossOrigin='anonymous' src={ <Image src={record.owner.picture || record.residente.picture } /> } />
+                 <p className='ml-4'> {record.belongsTo === userAuth.id ? record.residente.nombre : record.owner.nombre}  </p>
+                </div>
                 </>
             )
         },
@@ -81,7 +84,12 @@ const Prestamo = () => {
             key: 'tipo',
             render: (text, record ) => (
             <>
-                {record.belongsTo === userAuth.id ? 'Yo pedí' : 'Me pidieron'}
+            {
+                record.belongsTo === userAuth.id ?
+                <Badge status='default' text='Yo pedí' />
+                :
+                <Badge status='processing' text='Me pidieron' />
+            }
             </>
             )
         },

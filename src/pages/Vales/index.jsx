@@ -1,5 +1,5 @@
 
-import { BellOutlined, CheckCircleOutlined, FileTextOutlined, PieChartOutlined, PlusCircleOutlined, StopOutlined } from '@ant-design/icons';
+import { BellOutlined, CheckCircleOutlined, FileTextOutlined, PieChartOutlined, PlusCircleOutlined, ShrinkOutlined, StopOutlined } from '@ant-design/icons';
 import { cancelDetalleAction, cancelValeAction, closeValeAction, completeValeSalida, deliverValeAction, getAllValesAction, getCountValeSalidaAction, searchValeAction } from '../../actions/valeActions';
 import { BsInfoCircle } from 'react-icons/bs'
 import { Button, Table, Tag, Modal, Input, Badge, Avatar, Image, Tooltip, Spin } from 'antd';
@@ -339,7 +339,16 @@ const ValesSalida = () => {
                 title: 'Nombre',
                 dataIndex: 'insumo',
                 key: `nombre-${nanoid()}`,
-                render: item => item.nombre,
+                // render: item => item.nombre,
+                render: (text, record) => (
+                    <div className='flex items-center align-middle'>
+                        { record.prestamo? 
+                            <Tooltip  title={ `Prestamo de ${record.prestamo.residente.nombre} ${record.prestamo.residente.apellidoPaterno}` }><ShrinkOutlined className="mx-1 text-blue-500" /></Tooltip>
+                            : null 
+                        }
+                        { record.insumo.nombre }
+                    </div>
+                ),
                 ellipsis: true,
                 width: '39%'
             },

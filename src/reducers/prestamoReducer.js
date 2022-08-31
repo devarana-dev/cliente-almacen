@@ -41,7 +41,6 @@ export default (state = initialState, action) => {
             }
 
         case types.UPDATE_PRESTAMO_SUCCESS:
-            console.log(action.payload);
             return {
                 ...state,
                 isLoading: false,

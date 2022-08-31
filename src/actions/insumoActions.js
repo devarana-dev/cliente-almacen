@@ -130,7 +130,6 @@ export function deleteInsumoAction(id){
         dispatch(deleteInsumoRequest())
         await clientAxios.delete(`/insumos/${id}`)
             .then ( res => {
-                console.log(res.data);
                 dispatch(deleteInsumoSuccess(res.data.insumo))
             }).catch( err => {
                 console.log('Error deleteInsumoAction', err.response);
