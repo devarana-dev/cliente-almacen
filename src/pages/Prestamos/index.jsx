@@ -44,11 +44,11 @@ const Prestamo = () => {
             setColumns( hasPermission(userPermission, 'acciones prestamos') ?  defaultColumns.concat(actionsColumns)  : defaultColumns )
         }
         if ( value === "Prestamos" ) {
-            setDataSource(prestamos.filter( item => item.residente.id === userAuth.id ))
             setColumns( hasPermission(userPermission, 'acciones prestamos') ? prestamosColumns.concat(actionsColumns)  : prestamosColumns )
+            setDataSource( prestamos.filter( item => item.owner.id === userAuth.id )  )
         }
         if ( value === "Solicitudes") {
-            setDataSource( prestamos.filter( item => item.owner.id === userAuth.id )  )
+            setDataSource(prestamos.filter( item => item.residente.id === userAuth.id ))
             setColumns( hasPermission(userPermission, 'acciones prestamos') ? solicitudesColumns.concat(actionsColumns)  : solicitudesColumns )
         }
     }
@@ -61,12 +61,6 @@ const Prestamo = () => {
         }else{
             dispatch(getPrestamosAction())
             setSegment(['Todos', 'Prestamos', 'Solicitudes'])
-        }
-
-        if(!hasPermission(userPermission, 'ver prestamos')){
-            
-        }else{
-            
         }
         
     // eslint-disable-next-line
@@ -85,7 +79,7 @@ const Prestamo = () => {
 
     const defaultColumns = [
         {
-            title: 'Propietario',
+            title: 'Solicitante',
             dataIndex: 'record',
             key: 'record',
             sorter: (a, b) => a.residente.nombre.localeCompare(b.residente.nombre),
@@ -102,7 +96,7 @@ const Prestamo = () => {
             )
         },
         {
-            title: 'Solicitante',
+            title: 'Propietario',
             dataIndex: 'record',
             key: 'record',
             sorter: (a, b) => a.residente.nombre.localeCompare(b.residente.nombre),
