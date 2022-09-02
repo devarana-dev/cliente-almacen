@@ -43,11 +43,11 @@ const Prestamo = () => {
             setDataSource(prestamos)
             setColumns( hasPermission(userPermission, 'acciones prestamos') ?  defaultColumns.concat(actionsColumns)  : defaultColumns )
         }
-        if ( value === "Prestamos" ) {
+        if ( value === "Yo Pedí" ) {
             setColumns( hasPermission(userPermission, 'acciones prestamos') ? prestamosColumns.concat(actionsColumns)  : prestamosColumns )
             setDataSource( prestamos.filter( item => item.owner.id === userAuth.id )  )
         }
-        if ( value === "Solicitudes") {
+        if ( value === "Me pidieron") {
             setDataSource(prestamos.filter( item => item.residente.id === userAuth.id ))
             setColumns( hasPermission(userPermission, 'acciones prestamos') ? solicitudesColumns.concat(actionsColumns)  : solicitudesColumns )
         }
@@ -60,7 +60,7 @@ const Prestamo = () => {
             setSegment(['Todos'])
         }else{
             dispatch(getPrestamosAction())
-            setSegment(['Todos', 'Prestamos', 'Solicitudes'])
+            setSegment(['Todos', 'Yo Pedí', 'Me pidieron'])
         }
         
     // eslint-disable-next-line
