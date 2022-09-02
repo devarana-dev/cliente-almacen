@@ -79,7 +79,7 @@ const Prestamo = () => {
 
     const defaultColumns = [
         {
-            title: 'Solicitante',
+            title: 'Propietario',
             dataIndex: 'record',
             key: 'record',
             sorter: (a, b) => a.residente.nombre.localeCompare(b.residente.nombre),
@@ -96,7 +96,7 @@ const Prestamo = () => {
             )
         },
         {
-            title: 'Propietario',
+            title: 'Solicitante',
             dataIndex: 'record',
             key: 'record',
             sorter: (a, b) => a.residente.nombre.localeCompare(b.residente.nombre),
@@ -158,7 +158,7 @@ const Prestamo = () => {
     
     const prestamosColumns = [
         {
-            title: 'Solicitante',
+            title: 'Propietario',
             dataIndex: 'record',
             key: 'record',
             sorter: (a, b) => a.residente.nombre.localeCompare(b.residente.nombre),
@@ -220,7 +220,7 @@ const Prestamo = () => {
 
     const solicitudesColumns = [
         {
-            title: 'Propietario',
+            title: 'Solicitante',
             dataIndex: 'record',
             key: 'record',
             sorter: (a, b) => a.residente.nombre.localeCompare(b.residente.nombre),
