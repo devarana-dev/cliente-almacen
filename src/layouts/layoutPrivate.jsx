@@ -9,6 +9,7 @@ import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
     LogoutOutlined,
+    SwapOutlined,
   } from '@ant-design/icons';
 
 import { MdLibraryAddCheck } from 'react-icons/md'
@@ -146,6 +147,12 @@ export default function LayoutPrivate({children}) {
                         <div className="footer__link-icon"> 
                             <AiOutlineUserAdd className="m-auto"/> 
                             <p> Personal </p>
+                        </div>
+                    </Link>
+                    <Link to={'/prestamos'} className="block w-full h-auto text-center footer__link">
+                        <div className="footer__link-icon"> 
+                            <SwapOutlined className="m-auto"/> 
+                            <p> Prestamos </p>
                         </div>
                     </Link>
                     <div className="block w-full h-auto text-center footer__link cursor-pointer">

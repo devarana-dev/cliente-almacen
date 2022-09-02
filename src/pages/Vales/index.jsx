@@ -660,6 +660,7 @@ const ValesSalida = () => {
                     <Button type='ghost' onClick={handleSubmit}> Enviar</Button>
                 ]}
                 okButtonProps={{ disabled: !validarCantidad }}
+                onCancel={hideModal}
             >
                 {
                     entrega.type === 1 ?
@@ -696,6 +697,7 @@ const ValesSalida = () => {
                     <Button type='ghost' onClick={handleSubmitCancel}> Enviar </Button>
                 ]}
                 okButtonProps={{ disabled: !cancel.comentarios }}
+                onCancel={hideModal}
                 >
                     {
                         cancel.type === 1 ?
@@ -723,6 +725,7 @@ const ValesSalida = () => {
                     <Button type='default' onClick={hideModal}> Cancelar </Button>,
                     <Button type='ghost' onClick={handleSubmitClose}> Enviar</Button>
                 ]}
+                onCancel={hideModal}
                 >
                     <p>Ingresa el folio de Enkontrol una vez generado</p>
                     <Input type="text" className='my-3' value={enkontrol.salidaEnkontrol} onChange={ (e) => setEnkontrol({ ...enkontrol,  salidaEnkontrol: e.target.value})} />

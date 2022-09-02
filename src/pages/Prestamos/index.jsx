@@ -43,11 +43,11 @@ const Prestamo = () => {
             setDataSource(prestamos)
             setColumns( hasPermission(userPermission, 'acciones prestamos') ?  defaultColumns.concat(actionsColumns)  : defaultColumns )
         }
-        if ( value === "Yo Pedí" ) {
+        if ( value === "Solicité" ) {
             setColumns( hasPermission(userPermission, 'acciones prestamos') ? prestamosColumns.concat(actionsColumns)  : prestamosColumns )
             setDataSource( prestamos.filter( item => item.owner.id === userAuth.id )  )
         }
-        if ( value === "Me pidieron") {
+        if ( value === "Me Solicitaron") {
             setDataSource(prestamos.filter( item => item.residente.id === userAuth.id ))
             setColumns( hasPermission(userPermission, 'acciones prestamos') ? solicitudesColumns.concat(actionsColumns)  : solicitudesColumns )
         }
@@ -60,7 +60,7 @@ const Prestamo = () => {
             setSegment(['Todos'])
         }else{
             dispatch(getPrestamosAction())
-            setSegment(['Todos', 'Yo Pedí', 'Me pidieron'])
+            setSegment(['Todos', 'Solicité', 'Me Solicitaron'])
         }
         
     // eslint-disable-next-line
@@ -327,7 +327,7 @@ const Prestamo = () => {
         let title = ''
         switch (action) {
             case 'approve':
-                title = '¿Estás seguro que quieres aprovarlo?'
+                title = '¿Apruebas la solicitud de prestamo?'
             break;
             case 'cancel':
                 title = '¿Estás seguro que quieres cancelarlo?'
@@ -378,7 +378,7 @@ const Prestamo = () => {
         title="Confirmación"
         footer={[
             <Button type='default' onClick={hideModal}> Cancelar </Button>,
-            <Button type='ghost' onClick={handleSubmit}> Guardar</Button>
+            <Button type='ghost' onClick={handleSubmit}> Enviar </Button>
         ]}
         
       >

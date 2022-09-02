@@ -245,8 +245,9 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
                 notFoundContent={isLoading ? <Spin size="small" /> : null}
                 filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                 showSearch
-                onChange={ (e) => {searchUnidad(e); setInsumo({...insumo, residentePrestamo: e }) } }
+                onChange={ (e) => {setInsumo({...insumo, residentePrestamo: e }) } }
             > 
+                <Option key={0} value={0}> </Option>
                 {
                     // Entre usuarios que se puedan prestar insumos
                    usuarios.filter( item => item.tipoUsuario_id === 4 ).map( item => (
