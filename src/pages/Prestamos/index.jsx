@@ -92,10 +92,11 @@ const Prestamo = () => {
             ...getColumnSearchProps('record'),
             ellipsis: true,
             render: (text, record) => (
-                <>
+                
+                 <>
                  <div className='flex flex-row items-center'>
-                 <Avatar crossOrigin='anonymous' src={ <Image src={ record.owner.picture  } /> } />
-                 <p className='ml-4'> { record.owner.nombre}  </p>
+                 <Avatar crossOrigin='anonymous' src={ <Image src={ record.residente.picture } /> } />
+                 <p className='ml-4'> { record.residente.nombre  }  </p>
                 </div>
                 </>
             )
@@ -109,11 +110,11 @@ const Prestamo = () => {
             ellipsis: true,
             render: (text, record) => (
                 <>
-                 <div className='flex flex-row items-center'>
-                 <Avatar crossOrigin='anonymous' src={ <Image src={ record.residente.picture } /> } />
-                 <p className='ml-4'> { record.residente.nombre  }  </p>
-                </div>
-                </>
+                <div className='flex flex-row items-center'>
+                <Avatar crossOrigin='anonymous' src={ <Image src={ record.owner.picture  } /> } />
+                <p className='ml-4'> { record.owner.nombre}  </p>
+               </div>
+               </>
             )
         },
         {
