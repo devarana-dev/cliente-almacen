@@ -4,29 +4,43 @@ import { types } from '../types';
 
 export function getAllPrestamosAction(){
     return async (dispatch) => {
-        dispatch(getAllPrestamoRequest())
-        await clientAxios.get('/prestamos')
+        dispatch(getPrestamoRequest())
+        await clientAxios.get('/prestamos/all')
             .then ( res => {
-                dispatch(getAllPrestamoSuccess(res.data.prestamos))
+                dispatch(getPrestamoSuccess(res.data.prestamos))
             })
             .catch( err => {
                 console.log('Error getAllPrestamosAction', err.response);
-                dispatch(getAllPrestamoError(err.response.data.message))
+                dispatch(getPrestamoError(err.response.data.message))
             })
     }
 }
-const getAllPrestamoRequest = () => {
+
+export function getPrestamosAction(){
+    return async (dispatch) => {
+        dispatch(getPrestamoRequest())
+        await clientAxios.get('/prestamos')
+            .then ( res => {
+                dispatch(getPrestamoSuccess(res.data.prestamos))
+            })
+            .catch( err => {
+                console.log('Error getPrestamosAction', err.response);
+                dispatch(getPrestamoError(err.response.data.message))
+            })
+    }
+}
+const getPrestamoRequest = () => {
     return {
         type: types.GET_ALL_PRESTAMO
     }
 }
-const getAllPrestamoSuccess = payload => {
+const getPrestamoSuccess = payload => {
     return {
         type: types.GET_ALL_PRESTAMO_SUCCESS,
         payload
     }
 }
-const getAllPrestamoError = error => {
+const getPrestamoError = error => {
     return {
         type: types.GET_ALL_PRESTAMO_ERROR,
         payload: error

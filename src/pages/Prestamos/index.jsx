@@ -1,23 +1,27 @@
 
 import { CheckCircleOutlined, ScheduleOutlined, StopOutlined, SwapOutlined } from '@ant-design/icons';
-import { Avatar, Badge, Button, Image, Modal, Table, Tag } from 'antd';
+import { Avatar, Button, Image, Modal, Segmented, Spin, Table, Tag } from 'antd';
 
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
-import { getAllPrestamosAction, updatePrestamoAction } from '../../actions/prestamoActions.js';
+import { getPrestamosAction, getAllPrestamosAction, updatePrestamoAction } from '../../actions/prestamoActions.js';
 import { getColumnSearchProps } from '../../hooks/useFilter'
 import openNotificationWithIcon from '../../hooks/useNotification';
 import { cleanErrorAction } from '../../actions/globalActions';
+import { hasPermission } from '../../utils/hasPermission.js';
 
 const Prestamo = () => {
 
     const dispatch = useDispatch();
 
     const [ dataSource, setDataSource ] = useState([]);
+    const { userPermission, isLoading:isLoadingPermission } = useSelector(state => state.permisos);
+    const [ value, setValue ] = useState('Todos')
+    const [ columns, setColumns ] = useState()
     const { prestamos, isLoading, errors, updated} = useSelector(state => state.prestamos);
     const { userAuth } = useSelector(state => state.auth)
-
     const [visible, setVisible] = useState(false);
+    const [segment, setSegment] = useState(['Todos'])
 
     const showModal = () => {
       setVisible(true);
@@ -33,19 +37,55 @@ const Prestamo = () => {
         title: ''
     })
 
+    const setloadDataSource = (value) => {
+        setValue(value)
+        if ( value === "Todos") {
+            setDataSource(prestamos)
+            setColumns( hasPermission(userPermission, 'acciones prestamos') ?  defaultColumns.concat(actionsColumns)  : defaultColumns )
+        }
+        if ( value === "Prestamos" ) {
+            setColumns( hasPermission(userPermission, 'acciones prestamos') ? prestamosColumns.concat(actionsColumns)  : prestamosColumns )
+            setDataSource( prestamos.filter( item => item.owner.id === userAuth.id )  )
+        }
+        if ( value === "Solicitudes") {
+            setDataSource(prestamos.filter( item => item.residente.id === userAuth.id ))
+            setColumns( hasPermission(userPermission, 'acciones prestamos') ? solicitudesColumns.concat(actionsColumns)  : solicitudesColumns )
+        }
+    }
+    
+
     useEffect(() => {
-        dispatch(getAllPrestamosAction())
+        if(hasPermission(userPermission, 'ver prestamos')){
+            dispatch(getAllPrestamosAction())
+            setSegment(['Todos'])
+        }else{
+            dispatch(getPrestamosAction())
+            setSegment(['Todos', 'Prestamos', 'Solicitudes'])
+        }
+
+        if(!hasPermission(userPermission, 'ver prestamos')){
+            
+        }else{
+            
+        }
+        
     // eslint-disable-next-line
-    }, [])
+    }, [userPermission])
 
     useEffect(() => {
 		setDataSource( prestamos )
+        setColumns(hasPermission(userPermission, 'acciones prestamos') ?  defaultColumns.concat(actionsColumns)  : defaultColumns )
+        
+
+        
+        
+    // eslint-disable-next-line
     }, [prestamos])
 
 
-    const columns = [
+    const defaultColumns = [
         {
-            title: 'Corresponde a',
+            title: 'Propietario',
             dataIndex: 'record',
             key: 'record',
             sorter: (a, b) => a.residente.nombre.localeCompare(b.residente.nombre),
@@ -54,8 +94,24 @@ const Prestamo = () => {
             render: (text, record) => (
                 <>
                  <div className='flex flex-row items-center'>
-                 <Avatar crossOrigin='anonymous' src={ <Image src={ record.belongsTo !== userAuth.id ? record.residente.picture : record.owner.picture  } /> } />
-                 <p className='ml-4'> {record.belongsTo === userAuth.id ? record.residente.nombre : record.owner.nombre}  </p>
+                 <Avatar crossOrigin='anonymous' src={ <Image src={ record.owner.picture  } /> } />
+                 <p className='ml-4'> { record.owner.nombre}  </p>
+                </div>
+                </>
+            )
+        },
+        {
+            title: 'Solicitante',
+            dataIndex: 'record',
+            key: 'record',
+            sorter: (a, b) => a.residente.nombre.localeCompare(b.residente.nombre),
+            ...getColumnSearchProps('record'),
+            ellipsis: true,
+            render: (text, record) => (
+                <>
+                 <div className='flex flex-row items-center'>
+                 <Avatar crossOrigin='anonymous' src={ <Image src={ record.residente.picture } /> } />
+                 <p className='ml-4'> { record.residente.nombre  }  </p>
                 </div>
                 </>
             )
@@ -78,21 +134,7 @@ const Prestamo = () => {
           ellipsis: true,
           render: (text, record) => record.detalle_salida.cantidadSolicitada
         },
-        {
-            title: 'Tipo',
-            dataIndex: 'tipo',
-            key: 'tipo',
-            render: (text, record ) => (
-            <>
-            {
-                record.belongsTo === userAuth.id ?
-                <Badge status='default' text='Yo pedí' />
-                :
-                <Badge status='processing' text='Me pidieron' />
-            }
-            </>
-            )
-        },
+
         {
             title: 'Estatus',
             dataIndex: 'status',
@@ -116,38 +158,158 @@ const Prestamo = () => {
             </>
             )
         },
+        
+    ]
+    
+    const prestamosColumns = [
         {
-            title: 'Acciones',
-            dataIndex: 'acciones',
-            key: 'acciones',
-            render: (text, record) => 
-            <div className='flex justify-start'> 
-                {   
-                record.status ===  1 ? // nuevo
-                    record.belongsTo === userAuth.id ? 
-                    <>
-                        <Button type='icon-danger' onClick={ () => handleAction(record.id, 'cancel') }> <StopOutlined className='text-xl'/> </Button> 
-                    </>    
-                    : 
-                    <>
-                        <Button type='icon-primary' onClick={ () => handleAction(record.id, 'approve') }> <CheckCircleOutlined className='text-xl'/> </Button> 
-                        <Button type='icon-danger' onClick={ () =>  handleAction(record.id, 'cancel') }> <StopOutlined className='text-xl'/> </Button> 
-                    </>
+            title: 'Solicitante',
+            dataIndex: 'record',
+            key: 'record',
+            sorter: (a, b) => a.residente.nombre.localeCompare(b.residente.nombre),
+            ...getColumnSearchProps('record'),
+            ellipsis: true,
+            render: (text, record) => (
+                <>
+                 <div className='flex flex-row items-center'>
+                 <Avatar crossOrigin='anonymous' src={ <Image src={ record.residente.picture } /> } />
+                 <p className='ml-4'> { record.residente.nombre  }  </p>
+                </div>
+                </>
+            )
+        },
+        {
+          title: 'Insumo',
+          dataIndex: 'insumo',
+          key: 'insumo',
+          sorter: (a, b) => a.insumo.localeCompare(b.insumo),
+          ...getColumnSearchProps('insumo'),
+          ellipsis: true,
+          render: (text, record) => record.detalle_salida.insumo.nombre
+        },
+        
+        {
+          title: 'Cantidad',
+          dataIndex: 'cantidad',
+          key: 'cantidad',
+          sorter: (a, b) => a.nombre.localeCompare(b.cantidad),
+          ellipsis: true,
+          render: (text, record) => record.detalle_salida.cantidadSolicitada
+        },
 
-                    : record.status === 2 && record.belongsTo === userAuth.id ? // autorizado
-                        <Button type='icon-primary' onClick={ () =>  handleAction(record.id, 'return') }> <SwapOutlined className='text-xl'/> </Button>
-                    : record.status === 4 && record.belongsTo !== userAuth.id ? // devuelto
-                        <Button type='icon-danger' onClick={ () =>  handleAction(record.id, 'verify') }> <ScheduleOutlined className='text-xl'/> </Button>
-                : null
+        {
+            title: 'Estatus',
+            dataIndex: 'status',
+            key: 'status',
+            render: (text, record) => (
+            <>
+                {
+                    record.status ===  1 ? // Nuevo
+                        
+                        <Tag color={'blue'}> Nuevo </Tag>
+                    : record.status ===  2 ? // Autorizado
+                        <Tag color={'green'}>Autorizado</Tag>
+                    : record.status ===  3 ? // Rechazado
+                        <Tag color={"red"}>Rechazado</Tag>
+                    : record.status ===  4 ? // Devuelto
+                        <Tag color={"yellow"}>Devuelto</Tag>
+                    : record.status ===  5 ? // Entregado
+                        <Tag color={"cyan"}>Entregado</Tag>
+                    : null
                 }
-                
-            </div>,
-            width: '5%',
+            </>
+            )
         }
         
-    ];
+    ]
 
+    const solicitudesColumns = [
+        {
+            title: 'Propietario',
+            dataIndex: 'record',
+            key: 'record',
+            sorter: (a, b) => a.residente.nombre.localeCompare(b.residente.nombre),
+            ...getColumnSearchProps('record'),
+            ellipsis: true,
+            render: (text, record) => (
+                <>
+                 <div className='flex flex-row items-center'>
+                 <Avatar crossOrigin='anonymous' src={ <Image src={ record.owner.picture  } /> } />
+                 <p className='ml-4'> { record.owner.nombre}  </p>
+                </div>
+                </>
+            )
+        },
+        {
+          title: 'Insumo',
+          dataIndex: 'insumo',
+          key: 'insumo',
+          sorter: (a, b) => a.insumo.localeCompare(b.insumo),
+          ...getColumnSearchProps('insumo'),
+          ellipsis: true,
+          render: (text, record) => record.detalle_salida.insumo.nombre
+        },
+        
+        {
+          title: 'Cantidad',
+          dataIndex: 'cantidad',
+          key: 'cantidad',
+          sorter: (a, b) => a.nombre.localeCompare(b.cantidad),
+          ellipsis: true,
+          render: (text, record) => record.detalle_salida.cantidadSolicitada
+        },
 
+        {
+            title: 'Estatus',
+            dataIndex: 'status',
+            key: 'status',
+            render: (text, record) => (
+            <>
+                {
+                    record.status ===  1 ? // Nuevo
+                        
+                        <Tag color={'blue'}> Nuevo </Tag>
+                    : record.status ===  2 ? // Autorizado
+                        <Tag color={'green'}>Autorizado</Tag>
+                    : record.status ===  3 ? // Rechazado
+                        <Tag color={"red"}>Rechazado</Tag>
+                    : record.status ===  4 ? // Devuelto
+                        <Tag color={"yellow"}>Devuelto</Tag>
+                    : record.status ===  5 ? // Entregado
+                        <Tag color={"cyan"}>Entregado</Tag>
+                    : null
+                }
+            </>
+            )
+        }
+    ]
+
+    const actionsColumns = [{
+        title: 'Acciones',
+        dataIndex: 'acciones',
+        key: 'acciones',
+        render: (text, record) => 
+        <div className='flex justify-start'> 
+            {   
+            record.status ===  1 ? // nuevo
+                record.belongsTo === userAuth.id ?
+                    <Button type='icon-danger' onClick={ () => handleAction(record.id, 'cancel') }> <StopOutlined className='text-xl'/> </Button> 
+                :
+                <>
+                    <Button type='icon-primary' onClick={ () => handleAction(record.id, 'approve') }> <CheckCircleOutlined className='text-xl'/> </Button> 
+                    <Button type='icon-danger' onClick={ () =>  handleAction(record.id, 'cancel') }> <StopOutlined className='text-xl'/> </Button> 
+                </>
+                : record.status === 2 && record.belongsTo === userAuth.id ? // autorizado
+                    <Button type='icon-primary' onClick={ () =>  handleAction(record.id, 'return') }> <SwapOutlined className='text-xl'/> </Button>
+
+                : record.status === 4 && record.belongsTo !== userAuth.id ? // Verificar corresponde a almacén?
+                    <Button type='icon-danger' onClick={ () =>  handleAction(record.id, 'verify') }> <ScheduleOutlined className='text-xl'/> </Button>
+            : null
+            }
+            
+        </div>,
+        width: '5%',
+    }]
 
     useEffect(() => {
         displayAlert()
@@ -205,11 +367,12 @@ const Prestamo = () => {
     }
     
     
-
+    if( isLoading || isLoadingPermission ) return <Spin tip='Cargando...' size='large' className='mt-5 mx-auto'/>
 
     return ( 
     <>
-        <div className='py-2 flex justify-end'>          
+        <div className='py-4 max-w-screen-sm w-full mx-auto'>
+            <Segmented block options={segment} value={value} onChange={setloadDataSource} />
         </div>
 
         <Table scroll={{ x: 'auto'}} rowKey={record => record.id} columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>

@@ -234,11 +234,11 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
             </Form.Item>
         </div>
 
-        <Divider />
+        <Divider className="mb-1 mt-0"/>
 
         <Form.Item
             className="w-full"
-            label="Prestamo"
+            label="Solicitar Prestamo A:"
             name="residentePrestamo"
         >
              <Select
@@ -248,7 +248,8 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
                 onChange={ (e) => {searchUnidad(e); setInsumo({...insumo, residentePrestamo: e }) } }
             > 
                 {
-                   usuarios.filter( item => item.tipoUsuario_id === 5 ).map( item => (
+                    // Entre usuarios que se puedan prestar insumos
+                   usuarios.filter( item => item.tipoUsuario_id === 4 ).map( item => (
                         <Option key={item.id} value={item.id}>{`${item.nombre} ${item.apellidoPaterno} `}</Option>
                     ))
                 }
@@ -261,9 +262,9 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
     <Divider />
 
     <div className="flex justify-between w-full">
-        <Button type='dark' htmlType='button' onClick={ () => setCurrent(0) }>
+        {/* <Button type='dark' htmlType='button' onClick={ () => setCurrent(0) }>
             Volver
-        </Button>     
+        </Button>      */}
         <Button type='danger' htmlType='button' onClick={ () => confirm(2) }>
             Cancelar
         </Button>

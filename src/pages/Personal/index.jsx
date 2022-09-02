@@ -20,7 +20,7 @@ const Personal = () => {
     const [ dataSource, setDataSource ] = useState([]);
     const {personal, isLoading, errors, deleted} = useSelector(state => state.personal);
     const { userPermission } = useSelector(state => state.permisos);
-
+ 
     useEffect(() => {
         dispatch(getAllPersonalAction())
     // eslint-disable-next-line
