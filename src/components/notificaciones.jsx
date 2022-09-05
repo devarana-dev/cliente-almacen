@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import { getNotificationesAction, updateNotificationeAction } from '../actions/notificationActions';
+import { getAllPrestamosAction } from '../actions/prestamoActions';
 import { getAllValesAction, getCountValeSalidaAction } from '../actions/valeActions';
 import { hasPermission } from '../utils/hasPermission';
 
@@ -51,16 +52,22 @@ const Notificaciones = () => {
         joinRoom()
         
         socket.on("recieve_vale", ({message}) => {
+            console.log('Recibi vale');
             dispatch(getAllValesAction())
             dispatch(getCountValeSalidaAction())
+        })
+
+        socket.on("recieve_prestamo", ({message}) => {
+            console.log('Recibi prestamos');
+            dispatch(getAllPrestamosAction())
         })
     }, [socket])
 
 
     const joinRoom = () => {
 
-        // console.log('Entrando....');
-        // console.log(userAuth);
+        console.log('Entrando....');
+        console.log(userAuth);
         if(userAuth && !isLoading){
             if(hasPermission(userPermission, 'entregar vales')){
                 socket.emit("join_room", {user: userAuth.id, room: 'almacen'})
