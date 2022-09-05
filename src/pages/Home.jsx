@@ -6,12 +6,13 @@ import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCountValeSalidaAction } from '../actions/valeActions';
+import Loading from '../components/Elements/Loading';
 
 
 export default function Home() {
 
     const dispatch = useDispatch()
-    const { count } = useSelector( state => state.vales)
+    const { count, isLoading } = useSelector( state => state.vales)
     const [ dataValues, setDataValues ] = useState({})
 
     const [filter, setFilter] = useState("hoy")
@@ -20,16 +21,18 @@ export default function Home() {
     
 
     useEffect(() => {
-        if(count.length ===  0 || !count){
             dispatch(getCountValeSalidaAction({type: "hoy"}))
-        }else{
+        // eslint-disable-next-line 
+    }, [])
+
+    useEffect(() => {
+        if(count){ 
             setDataValues({
                 "Pendientes": count.nuevo + count.parcialAbierto,
                 "Entregado": count.entregado + count.parcialCerrado,
                 "Cancelado": count.cancelado
             })
         }
-        // eslint-disable-next-line 
     }, [count])
 
     const data = {
@@ -246,7 +249,9 @@ export default function Home() {
             },
           ]}
         />
-      );
+    );
+
+    if(isLoading) return <Loading/>
 
     return (
        <> 

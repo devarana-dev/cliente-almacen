@@ -2,7 +2,7 @@
 import { BellOutlined, CheckCircleOutlined, FileTextOutlined, PieChartOutlined, PlusCircleOutlined, ShrinkOutlined, StopOutlined, SwapOutlined } from '@ant-design/icons';
 import { cancelDetalleAction, cancelValeAction, closeValeAction, completeValeSalida, deliverValeAction, getAllValesAction, getCountValeSalidaAction, searchValeAction } from '../../actions/valeActions';
 import { BsInfoCircle } from 'react-icons/bs'
-import { Button, Table, Tag, Modal, Input, Badge, Avatar, Image, Tooltip, Spin } from 'antd';
+import { Button, Table, Tag, Modal, Input, Badge, Avatar, Image, Tooltip } from 'antd';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +15,7 @@ import openNotificationWithIcon from '../../hooks/useNotification';
 import moment from 'moment';
 import { groupPermission, hasPermission } from '../../utils/hasPermission';
 import Forbidden from '../../components/Elements/Forbidden';
+import Loading from '../../components/Elements/Loading';
 
 const ValesSalida = () => {
 
@@ -562,13 +563,13 @@ const ValesSalida = () => {
 
 
     if(!hasPermission(userPermission, 'ver vale') && !isLoading ) return <Forbidden/>
-    if( !tableReady ) return <Spin tip='Cargando...' size='large' className='mt-5 mx-auto'/>
+    if( !tableReady ) return <Loading />
 
     return ( 
         <>
             {
                 hasPermission(userPermission, 'crear vales') ?
-                <Button type='icon-secondary-new' onClick={() => navigate('nuevo')} className="fixed right-3 bottom-8 hidden lg:block z-50 items-center"><PlusCircleOutlined /></Button>
+                <Button type='icon-secondary-new' onClick={() => navigate('create')} className="md:flex hidden fixed right-10 lg:bottom-8 bottom-28 z-50"><PlusCircleOutlined className='py-1'/></Button>
                 : null 
             }
                 <div className="lg:grid hidden grid-cols-4 gap-10 py-5 ">

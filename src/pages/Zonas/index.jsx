@@ -116,7 +116,7 @@ const Zonas = () => {
         <div className='py-2 flex justify-end'>          
             {
             hasPermission(userPermission, 'crear zonas') ?
-              <Button type='icon-secondary-new' onClick={() => navigate('create')} className="fixed right-10 bottom-8 z-50 items-center lg:block hidden"><PlusCircleOutlined /></Button>
+              <Button type='icon-secondary-new' onClick={() => navigate('create')} className="md:flex hidden fixed right-10 lg:bottom-8 bottom-28 z-50"><PlusCircleOutlined className='py-1'/></Button>
                 : null 
             }
         </div>

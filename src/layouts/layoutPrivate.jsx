@@ -1,4 +1,4 @@
-import { Layout, Button, Modal, notification, Switch } from "antd";
+import { Layout, Button, Modal, notification, Switch, Dropdown, Menu } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from 'react-router-dom'
@@ -10,6 +10,7 @@ import {
     MenuUnfoldOutlined,
     LogoutOutlined,
     SwapOutlined,
+    PlusCircleOutlined,
   } from '@ant-design/icons';
 
 import { MdLibraryAddCheck } from 'react-icons/md'
@@ -17,7 +18,7 @@ import { BiSearchAlt } from 'react-icons/bi'
 import { IoHome } from 'react-icons/io5'
 import {AiOutlineUserAdd,AiOutlineLogout} from 'react-icons/ai'
 
-import Menu from "../components/layout/Menu";
+import MenuLayout from "../components/layout/Menu";
 import { validateLoginAction } from "../actions/authActions";
 import Notificaciones from "../components/notificaciones";
 import tokenAuth from "../config/tokenAuth";
@@ -82,7 +83,6 @@ export default function LayoutPrivate({children}) {
         
         // eslint-disable-next-line
     }, [logout])
-    
 
 
     return (        
@@ -102,7 +102,7 @@ export default function LayoutPrivate({children}) {
             <div className="h-14 p-2 text-center">
                 <img src={Logotipo} alt="Logotipo" className="max-w-full p-2" />
             </div>
-            <Menu collapsed={collapsed} setCollapsed={setCollapsed} hiddeable={hiddeable} />
+            <MenuLayout collapsed={collapsed} setCollapsed={setCollapsed} hiddeable={hiddeable} />
             
             </Sider>
             <Layout className="layout-right">
@@ -131,12 +131,12 @@ export default function LayoutPrivate({children}) {
                             <p> Home </p>
                         </div>
                     </Link>
-                    <Link to={'/vales-salida/nuevo'} className="block w-full h-auto text-center footer__link">
+                    {/* <Link to={'/vales-salida/nuevo'} className="block w-full h-auto text-center footer__link">
                         <div className="footer__link-icon"> 
                             <MdLibraryAddCheck className="m-auto"/> 
                             <p> Crear Vale </p>
                         </div>
-                    </Link>
+                    </Link> */}
                     <Link to={'/vales-salida'} className="block w-full h-auto text-center footer__link">
                     <div className="footer__link-icon"> 
                             <BiSearchAlt className="m-auto"/> 
@@ -162,6 +162,37 @@ export default function LayoutPrivate({children}) {
                         </div>
                     </div>
                 </div>
+                
+                <Dropdown
+                    className="fixed right-7 bottom-24 z-50"
+                    overlay={<Menu
+                        items={[
+                        {
+                            key: '5',
+                            label: (
+                            <Link to={'/vales-salida/nuevo'}>
+                                Crear Vale
+                            </Link>
+                            ),
+                        },
+                        {
+                            key: '6',
+                            label: (
+                            <Link to={'/personal/create'}>
+                                Crear Personal
+                            </Link>
+                            ),
+                        },
+                        ]}
+                    />}
+                    placement="topRight"
+                    trigger={'click'}
+                    arrow={{
+                        pointAtCenter: true,
+                    }}
+                    >
+                    <Button type='icon-secondary-new'><PlusCircleOutlined className='py-1'/></Button>
+                </Dropdown>
             </Footer>
 
             <Modal

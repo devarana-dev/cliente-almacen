@@ -153,7 +153,7 @@ const Insumos = () => {
                 hasPermission(userPermission, 'crear insumos') ?
                 <div>
                     <Button type='default' onClick={() => showModal()}>Importar</Button>
-                    <Button type='icon-secondary-new' onClick={() => navigate('create')} className="fixed right-10 bottom-8 z-50 items-center lg:block hidden"><PlusCircleOutlined /></Button>
+                    <Button type='icon-secondary-new' onClick={() => navigate('create')} className="md:flex hidden fixed right-10 lg:bottom-8 bottom-28 z-50"><PlusCircleOutlined className='py-1'/></Button>
                 </div>
                 : null 
             }

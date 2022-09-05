@@ -1,6 +1,6 @@
 
 import { CheckCircleOutlined, ScheduleOutlined, StopOutlined, SwapOutlined } from '@ant-design/icons';
-import { Avatar, Button, Image, Modal, Segmented, Spin, Table, Tag } from 'antd';
+import { Avatar, Button, Image, Modal, Segmented, Table, Tag } from 'antd';
 
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
@@ -9,6 +9,8 @@ import { getColumnSearchProps } from '../../hooks/useFilter'
 import openNotificationWithIcon from '../../hooks/useNotification';
 import { cleanErrorAction } from '../../actions/globalActions';
 import { hasPermission } from '../../utils/hasPermission.js';
+import Loading from '../../components/Elements/Loading.js';
+import '../../assets/scss/prestamos.scss'
 
 const Prestamo = () => {
 
@@ -89,7 +91,7 @@ const Prestamo = () => {
                 
                  <>
                  <div className='flex flex-row items-center'>
-                 <Avatar crossOrigin='anonymous' src={ <Image src={ record.residente.picture } /> } />
+                 <Avatar crossOrigin='anonymous' src={ <Image src={ record.residente.picture } /> || '' } />
                  <p className='ml-4'> { record.residente.nombre  }  </p>
                 </div>
                 </>
@@ -105,7 +107,7 @@ const Prestamo = () => {
             render: (text, record) => (
                 <>
                 <div className='flex flex-row items-center'>
-                <Avatar crossOrigin='anonymous' src={ <Image src={ record.owner.picture  } /> } />
+                <Avatar crossOrigin='anonymous' src={ <Image src={ record.owner.picture  } /> || '' } />
                 <p className='ml-4'> { record.owner.nombre}  </p>
                </div>
                </>
@@ -134,23 +136,24 @@ const Prestamo = () => {
             title: 'Estatus',
             dataIndex: 'status',
             key: 'status',
+            width: '5%',
             render: (text, record) => (
-            <>
+            <div className='w-full justify-center text-center flex'>
                 {
                     record.status ===  1 ? // Nuevo
                         
-                        <Tag color={'blue'}> Nuevo </Tag>
+                        <Tag className='m-auto w-full' color={'blue'}> Nuevo </Tag>
                     : record.status ===  2 ? // Autorizado
-                        <Tag color={'green'}>Autorizado</Tag>
+                        <Tag className='m-auto w-full' color={'green'}>Autorizado</Tag>
                     : record.status ===  3 ? // Rechazado
-                        <Tag color={"red"}>Rechazado</Tag>
+                        <Tag className='m-auto w-full' color={"red"}>Rechazado</Tag>
                     : record.status ===  4 ? // Devuelto
-                        <Tag color={"yellow"}>Devuelto</Tag>
+                        <Tag className='m-auto w-full' color={"yellow"}>Devuelto</Tag>
                     : record.status ===  5 ? // Entregado
-                        <Tag color={"cyan"}>Entregado</Tag>
+                        <Tag className='m-auto w-full' color={"cyan"}>Entregado</Tag>
                     : null
                 }
-            </>
+            </div>
             )
         },
         
@@ -196,23 +199,24 @@ const Prestamo = () => {
             title: 'Estatus',
             dataIndex: 'status',
             key: 'status',
+            width: '5%',
             render: (text, record) => (
-            <>
+            <div className='w-full justify-center text-center flex'>
                 {
                     record.status ===  1 ? // Nuevo
                         
-                        <Tag color={'blue'}> Nuevo </Tag>
+                        <Tag className='m-auto w-full' color={'blue'}> Nuevo </Tag>
                     : record.status ===  2 ? // Autorizado
-                        <Tag color={'green'}>Autorizado</Tag>
+                        <Tag className='m-auto w-full' color={'green'}>Autorizado</Tag>
                     : record.status ===  3 ? // Rechazado
-                        <Tag color={"red"}>Rechazado</Tag>
+                        <Tag className='m-auto w-full' color={"red"}>Rechazado</Tag>
                     : record.status ===  4 ? // Devuelto
-                        <Tag color={"yellow"}>Devuelto</Tag>
+                        <Tag className='m-auto w-full' color={"yellow"}>Devuelto</Tag>
                     : record.status ===  5 ? // Entregado
-                        <Tag color={"cyan"}>Entregado</Tag>
+                        <Tag className='m-auto w-full' color={"cyan"}>Entregado</Tag>
                     : null
                 }
-            </>
+            </div>
             )
         }
         
@@ -258,23 +262,24 @@ const Prestamo = () => {
             title: 'Estatus',
             dataIndex: 'status',
             key: 'status',
+            width: '5%',
             render: (text, record) => (
-            <>
+                <div className='w-full justify-center text-center flex'>
                 {
                     record.status ===  1 ? // Nuevo
                         
-                        <Tag color={'blue'}> Nuevo </Tag>
+                        <Tag className='m-auto w-full' color={'blue'}> Nuevo </Tag>
                     : record.status ===  2 ? // Autorizado
-                        <Tag color={'green'}>Autorizado</Tag>
+                        <Tag className='m-auto w-full' color={'green'}>Autorizado</Tag>
                     : record.status ===  3 ? // Rechazado
-                        <Tag color={"red"}>Rechazado</Tag>
+                        <Tag className='m-auto w-full' color={"red"}>Rechazado</Tag>
                     : record.status ===  4 ? // Devuelto
-                        <Tag color={"yellow"}>Devuelto</Tag>
+                        <Tag className='m-auto w-full' color={"yellow"}>Devuelto</Tag>
                     : record.status ===  5 ? // Entregado
-                        <Tag color={"cyan"}>Entregado</Tag>
+                        <Tag className='m-auto w-full' color={"cyan"}>Entregado</Tag>
                     : null
                 }
-            </>
+            </div>
             )
         }
     ]
@@ -362,7 +367,7 @@ const Prestamo = () => {
     }
     
     
-    if( isLoading || isLoadingPermission ) return <Spin tip='Cargando...' size='large' className='mt-5 mx-auto'/>
+    if( isLoading || isLoadingPermission ) return <Loading />
 
     return ( 
     <>
@@ -370,7 +375,15 @@ const Prestamo = () => {
             <Segmented block options={segment} value={value} onChange={setloadDataSource} />
         </div>
 
-        <Table scroll={{ x: 'auto'}} rowKey={record => record.id} columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>
+        <Table 
+            className='prestamosTable'
+            scroll={{ x: 'auto'}} 
+            rowKey={record => record.id} 
+            columns={columns} 
+            dataSource={dataSource} 
+            loading={isLoading} 
+            showSorterTooltip={false}
+        />
         <Modal
         visible={visible}
         okText="Si"
