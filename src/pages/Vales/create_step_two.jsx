@@ -31,7 +31,6 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
 
     const { listaInsumos } = vale
 
-
     useEffect(() => {
         dispatch(getAllInsumosAction())
         dispatch(getAllUsuariosAction())
@@ -175,6 +174,10 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
             navigate('/vales-salida')
         }
     }
+
+    
+    console.log();
+    // console.log(test);
     return ( 
     <>
 
@@ -250,9 +253,13 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
                 <Option key={0} value={0}> </Option>
                 {
                     // Entre usuarios que se puedan prestar insumos
-                   usuarios.filter( item => item.tipoUsuario_id === 4 ).map( item => (
-                        <Option key={item.id} value={item.id}>{`${item.nombre} ${item.apellidoPaterno} `}</Option>
-                    ))
+                //    usuarios.filter( item => item.tipoUsuario_id === 4 ).map( item => (
+                //         <Option key={item.id} value={item.id}>{`${item.nombre} ${item.apellidoPaterno} `}</Option>
+                //     ))
+
+                usuarios.filter( item => item.role.permisos.map( item => item.permisos === 'acciones prestamos' ).includes(true) )
+                .map( item => ( <Option key={item.id} value={item.id}>{`${item.nombre} ${item.apellidoPaterno} `}</Option> )
+                )
                 }
             </Select>
         </Form.Item>

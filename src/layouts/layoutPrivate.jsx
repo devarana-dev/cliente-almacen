@@ -170,7 +170,7 @@ export default function LayoutPrivate({children}) {
                         {
                             key: '5',
                             label: (
-                            <Link to={'/vales-salida/nuevo'}>
+                            <Link className="my-2" to={'/vales-salida/nuevo'}>
                                 Crear Vale
                             </Link>
                             ),
