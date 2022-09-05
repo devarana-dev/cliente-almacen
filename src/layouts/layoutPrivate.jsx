@@ -1,4 +1,4 @@
-import { Layout, Button, Modal, notification, Switch, Dropdown, Menu } from "antd";
+import { Layout, Button, Modal, notification, Switch, Dropdown, Menu, Popconfirm } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from 'react-router-dom'
@@ -11,9 +11,10 @@ import {
     LogoutOutlined,
     SwapOutlined,
     PlusCircleOutlined,
+    AlertOutlined,
+    BugOutlined,
   } from '@ant-design/icons';
 
-import { MdLibraryAddCheck } from 'react-icons/md'
 import { BiSearchAlt } from 'react-icons/bi'
 import { IoHome } from 'react-icons/io5'
 import {AiOutlineUserAdd,AiOutlineLogout} from 'react-icons/ai'
@@ -27,6 +28,7 @@ import { Footer } from "antd/lib/layout/layout";
 
 import { logoutAction } from '../actions/authActions'
 import { getPermisoAction } from "../actions/permisosActions";
+import Notas from "../components/Notas";
 
 export default function LayoutPrivate({children}) {
     const dispatch = useDispatch()
@@ -39,6 +41,7 @@ export default function LayoutPrivate({children}) {
     const { isAuthenticated, token, isLoading, errors, logout } = useSelector( state => state.auth )
     const [hiddeable, setHiddeable] = useState(localStorage.getItem('sideBar') || false)
     const [visible, setVisible] = useState(false);
+    const [visibleNotas, setVisibleNotas] = useState(false);
   
     tokenAuth(token)
     const isAuth = authProvider()    
@@ -63,6 +66,8 @@ export default function LayoutPrivate({children}) {
     
     const showModal = () => setVisible(true);
     const hideModal = () => setVisible(false); 
+    const showModalNotas = () => setVisibleNotas(true);
+    const hideModalNotas = () => setVisibleNotas(false); 
     const handleLogout = () => dispatch(logoutAction())
 
     useEffect(() => {
@@ -108,11 +113,11 @@ export default function LayoutPrivate({children}) {
             <Layout className="layout-right">
                 <Header className="layout-right__header hidden lg:flex"> 
                     <div>
-                    <Switch className="bg-dark" checkedChildren="On" unCheckedChildren="Off" defaultChecked={hiddeable} onChange={() => handleSidebar(!hiddeable)}/>
-                    <button onClick={() => setCollapsed(!collapsed)}> {collapsed ? <MenuUnfoldOutlined className="text-2xl sm:text-dark sm:bg-transparent bg-primary text-white pb-1 px-2 rounded "/> : <MenuFoldOutlined className="text-2xl sm:text-dark sm:bg-transparent bg-primary text-white pb-1 px-2 rounded "/>} </button>
+                        <Switch className="bg-dark" checkedChildren="On" unCheckedChildren="Off" defaultChecked={hiddeable} onChange={() => handleSidebar(!hiddeable)}/>
+                        <button onClick={() => setCollapsed(!collapsed)}> {collapsed ? <MenuUnfoldOutlined className="text-2xl sm:text-dark sm:bg-transparent bg-primary text-white pb-1 px-2 rounded "/> : <MenuFoldOutlined className="text-2xl sm:text-dark sm:bg-transparent bg-primary text-white pb-1 px-2 rounded "/>} </button>
                     </div>
                     <div>
-                        
+                        <Button className="ml-5" type="icon-primary" onClick={showModalNotas }>  <AlertOutlined className="text-xl text-dark"/> </Button>
                         {isAuth.isAuthenticated ? <Notificaciones/> : null }
                         <Button className="ml-5" type="icon-primary" onClick={showModal }>  <LogoutOutlined className="text-xl"/> </Button>
                     </div>
@@ -204,6 +209,16 @@ export default function LayoutPrivate({children}) {
                 cancelText="No"
             >
                 <p>Deseas cerrar sesión?</p>
+            </Modal>
+
+            <Modal 
+                title="Notas de Versión"
+                visible={visibleNotas}
+                footer={false}
+                onCancel={hideModalNotas}
+                width={ 1000 }
+                >
+                < Notas />
             </Modal>
         </Layout>
     )

@@ -175,9 +175,6 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
         }
     }
 
-    
-    console.log();
-    // console.log(test);
     return ( 
     <>
 

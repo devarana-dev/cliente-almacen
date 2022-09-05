@@ -12,7 +12,7 @@ const CreateValesSalida = () => {
     });
 
     return ( 
-        <div className="max-w-2xl w-full mx-auto sm:px-10 px-1">      
+        <div className="max-w-2xl w-full mx-auto sm:px-10 px-1 mb-20">      
             <div className={`${current !== 0 ? 'hidden' : 'block '}`}>
                 <InformacionGral current={current} setCurrent={setCurrent} setVale={setVale} vale={vale} />
             </div>

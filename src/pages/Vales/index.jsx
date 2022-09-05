@@ -1,5 +1,5 @@
 
-import { BellOutlined, CheckCircleOutlined, FileTextOutlined, PieChartOutlined, PlusCircleOutlined, ShrinkOutlined, StopOutlined, SwapOutlined } from '@ant-design/icons';
+import { BellOutlined, CheckCircleOutlined, ClockCircleOutlined, FileTextOutlined, PieChartOutlined, PlusCircleOutlined, ShrinkOutlined, StopOutlined, SwapOutlined } from '@ant-design/icons';
 import { cancelDetalleAction, cancelValeAction, closeValeAction, completeValeSalida, deliverValeAction, getAllValesAction, getCountValeSalidaAction, searchValeAction } from '../../actions/valeActions';
 import { BsInfoCircle } from 'react-icons/bs'
 import { Button, Table, Tag, Modal, Input, Badge, Avatar, Image, Tooltip } from 'antd';
@@ -90,6 +90,7 @@ const ValesSalida = () => {
         className:"",
         render: (text, record) => (
             <div>
+                
                 { 
                     record.statusVale === 1 ? 
                     <div className='flex justify-start'>
@@ -141,22 +142,38 @@ const ValesSalida = () => {
 
     useEffect(() => {
 
-        const result = vales.filter( item => 
-            item.detalle_salidas.every( item => item.prestamo?.status !== 1 ) ?? item ).filter( item => item.detalle_salidas.length > 0).map( (item, i) => (
-				{ 
-                    key: i, 
-                    residente:`${item.user.nombre} ${item.user.apellidoPaterno}`,
-                    residentePicture: item.user.picture,
-                    personalInfo: `${item.personal.nombre} ${item.personal.apellidoPaterno}`,
-                    actividadInfo: item.actividad.nombre,
-                    aciones:item.id, 
-                    ...item 
-                }
-			))
+       
+        let result = []
+        if(hasPermission(userPermission, 'entregar vales')){
+            result = vales.filter( item => 
+                item.detalle_salidas.every( item => item.prestamo?.status !== 1 ) ?? item ).filter( item => item.detalle_salidas.length > 0).map( (item, i) => (
+                    { 
+                        key: i, 
+                        residente:`${item.user.nombre} ${item.user.apellidoPaterno}`,
+                        residentePicture: item.user.picture,
+                        personalInfo: `${item.personal.nombre} ${item.personal.apellidoPaterno}`,
+                        actividadInfo: item.actividad.nombre,
+                        aciones:item.id, 
+                        ...item 
+                    }
+            ))
+        }else{
+            result = vales.map( (item, i) => (
+                    { 
+                        key: i, 
+                        residente:`${item.user.nombre} ${item.user.apellidoPaterno}`,
+                        residentePicture: item.user.picture,
+                        personalInfo: `${item.personal.nombre} ${item.personal.apellidoPaterno}`,
+                        actividadInfo: item.actividad.nombre,
+                        aciones:item.id, 
+                        esPrestamo: item,
+                        ...item 
+                    }
+            ))
+        }
+        
 
-		setDataSource(
-			result
-		)
+		setDataSource( result )
 
         if((groupPermission(userPermission, ['entregar vales', 'registrar vales', 'eliminar vales', 'ver vales']) ) && !loadedColumn ){
             setLoad(true)
@@ -229,18 +246,26 @@ const ValesSalida = () => {
             dataIndex: 'statusVale',
             key: 'statusVale',
             render: (text, record, index) => ( 
-                <div className='w-full justify-center text-center flex'>
-                { 
-                    record.statusVale === 1 ? <Tag className='m-auto w-full' key={nanoid(4)} color="blue">Nuevo</Tag> :
-                    record.statusVale === 2 ? <Tag className='m-auto w-full' key={nanoid(4)} color="orange">Parcial</Tag> :
-                    record.statusVale === 3 ? <Tag className='m-auto w-full' key={nanoid(4)} color="orange">Parcial</Tag> :
-                    record.statusVale === 4 ? <Tag className='m-auto w-full' key={nanoid(4)} color="green">Entregado</Tag> :
-                    record.statusVale === 5 ? <Tag className='m-auto w-full' key={nanoid(4)} color="red">Cancelado</Tag> :
-                    record.statusVale === 6 ? <Tag className='m-auto w-full' key={nanoid(4)} color="orange">Parcial</Tag> :
-                    record.statusVale === 7 ? <Tag className='m-auto w-full' key={nanoid(4)} color="green">Entregado</Tag> :
-                    null
-                }
-            </div>
+                        <div className='w-full justify-center text-center flex relative'>
+                            { 
+                                record.statusVale === 1 ? <Tag className='m-auto w-full' key={nanoid(4)} color="blue">Nuevo</Tag> :
+                                record.statusVale === 2 ? <Tag className='m-auto w-full' key={nanoid(4)} color="orange">Parcial</Tag> :
+                                record.statusVale === 3 ? <Tag className='m-auto w-full' key={nanoid(4)} color="orange">Parcial</Tag> :
+                                record.statusVale === 4 ? <Tag className='m-auto w-full' key={nanoid(4)} color="green">Entregado</Tag> :
+                                record.statusVale === 5 ? <Tag className='m-auto w-full' key={nanoid(4)} color="red">Cancelado</Tag> :
+                                record.statusVale === 6 ? <Tag className='m-auto w-full' key={nanoid(4)} color="orange">Parcial</Tag> :
+                                record.statusVale === 7 ? <Tag className='m-auto w-full' key={nanoid(4)} color="green">Entregado</Tag> :
+                                null
+                            }
+                        { record.detalle_salidas.map( item => item.prestamo?.status === 1 ).some(item => item === true) && record.statusVale === 1 ? 
+                            <Tooltip title="En proceso de aprobación">
+                                <Badge className='absolute -right-2 -top-2' count={<ClockCircleOutlined style={{ color: '#f5222d' }} /> } />
+                            </Tooltip>
+                            : 
+                            null
+                        } 
+                        </div>
+                        
             ),
             filters: [
                 { 
@@ -328,13 +353,15 @@ const ValesSalida = () => {
                 dataIndex: 'acciones',
                 key: `acciones-${nanoid()}`,
                 render: (text, record, index) => (
-                      record.status === 1 ? <Tag key={index} className='w-full text-center' color="blue"> Nuevo </Tag>
-                    : record.status === 2 ? <Tag key={index} className='w-full text-center' color="orange">Parcial</Tag> 
-                    : record.status === 6 ? <Tag key={index} className='w-full text-center' color="volcano">Parcial</Tag>
-                    : record.status === 3 ? <Tag key={index} className='w-full text-center' color="green">Entregado</Tag> 
-                    : record.status === 4 ? <Tag key={index} className='w-full text-center' color="red">Cancelado</Tag>
-                    : record.status === 5 ? <Tag key={index} className='w-full text-center' color="magenta">Cerrado</Tag>
-                    : null
+                    // record.prestamo.status !== 1 ?
+                        record.status === 1 ? <Tag key={index} className='w-full text-center' color="blue"> Nuevo </Tag>
+                        : record.status === 2 ? <Tag key={index} className='w-full text-center' color="orange">Parcial</Tag> 
+                        : record.status === 6 ? <Tag key={index} className='w-full text-center' color="volcano">Parcial</Tag>
+                        : record.status === 3 ? <Tag key={index} className='w-full text-center' color="green">Entregado</Tag> 
+                        : record.status === 4 ? <Tag key={index} className='w-full text-center' color="red">Cancelado</Tag>
+                        : record.status === 5 ? <Tag key={index} className='w-full text-center' color="magenta">Cerrado</Tag>
+                        : null
+                    // : <Tag key={index} className='w-full text-center' color="red"> Sin Aprobar </Tag>
                 ),
                 width: '6%'
             },
@@ -569,7 +596,7 @@ const ValesSalida = () => {
         <>
             {
                 hasPermission(userPermission, 'crear vales') ?
-                <Button type='icon-secondary-new' onClick={() => navigate('create')} className="md:flex hidden fixed right-10 lg:bottom-8 bottom-28 z-50"><PlusCircleOutlined className='py-1'/></Button>
+                <Button type='icon-secondary-new' onClick={() => navigate('nuevo')} className="md:flex hidden fixed right-10 lg:bottom-8 bottom-28 z-50"><PlusCircleOutlined className='py-1'/></Button>
                 : null 
             }
                 <div className="lg:grid hidden grid-cols-4 gap-10 py-5 ">
