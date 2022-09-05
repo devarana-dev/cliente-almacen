@@ -61,17 +61,19 @@ const Notificaciones = () => {
             console.log('Recibi prestamos');
             dispatch(getAllPrestamosAction())
         })
-    }, [socket])
+    }, [socket, userAuth])
 
 
     const joinRoom = () => {
 
         console.log('Entrando....');
-        console.log(userAuth);
         if(userAuth && !isLoading){
+            console.log( userAuth );
             if(hasPermission(userPermission, 'entregar vales')){
+                console.log('Almacenista');
                 socket.emit("join_room", {user: userAuth.id, room: 'almacen'})
             }else{
+                console.log('Residente');
                 socket.emit("join_room", {user: userAuth.id, room: 'residente'})
             }
         }
