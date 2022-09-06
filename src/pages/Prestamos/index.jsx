@@ -57,12 +57,15 @@ const Prestamo = () => {
     
 
     useEffect(() => {
-        if(hasPermission(userPermission, 'ver prestamos')){
-            dispatch(getAllPrestamosAction())
-            setSegment(['Todos'])
-        }else{
-            dispatch(getPrestamosAction())
-            setSegment(['Todos', 'Solicité', 'Me Solicitaron'])
+        if(!isLoadingPermission){
+
+            if(hasPermission(userPermission, 'ver prestamos')){
+                dispatch(getAllPrestamosAction())
+                setSegment(['Todos'])
+            }else{
+                dispatch(getPrestamosAction())
+                setSegment(['Todos', 'Solicité', 'Me Solicitaron'])
+            }
         }
         
     // eslint-disable-next-line

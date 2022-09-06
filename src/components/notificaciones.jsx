@@ -67,9 +67,7 @@ const Notificaciones = () => {
 
     const joinRoom = () => {
 
-        console.log('Entrando....');
         if(userPermission && !isLoading){
-            console.log( userPermission );
             if(hasPermission(userPermission, 'entregar vales')){
                 console.log('Almacenista');
                 socket.emit("join_room", {user: userAuth.id, room: 'almacen'})
