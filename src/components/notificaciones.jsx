@@ -1,10 +1,10 @@
-import { BellOutlined } from '@ant-design/icons';
-import { Badge, Button, Dropdown, Menu, notification } from 'antd';
+// import { BellOutlined } from '@ant-design/icons';
+// import { Badge, Button, Dropdown, Menu, notification } from 'antd';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
-import { getNotificationesAction, updateNotificationeAction } from '../actions/notificationActions';
+// import { getNotificationesAction, updateNotificationeAction } from '../actions/notificationActions';
 import { getAllPrestamosAction } from '../actions/prestamoActions';
 import { getAllValesAction, getCountValeSalidaAction } from '../actions/valeActions';
 import { hasPermission } from '../utils/hasPermission';
@@ -19,9 +19,9 @@ import { hasPermission } from '../utils/hasPermission';
         
 const Notificaciones = () => {
     const dispatch = useDispatch()
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
     const [isConnected, setIsConnected] = useState(socket.connected)
-    const [active, setActive] = useState(true)
+    // const [active, setActive] = useState(true)
 
     
     // const { notificaciones } = useSelector( state => state.notificaciones)
@@ -61,6 +61,7 @@ const Notificaciones = () => {
             console.log('Recibi prestamos');
             dispatch(getAllPrestamosAction())
         })
+        // eslint-disable-next-line
     }, [socket, userPermission])
  
     

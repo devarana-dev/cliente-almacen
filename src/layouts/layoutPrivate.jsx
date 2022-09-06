@@ -1,4 +1,4 @@
-import { Layout, Button, Modal, notification, Switch, Dropdown, Menu, Popconfirm } from "antd";
+import { Layout, Button, Modal, notification, Switch, Dropdown, Menu } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from 'react-router-dom'
@@ -12,7 +12,6 @@ import {
     SwapOutlined,
     PlusCircleOutlined,
     AlertOutlined,
-    BugOutlined,
   } from '@ant-design/icons';
 
 import { BiSearchAlt } from 'react-icons/bi'
@@ -29,6 +28,7 @@ import { Footer } from "antd/lib/layout/layout";
 import { logoutAction } from '../actions/authActions'
 import { getPermisoAction } from "../actions/permisosActions";
 import Notas from "../components/Notas";
+import { groupPermission, hasPermission } from "../utils/hasPermission";
 
 export default function LayoutPrivate({children}) {
     const dispatch = useDispatch()
@@ -37,7 +37,7 @@ export default function LayoutPrivate({children}) {
     const { Header, Sider, Content } = Layout
     const [collapsed, setCollapsed] = useState(false);
 
-
+    const { userPermission } = useSelector(state => state.permisos);
     const { isAuthenticated, token, isLoading, errors, logout } = useSelector( state => state.auth )
     const [hiddeable, setHiddeable] = useState(localStorage.getItem('sideBar') || false)
     const [visible, setVisible] = useState(false);
@@ -167,37 +167,49 @@ export default function LayoutPrivate({children}) {
                         </div>
                     </div>
                 </div>
+
+                {
+                groupPermission(userPermission, ['crear vales', 'crear personal']) ?
                 
-                <Dropdown
-                    className="fixed right-7 bottom-24 z-50"
-                    overlay={<Menu
-                        items={[
-                        {
-                            key: '5',
-                            label: (
-                            <Link className="my-2" to={'/vales-salida/nuevo'}>
-                                Crear Vale
-                            </Link>
-                            ),
-                        },
-                        {
-                            key: '6',
-                            label: (
-                            <Link to={'/personal/create'}>
-                                Crear Personal
-                            </Link>
-                            ),
-                        },
-                        ]}
-                    />}
-                    placement="topRight"
-                    trigger={'click'}
-                    arrow={{
-                        pointAtCenter: true,
-                    }}
-                    >
-                    <Button type='icon-secondary-new'><PlusCircleOutlined className='py-1'/></Button>
-                </Dropdown>
+                    <Dropdown
+                        className="fixed right-7 bottom-24 z-50"
+                        overlay={<Menu
+                            items={
+                                [
+                                    hasPermission(userPermission, 'crear vales') ?
+                                    {
+                                        key: '5',
+                                        label: (
+                                        <Link className="dropDownResponsive" to={'/vales-salida/nuevo'}>
+                                            Crear Vale
+                                        </Link>
+                                        ),
+                                    }:
+                                    null,
+                                    hasPermission(userPermission, 'crear personal') ?
+                                    {
+                                        key: '6',
+                                        label: (
+                                        <Link className="dropDownResponsive" to={'/personal/create'}>
+                                            Crear Personal
+                                        </Link>
+                                        ),
+                                    } : null
+                                ]
+                            }
+                        />}
+                        placement="topRight"
+                        trigger={'click'}
+                        arrow={{
+                            pointAtCenter: true,
+                        }}
+                        >
+                        <Button type='icon-secondary-new'><PlusCircleOutlined className='py-1'/></Button>
+                    </Dropdown>
+                    : null 
+                }
+                
+                
             </Footer>
 
             <Modal

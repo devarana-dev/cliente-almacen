@@ -3,11 +3,12 @@ import { useState } from "react";
 export default function Forbidden() {
 
     const [visible, setVisible] = useState()
-
     setTimeout(() => {
         setVisible(true)
     } , 1000);
 
+
+    
     return(
         visible?
             <div className="flex h-full">

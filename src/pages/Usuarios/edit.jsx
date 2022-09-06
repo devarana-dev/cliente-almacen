@@ -181,18 +181,6 @@ const EditUsuario = () => {
                     <Button type="ghost" htmlType="submit">
                         Guardar
                     </Button>  
-                    {/* <Button type="ghost" onClick={ () => navigate(-1)}>
-                        Secondary
-                    </Button>  
-                    <Button type="danger" htmlType="submit">
-                        Danger
-                    </Button>  
-                    <Button type="warning" htmlType="submit">
-                        Warning
-                    </Button>  
-                    <Button type="dark" htmlType="submit">
-                        Cancelar
-                    </Button>   */}
                 </div>
             </Form.Item>
         </Form>
