@@ -23,7 +23,7 @@ const ValesSalida = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const { vales, errors, delivered, updated, isLoading, count, deleted } = useSelector( state => state.vales )
-    const { userPermission } = useSelector(state => state.permisos);
+    const { userPermission, isLoading:isLoadingPermisos } = useSelector(state => state.permisos);
     const [ tableReady , setTableReady ] = useState(false)
     const [ dataSource, setDataSource ] = useState([]);
     const [ dataNestedSource, setDataNestedSource ] = useState([])
@@ -141,10 +141,9 @@ const ValesSalida = () => {
     }, [])
 
     useEffect(() => {
-
-       
         let result = []
-        if(hasPermission(userPermission, 'entregar vales')){
+
+        if(hasPermission(userPermission, 'entregar vales') && !isLoadingPermisos){
             result = vales.filter( item => 
                 item.detalle_salidas.every( item => item.prestamo?.status !== 1 ) ?? item ).filter( item => item.detalle_salidas.length > 0).map( (item, i) => (
                     { 
@@ -158,6 +157,7 @@ const ValesSalida = () => {
                     }
             ))
         }else{
+            console.log('hola');
             result = vales.map( (item, i) => (
                     { 
                         key: i, 
@@ -182,7 +182,7 @@ const ValesSalida = () => {
 
         setTableReady(true)
         // eslint-disable-next-line
-    }, [vales])
+    }, [ vales, userPermission ])
 
     const [columns, setColumns] = useState([
         {

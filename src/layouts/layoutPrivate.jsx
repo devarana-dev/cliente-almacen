@@ -191,7 +191,7 @@ export default function LayoutPrivate({children}) {
                                         key: '6',
                                         label: (
                                         <Link className="dropDownResponsive" to={'/personal/create'}>
-                                            Crear Personal
+                                            Registrar Personal
                                         </Link>
                                         ),
                                     } : null
