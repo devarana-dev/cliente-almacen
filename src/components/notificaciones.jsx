@@ -32,7 +32,7 @@ const Notificaciones = () => {
     
 
     useEffect(() => {
-        console.log('Conectado ?', socket.connected);
+        // console.log('Conectado ?', socket.connected);
 
         socket.on('connected', () => {
             setIsConnected(true)
@@ -52,13 +52,13 @@ const Notificaciones = () => {
         joinRoom()
         
         socket.on("recieve_vale", ({message}) => {
-            console.log('Recibi vale');
+            // console.log('Recibi vale');
             dispatch(getAllValesAction())
             dispatch(getCountValeSalidaAction())
         })
 
         socket.on("recieve_prestamo", ({message}) => {
-            console.log('Recibi prestamos');
+            // console.log('Recibi prestamos');
             dispatch(getAllPrestamosAction())
         })
         // eslint-disable-next-line
@@ -70,10 +70,10 @@ const Notificaciones = () => {
 
         if(userPermission && !isLoading){
             if(hasPermission(userPermission, 'entregar vales')){
-                console.log('Almacenista');
+                // console.log('Almacenista');
                 socket.emit("join_room", {user: userAuth.id, room: 'almacen'})
             }else{
-                console.log('Residente');
+                // console.log('Residente');
                 socket.emit("join_room", {user: userAuth.id, room: 'residente'})
             }
         }

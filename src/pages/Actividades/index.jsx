@@ -107,9 +107,6 @@ const Actividades = () => {
                 openNotificationWithIcon('success', 'El insumo se ha eliminado')
             }
         }
-
-        console.log(!hasPermission(userPermission, 'ver actividades') && !isLoading);
-
         if(!hasPermission(userPermission, 'ver actividades') && !isLoading ) return <Forbidden/>
 
         return ( 
