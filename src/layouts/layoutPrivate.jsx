@@ -113,7 +113,7 @@ export default function LayoutPrivate({children}) {
             <Layout className="layout-right">
                 <Header className="layout-right__header hidden lg:flex"> 
                     <div>
-                        <Switch className="bg-dark" checkedChildren="On" unCheckedChildren="Off" defaultChecked={hiddeable} onChange={() => handleSidebar(!hiddeable)}/>
+                        {/* <Switch className="bg-dark" checkedChildren="On" unCheckedChildren="Off" defaultChecked={hiddeable} onChange={() => handleSidebar(!hiddeable)}/> */}
                         <button onClick={() => setCollapsed(!collapsed)}> {collapsed ? <MenuUnfoldOutlined className="text-2xl sm:text-dark sm:bg-transparent bg-primary text-white pb-1 px-2 rounded "/> : <MenuFoldOutlined className="text-2xl sm:text-dark sm:bg-transparent bg-primary text-white pb-1 px-2 rounded "/>} </button>
                     </div>
                     <div>
