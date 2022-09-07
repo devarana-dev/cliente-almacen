@@ -19,6 +19,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
     const [ form ] = Form.useForm();
     const { insumos, isLoading, errors } = useSelector( state => state.insumos )
     const { created, errors:errorsVale } = useSelector(state => state.vales)
+    const { userAuth } = useSelector( state => state.auth )
     const { usuarios } = useSelector( state => state.usuarios)
     
     const [ dataSource, setDataSource ] = useState([]);
@@ -254,7 +255,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
                 //         <Option key={item.id} value={item.id}>{`${item.nombre} ${item.apellidoPaterno} `}</Option>
                 //     ))
 
-                usuarios.filter( item => item.role.permisos.map( item => item.permisos === 'acciones prestamos' ).includes(true) )
+                usuarios.filter( item => item.role.permisos.map( item => item.permisos === 'acciones prestamos' ).includes(true) && userAuth.id !== item.id )
                 .map( item => ( <Option key={item.id} value={item.id}>{`${item.nombre} ${item.apellidoPaterno} `}</Option> )
                 )
                 }

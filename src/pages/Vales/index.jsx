@@ -1,5 +1,5 @@
 
-import { BellOutlined, CheckCircleOutlined, ClockCircleOutlined, FileTextOutlined, PieChartOutlined, PlusCircleOutlined, ShrinkOutlined, StopOutlined, SwapOutlined } from '@ant-design/icons';
+import { BellOutlined, CheckCircleOutlined, ClockCircleOutlined, FileTextOutlined, PieChartOutlined, PlusCircleOutlined, ShrinkOutlined, StopOutlined } from '@ant-design/icons';
 import { cancelDetalleAction, cancelValeAction, closeValeAction, completeValeSalida, deliverValeAction, getAllValesAction, getCountValeSalidaAction, searchValeAction } from '../../actions/valeActions';
 import { BsInfoCircle } from 'react-icons/bs'
 import { Button, Table, Tag, Modal, Input, Badge, Avatar, Image, Tooltip } from 'antd';
@@ -157,7 +157,6 @@ const ValesSalida = () => {
                     }
             ))
         }else{
-            console.log('hola');
             result = vales.map( (item, i) => (
                     { 
                         key: i, 
@@ -437,9 +436,6 @@ const ValesSalida = () => {
                     :  
                     <div className="flex justify-start h-6" key={index}> 
                         <Button type='icon-warning' onClick={ () => { setDisplayInsumo(record); showModal({...visible, insumoInfo: true}); } } htmlType='button' className='icon'><BsInfoCircle className='text-xl align-middle' /> </Button>
-                        {record.status === 3? 
-                        <Button type='icon-primary' htmlType='button' className='icon'> <SwapOutlined className='text-xl align-middle'/> </Button>
-                        : null}
                     </div>
 
                 ),
@@ -678,7 +674,7 @@ const ValesSalida = () => {
             }}
 
             />
-            :null }
+            : null }
 
             <Modal
                 title={`${entrega.type === 1 || entrega.type === 3 ? 'Entrega Completa' : 'Entrega Parcial' }`}
