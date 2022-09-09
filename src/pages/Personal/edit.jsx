@@ -107,7 +107,7 @@ const EditPersonal = () => {
             </Form.Item>
 
             <Form.Item 
-                label="Apellido Materno" 
+                label="Apodo" 
                 name="apellidoMaterno" 
                 hasFeedback>   
                 <Input name="apellidoMaterno" onChange={handleChange}/>

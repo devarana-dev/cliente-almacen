@@ -157,7 +157,7 @@ export default function LayoutPrivate({children}) {
                     <Link to={'/prestamos'} className="block w-full h-auto text-center footer__link">
                         <div className="footer__link-icon"> 
                             <SwapOutlined className="m-auto"/> 
-                            <p> Prestamos </p>
+                            <p> Préstamos </p>
                         </div>
                     </Link>
                     <div className="block w-full h-auto text-center footer__link cursor-pointer">

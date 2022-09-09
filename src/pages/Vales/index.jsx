@@ -150,7 +150,7 @@ const ValesSalida = () => {
                         key: i, 
                         residente:`${item.user.nombre} ${item.user.apellidoPaterno}`,
                         residentePicture: item.user.picture,
-                        personalInfo: `${item.personal.nombre} ${item.personal.apellidoPaterno}`,
+                        personalInfo: `${item.personal.nombre} ${item.personal.apellidoMaterno? `(${item.personal.apellidoMaterno})` : '' } ${item.personal.apellidoPaterno}`,
                         actividadInfo: item.actividad.nombre,
                         aciones:item.id, 
                         ...item 

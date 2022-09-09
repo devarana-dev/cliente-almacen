@@ -53,7 +53,7 @@ const Personal = () => {
           ellipsis: true,
         },
         {
-          title: 'Apellido Materno',
+          title: 'Apodo',
           dataIndex: 'apellidoMaterno',
           key: 'apellidoMaterno',
           sorter: (a, b) => a.nombre.localeCompare(b.apellidoMaterno),

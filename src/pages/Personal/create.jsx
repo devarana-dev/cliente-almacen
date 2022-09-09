@@ -88,7 +88,7 @@ const CreatePersonal = () => {
             </Form.Item>
 
             <Form.Item 
-                label="Apellido Materno" 
+                label="Apodo" 
                 name="apellidoMaterno" 
                 hasFeedback>   
                 <Input name="apellidoMaterno" value={apellidoMaterno} onChange={handleChange}/>
