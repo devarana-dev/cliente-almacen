@@ -7,7 +7,7 @@ const Notas = () => {
             <div className="">
                 <h1 className="text-primary text-lg font-bold">Actualización <span>13/09/22</span></h1>
                 <ul className="text-dark">
-                    <li>Se ajustó validaciones sobre los cuadros de comentarios en algunas secciones, ya que permitia enviarlos vacios.</li>
+                    <li>Se ajustó validaciones sobre los cuadros de comentarios en algunas secciones, ya que permitía enviarlos vacíos.</li>
                     <li>Se ajustó una validación a la hora de cancelar un insumo, no se cerraba correctamente el vale cuando ya había insumos "Entregados" </li>
                 </ul>
             </div>
