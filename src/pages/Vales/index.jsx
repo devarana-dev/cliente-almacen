@@ -681,9 +681,8 @@ const ValesSalida = () => {
                 visible={visible.entrega}
                 footer={[
                     <Button type='default' onClick={hideModal}> Cancelar </Button>,
-                    <Button type='ghost' onClick={handleSubmit}> Enviar</Button>
+                    <Button type='ghost' onClick={handleSubmit} disabled={(!entrega.cantidadEntregada || entrega.cantidadEntregada === 0) || !validarCantidad}>Enviar</Button>
                 ]}
-                okButtonProps={{ disabled: !validarCantidad }}
                 onCancel={hideModal}
             >
                 {
@@ -718,9 +717,8 @@ const ValesSalida = () => {
                 visible={visible.cancelar}
                 footer={[
                     <Button type='default' onClick={hideModal}> Cancelar </Button>,
-                    <Button type='ghost' onClick={handleSubmitCancel}> Enviar </Button>
+                    <Button type='ghost' onClick={handleSubmitCancel} disabled={!cancel.comentarios}> Enviar </Button>
                 ]}
-                okButtonProps={{ disabled: !cancel.comentarios }}
                 onCancel={hideModal}
                 >
                     {
@@ -744,10 +742,9 @@ const ValesSalida = () => {
             <Modal
                 title="Registro de vale"
                 visible={visible.enktrl}
-                okButtonProps={{ disabled: !enkontrol.salidaEnkontrol }}
                 footer={[
                     <Button type='default' onClick={hideModal}> Cancelar </Button>,
-                    <Button type='ghost' onClick={handleSubmitClose}> Enviar</Button>
+                    <Button type='ghost' onClick={handleSubmitClose} disabled={!enkontrol.salidaEnkontrol  || enkontrol.salidaEnkontrol.trim() === ""}> Enviar</Button>
                 ]}
                 onCancel={hideModal}
                 >

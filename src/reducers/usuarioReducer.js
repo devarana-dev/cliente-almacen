@@ -14,8 +14,6 @@ const initialState = {
 // eslint-disable-next-line
 export default (state = initialState, action) => {
     switch(action.type) {
-
-        case types.GET_ALL_USER:
         case types.GET_USER:
         case types.CREATE_USER:
         case types.UPDATE_USER:
@@ -28,7 +26,17 @@ export default (state = initialState, action) => {
                 updated: false,
                 deleted: false,
             }
-
+        
+        case types.GET_ALL_USER:
+            return {
+                ...state,
+                isLoading: true,
+                errors: null,
+                created: false,
+                updated: false,
+                deleted: false,
+                editedUsuario: null,
+            }
         case types.GET_ALL_USER_SUCCESS:
             return {
                 ...state,
