@@ -644,7 +644,7 @@ const ValesSalida = () => {
                             </div>
                                 <div className="sm:text-right text-center sm:py-0 pt-2">
                                 <p className="text-custom-dark2 font-light sm:text-base text-sm">Sin Registro EK</p>
-                                <h1 className="lg:text-2xl text-lg text-custom-dark">{count.entregado}</h1>
+                                <h1 className="lg:text-2xl text-lg text-custom-dark">{count.entregado + count.parcialCerrado}</h1>
                             </div>
                         </div>
                     </div>
