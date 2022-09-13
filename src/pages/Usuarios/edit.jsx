@@ -130,7 +130,7 @@ const EditUsuario = () => {
             </Form.Item>
             <Form.Item 
                 label="Telefono" 
-                name="email" 
+                name="telefono" 
                 rules={[
                     { required: true, message: 'Debes ingresar un teléfono', },
                 ]} 
