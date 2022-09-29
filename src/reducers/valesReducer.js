@@ -10,7 +10,8 @@ const initialState = {
     updated: false,
     delivered: false,
     deleted: false,
-    count: []
+    count: [],
+    paginate: {}
 }
 
 // eslint-disable-next-line
@@ -79,7 +80,12 @@ export default (state = initialState, action) => {
         case types.GET_ALL_VALE_SUCCESS:
             return {
                 ...state,
-                vales: action.payload,
+                vales: action.payload.valeSalida,
+                paginate: {
+                    totalItem:action.payload.totalItem,
+                    totalPages:action.payload.totalPages,
+                    currentPage:action.payload.currentPage,
+                },
                 isLoading: false,
                 errors: null
             }
@@ -129,7 +135,6 @@ export default (state = initialState, action) => {
             }
 
         case types.CLOSE_VALE_SUCCESS:
-            console.log(action.payload);
             return {
                 ...state,
                 isLoading: false,

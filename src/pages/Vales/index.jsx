@@ -2,7 +2,7 @@
 import { BellOutlined, CheckCircleOutlined, ClockCircleOutlined, FileTextOutlined, PieChartOutlined, PlusCircleOutlined, ShrinkOutlined, StopOutlined } from '@ant-design/icons';
 import { cancelDetalleAction, cancelValeAction, closeValeAction, completeValeSalida, deliverValeAction, getAllValesAction, getCountValeSalidaAction, searchValeAction } from '../../actions/valeActions';
 import { BsInfoCircle } from 'react-icons/bs'
-import { Button, Table, Tag, Modal, Input, Badge, Avatar, Image, Tooltip } from 'antd';
+import { Button, Table, Tag, Modal, Input, Badge, Avatar, Image, Tooltip, Pagination, DatePicker, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
@@ -19,10 +19,11 @@ import Loading from '../../components/Elements/Loading';
 
 const ValesSalida = () => {
 
+    const { RangePicker } = DatePicker;
     const { TextArea } = Input;
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { vales, errors, delivered, updated, isLoading, count, deleted } = useSelector( state => state.vales )
+    const { vales, errors, delivered, updated, isLoading, count, deleted, paginate } = useSelector( state => state.vales )
     const { userPermission, isLoading:isLoadingPermisos } = useSelector(state => state.permisos);
     const [ tableReady , setTableReady ] = useState(false)
     const [ dataSource, setDataSource ] = useState([]);
@@ -33,6 +34,14 @@ const ValesSalida = () => {
     const [ displayComentarios, setComentarios ] = useState('')
     const [ displayInsumo, setDisplayInsumo ] = useState({ })
 
+    const [ filter, setFilter ]  = useState({
+        search: '',
+        page: 0,
+        limit: 10,
+        status: [],
+        dateInit: '',
+        dateEnd: ''
+    })
 
 
     // TODO: Optimizar Modals
@@ -45,7 +54,8 @@ const ValesSalida = () => {
             comentarios:false,
             insumoInfo:false
     });
-	
+
+
     const [ entrega, setEntrega ] = useState({
         id: 0,
         valeSalidaId: 0,
@@ -135,7 +145,7 @@ const ValesSalida = () => {
     }
 
     useEffect(() => {
-            dispatch(getAllValesAction())
+            dispatch(getAllValesAction(filter))
             dispatch(getCountValeSalidaAction())
         // eslint-disable-next-line
     }, [])
@@ -189,15 +199,12 @@ const ValesSalida = () => {
             dataIndex: 'id',
             key: `id-${nanoid()}`,
             responsive: ['lg'],
-            sorter: (a, b) => a.id - b.id,
-            ...getColumnSearchProps('id'),
             width: '5%'
         },
         {
             title: 'Fecha',
             dataIndex: 'fecha',
             key: `fecha-${nanoid()}`,
-            ...getColumnSearchProps('fecha'),
             responsive: ['lg'],
             width: '5%',
             render: (text, record) => (
@@ -232,13 +239,6 @@ const ValesSalida = () => {
                 </div>
             : ''
             ),
-            onFilter: (value, record) => record.statusVale === value,
-            filterMode: 'tree',
-            filters: [
-                { text: 'Abierto', value: 'Abierto', children: [{ text: 'Nuevo', value: 1 }, {text: 'Parcial', value: 2}] },
-                { text: 'Cerrado', value: 'Cerrado', children: [{ text: 'Parcial', value: 3 }, {text: 'Entregado', value: 4}, {text: 'Cancelado', value: 5 }] },
-                { text: 'Registrado', value: 'Parcial', children: [{ text: 'Entregado', value: 6 }, {text: 'Parcial', value: 7}] },
-            ]
         },
         {
             title: 'Estatus',
@@ -266,33 +266,6 @@ const ValesSalida = () => {
                         </div>
                         
             ),
-            filters: [
-                { 
-                    text: 'Por Entregar',
-                    value: 1
-                },
-                { 
-                    text: 'Parcial Abierto',
-                    value: 2
-                },
-                { 
-                    text: 'Parcial Cerrado',
-                    value: 6
-                },
-                { 
-                    text: 'Entregado',
-                    value: 4
-                },
-                { 
-                    text: 'Cancelado',
-                    value: 5
-                },
-                { 
-                    text: 'Enkontrol',
-                    value: 7
-                },
-            ],
-            onFilter: (value, record) => record.statusVale === value,
             width: '5%'
         },
         {
@@ -300,9 +273,6 @@ const ValesSalida = () => {
             dataIndex: 'residente',
             responsive: ['lg'],
             key: `residente-${nanoid()}`,
-            sorter: (a, b) => a.residente.localeCompare(b.residente),
-            ...getColumnSearchProps('residente'),
-            // width: 450,
             render: (text, record) => (
                 <div className='flex flex-row items-center'>
                     <Avatar crossOrigin='anonymous' src={ <Image src={record.residentePicture} /> || '' } />
@@ -316,8 +286,6 @@ const ValesSalida = () => {
             dataIndex: 'personalInfo',
             key: `personalInfo-${nanoid()}`,
             ellipsis: true,
-            sorter: (a, b) => a.personalInfo.localeCompare(b.personalInfo),
-            ...getColumnSearchProps('personalInfo'),
             width: '22%',
         },
         {
@@ -325,8 +293,6 @@ const ValesSalida = () => {
             dataIndex: 'actividadInfo',
             key: `actividadInfo-${nanoid()}`,
             ellipsis: true,
-            sorter: (a, b) => a.actividadInfo.localeCompare(b.actividadInfo),
-            ...getColumnSearchProps('actividadInfo'),
             width: '25%',
         },
         
@@ -584,10 +550,52 @@ const ValesSalida = () => {
         return result.cantidadEntregada
     }
 
+    useEffect (() => {
+        dispatch(getAllValesAction(filter))
+    }, [filter] )
 
     if(!hasPermission(userPermission, 'ver vale') && !isLoading ) return <Forbidden/>
     if( !tableReady ) return <Loading />
 
+
+    const handleLoadVales = (page, limit) => {
+        setFilter({
+            ...filter,
+            page: page,
+            limit: 10,
+        })
+    }
+    
+    const handleSearchByStatus = (value) => {
+        setFilter({
+            ...filter,
+            status: value
+        })
+    }
+
+    const handleSearchByText = (e) => {
+        const {value} = e.target
+        if(value.length > 2){
+            setFilter({
+                ...filter,
+                search: value
+            })
+        }else if(value.length === 0){
+            setFilter({
+                ...filter,
+                search: ''
+            })
+        }
+
+    }
+
+    const handleSearchByDate = (value, dateString) => {
+        console.log(dateString);
+    }
+
+
+
+    
     return ( 
         <>
             {
@@ -596,7 +604,7 @@ const ValesSalida = () => {
                 : null 
             }
                 <div className="lg:grid hidden grid-cols-4 gap-10 py-5 ">
-                    <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction()) }>
+                    <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(getAllValesAction(filter)) }>
                         <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
                             <div className="text-white bg-gradient-to-tr from-dark to-dark-lighter sm:w-16 sm:h-16 w-12 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
                                 <div className="text-base sm:text-3xl  w-full justify-center flex m-auto">
@@ -609,7 +617,7 @@ const ValesSalida = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction( {statusVale: 1} )) }>
+                    <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => handleSearchByStatus([1]) }>
                         <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
                             <div className="text-white bg-gradient-to-tr from-info to-info-lighter sm:w-16 sm:h-16 w-12 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
                                 <div className="text-base sm:text-3xl w-full justify-center flex m-auto">
@@ -622,7 +630,7 @@ const ValesSalida = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction( {statusVale: 2} )) }>
+                    <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => handleSearchByStatus( [2] )  }>
                         <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
                             <div className="text-white bg-gradient-to-tr from-warning to-warning-lighter sm:w-16 sm:h-16 w-12 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
                                 <div className="text-base sm:text-3xl  w-full justify-center flex m-auto">
@@ -635,7 +643,7 @@ const ValesSalida = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(searchValeAction({statusVale: 4})) }>
+                    <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => handleSearchByStatus( [3, 4 ] ) }>
                         <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
                             <div className="text-white bg-gradient-to-tr from-primary to-primary-lighter sm:w-16 sm:h-16 w-12 h-12 -mt-10 p-5 rounded-md shadow align-middle flex">
                                 <div className="text-base sm:text-3xl  w-full justify-center flex m-auto">
@@ -648,32 +656,72 @@ const ValesSalida = () => {
                             </div>
                         </div>
                     </div>
-                </div>               
+                </div>    
+
+                <div className='inline-flex items-center pb-3 w-full'>
+                    <p>Filtros: </p>
+                    <Input type="text" 
+                        placeholder='Escribe para filtrar' 
+                        className='mx-3' 
+                        style={{ width : '250px'}} 
+                        onChange={ handleSearchByText } 
+                    />
+                    <RangePicker showToday={true}  className="mx-3" style={{ width : '350px'}} onCalendarChange={ (value, dateString) => {handleSearchByDate(value, dateString); dispatch(getAllValesAction(filter))} }/>         
+                    <Select
+                        mode="multiple"
+                        allowClear
+                        className='mx-3'
+                        style={{
+                            width: '360px',
+                        }}
+                        placeholder="Filtrar Por Estatus"
+                        maxTagCount= 'responsive'
+                        onChange={ (e) => {handleSearchByStatus(e);dispatch(getAllValesAction(filter))}}
+                        showSearch={false}
+                        >
+                        <Select.Option key={1} value={1}> Nuevo </Select.Option>
+                        <Select.Option key={2} value={2}> Parcial Abierto </Select.Option>
+                        <Select.Option key={6} value={6}> Parcial Cerrado </Select.Option>
+                        <Select.Option key={4} value={4}> Entregado </Select.Option>
+                        <Select.Option key={5} value={5}> Cancelado </Select.Option>
+                        <Select.Option key={7} value={7}> Enkontrol </Select.Option>
+                    </Select>       
+                </div>           
            
            { tableReady ?
-            <Table 
-            className='tableVales' 
-            loading={isLoading} 
-            render={true}
-            scroll={{ x: 'auto' }} 
-            key={record => record.id + nanoid()}
-            columns={columns} 
-            dataSource={dataSource} 
-            expandable={{
-                expandedRowRender, 
-                defaultExpandedRowKeys: ['0'], 
-                expandedRowKeys: activeExpRow,
-                rowExpandable: (record) => true,
-                onExpand: (expanded, record) => {
-                    const keys = [];
-                    if (expanded) {
-                    keys.push(record.key);
+            <>
+                <Table 
+                className='tableVales' 
+                loading={isLoading} 
+                render={true}
+                pagination={false}
+                scroll={{ x: 'auto' }} 
+                key={record => record.id + nanoid()}
+                columns={columns} 
+                dataSource={dataSource} 
+                expandable={{
+                    expandedRowRender, 
+                    defaultExpandedRowKeys: ['0'], 
+                    expandedRowKeys: activeExpRow,
+                    rowExpandable: (record) => true,
+                    onExpand: (expanded, record) => {
+                        const keys = [];
+                        if (expanded) {
+                        keys.push(record.key);
+                        }
+                        setActiveExpRow(keys);
                     }
-                    setActiveExpRow(keys);
-                }
-            }}
+                }}
 
-            />
+                />
+                <Pagination 
+                    total={paginate.totalItem} 
+                    current={paginate.currentPage+1} 
+                    pageSize={10} 
+                    onChange={handleLoadVales} 
+                    className="w-auto py-4 max-w-max ml-auto" 
+                    />
+            </>
             : null }
 
             <Modal

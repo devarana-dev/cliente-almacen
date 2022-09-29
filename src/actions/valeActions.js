@@ -1,5 +1,9 @@
-import clientAxios from '../config/axios';
+import clientAxios, { cancelTokenSource } from '../config/axios';
 import { types } from '../types';
+
+import axios from 'axios';
+
+
 
 export function createValeAction(vale){
     return async (dispatch) => {
@@ -33,15 +37,20 @@ const createValeError = error => {
 }
 
 
-export function getAllValesAction(){
+export function getAllValesAction(params){
+ 
     return async (dispatch) => {
         dispatch(getAllValesRequest())
-        await clientAxios.get('/vales')
+        await clientAxios.get(`/vales/paginate`,{params}, { cancelToken: clientAxios.cancelToken } )
             .then ( res => {
                 dispatch(getAllValesSuccess(res.data.valeSalida))
             }).catch( err => {
-                console.log('Error getAllValesAction', err.response);
-                dispatch(getAllValesError(err.response.data))
+                if (clientAxios.isCancel(err)) {
+                    console.log('Previous request canceled, new request is send', err.message);
+                } else {
+                    console.log('Error getAllValesAction', err.response);
+                    dispatch(getAllValesError(err.response.data))
+                }
             } )
     }
 }
@@ -128,6 +137,7 @@ const deliverValeError = error => {
     }
 }
 
+// TODO Falta mejorarlo
 export function searchValeAction(params){
     return async (dispatch) => {
         dispatch(getAllValesRequest())
