@@ -1,7 +1,6 @@
-import clientAxios, { cancelTokenSource } from '../config/axios';
+import clientAxios from '../config/axios';
 import { types } from '../types';
 
-import axios from 'axios';
 
 
 
@@ -45,12 +44,8 @@ export function getAllValesAction(params){
             .then ( res => {
                 dispatch(getAllValesSuccess(res.data.valeSalida))
             }).catch( err => {
-                if (clientAxios.isCancel(err)) {
-                    console.log('Previous request canceled, new request is send', err.message);
-                } else {
-                    console.log('Error getAllValesAction', err.response);
-                    dispatch(getAllValesError(err.response.data))
-                }
+                console.log('Error getAllValesAction', err.response);
+                dispatch(getAllValesError(err.response.data))
             } )
     }
 }
@@ -235,6 +230,42 @@ const closeDetalleSuccess = payload => {
 const closeDetalleError = error => {
     return {
         type: types.CLOSE_DETALLE_ERROR,
+        payload: error
+    }
+}
+
+
+
+
+
+
+export function getDetalleSalidaAction(params){
+    return async (dispatch) => {
+        dispatch(getDetalleSalidaRequest())
+        await clientAxios.get('/vales/detalleSalida', {params})
+            .then ( res => {
+                dispatch(getDetalleSalidaSuccess(res.data.detalle))
+            }).catch( err => {
+                console.log('Error getDetalleSalidaAction', err.response);
+                dispatch(getDetalleSalidaError(err.response.data))
+            } )
+    }
+}
+
+const getDetalleSalidaRequest = () => {
+    return {
+        type: types.GET_DETALLE_SALIDA
+    }
+}
+const getDetalleSalidaSuccess = payload => {
+    return {
+        type: types.GET_DETALLE_SALIDA_SUCCESS,
+        payload
+    }
+}
+const getDetalleSalidaError = error => {
+    return {
+        type: types.GET_DETALLE_SALIDA_ERROR,
         payload: error
     }
 }

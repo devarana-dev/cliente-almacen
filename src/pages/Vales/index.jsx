@@ -6,7 +6,6 @@ import { Button, Table, Tag, Modal, Input, Badge, Avatar, Image, Tooltip, Pagina
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
-import { getColumnSearchProps } from '../../hooks/useFilter'
 import { nanoid } from 'nanoid'
 import '../../assets/scss/showVale.scss'
 import ekIcon from "../../assets/img/Original-EK.png"
@@ -33,6 +32,7 @@ const ValesSalida = () => {
     const [ loadedColumn , setLoad ] = useState(false)
     const [ displayComentarios, setComentarios ] = useState('')
     const [ displayInsumo, setDisplayInsumo ] = useState({ })
+    const [ current, setCurrent ] = useState(1)
 
     const [ filter, setFilter ]  = useState({
         search: '',
@@ -145,10 +145,15 @@ const ValesSalida = () => {
     }
 
     useEffect(() => {
-            dispatch(getAllValesAction(filter))
             dispatch(getCountValeSalidaAction())
         // eslint-disable-next-line
     }, [])
+
+    useEffect (() => {
+        dispatch(getAllValesAction(filter))
+
+        setCurrent( current )
+    }, [filter] )
 
     useEffect(() => {
         let result = []
@@ -550,9 +555,7 @@ const ValesSalida = () => {
         return result.cantidadEntregada
     }
 
-    useEffect (() => {
-        dispatch(getAllValesAction(filter))
-    }, [filter] )
+
 
     if(!hasPermission(userPermission, 'ver vale') && !isLoading ) return <Forbidden/>
     if( !tableReady ) return <Loading />
@@ -569,7 +572,8 @@ const ValesSalida = () => {
     const handleSearchByStatus = (value) => {
         setFilter({
             ...filter,
-            status: value
+            status: value,
+            page: 1
         })
     }
 
@@ -578,19 +582,28 @@ const ValesSalida = () => {
         if(value.length > 2){
             setFilter({
                 ...filter,
-                search: value
+                search: value,
+                page: 1
             })
         }else if(value.length === 0){
             setFilter({
                 ...filter,
-                search: ''
+                search: '',
+                page: 1
             })
         }
 
     }
 
     const handleSearchByDate = (value, dateString) => {
-        console.log(dateString);
+        if ((dateString[0] !== '' && dateString[1] !== '') || (dateString[0] === '' && dateString[1] === '')){
+            setFilter({
+                ...filter,
+                page: 1,
+                dateInit: dateString[0],
+                dateEnd: dateString[1]
+            })
+        }
     }
 
 
@@ -666,7 +679,7 @@ const ValesSalida = () => {
                         style={{ width : '250px'}} 
                         onChange={ handleSearchByText } 
                     />
-                    <RangePicker showToday={true}  className="mx-3" style={{ width : '350px'}} onCalendarChange={ (value, dateString) => {handleSearchByDate(value, dateString); dispatch(getAllValesAction(filter))} }/>         
+                    <RangePicker showToday={true}  className="mx-3" style={{ width : '350px'}} onCalendarChange={ (value, dateString) => {handleSearchByDate(value, dateString); } }/>         
                     <Select
                         mode="multiple"
                         allowClear
@@ -707,7 +720,7 @@ const ValesSalida = () => {
                     onExpand: (expanded, record) => {
                         const keys = [];
                         if (expanded) {
-                        keys.push(record.key);
+                            keys.push(record.key);
                         }
                         setActiveExpRow(keys);
                     }
@@ -716,10 +729,10 @@ const ValesSalida = () => {
                 />
                 <Pagination 
                     total={paginate.totalItem} 
-                    current={paginate.currentPage+1} 
+                    current={paginate.currentPage} 
                     pageSize={10} 
                     onChange={handleLoadVales} 
-                    className="w-auto py-4 max-w-max ml-auto" 
+                    className="w-auto py-4 max-w-max ml-auto"
                     />
             </>
             : null }

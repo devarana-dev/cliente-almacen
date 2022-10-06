@@ -3,8 +3,10 @@ import { types } from '../types'
 
 const initialState = {
     vales: [],
+    detalleSalida: [],
     editedVale: null,
     isLoading: true,
+    isLoadingDetalles: true,
     errors: null,
     created: false,
     updated: false,
@@ -28,6 +30,19 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 isLoading: true,
+                errors: null,
+                editedVale: null,
+                created: false,
+                updated: false,
+                delivered: false,
+                deleted: false,
+                isLoadingDetalles: false,
+            }
+        case types.GET_DETALLE_SALIDA:
+            return {
+                ...state,
+                detalleSalida: [],
+                isLoadingDetalles: true,
                 errors: null,
                 editedVale: null,
                 created: false,
@@ -122,10 +137,12 @@ export default (state = initialState, action) => {
         case types.UPDATE_VALE_ERROR:
         case types.CLOSE_VALE_ERROR:
         case types.CLOSE_DETALLE_ERROR:
+        case types.GET_DETALLE_SALIDA_ERROR:
         case types.COUNT_VALE_SALIDA_ERROR:
             return {
                 ...state,
                 isLoading: false,
+                isLoadingDetalles: false,
                 errors: action.payload.message
             }
         case types.CLEAN_ERROR_STATE:
@@ -170,6 +187,16 @@ export default (state = initialState, action) => {
                 count: action.payload
             }
         
+
+        case types.GET_DETALLE_SALIDA_SUCCESS:
+            return {
+                ...state,
+                errors: null,
+                isLoadingDetalles: false,
+                detalleSalida: action.payload
+            }
+
+
         default:
             return state
     }
