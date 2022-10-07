@@ -11,6 +11,7 @@ import { groupPermission, hasPermission } from "../../utils/hasPermission";
 import ekIcon2 from "../../assets/img/Original-EK2.png"
 import ekIcon from "../../assets/img/Original-EK.png"
 import { BsInfoCircle } from "react-icons/bs";
+import Card from "../../components/Vales/Card";
 
 const ValesSalidaNew = () => {
 
@@ -240,15 +241,15 @@ const ValesSalidaNew = () => {
     const handleLoadVales = (page, limit) => {
         setFilter({
             ...filter,
-            page: page,
-            limit: 10,
+            page: page -1,
+            limit,
         })
     }
     const handleSearchByStatus = (value) => {
         setFilter({
             ...filter,
             status: value,
-            page: 1
+            page: 0
         })
     }
 
@@ -259,7 +260,7 @@ const ValesSalidaNew = () => {
             setFilter({
                 ...filter,
                 search: value,
-                page: 1
+                page: 0
             })
         }else if(value.length === 0){
             handleCleanSearch()
@@ -271,7 +272,7 @@ const ValesSalidaNew = () => {
         if ((dateString[0] !== '' && dateString[1] !== '')){
             setFilter({
                 ...filter,
-                page: 1,
+                page: 0,
                 dateInit: dateString[0],
                 dateEnd: dateString[1]
             })
@@ -287,7 +288,7 @@ const ValesSalidaNew = () => {
             limit: 10,
             status: [],
             dateInit: '',
-            dateEnd: ''
+            dateEnd: '',
         })
     }
 
@@ -319,7 +320,7 @@ const ValesSalidaNew = () => {
     // TODO FIN Modales
 
 
-    // Table Actions
+    // Table Nested Data
     const expandedRowRender = (record, index, indent, expanded) => {
         
         if(expanded){
@@ -450,59 +451,36 @@ const ValesSalidaNew = () => {
 
 
             <div className="lg:grid hidden grid-cols-4 gap-10 py-5 ">
-                <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => handleCleanSearch() }>
-                    <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
-                        <div className="text-white bg-gradient-to-tr from-dark to-dark-lighter sm:w-16 sm:h-16 w-12 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
-                            <div className="text-base sm:text-3xl  w-full justify-center flex m-auto">
-                                <FileTextOutlined className='align-middle'/>
-                            </div>
-                        </div>
-                            <div className="sm:text-right text-center sm:py-0 pt-2">
-                            <p className="text-custom-dark2 font-light sm:text-base text-sm">Todos</p>
-                            <h1 className="lg:text-2xl text-lg text-custom-dark">{count.todos}</h1>
-                        </div>
-                    </div>
-                </div>
-                <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => handleSearchByStatus([1]) }>
-                    <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
-                        <div className="text-white bg-gradient-to-tr from-info to-info-lighter sm:w-16 sm:h-16 w-12 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
-                            <div className="text-base sm:text-3xl w-full justify-center flex m-auto">
-                                <BellOutlined className='align-middle'/>
-                            </div>
-                        </div>
-                            <div className="sm:text-right text-center sm:py-0 pt-2">
-                            <p className="text-custom-dark2 font-light sm:text-base text-sm">Nuevos</p>
-                            <h1 className="lg:text-2xl text-lg text-custom-dark">{count.nuevo}</h1>
-                        </div>
-                    </div>
-                </div>
-                <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => handleSearchByStatus( [2] )  }>
-                    <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
-                        <div className="text-white bg-gradient-to-tr from-warning to-warning-lighter sm:w-16 sm:h-16 w-12 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
-                            <div className="text-base sm:text-3xl  w-full justify-center flex m-auto">
-                                <PieChartOutlined className='align-middle'/>
-                            </div>
-                        </div>
-                            <div className="sm:text-right text-center sm:py-0 pt-2">
-                            <p className="text-custom-dark2 font-light sm:text-base text-sm">Parciales</p>
-                            <h1 className="lg:text-2xl text-lg text-custom-dark">{count.parcialAbierto}</h1>
-                        </div>
-                    </div>
-                </div>
-                <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => handleSearchByStatus( [3, 4] ) }>
-                    <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
-                        <div className="text-white bg-gradient-to-tr from-primary to-primary-lighter sm:w-16 sm:h-16 w-12 h-12 -mt-10 p-5 rounded-md shadow align-middle flex">
-                            <div className="text-base sm:text-3xl  w-full justify-center flex m-auto">
-                                <img src={ekIcon2} alt="" />
-                            </div>
-                        </div>
-                            <div className="sm:text-right text-center sm:py-0 pt-2">
-                            <p className="text-custom-dark2 font-light sm:text-base text-sm">Sin Registro EK</p>
-                            <h1 className="lg:text-2xl text-lg text-custom-dark">{count.entregado + count.parcialCerrado}</h1>
-                        </div>
-                    </div>
-                </div>
+                <Card   
+                    text="Todos"
+                    icon={<FileTextOutlined className='align-middle'/>}
+                    fn={() => handleCleanSearch()}
+                    count={count.todos}
+                    color={'dark'}
+                />
+                <Card   
+                    text="Nuevos"
+                    icon={ <BellOutlined className='align-middle'/>}
+                    fn={() => handleSearchByStatus([1]) }
+                    count={count.nuevo}
+                    color={'info'}
+                />
+                <Card   
+                    text="Parciales"
+                    icon={<PieChartOutlined className='align-middle'/>}
+                    fn={() => handleSearchByStatus( [2] )}
+                    count={count.parcialAbierto}
+                    color={'warning'}
+                />
+                <Card   
+                    text="Sin Registro EK"
+                    icon={<img src={ekIcon2} alt="" />}
+                    fn={() => handleSearchByStatus( [3, 4] )}
+                    count={count.entregado + count.parcialCerrado}
+                    color={'primary'}
+                />
             </div> 
+
             <div className='inline-flex items-center pb-3 w-full'>
                 <p>Filtros: </p>
                 <Input type="text" 
@@ -521,7 +499,7 @@ const ValesSalidaNew = () => {
                     }}
                     placeholder="Filtrar Por Estatus"
                     maxTagCount= 'responsive'
-                    onChange={ (e) => {handleSearchByStatus(e)}}
+                    onChange={ (e) => { handleSearchByStatus(e) }}
                     showSearch={false}
                     >
                     <Select.Option key={1} value={1}> Nuevo </Select.Option>
@@ -563,8 +541,8 @@ const ValesSalidaNew = () => {
                 />
                 <Pagination 
                     total={(paginate.totalItem)} 
-                    current={paginate.currentPage} 
-                    pageSize={10} 
+                    current={paginate.currentPage + 1} 
+                    pageSize={filter.limit} 
                     onChange={handleLoadVales} 
                     className="w-auto py-4 max-w-max ml-auto"
                 />
