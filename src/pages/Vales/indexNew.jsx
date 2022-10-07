@@ -1,12 +1,12 @@
 
 import { BellOutlined, CheckCircleOutlined, ClockCircleOutlined, FileTextOutlined, PieChartOutlined, PlusCircleOutlined, ShrinkOutlined, StopOutlined } from "@ant-design/icons";
-import { Avatar, Badge, Button, DatePicker, Image, Input, Pagination, Select, Table, Tag, Tooltip } from "antd";
+import { Avatar, Badge, Button, DatePicker, Image, Input, Modal, Pagination, Select, Table, Tag, Tooltip } from "antd";
 import moment from "moment";
 import { nanoid } from "nanoid";
-import { createRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getAllValesAction, getCountValeSalidaAction, getDetalleSalidaAction } from "../../actions/valeActions";
+import { completeValeSalida, getAllValesAction, getCountValeSalidaAction, getDetalleSalidaAction } from "../../actions/valeActions";
 import { groupPermission, hasPermission } from "../../utils/hasPermission";
 import ekIcon2 from "../../assets/img/Original-EK2.png"
 import ekIcon from "../../assets/img/Original-EK.png"
@@ -30,39 +30,40 @@ const ValesSalidaNew = () => {
     const [ tableReady , setTableReady ] = useState(false)
     const [ activeExpRow, setActiveExpRow] = useState();
     const [ dataNestedSource, setDataNestedSource ] = useState([])
+    const [ modalProps, setModalProps ] = useState({
+
+    })
     const [ filter, setFilter ]  = useState({
         search: '',
         page: 0,
         limit: 10,
         status: [],
         dateInit: '',
-        dateEnd: ''
+        dateEnd: '',
+        sort: 'DESC',
+    })
+    const [ entrega, setEntrega ] = useState({
+        id: 0,
+        valeSalidaId: 0,
+        insumoId: 0,
+        cantidadEntregada: 0,
+        type: 1,
+        comentarios: null
     })
 
-    
+    const hideModal = () => {
+        setVisible(false)
+    }
+
     useEffect(() => {
         dispatch(getCountValeSalidaAction())
         dispatch(getAllValesAction(filter))
         setCurrent(current)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filter])
 
     useEffect(() => {
         let result = []
-
-        // if(hasPermission(userPermission, 'entregar vales') && !isLoadingPermisos){
-        //     result = vales.filter( item => 
-        //         item.detalle_salidas.every( item => item.prestamo?.status !== 1 ) ?? item ).filter( item => item.detalle_salidas.length > 0).map( (item, i) => (
-        //             { 
-        //                 key: i, 
-        //                 residente:`${item.user.nombre} ${item.user.apellidoPaterno}`,
-        //                 residentePicture: item.user.picture,
-        //                 personalInfo: `${item.personal.nombre} ${item.personal.apellidoMaterno? `(${item.personal.apellidoMaterno})` : '' } ${item.personal.apellidoPaterno}`,
-        //                 actividadInfo: item.actividad.nombre,
-        //                 aciones:item.id, 
-        //                 ...item 
-        //             }
-        //     ))
-        // }else{
             result = vales.map( (item, i) => (
                     { 
                         key: i, 
@@ -75,9 +76,6 @@ const ValesSalidaNew = () => {
                         ...item 
                     }
             ))
-        // }
-        
-
 		setDataSource( result )
 
         if((groupPermission(userPermission, ['entregar vales', 'registrar vales', 'eliminar vales', 'ver vales']) ) && !loadedColumn ){
@@ -85,6 +83,7 @@ const ValesSalidaNew = () => {
             setColumns([...columns, actionColumn])
         }
         setTableReady(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [vales, userPermission])
 
     const actionColumn = {
@@ -100,7 +99,7 @@ const ValesSalidaNew = () => {
                     <div className='flex justify-start'>
                         { hasPermission(userPermission, 'entregar vales') ? 
                             <Tooltip title="Entrega Completa" placement='topRight'>
-                                <Button type='icon-primary' className='icon' onClick={ () => handleEntrega(record, 3)}> <CheckCircleOutlined className='ml-0 align-middle text-xl' /> </Button>
+                                <Button type='icon-primary' className='icon' onClick={ () => handleModal(record, 1)}> <CheckCircleOutlined className='ml-0 align-middle text-xl' /> </Button>
                             </Tooltip> 
                             : null
                         }
@@ -112,7 +111,7 @@ const ValesSalidaNew = () => {
                             : null
                         }
                     </div> : 
-                   record.statusVale === 3 || record.statusVale === 4  ? 
+                   record.statusVale === 3 || record.statusVale === 4 ? 
                     <>
                         { hasPermission(userPermission, 'registrar vales') ? 
                         <Tooltip title="Registrar Enkontrol" placement='topRight'>
@@ -125,7 +124,7 @@ const ValesSalidaNew = () => {
                     </>
                     : 
                    <div className="h-6 justify-start flex">
-                        { record.salidaEnkontrol || record.comentarios  ? 
+                        { record.salidaEnkontrol || record.comentarios ? 
                             <Tooltip title="Ver Información" placement='topRight'>
                                 <Button type='icon-danger' className='px-2' onClick={() => { setComentarios(record); showModal({...visible, comentarios: true}); }}><BsInfoCircle className='text-xl'/></Button> 
                             </Tooltip>
@@ -197,13 +196,15 @@ const ValesSalidaNew = () => {
                                 record.statusVale === 7 ? <Tag className='m-auto w-full' key={nanoid(4)} color="green">Entregado</Tag> :
                                 null
                             }
-                        {/* { record.detalle_salidas.map( item => item.prestamo?.status === 1 ).some(item => item === true) && record.statusVale === 1 ? 
+                        { 
+                         
+                            record.prestamo?.status === 1? 
                             <Tooltip title="En proceso de aprobación">
                                 <Badge className='absolute -right-2 -top-2' count={<ClockCircleOutlined style={{ color: '#f5222d' }} /> } />
                             </Tooltip>
                             : 
                             null
-                        }  */}
+                        } 
                         </div>
                         
             ),
@@ -289,12 +290,63 @@ const ValesSalidaNew = () => {
             status: [],
             dateInit: '',
             dateEnd: '',
+            sort: 'DESC',
+        })
+    }
+
+    const handleSort = (value) => {
+        setFilter({
+            ...filter,
+            sort: value
         })
     }
 
     // * End Pagination
 
     // ? Acciones
+
+    const handleModal = (record, type) => {
+
+ 
+        // Type 1 = Entrega
+    
+        switch (type) {
+            case 1:
+                setEntrega({
+                    id: record.id,
+                    type,
+                })
+
+                setModalProps({
+                    title: 'Entrega Completa',
+                    footer: [
+                        <Button type='default' onClick={hideModal}> Cancelar </Button>,
+                        <Button type='ghost' onClick={handleSubmit}>Enviar</Button>
+                    ],
+                    content: `<p> ¿Estás seguro de realizar una entrega <span className='underline'>total del insumo solicitado</span>? </p> 
+                              <p> No podrá modificarse posteriormente. </p>`
+                });
+                
+            break
+            default:
+                break;
+        }
+
+        
+        setVisible(true)
+    }
+
+    console.log(entrega)
+
+    const handleSubmit = () => {
+        switch (entrega.type) {
+            case 1:
+                dispatch(completeValeSalida(entrega))
+                break
+            default:
+                break;
+        }
+    }
 
     const handleEntrega = () =>{}
     const handleCancel = () =>{}
@@ -308,14 +360,7 @@ const ValesSalidaNew = () => {
 
     const showModal = (props) => {};
 
-    const [ visible, setVisible] = useState({
-        entrega: false,
-        cancelar: false,
-        cerrar: false,
-        enktrl:false,
-        comentarios:false,
-        insumoInfo:false
-    })
+    const [ visible, setVisible] = useState(false)
 
     // TODO FIN Modales
 
@@ -487,15 +532,15 @@ const ValesSalidaNew = () => {
                     placeholder='Escribe para filtrar' 
                     className='mx-3' 
                     style={{ width : '250px'}} 
-                    onChange={ handleSearchByText } 
+                    onChange={ handleSearchByText }
                 />
-                <RangePicker showToday={true}  className="mx-3" style={{ width : '350px'}} onCalendarChange={ (value, dateString) => {handleSearchByDate(value, dateString); } }/>         
+                <RangePicker showToday={true}  className="mx-3 hidden lg:flex" style={{ width : '350px'}} onCalendarChange={ (value, dateString) => {handleSearchByDate(value, dateString); } }/>         
                 <Select
                     mode="multiple"
                     allowClear
                     className='mx-3'
                     style={{
-                        width: '360px',
+                        width: '200px',
                     }}
                     placeholder="Filtrar Por Estatus"
                     maxTagCount= 'responsive'
@@ -508,7 +553,20 @@ const ValesSalidaNew = () => {
                     <Select.Option key={4} value={4}> Entregado </Select.Option>
                     <Select.Option key={5} value={5}> Cancelado </Select.Option>
                     <Select.Option key={7} value={7}> Enkontrol </Select.Option>
-                </Select>       
+                </Select>
+                <Select
+                    className='mx-3 hidden lg:block'
+                    style={{
+                        width: '200px',
+                    }}
+                    placeholder="Ordenar por: "
+                    onChange={ (e) => { handleSort(e) }}
+                    showSearch={false}
+                    defaultValue={"DESC"}
+                    >
+                    <Select.Option key={1} value={'ASC'}> Primeros Registros </Select.Option>
+                    <Select.Option key={2} value={'DESC'}> Últimos Registros </Select.Option>
+                </Select>    
             </div> 
 
 
@@ -548,6 +606,18 @@ const ValesSalidaNew = () => {
                 />
                 </>
             : null }
+
+
+
+
+            <Modal
+                visible={visible}
+                onCancel={ hideModal }
+                title={modalProps.title}
+                footer={modalProps.footer}
+                >
+                    <div dangerouslySetInnerHTML={{ __html:modalProps.content }} />
+            </Modal>
         </> 
     );
 }

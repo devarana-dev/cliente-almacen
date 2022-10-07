@@ -42,6 +42,7 @@ export function getAllValesAction(params){
         dispatch(getAllValesRequest())
         await clientAxios.get(`/vales/paginate`,{params}, { cancelToken: clientAxios.cancelToken } )
             .then ( res => {
+                console.log(res.data.valeSalida);
                 dispatch(getAllValesSuccess(res.data.valeSalida))
             }).catch( err => {
                 console.log('Error getAllValesAction', err.response);

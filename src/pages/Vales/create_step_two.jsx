@@ -110,6 +110,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
                 ...vale,
                 listaInsumos: [...listaInsumos, {...insumo, ...result, ...{uuid: nanoid(6)} }],
             })
+
             form.resetFields()
             setUnidad('')
             setInsumo({
@@ -119,6 +120,11 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
             message.error('El insumo debe ser mayor a 0');
         }
     }
+
+    const verificarPrestamo = () => {
+        listaInsumos.some( item => item.residentePrestamo ) ? setVale({...vale, statusVale: 8 }) : setVale({...vale, statusVale:1 })
+    }
+
 
     const handleDelete = (uuid) => {
         setVale({
@@ -160,6 +166,14 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
         dispatch(createValeAction(vale))
     }
 
+    const handlePrestamo = (e) => {
+        setInsumo({...insumo, residentePrestamo: e })
+    }
+
+    useEffect(() => {
+        verificarPrestamo()
+        // eslint-disable-next-line
+    }, [listaInsumos])
 
     useEffect(() => {
         displayAlert()
@@ -246,15 +260,10 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
                 notFoundContent={isLoading ? <Spin size="small" /> : null}
                 filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                 showSearch
-                onChange={ (e) => {setInsumo({...insumo, residentePrestamo: e }) } }
+                onChange={ (e) => { handlePrestamo(e) } }
             > 
                 <Option key={0} value={0}> </Option>
                 {
-                    // Entre usuarios que se puedan prestar insumos
-                //    usuarios.filter( item => item.tipoUsuario_id === 4 ).map( item => (
-                //         <Option key={item.id} value={item.id}>{`${item.nombre} ${item.apellidoPaterno} `}</Option>
-                //     ))
-
                 usuarios.filter( item => item.role.permisos.map( item => item.permisos === 'acciones prestamos' ).includes(true) && userAuth.id !== item.id )
                 .map( item => ( <Option key={item.id} value={item.id}>{`${item.nombre} ${item.apellidoPaterno} `}</Option> )
                 )
@@ -268,13 +277,10 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
     <Divider />
 
     <div className="flex justify-between w-full">
-        {/* <Button type='dark' htmlType='button' onClick={ () => setCurrent(0) }>
-            Volver
-        </Button>      */}
         <Button type='danger' htmlType='button' onClick={ () => confirm(2) }>
             Cancelar
         </Button>
-        <Button type='ghost' htmlType='button' onClick={ async () => { const statusValue = 1; await setVale({ ...vale, statusVale: statusValue }); confirm(1)  }} disabled={ !listaInsumos.length > 0 } >
+        <Button type='ghost' htmlType='button' onClick={ () => confirm(1)  } disabled={ !listaInsumos.length > 0 } >
             Enviar
         </Button>
 
