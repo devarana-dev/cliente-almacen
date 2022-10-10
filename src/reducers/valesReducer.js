@@ -59,20 +59,17 @@ export default (state = initialState, action) => {
                 delivered: true,
                 
                 vales: state.vales.map(vale => {
-                    if(vale.id === action.payload.detalleSalida.valeSalidaId) {
+                    if(vale.id === action.payload.valeSalida.id) {
                         vale.statusVale = action.payload.valeSalida.statusVale
-                        // eslint-disable-next-line
-                        vale.detalle_salidas.map(detalle => {
-                            if(detalle.id === action.payload.detalleSalida.id) {
-                                return (
-                                    detalle.cantidadEntregada = action.payload.detalleSalida.cantidadEntregada,
-                                    detalle.cantidadSolicitada = action.payload.detalleSalida.cantidadSolicitada,
-                                    detalle.status = action.payload.detalleSalida.status
-                                )
-                            }
-                        })
                     }
                     return vale
+                }),
+                detalleSalida: state.detalleSalida.map(detalle => {
+                    if(detalle.id === action.payload.detalleSalida.id) {
+                        detalle.status = action.payload.detalleSalida.status
+                        detalle.cantidadEntregada = action.payload.detalleSalida.cantidadEntregada
+                    }
+                    return detalle
                 })
             }
 
@@ -166,16 +163,16 @@ export default (state = initialState, action) => {
                 errors: null,
                 deleted: true,
                 vales: state.vales.map(vale => {
-                    if(vale.id === action.payload.detalleSalida.valeSalidaId) {
-                        vale.detalle_salidas.map(detalle => {
-                            if(detalle.id === action.payload.detalleSalida.id) {
-                                return (
-                                    detalle.status = action.payload.detalleSalida.status
-                                )
-                            }
-                        })
+                    if(vale.id === action.payload.valeSalida.id) {
+                        vale.statusVale = action.payload.valeSalida.statusVale
                     }
                     return vale
+                }),
+                detalleSalida: state.detalleSalida.map(detalle => {
+                    if(detalle.id === action.payload.detalleSalida.id) {
+                        detalle.status = action.payload.detalleSalida.status 
+                    }
+                    return detalle
                 })
             }
 

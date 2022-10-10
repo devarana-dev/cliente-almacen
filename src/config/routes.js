@@ -35,7 +35,7 @@ import Insumos from "../pages/Insumos"
 import EditInsumos from "../pages/Insumos/edit"
 import CreateInsumos from "../pages/Insumos/create"
 import Prestamos from "../pages/Prestamos"
-import ValesSalidaNew from "../pages/Vales/indexNew"
+
 
 const routesPublic = [
     {
@@ -155,11 +155,6 @@ const routesPrivate = [
         path: '/vales-salida',
         layout: Private,
         component: ValesSalida
-    },
-    {
-        path: '/vales-salida-new',
-        layout: Private,
-        component: ValesSalidaNew
     },
     {
         path: '/vales-salida/nuevo',

@@ -155,7 +155,13 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
         Modal.confirm({
           title: 'Confirmar',
           icon: <ExclamationCircleOutlined />,
-          content: content,
+          width: 600,
+          content:  <>
+                     <p> {content} </p>
+                    { 
+                        vale.statusVale === 8 ? <span className="text-xs text-secondary">Recuerda: Los prestamos deben ser aprobados, de lo contrario no se podrán entregar. </span> : null
+                    }
+                    </>,
           okText: 'Confirmar',
           cancelText: 'Cancelar',
           onOk: () => fn()
@@ -269,6 +275,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
                 )
                 }
             </Select>
+            <span className="text-xs text-secondary">Nota: Los prestamos deberán ser aprobados por la persona a quien se le solicita.</span>
         </Form.Item>
 
         <Button type="primary" className="block mx-auto" htmlType="submit"> Agregar </Button>
@@ -280,8 +287,8 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
         <Button type='danger' htmlType='button' onClick={ () => confirm(2) }>
             Cancelar
         </Button>
-        <Button type='ghost' htmlType='button' onClick={ () => confirm(1)  } disabled={ !listaInsumos.length > 0 } >
-            Enviar
+        <Button type='ghost' htmlType='button' onClick={ () => confirm(1)  } disabled={ !listaInsumos.length > 0 || isLoading} >
+            { isLoading ? <Spin size="small" /> : 'Enviar' }
         </Button>
 
     </div>

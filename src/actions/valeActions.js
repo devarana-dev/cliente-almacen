@@ -42,7 +42,6 @@ export function getAllValesAction(params){
         dispatch(getAllValesRequest())
         await clientAxios.get(`/vales/paginate`,{params}, { cancelToken: clientAxios.cancelToken } )
             .then ( res => {
-                console.log(res.data.valeSalida);
                 dispatch(getAllValesSuccess(res.data.valeSalida))
             }).catch( err => {
                 console.log('Error getAllValesAction', err.response);
@@ -108,6 +107,7 @@ export function deliverValeAction(vale){
             .then ( res => {
                 dispatch(deliverValeSuccess(res.data))
             }).catch( err => {
+                console.log('Error deliverValeAction', err);
                 console.log('Error deliverValeAction', err.response);
                 dispatch(deliverValeError(err.response.data))
             } )
@@ -187,6 +187,7 @@ export function cancelDetalleAction(vale){
 }
 
 export function completeValeSalida(vale){
+    console.log(vale);
     return async (dispatch) => {
         dispatch(closeValeRequest())
         await clientAxios.post('/vales/completeVale', vale)

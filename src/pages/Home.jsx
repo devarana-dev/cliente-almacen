@@ -30,7 +30,7 @@ export default function Home() {
             setDataValues({
                 "Pendientes": count.nuevo + count.parcialAbierto,
                 "Entregado": count.entregado + count.parcialCerrado,
-                "Cancelado": count.cancelado
+                // "Cancelado": count.cancelado
             })
         }
     }, [count])
@@ -44,7 +44,7 @@ export default function Home() {
                 backgroundColor: [
                     'rgba(214, 71, 103, 0.8)',
                     'rgba(86, 115, 155, 0.8)',
-                    'rgba(169, 192, 228, 0.8)',
+                    // 'rgba(169, 192, 228, 0.8)',
                     // 'rgba(247, 37, 0, 0.8)',
                     // 'rgba(255, 107, 44, 0.8)',
                 ],
@@ -78,7 +78,7 @@ export default function Home() {
         },
         centerText: {
             display: true,
-            text: count.entregado + count.parcialCerrado + count.nuevo + count.parcialAbierto + count.cancelado || 0
+            text: count.entregado + count.nuevo  || 0
         },
         aspectRatio: 1,
     }

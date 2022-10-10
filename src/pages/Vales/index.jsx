@@ -1,38 +1,43 @@
 
-import { BellOutlined, CheckCircleOutlined, ClockCircleOutlined, FileTextOutlined, PieChartOutlined, PlusCircleOutlined, ShrinkOutlined, StopOutlined } from '@ant-design/icons';
-import { cancelDetalleAction, cancelValeAction, closeValeAction, completeValeSalida, deliverValeAction, getAllValesAction, getCountValeSalidaAction, searchValeAction } from '../../actions/valeActions';
-import { BsInfoCircle } from 'react-icons/bs'
-import { Button, Table, Tag, Modal, Input, Badge, Avatar, Image, Tooltip, Pagination, DatePicker, Select } from 'antd';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom';
-import { nanoid } from 'nanoid'
+import { BellOutlined, CheckCircleOutlined, ClockCircleOutlined, ExclamationCircleOutlined, FileTextOutlined, InfoCircleOutlined, PieChartOutlined, PlusCircleOutlined, ShrinkOutlined, StopOutlined } from "@ant-design/icons";
+import { Avatar, Badge, Button, DatePicker, Image, Input, InputNumber, Modal, Pagination, Select, Table, Tag, Tooltip } from "antd";
+import moment from "moment";
+import { nanoid } from "nanoid";
+import { useEffect, useState } from "react";
 import '../../assets/scss/showVale.scss'
-import ekIcon from "../../assets/img/Original-EK.png"
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { cancelValeAction, completeValeSalida, deliverValeAction, getAllValesAction, getCountValeSalidaAction, getDetalleSalidaAction, cancelDetalleAction, closeValeAction } from "../../actions/valeActions";
+import { groupPermission, hasPermission } from "../../utils/hasPermission";
 import ekIcon2 from "../../assets/img/Original-EK2.png"
-import openNotificationWithIcon from '../../hooks/useNotification';
-import moment from 'moment';
-import { groupPermission, hasPermission } from '../../utils/hasPermission';
-import Forbidden from '../../components/Elements/Forbidden';
-import Loading from '../../components/Elements/Loading';
+import ekIcon from "../../assets/img/Original-EK.png"
+import Card from "../../components/Vales/Card";
+import { BsInfoCircle } from "react-icons/bs";
+import openNotificationWithIcon from "../../hooks/useNotification";
 
 const ValesSalida = () => {
 
-    const { RangePicker } = DatePicker;
-    const { TextArea } = Input;
-    const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { vales, errors, delivered, updated, isLoading, count, deleted, paginate } = useSelector( state => state.vales )
+    const dispatch = useDispatch()
+
+    const { RangePicker } = DatePicker;
+
     const { userPermission, isLoading:isLoadingPermisos } = useSelector(state => state.permisos);
-    const [ tableReady , setTableReady ] = useState(false)
-    const [ dataSource, setDataSource ] = useState([]);
-    const [ dataNestedSource, setDataNestedSource ] = useState([])
-    const [ validarCantidad, setValidarCantidad ] = useState(true)
-    const [ activeExpRow, setActiveExpRow] = useState();
+    const { vales, isLoading, paginate, count, detalleSalida, isLoadingDetalles, errors, delivered, updated, deleted } = useSelector( state => state.vales )
+    
+    const [ dataSource, setDataSource ] = useState([])
     const [ loadedColumn , setLoad ] = useState(false)
-    const [ displayComentarios, setComentarios ] = useState('')
-    const [ displayInsumo, setDisplayInsumo ] = useState({ })
     const [ current, setCurrent ] = useState(1)
+    const [ tableReady , setTableReady ] = useState(false)
+    const [ activeExpRow, setActiveExpRow] = useState();
+    const [ dataNestedSource, setDataNestedSource ] = useState([])
+    const [ visible, setVisible ] = useState(false)
+    const [ modalProps, setModalProps ] = useState({})
+    
+    const [ response, setResponse ] = useState("")
+    const [ amount, setAmount ] = useState(0)
+
+
 
     const [ filter, setFilter ]  = useState({
         search: '',
@@ -40,59 +45,42 @@ const ValesSalida = () => {
         limit: 10,
         status: [],
         dateInit: '',
-        dateEnd: ''
+        dateEnd: '',
+        sort: 'DESC',
     })
+ 
 
+    useEffect(() => {
+        dispatch(getCountValeSalidaAction())
+        dispatch(getAllValesAction(filter))
+        setCurrent(current)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filter])
 
-    // TODO: Optimizar Modals
-    
-    const [ visible, setVisible] = useState({
-            entrega: false,
-            cancelar: false,
-            cerrar: false,
-            enktrl:false,
-            comentarios:false,
-            insumoInfo:false
-    });
+    useEffect(() => {
+        let result = []
+            result = vales.map( (item, i) => (
+                    { 
+                        key: i, 
+                        residente:`${item.user.nombre} ${item.user.apellidoPaterno}`,
+                        residentePicture: item.user.picture,
+                        personalInfo: `${item.personal.nombre} ${item.personal.apellidoPaterno}`,
+                        actividadInfo: item.actividad.nombre,
+                        aciones:item.id, 
+                        esPrestamo: item,
+                        ...item 
+                    }
+            ))
+		setDataSource( result )
 
+        if((groupPermission(userPermission, ['entregar vales', 'registrar vales', 'eliminar vales', 'ver vales']) ) && !loadedColumn ){
+            setLoad(true)
+            setColumns([...columns, actionColumn])
+        }
+        setTableReady(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [vales, userPermission])
 
-    const [ entrega, setEntrega ] = useState({
-        id: 0,
-        valeSalidaId: 0,
-        insumoId: 0,
-        cantidadEntregada: 0,
-        type: 1,
-        comentarios: null
-    })
-
-    const [ cancel, setCancel ] = useState({
-        type: 0,
-        comentarios: '',
-        id:0
-    })
-
-    const [ enkontrol, setEnkontrol ] = useState({
-        salidaEnkontrol: '',
-        id:0
-    })
-
-    const showModal = (props) => {
-        setVisible(props);
-    };
-    
-    const hideModal = () => {
-        setVisible(false);
-        setValidarCantidad(true)
-        setEntrega({
-            id: 0,
-            valeSalidaId: 0,
-            insumoId: 0,
-            cantidadEntregada: 0,
-            comentarios: '',
-            type: 1
-        })
-    };
-    ;
     const actionColumn = {
         title: 'Acciones',
         dataIndex: 'statusValue',
@@ -106,23 +94,23 @@ const ValesSalida = () => {
                     <div className='flex justify-start'>
                         { hasPermission(userPermission, 'entregar vales') ? 
                             <Tooltip title="Entrega Completa" placement='topRight'>
-                                <Button type='icon-primary' className='icon' onClick={ () => handleEntrega(record, 3)}> <CheckCircleOutlined className='ml-0 align-middle text-xl' /> </Button>
+                                <Button type='icon-primary' className='icon' onClick={ () =>  handleEntregaCompleta (record)}> <CheckCircleOutlined className='ml-0 align-middle text-xl' /> </Button>
                             </Tooltip> 
                             : null
                         }
                         {
                             hasPermission(userPermission, 'eliminar vales') ? 
                             <Tooltip title="Cancelar Entrega" placement='topRight'>
-                                <Button type='icon-danger' className='icon' onClick={() => handleCancel(1, record.id)}> <StopOutlined className='ml-0 align-middle text-xl' /> </Button> 
+                                <Button type='icon-danger' className='icon' onClick={() => handleCancelarVale(record)}> <StopOutlined className='ml-0 align-middle text-xl' /> </Button> 
                             </Tooltip>
                             : null
                         }
                     </div> : 
-                   record.statusVale === 3 || record.statusVale === 4  ? 
+                   record.statusVale === 3 || record.statusVale === 4 ? 
                     <>
                         { hasPermission(userPermission, 'registrar vales') ? 
                         <Tooltip title="Registrar Enkontrol" placement='topRight'>
-                            <Button type='icon-warning' className='icon' onClick={()=> handleClose(record.id)}> 
+                            <Button type='icon-warning' className='icon' onClick={()=> handleAltaEnkontrol(record)}> 
                                 <img src={ekIcon} alt="sa" width={16} className="py-0.5" />
                             </Button>
                         </Tooltip>
@@ -131,9 +119,9 @@ const ValesSalida = () => {
                     </>
                     : 
                    <div className="h-6 justify-start flex">
-                        { record.salidaEnkontrol || record.comentarios  ? 
+                        { record.salidaEnkontrol || record.comentarios ? 
                             <Tooltip title="Ver Información" placement='topRight'>
-                                <Button type='icon-danger' className='px-2' onClick={() => { setComentarios(record); showModal({...visible, comentarios: true}); }}><BsInfoCircle className='text-xl'/></Button> 
+                                <Button type='icon-danger' className='px-2' onClick={()=>handleShowInformationVale(record)}><BsInfoCircle className='text-xl'/></Button> 
                             </Tooltip>
                             : null 
                         }
@@ -144,72 +132,16 @@ const ValesSalida = () => {
         width: '8%'
     }
 
-    useEffect(() => {
-            dispatch(getCountValeSalidaAction())
-        // eslint-disable-next-line
-    }, [])
-
-    useEffect (() => {
-        dispatch(getAllValesAction(filter))
-
-        setCurrent( current )
-    }, [filter] )
-
-    useEffect(() => {
-        let result = []
-
-        if(hasPermission(userPermission, 'entregar vales') && !isLoadingPermisos){
-            result = vales.filter( item => 
-                item.detalle_salidas.every( item => item.prestamo?.status !== 1 ) ?? item ).filter( item => item.detalle_salidas.length > 0).map( (item, i) => (
-                    { 
-                        key: i, 
-                        residente:`${item.user.nombre} ${item.user.apellidoPaterno}`,
-                        residentePicture: item.user.picture,
-                        personalInfo: `${item.personal.nombre} ${item.personal.apellidoMaterno? `(${item.personal.apellidoMaterno})` : '' } ${item.personal.apellidoPaterno}`,
-                        actividadInfo: item.actividad.nombre,
-                        aciones:item.id, 
-                        ...item 
-                    }
-            ))
-        }else{
-            result = vales.map( (item, i) => (
-                    { 
-                        key: i, 
-                        residente:`${item.user.nombre} ${item.user.apellidoPaterno}`,
-                        residentePicture: item.user.picture,
-                        personalInfo: `${item.personal.nombre} ${item.personal.apellidoPaterno}`,
-                        actividadInfo: item.actividad.nombre,
-                        aciones:item.id, 
-                        esPrestamo: item,
-                        ...item 
-                    }
-            ))
-        }
-        
-
-		setDataSource( result )
-
-        if((groupPermission(userPermission, ['entregar vales', 'registrar vales', 'eliminar vales', 'ver vales']) ) && !loadedColumn ){
-            setLoad(true)
-            setColumns([...columns, actionColumn])
-        }
-
-        setTableReady(true)
-        // eslint-disable-next-line
-    }, [ vales, userPermission ])
-
     const [columns, setColumns] = useState([
         {
             title: 'Folio',
             dataIndex: 'id',
-            key: `id-${nanoid()}`,
             responsive: ['lg'],
             width: '5%'
         },
         {
             title: 'Fecha',
             dataIndex: 'fecha',
-            key: `fecha-${nanoid()}`,
             responsive: ['lg'],
             width: '5%',
             render: (text, record) => (
@@ -221,7 +153,6 @@ const ValesSalida = () => {
         {
             title: 'Fase',
             dataIndex: 'statusVale',
-            key: `statusVale-${nanoid()}`,
             width: '5%',
             className: 'text-center',
             render: (text, record) => (
@@ -248,7 +179,6 @@ const ValesSalida = () => {
         {
             title: 'Estatus',
             dataIndex: 'statusVale',
-            key: 'statusVale',
             render: (text, record, index) => ( 
                         <div className='w-full justify-center text-center flex relative'>
                             { 
@@ -261,7 +191,9 @@ const ValesSalida = () => {
                                 record.statusVale === 7 ? <Tag className='m-auto w-full' key={nanoid(4)} color="green">Entregado</Tag> :
                                 null
                             }
-                        { record.detalle_salidas.map( item => item.prestamo?.status === 1 ).some(item => item === true) && record.statusVale === 1 ? 
+                        { 
+                         
+                            record.prestamo?.status === 1? 
                             <Tooltip title="En proceso de aprobación">
                                 <Badge className='absolute -right-2 -top-2' count={<ClockCircleOutlined style={{ color: '#f5222d' }} /> } />
                             </Tooltip>
@@ -277,7 +209,6 @@ const ValesSalida = () => {
             title: 'Solicitante',
             dataIndex: 'residente',
             responsive: ['lg'],
-            key: `residente-${nanoid()}`,
             render: (text, record) => (
                 <div className='flex flex-row items-center'>
                     <Avatar crossOrigin='anonymous' src={ <Image src={record.residentePicture} /> || '' } />
@@ -289,26 +220,336 @@ const ValesSalida = () => {
         {
             title: 'Lider',
             dataIndex: 'personalInfo',
-            key: `personalInfo-${nanoid()}`,
             ellipsis: true,
             width: '22%',
         },
         {
             title: 'Actividad',
             dataIndex: 'actividadInfo',
-            key: `actividadInfo-${nanoid()}`,
             ellipsis: true,
             width: '25%',
         },
         
-    ])  
+    ]) 
 
-    const expandedRowRender = (record, index, indent, expanded) => {
 
-        if(expanded){
-            setDataNestedSource( record.detalle_salidas )
+    // * Pagination y Filtros
+    const handleLoadVales = (page, limit) => {
+        setFilter({
+            ...filter,
+            page: page -1,
+            limit,
+        })
+    }
+    const handleSearchByStatus = (value) => {
+        setFilter({
+            ...filter,
+            status: value,
+            page: 0
+        })
+    }
+
+    const handleSearchByText = (e) => {
+        e.preventDefault() 
+        const {value} = e.target
+        if(value.length > 2){
+            setFilter({
+                ...filter,
+                search: value,
+                page: 0
+            })
+        }else if(value.length === 0){
+            handleCleanSearch()
         }
+
+    }
+
+    const handleSearchByDate = (value, dateString) => {
+        if ((dateString[0] !== '' && dateString[1] !== '')){
+            setFilter({
+                ...filter,
+                page: 0,
+                dateInit: dateString[0],
+                dateEnd: dateString[1]
+            })
+        }else if (dateString[0] === '' && dateString[1] === ''){
+            handleCleanSearch()
+        }
+    }
+
+    const handleCleanSearch = () => {
+        setFilter({
+            search: '',
+            page: 0,
+            limit: 10,
+            status: [],
+            dateInit: '',
+            dateEnd: '',
+            sort: 'DESC',
+        })
+    }
+
+    const handleSort = (value) => {
+        setFilter({
+            ...filter,
+            sort: value
+        })
+    }
+
+    // * End Pagination
+
+    // ? Acciones
+
     
+    const clearFields = () => {
+        setResponse("")
+        setAmount(0)
+    }
+
+    const handleEntregaCompleta = (record) => {
+        Modal.confirm({
+            title: 'Entrega de Vale',
+            icon: <ExclamationCircleOutlined />,
+            content: (<div>
+                    <p> ¿Estás seguro de realizar una entrega <span className='underline'>total de este vale</span>? </p>
+                    <p> No podrá modificarse posteriormente. </p>
+                </div>),
+            okText: 'Entregar',
+            okType: 'ghost',
+            width: 600,
+            cancelText: 'Cancelar',
+            onOk() {
+               handleSubmit({ id: record.id, statusVale: record.statusVale, type: 1 })
+            }
+        })
+    }
+
+    const handleEntregaInsumoCompleta = (record) => {
+        Modal.confirm({
+            title: 'Entrega Completa de Insumo',
+            icon: <ExclamationCircleOutlined />,
+            content: (<div>
+                    <p> ¿Estás seguro de realizar una entrega <span className='underline'>total del insumo solicitado</span>? </p>
+                    <p> No podrá modificarse posteriormente. </p>
+                </div>),
+            okText: 'Entregar',
+            okType: 'ghost',
+            width: 600,
+            cancelText: 'Cancelar',
+            onOk() {
+                const cantidadTotal = record.cantidadSolicitada - record.cantidadEntregada
+                handleSubmit({ id: record.id, valeSalidaId:record.valeSalidaId, statusVale: record.statusVale, type: 2, insumoId: record.insumoId, cantidadEntregada: cantidadTotal, comentarios: record.comentarios })
+            }
+        })
+    }
+
+    const handleCancelarVale = (record) => {
+        setVisible(true)
+
+        let onTimeCommentario = ""
+        setModalProps({
+            title: 'Cancelar Vale',
+            icon: <ExclamationCircleOutlined />,
+            content: (
+                <div>
+                    <p> ¿Estás seguro de realizar la <span className='underline'>cancelación-cierre</span> de este vale ? </p>
+                    <label htmlFor="">Describe el motivo</label>
+                    <Input.TextArea className='my-3' onChange={(e) => {setResponse(e.target.value); onTimeCommentario = e.target.value }}/>
+                </div>
+            ),
+            fn: () => { 
+                    handleSubmit({ id: record.id, type: 3, comentarios: onTimeCommentario }) 
+                }
+        })
+
+        
+    }
+
+    const handleCancelInsumo = (record) => {
+        setVisible(true)
+        let onTimeCommentario = ""
+        setModalProps({
+            title: 'Cancelar Insumo',
+            icon: <ExclamationCircleOutlined />,
+            content: (
+                <div>
+                    <p> ¿Estás seguro de realizar la <span className='underline'>cancelación de entrega del insumo</span> solicitado ? </p>
+                    <label htmlFor="">Describe el motivo</label>
+                    <Input.TextArea className='my-3' onChange={(e) => {setResponse(e.target.value); onTimeCommentario = e.target.value }}/>
+                </div>
+            ),
+            fn: () => { 
+                    handleSubmit({ id: record.id, type: 4, comentarios: onTimeCommentario }) 
+                }
+        })
+    }
+
+    const handleEntregaParcial = (record) => {
+        
+        clearFields()
+        setVisible(true)
+        let onTimeAmount = ""
+        const maxAmount = record.cantidadSolicitada - record.cantidadEntregada      
+        setModalProps({
+            title: 'Entrega Parcial de Insumo',
+            icon: <ExclamationCircleOutlined />,
+            content: (
+                <div>
+                    <p>Estás a punto de realizar una entrega <span className='underline'>parcial del insumo solicitado</span>, solo tienes este día para completar la entrega. </p>
+                    <label>Por favor indica qué cantidad entregarás ahora:</label>
+                    <InputNumber 
+                        className='my-3 block w-full'
+                        onChange={(value) => { setAmount( Math.min(value, maxAmount) ); onTimeAmount = Math.min(value, maxAmount) }} 
+                        min={0.01}
+                        max={maxAmount}
+                        />
+                    <p className={`text-xs ${ amount > maxAmount? 'text-red-500 ' : 'text-gray-500 ' }`}>*La cantidad máxima es de {maxAmount} unidades</p>
+                </div>
+            ),
+            fn: () => { 
+                handleSubmit({ id: record.id, valeSalidaId:record.valeSalidaId, statusVale: record.statusVale, type: 2, insumoId: record.insumoId, cantidadEntregada: onTimeAmount, comentarios: record.comentarios })
+            }
+        })
+
+    }
+
+    const handleAltaEnkontrol = (record) => {
+        setVisible(true)
+
+        let onTimeFolio = ""
+        setModalProps({
+            title: 'Registro Enkontrol',
+            icon: <ekIcon2 />,
+            content: (
+                <div>
+                     <p>Ingresa el <span className="font-bold">folio</span> de Enkontrol una vez generado</p>
+                    <Input className='my-3' onChange={(e) => {setResponse(e.target.value); onTimeFolio = e.target.value }}/>
+                </div>
+            ),
+            fn: () => { 
+                    handleSubmit({ id: record.id, type: 5, salidaEnkontrol: onTimeFolio }) 
+                }
+        })
+    }    
+
+    const handleShowInformationVale = (record) => {
+        Modal.info({
+            title: 'Información del Vale',
+            icon: <InfoCircleOutlined />,
+            width: 600,
+            content: (
+                <div>
+                    <div className='inline-flex pb-5'>
+                            <p className='pr-2'>Estatus:</p>
+                            { 
+                            record.statusVale === 1 ? <Tag className='m-auto w-full' key={nanoid(4)} color="blue">Nuevo</Tag> :
+                            record.statusVale === 2 ? <Tag className='m-auto w-full' key={nanoid(4)} color="orange">Parcial</Tag> :
+                            record.statusVale === 3 ? <Tag className='m-auto w-full' key={nanoid(4)} color="orange">Parcial</Tag> :
+                            record.statusVale === 4 ? <Tag className='m-auto w-full' key={nanoid(4)} color="green">Entregado</Tag> :
+                            record.statusVale === 5 ? <Tag className='m-auto w-full' key={nanoid(4)} color="red">Cancelado</Tag> :
+                            record.statusVale === 6 ? <Tag className='m-auto w-full' key={nanoid(4)} color="orange">Parcial</Tag> :
+                            record.statusVale === 7 ? <Tag className='m-auto w-full' key={nanoid(4)} color="green">Entregado</Tag> :
+                            null }
+                    </div>
+                    <h2> Folio: </h2>
+                    <p className='font-bold'> {record.id } </p>
+                    <h2> Actividad: </h2>
+                    <p className='font-bold'> {record.actividadInfo } </p>
+                        { record.comentarios ? 
+                            <> 
+                                <h2> Comentarios: </h2>
+                                <p className='font-bold'> {record.comentarios } </p> 
+                            </>
+                        : 
+                        null }
+                        { record.salidaEnkontrol ? 
+                            <> 
+                                <h2> Folio de salida Enkontrol: </h2>
+                                <p className='font-bold'> {record.salidaEnkontrol } </p> 
+                            </>
+                        : 
+                        null }
+                </div>      
+                ),
+        })
+    }
+
+    const handleShowInformationInsumo = (record) => {
+        Modal.info({
+            title: 'Información del Insumo',
+            icon: <InfoCircleOutlined />,
+            width: 600,
+            content: (
+                <div>
+                    {record.insumo ? 
+                    <>
+                            <div className='inline-flex pb-5'>
+                            <p className='pr-2'>Estatus:</p>
+                            {  
+                                record.status === 1 ?<Tag className='text-center' color="blue"> Nuevo </Tag> :
+                                record.status === 2 ?<Tag className='text-center' color="orange">Parcial</Tag>  :
+                                record.status === 3 ? <Tag className='text-center' color="green">Entregado</Tag>  :
+                                record.status === 4 ? <Tag className='text-center' color="red">Cancelado</Tag> :
+                                record.status === 5 ? <Tag className='text-center' color="magenta">Cerrado</Tag> :
+                                record.status === 6 ? <Tag className='text-center' color="volcano">Parcial</Tag>
+                            : null
+                            }
+                            </div>
+                            <h2> Insumo: </h2>
+                            <p className='font-bold'> { record.insumo.nombre } </p>
+                            <h2> Unidad:  </h2>
+                            <p className='font-bold'>{ record.insumo.unidadMedida }</p>
+                            <h2> Cantidad Solicitada: </h2>
+                            <p className='font-bold text-dark'>{ Number(record.cantidadSolicitada) }</p>
+                            <h2> Cantidad Entregada: </h2>
+                            <p className='font-bold text-green-500'>{ Number(record.cantidadEntregada) }</p>
+                            <h2> Cantidad Pendiente: </h2>
+                            <p className='font-bold text-red-500'>{ Number(record.cantidadSolicitada) - Number(record.cantidadEntregada) }</p>
+                            {
+                                record.comentarios?
+                                <> 
+                                    <h2> Observaciones: </h2>
+                                    <p className="font-bold">{ record.comentarios }</p>
+                                </>
+                            : null }   
+                        </>
+                    : null }
+                </div>         
+                ),
+        })
+    }
+
+    const handleSubmit = (value) => {
+        switch (value.type) {
+            case 1:
+                dispatch(completeValeSalida(value))
+                break
+            case 2:
+                dispatch(deliverValeAction(value))
+                break
+            case 3:
+                // Cancelar Vale
+                dispatch(cancelValeAction(value))
+                break
+            case 4: 
+                dispatch(cancelDetalleAction(value))
+                break
+            case 5:
+                dispatch(closeValeAction(value))
+            break
+            default:
+                break;
+        }
+    }
+    // ? End Acciones
+
+    // Table Nested Data
+    const expandedRowRender = (record, index, indent, expanded) => {
+        
+        if(expanded){
+            setDataNestedSource( detalleSalida )
+        }
+        
         const columns = [
             {
                 title: 'Enkontrol',
@@ -393,105 +634,35 @@ const ValesSalida = () => {
                         {
                             hasPermission(userPermission, 'entregar vales') ? 
                             <>
-                                <Tooltip placement='topRight' title="Entrega Completa"><Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 1) } type='icon-primary'> <CheckCircleOutlined className='align-middle text-xl' /> </Button></Tooltip>
-                                <Tooltip placement='topRight' title="Entrega Parcial"><Button className="icon" htmlType='button' onClick={ () => handleEntrega(record, 2) } type='icon-warning'> <PieChartOutlined className='align-middle text-xl' /> </Button> </Tooltip>
+                                <Tooltip placement='topRight' title="Entrega Completa"><Button className="icon" htmlType='button' onClick={ () => handleEntregaInsumoCompleta(record) } type='icon-primary'> <CheckCircleOutlined className='align-middle text-xl' /> </Button></Tooltip>
+                                <Tooltip placement='topRight' title="Entrega Parcial"><Button className="icon" htmlType='button' onClick={ () => handleEntregaParcial(record) } type='icon-warning'> <PieChartOutlined className='align-middle text-xl' /> </Button> </Tooltip>
                             </>
                             : null
                         }
                         {
                             hasPermission(userPermission, 'eliminar vales') ? 
-                            <Tooltip placement='topRight' title="Cancelar Insumo"> <Button className="icon" htmlType='button' onClick={ () => handleCancel(2, record.id) } type='icon-danger'> <StopOutlined className='align-middle text-xl' /> </Button> </Tooltip>
+                            <Tooltip placement='topRight' title="Cancelar Insumo"> <Button className="icon" htmlType='button' onClick={ () => handleCancelInsumo(record) } type='icon-danger'> <StopOutlined className='align-middle text-xl' /> </Button> </Tooltip>
                             : null
                         }
                     </div>
                     :  
                     <div className="flex justify-start h-6" key={index}> 
-                        <Button type='icon-warning' onClick={ () => { setDisplayInsumo(record); showModal({...visible, insumoInfo: true}); } } htmlType='button' className='icon'><BsInfoCircle className='text-xl align-middle' /> </Button>
+                        <Button type='icon-warning' onClick={ () => { handleShowInformationInsumo(record) } } htmlType='button' className='icon'><BsInfoCircle className='text-xl align-middle' /> </Button>
                     </div>
 
                 ),
             },
  
         ]
-        return <Table bordered key={record => record.id + nanoid()} scroll={{ x: 'auto' }} columns={columns} dataSource={dataNestedSource} pagination={false} rowKey={nanoid()}  className="nestedTable"/>
-    }
 
-    const handleEntrega = (record, type) => {
-
-        setEntrega({
-            ...entrega,
-            id: record.id,
-            valeSalidaId: record.valeSalidaId,
-            insumoId: record.insumoId,
-            type: type,
-            cantidadEntregada: type === 1? Number(record.cantidadSolicitada) - Number(record.cantidadEntregada) : Number(entrega.cantidadEntregada),
-            cantidadSolicitada: Number(record.cantidadSolicitada)
-        })
-
-
-        showModal({
-            entrega: true,
-            cancelar: false,
-            cerrar: false,
-            enktrl: false,
-            comentarios: false,
-            insumoInfo: false
-        })
-
-    }
-
-    const handleCancel = (type, id) => {
-        showModal ({
-            entrega: false,
-            cancelar: true,
-            cerrar: false,
-            enktrl: false,
-            comentarios: false
-        })
-
-        setCancel({
-            ...cancel,
-            type,
-            id
-        })
-    }
-
-    const handleClose = (id) =>{
-        showModal ({
-            entrega: false,
-            cancelar: false,
-            cerrar: false,
-            enktrl: true,
-            comentarios: false,
-            insumoInfo: false
-        })
-
-        setEnkontrol({
-            ...enkontrol,
-            id
-        })
-    }
-
-    const handleSubmitClose = () => {
-        dispatch(closeValeAction(enkontrol))
-    }
-
-    const handleSubmitCancel = () => {
-        if (cancel.type === 1 ) {
-            dispatch(cancelValeAction(cancel))
+        if(!isLoadingDetalles){  
+            return <Table render={true} bordered key={record => record.id } scroll={{ x: 'auto' }} columns={columns} dataSource={dataNestedSource} pagination={false} className="nestedTable"/>
         }
-        if( cancel.type === 2){
-            dispatch(cancelDetalleAction(cancel))
-        }
-    }
 
-    const handleSubmit = () => {
-        if(entrega.type === 3){
-            dispatch(completeValeSalida(entrega))
-        }else{ 
-            dispatch(deliverValeAction(entrega))
-        }
     }
+    // End Table Nested Data
+
+    // ? Alertas
 
     useEffect(() => {
         displayAlert()
@@ -504,398 +675,166 @@ const ValesSalida = () => {
         }
         if(delivered){
             openNotificationWithIcon('success', 'Se ha guardado correctamente')
-            setEntrega({
-                id: 0,
-                valeSalidaId: 0,
-                insumoId: 0,
-                cantidadEntregada: 0,
-                comentarios: '',
-                type: 1
-            })
-            hideModal()
+            setVisible(false)
+            clearFields()
         }
         if(updated){
             openNotificationWithIcon('success', 'Se ha guardado correctamente')
-            setCancel({
-                type: 0,
-                comentarios: '',
-                id:0
-            })
-            hideModal()
+            setVisible(false)
+            clearFields()
         }
         if(deleted){
             openNotificationWithIcon('success', 'Se ha cancelado correctamente')
-            setCancel({
-                type: 0,
-                comentarios: '',
-                id:0
-            })
-            hideModal()
+            setVisible(false)
+            clearFields()
          }
     }
 
-    const handleChange = (e) => {
-        const { value } = e.target
-        setEntrega({ 
-            ...entrega, 
-            cantidadEntregada: Number(value)
-        })
-    
-        if( (entrega.cantidadSolicitada - buscarEntregado(entrega.valeSalidaId, entrega.id))  < value ){
-            setValidarCantidad(false)
-        } else {
-            setValidarCantidad(true)
-        }
-    }
-
-    const buscarEntregado = (valeSalidaId, id) => {
-        const [{detalle_salidas}] = vales.filter( item => item.id === valeSalidaId)
-        const [result] = detalle_salidas.filter( item => item.id === id)
-   
-        return result.cantidadEntregada
-    }
-
-
-
-    if(!hasPermission(userPermission, 'ver vale') && !isLoading ) return <Forbidden/>
-    if( !tableReady ) return <Loading />
-
-
-    const handleLoadVales = (page, limit) => {
-        setFilter({
-            ...filter,
-            page: page,
-            limit: 10,
-        })
-    }
-    
-    const handleSearchByStatus = (value) => {
-        setFilter({
-            ...filter,
-            status: value,
-            page: 1
-        })
-    }
-
-    const handleSearchByText = (e) => {
-        const {value} = e.target
-        if(value.length > 2){
-            setFilter({
-                ...filter,
-                search: value,
-                page: 1
-            })
-        }else if(value.length === 0){
-            setFilter({
-                ...filter,
-                search: '',
-                page: 1
-            })
-        }
-
-    }
-
-    const handleSearchByDate = (value, dateString) => {
-        if ((dateString[0] !== '' && dateString[1] !== '') || (dateString[0] === '' && dateString[1] === '')){
-            setFilter({
-                ...filter,
-                page: 1,
-                dateInit: dateString[0],
-                dateEnd: dateString[1]
-            })
-        }
-    }
+    // ? End Alertas
 
 
 
     
     return ( 
+
         <>
-            {
-                hasPermission(userPermission, 'crear vales') ?
-                <Button type='icon-secondary-new' onClick={() => navigate('nuevo')} className="md:flex hidden fixed right-10 lg:bottom-8 bottom-28 z-50"><PlusCircleOutlined className='py-1'/></Button>
-                : null 
+            { hasPermission(userPermission, 'crear vales') ?
+            //  Validamos Permiso para Crear Vale
+                    <Button type='icon-secondary-new' onClick={() => navigate('nuevo')} className="lg:flex hidden fixed right-10 lg:bottom-8 bottom-28 z-50"><PlusCircleOutlined className='py-1'/></Button>
+            : null 
+            // Fin Validación Permiso Para Crear Vale
             }
-                <div className="lg:grid hidden grid-cols-4 gap-10 py-5 ">
-                    <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => dispatch(getAllValesAction(filter)) }>
-                        <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
-                            <div className="text-white bg-gradient-to-tr from-dark to-dark-lighter sm:w-16 sm:h-16 w-12 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
-                                <div className="text-base sm:text-3xl  w-full justify-center flex m-auto">
-                                    <FileTextOutlined className='align-middle'/>
-                                </div>
-                            </div>
-                                <div className="sm:text-right text-center sm:py-0 pt-2">
-                                <p className="text-custom-dark2 font-light sm:text-base text-sm">Todos</p>
-                                <h1 className="lg:text-2xl text-lg text-custom-dark">{count.todos}</h1>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => handleSearchByStatus([1]) }>
-                        <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
-                            <div className="text-white bg-gradient-to-tr from-info to-info-lighter sm:w-16 sm:h-16 w-12 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
-                                <div className="text-base sm:text-3xl w-full justify-center flex m-auto">
-                                    <BellOutlined className='align-middle'/>
-                                </div>
-                            </div>
-                                <div className="sm:text-right text-center sm:py-0 pt-2">
-                                <p className="text-custom-dark2 font-light sm:text-base text-sm">Nuevos</p>
-                                <h1 className="lg:text-2xl text-lg text-custom-dark">{count.nuevo}</h1>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => handleSearchByStatus( [2] )  }>
-                        <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
-                            <div className="text-white bg-gradient-to-tr from-warning to-warning-lighter sm:w-16 sm:h-16 w-12 h-12 -mt-10 p-4 rounded-md shadow align-middle flex">
-                                <div className="text-base sm:text-3xl  w-full justify-center flex m-auto">
-                                    <PieChartOutlined className='align-middle'/>
-                                </div>
-                            </div>
-                                <div className="sm:text-right text-center sm:py-0 pt-2">
-                                <p className="text-custom-dark2 font-light sm:text-base text-sm">Parciales</p>
-                                <h1 className="lg:text-2xl text-lg text-custom-dark">{count.parcialAbierto}</h1>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="p-1 sm:p-5 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ () => handleSearchByStatus( [3, 4 ] ) }>
-                        <div className="flex sm:justify-between justify-center flex-wrap gap-x-5">
-                            <div className="text-white bg-gradient-to-tr from-primary to-primary-lighter sm:w-16 sm:h-16 w-12 h-12 -mt-10 p-5 rounded-md shadow align-middle flex">
-                                <div className="text-base sm:text-3xl  w-full justify-center flex m-auto">
-                                    <img src={ekIcon2} alt="" />
-                                </div>
-                            </div>
-                                <div className="sm:text-right text-center sm:py-0 pt-2">
-                                <p className="text-custom-dark2 font-light sm:text-base text-sm">Sin Registro EK</p>
-                                <h1 className="lg:text-2xl text-lg text-custom-dark">{count.entregado + count.parcialCerrado}</h1>
-                            </div>
-                        </div>
-                    </div>
-                </div>    
 
-                <div className='inline-flex items-center pb-3 w-full'>
-                    <p>Filtros: </p>
-                    <Input type="text" 
-                        placeholder='Escribe para filtrar' 
-                        className='mx-3' 
-                        style={{ width : '250px'}} 
-                        onChange={ handleSearchByText } 
-                    />
-                    <RangePicker showToday={true}  className="mx-3" style={{ width : '350px'}} onCalendarChange={ (value, dateString) => {handleSearchByDate(value, dateString); } }/>         
-                    <Select
-                        mode="multiple"
-                        allowClear
-                        className='mx-3'
-                        style={{
-                            width: '360px',
-                        }}
-                        placeholder="Filtrar Por Estatus"
-                        maxTagCount= 'responsive'
-                        onChange={ (e) => {handleSearchByStatus(e);dispatch(getAllValesAction(filter))}}
-                        showSearch={false}
-                        >
-                        <Select.Option key={1} value={1}> Nuevo </Select.Option>
-                        <Select.Option key={2} value={2}> Parcial Abierto </Select.Option>
-                        <Select.Option key={6} value={6}> Parcial Cerrado </Select.Option>
-                        <Select.Option key={4} value={4}> Entregado </Select.Option>
-                        <Select.Option key={5} value={5}> Cancelado </Select.Option>
-                        <Select.Option key={7} value={7}> Enkontrol </Select.Option>
-                    </Select>       
-                </div>           
-           
-           { tableReady ?
-            <>
+
+            <div className="lg:grid hidden grid-cols-4 gap-10 py-5 ">
+                <Card   
+                    text="Todos"
+                    icon={<FileTextOutlined className='align-middle'/>}
+                    fn={() => handleCleanSearch()}
+                    count={count.todos}
+                    color={'dark'}
+                />
+                <Card   
+                    text="Nuevos"
+                    icon={ <BellOutlined className='align-middle'/>}
+                    fn={() => handleSearchByStatus([1]) }
+                    count={count.nuevo}
+                    color={'info'}
+                />
+                <Card   
+                    text="Parciales"
+                    icon={<PieChartOutlined className='align-middle'/>}
+                    fn={() => handleSearchByStatus( [2] )}
+                    count={count.parcialAbierto}
+                    color={'warning'}
+                />
+                <Card   
+                    text="Sin Registro EK"
+                    icon={<img src={ekIcon2} alt="" />}
+                    fn={() => handleSearchByStatus( [3, 4] )}
+                    count={count.entregado + count.parcialCerrado}
+                    color={'primary'}
+                />
+            </div> 
+
+            <div className='inline-flex items-center pb-3 w-full'>
+                <p>Filtros: </p>
+                <Input type="text" 
+                    placeholder='Escribe para filtrar' 
+                    className='mx-3' 
+                    style={{ width : '250px'}} 
+                    onChange={ handleSearchByText }
+                />
+                <RangePicker showToday={true}  className="mx-3 hidden lg:flex" style={{ width : '350px'}} onCalendarChange={ (value, dateString) => {handleSearchByDate(value, dateString); } }/>         
+                <Select
+                    mode="multiple"
+                    allowClear
+                    className='mx-3'
+                    style={{
+                        width: '200px',
+                    }}
+                    placeholder="Filtrar Por Estatus"
+                    maxTagCount= 'responsive'
+                    onChange={ (e) => { handleSearchByStatus(e) }}
+                    showSearch={false}
+                    >
+                    <Select.Option key={1} value={1}> Nuevo </Select.Option>
+                    <Select.Option key={2} value={2}> Parcial Abierto </Select.Option>
+                    <Select.Option key={6} value={6}> Parcial Cerrado </Select.Option>
+                    <Select.Option key={4} value={4}> Entregado </Select.Option>
+                    <Select.Option key={5} value={5}> Cancelado </Select.Option>
+                    <Select.Option key={7} value={7}> Enkontrol </Select.Option>
+                </Select>
+                <Select
+                    className='mx-3 hidden lg:block'
+                    style={{
+                        width: '200px',
+                    }}
+                    placeholder="Ordenar por: "
+                    onChange={ (e) => { handleSort(e) }}
+                    showSearch={false}
+                    defaultValue={"DESC"}
+                    >
+                    <Select.Option key={1} value={'ASC'}> Primeros Registros </Select.Option>
+                    <Select.Option key={2} value={'DESC'}> Últimos Registros </Select.Option>
+                </Select>    
+            </div> 
+
+
+            {
+                tableReady? 
+                <>
                 <Table 
-                className='tableVales' 
-                loading={isLoading} 
-                render={true}
-                pagination={false}
-                scroll={{ x: 'auto' }} 
-                key={record => record.id + nanoid()}
-                columns={columns} 
-                dataSource={dataSource} 
-                expandable={{
-                    expandedRowRender, 
-                    defaultExpandedRowKeys: ['0'], 
-                    expandedRowKeys: activeExpRow,
-                    rowExpandable: (record) => true,
-                    onExpand: (expanded, record) => {
-                        const keys = [];
-                        if (expanded) {
-                            keys.push(record.key);
+                    className='tableVales' 
+                    loading={isLoading}
+                    pagination={false}
+                    render={true}
+                    scroll={{ x: 'auto' }} 
+                    columns={columns}
+                    dataSource={dataSource}
+                    rowKey={ record => record.id } 
+                    expandable={{
+                        expandedRowRender, 
+                        expandedRowKeys: activeExpRow,
+                        rowExpandable: (record) => true,
+                        onExpand: (expanded, record) => {       
+                            // Al expandir la fila, se obtiene el detalle de la orden
+                            if(expanded){
+                                dispatch( getDetalleSalidaAction({'id':record.id}) )
+                                setActiveExpRow([record.id]);
+                            }else{
+                                setActiveExpRow([]);
+                            }
                         }
-                        setActiveExpRow(keys);
-                    }
-                }}
-
+                    }}
                 />
                 <Pagination 
-                    total={paginate.totalItem} 
-                    current={paginate.currentPage} 
-                    pageSize={10} 
+                    total={(paginate.totalItem)} 
+                    current={paginate.currentPage + 1} 
+                    pageSize={filter.limit} 
                     onChange={handleLoadVales} 
                     className="w-auto py-4 max-w-max ml-auto"
-                    />
-            </>
+                />
+                </>
             : null }
 
-            <Modal
-                title={`${entrega.type === 1 || entrega.type === 3 ? 'Entrega Completa' : 'Entrega Parcial' }`}
-                visible={visible.entrega}
-                footer={[
-                    <Button type='default' onClick={hideModal}> Cancelar </Button>,
-                    <Button type='ghost' onClick={handleSubmit} disabled={(!entrega.cantidadEntregada || entrega.cantidadEntregada === 0) || !validarCantidad}>Enviar</Button>
-                ]}
-                onCancel={hideModal}
-            >
-                {
-                    entrega.type === 1 ?
-                    <>
-                        <p> ¿Estás seguro de realizar una entrega <span className='underline'>total del insumo solicitado</span>? </p>
-                        <p> No podrá modificarse posteriormente. </p>
-                    </>
-                    :
-                    entrega.type === 2 ?
-                    <>
-                        <p>Estás a punto de realizar una entrega <span className='underline'>parcial del insumo solicitado</span>, solo tienes este día para completar la entrega. </p>
-                        <label>Por favor indica qué cantidad entregarás ahora:</label>
-                        <Input className='my-3' type="number" value={entrega.cantidadEntregada} name="cantidadEntrega" onChange={ handleChange } status={ !validarCantidad ? 'error' : null }/>
-                        <span className='py-2 text-danger'>
-                            { !validarCantidad ? 
-                                `No puede ser mayor a ${ entrega.cantidadSolicitada - buscarEntregado(entrega.valeSalidaId, entrega.id) } `
-                            : null }
-                        </span>
-                    </>
-                    : 
-                    entrega.type === 3 ?
-                    <>
-                        <p> ¿Estás seguro de realizar una entrega <span className='underline'>total de este vale</span>? </p>
-                        <p> No podrá modificarse posteriormente. </p>
-                    </>
-                    : null
-                }
-            </Modal>
-            <Modal
-                title="Entrega Cancelada"
-                visible={visible.cancelar}
-                footer={[
-                    <Button type='default' onClick={hideModal}> Cancelar </Button>,
-                    <Button type='ghost' onClick={handleSubmitCancel} disabled={!cancel.comentarios}> Enviar </Button>
-                ]}
-                onCancel={hideModal}
-                >
-                    {
-                        cancel.type === 1 ?
-                        <>
-                            <p> ¿Estás seguro de realizar la <span className='underline'>cancelación-cierre</span> de este vale ? </p>
-                            <label htmlFor="">Describe el motivo</label>
-                        </>
-                        :
-                        cancel.type === 2 ?
-                        <>
-                            <p> ¿Estás seguro de realizar la <span className='underline'>cancelación de entrega del insumo</span> solicitado ? </p>
-                            <label htmlFor="">Describe el motivo</label>
-                        </>
-                        :
-                        null 
 
-                    }
-                    <TextArea className='my-3' value={cancel.comentarios} onChange={ (e) => setCancel({ ...cancel,  comentarios: e.target.value})}/>
-            </Modal> 
             <Modal
-                title="Registro de vale"
-                visible={visible.enktrl}
+                title={modalProps.title}
+                destroyOnClose={true}
                 footer={[
-                    <Button type='default' onClick={hideModal}> Cancelar </Button>,
-                    <Button type='ghost' onClick={handleSubmitClose} disabled={!enkontrol.salidaEnkontrol  || enkontrol.salidaEnkontrol.trim() === ""}> Enviar</Button>
+                    <Button key={1} type='default' onClick={() => setVisible(false)}> Cancelar </Button>,
+                    <Button key={2} type='ghost' onClick={modalProps.fn} disabled={ !( response !== "" || Number(amount) > 0) }> Enviar</Button>
                 ]}
-                onCancel={hideModal}
+                visible={visible}
+                onCancel={() => { setVisible(false); clearFields() }}
+                width={600}
+                icon={modalProps.icon}
                 >
-                    <p>Ingresa el folio de Enkontrol una vez generado</p>
-                    <Input type="text" className='my-3' value={enkontrol.salidaEnkontrol} onChange={ (e) => setEnkontrol({ ...enkontrol,  salidaEnkontrol: e.target.value})} />
+                    { modalProps.content }
             </Modal>
-            <Modal 
-                visible={visible.comentarios}
-                onCancel={hideModal}
-                footer={false}
-            > 
-                {displayComentarios.id ?
-                <>
-                    <div className='inline-flex pb-5'>
-                        <p className='pr-2'>Estatus:</p>
-                        { 
-                        displayComentarios.statusVale === 1 ? <Tag className='m-auto w-full' key={nanoid(4)} color="blue">Nuevo</Tag> :
-                        displayComentarios.statusVale === 2 ? <Tag className='m-auto w-full' key={nanoid(4)} color="orange">Parcial</Tag> :
-                        displayComentarios.statusVale === 3 ? <Tag className='m-auto w-full' key={nanoid(4)} color="orange">Parcial</Tag> :
-                        displayComentarios.statusVale === 4 ? <Tag className='m-auto w-full' key={nanoid(4)} color="green">Entregado</Tag> :
-                        displayComentarios.statusVale === 5 ? <Tag className='m-auto w-full' key={nanoid(4)} color="red">Cancelado</Tag> :
-                        displayComentarios.statusVale === 6 ? <Tag className='m-auto w-full' key={nanoid(4)} color="orange">Parcial</Tag> :
-                        displayComentarios.statusVale === 7 ? <Tag className='m-auto w-full' key={nanoid(4)} color="green">Entregado</Tag> :
-                        null }
-                    </div>
-                    <h2> Folio: </h2>
-                    <p className='font-bold'> {displayComentarios.id } </p>
-                    <h2> Actividad: </h2>
-                    <p className='font-bold'> {displayComentarios.actividadInfo } </p>
-                    { displayComentarios.comentarios ? 
-                        <> 
-                            <h2> Comentarios: </h2>
-                            <p className='font-bold'> {displayComentarios.comentarios } </p> 
-                        </>
-                    : 
-                    null }
-                    { displayComentarios.salidaEnkontrol ? 
-                        <> 
-                            <h2> Folio de salida Enkontrol: </h2>
-                            <p className='font-bold'> {displayComentarios.salidaEnkontrol } </p> 
-                        </>
-                    : 
-                    null }
 
-                </>
-                : null
-                }
-            </Modal>
-            <Modal
-                visible={visible.insumoInfo}
-                onCancel={hideModal}
-                footer={false}
-            >
-                <div>
-                    {displayInsumo.insumo ? 
-                    <>
-                        <div className='inline-flex pb-5'>
-                        <p className='pr-2'>Estatus:</p>
-                        {  
-                            displayInsumo.status === 1 ?<Tag className='text-center' color="blue"> Nuevo </Tag> :
-                            displayInsumo.status === 2 ?<Tag className='text-center' color="orange">Parcial</Tag>  :
-                            displayInsumo.status === 3 ? <Tag className='text-center' color="green">Entregado</Tag>  :
-                            displayInsumo.status === 4 ? <Tag className='text-center' color="red">Cancelado</Tag> :
-                            displayInsumo.status === 5 ? <Tag className='text-center' color="magenta">Cerrado</Tag> :
-                            displayInsumo.status === 6 ? <Tag className='text-center' color="volcano">Parcial</Tag>
-                        : null
-                        }
-                        </div>
-                        <h2> Insumo: </h2>
-                        <p className='font-bold'> { displayInsumo.insumo.nombre } </p>
-                        <h2> Unidad:  </h2>
-                        <p className='font-bold'>{ displayInsumo.insumo.unidadMedida }</p>
-                        <h2> Cantidad Solicitada: </h2>
-                        <p className='font-bold text-dark'>{ Number(displayInsumo.cantidadSolicitada) }</p>
-                        <h2> Cantidad Entregada: </h2>
-                        <p className='font-bold text-green-500'>{ Number(displayInsumo.cantidadEntregada) }</p>
-                        <h2> Cantidad Pendiente: </h2>
-                        <p className='font-bold text-red-500'>{ Number(displayInsumo.cantidadSolicitada) - Number(displayInsumo.cantidadEntregada) }</p>
-                        {
-                            displayInsumo.comentarios?
-                            <> 
-                                <h2> Observaciones: </h2>
-                                <p>{ displayInsumo.comentarios }</p>
-                            </>
-                        : null }   
-                    </>
-                : null }
-                </div>                
-            </Modal>
-        </>    
+        </> 
     );
 }
  

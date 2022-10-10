@@ -11,7 +11,7 @@ export default function Card({fn, icon, text, count, color}) {
                 </div>
                     <div className="sm:text-right text-center sm:py-0 pt-2">
                     <p className="text-custom-dark2 font-light sm:text-base text-sm">{text}</p>
-                    <h1 className="lg:text-2xl text-lg text-custom-dark">{count}</h1>
+                    <p className="lg:text-2xl text-lg text-custom-dark">{count || 0}  </p>
                 </div>
             </div>
         </div>
