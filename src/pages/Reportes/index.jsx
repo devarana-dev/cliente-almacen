@@ -46,6 +46,8 @@ const Reportes = () => {
 
     useEffect(() => {
         dispatch(getAllObraAction())
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {
@@ -54,7 +56,8 @@ const Reportes = () => {
         }else if(filtros.type === 'general') {
             dispatch(getReportesGeneralAction(filtros))
         }
-
+        
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filtros])
 
 
