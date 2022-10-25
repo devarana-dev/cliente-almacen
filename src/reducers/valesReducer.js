@@ -92,7 +92,7 @@ export default (state = initialState, action) => {
         case types.GET_ALL_VALE_SUCCESS:
             return {
                 ...state,
-                vales: action.payload.valeSalida,
+                vales: action.payload.rows,
                 paginate: {
                     totalItem:action.payload.totalItem,
                     totalPages:action.payload.totalPages,

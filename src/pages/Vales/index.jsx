@@ -1,5 +1,5 @@
 
-import { BellOutlined, CheckCircleOutlined, ClockCircleOutlined, ExclamationCircleOutlined, FileTextOutlined, InfoCircleOutlined, PieChartOutlined, PlusCircleOutlined, ShrinkOutlined, StopOutlined } from "@ant-design/icons";
+import { BellOutlined, CheckCircleOutlined, ClockCircleOutlined, ExclamationCircleOutlined, FileTextOutlined, InfoCircleOutlined, PieChartOutlined, PlusCircleOutlined, ShrinkOutlined, StopOutlined, SearchOutlined} from "@ant-design/icons";
 import { Avatar, Badge, Button, DatePicker, Image, Input, InputNumber, Modal, Pagination, Select, Table, Tag, Tooltip } from "antd";
 import moment from "moment";
 import { nanoid } from "nanoid";
@@ -738,12 +738,13 @@ const ValesSalida = () => {
             </div> 
 
             <div className='inline-flex items-center pb-3 w-full'>
-                <p>Filtros: </p>
                 <Input type="text" 
-                    placeholder='Escribe para filtrar' 
+                    placeholder='Buscar'
+                    allowClear
                     className='mx-3' 
                     style={{ width : '250px'}} 
                     onChange={ handleSearchByText }
+                    suffix={ <SearchOutlined className='text-xl' /> }
                 />
                 <RangePicker showToday={true}  className="mx-3 hidden lg:flex" style={{ width : '350px'}} onCalendarChange={ (value, dateString) => {handleSearchByDate(value, dateString); } }/>         
                 <Select

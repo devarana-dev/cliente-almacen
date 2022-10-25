@@ -40,7 +40,7 @@ export function getAllValesAction(params){
  
     return async (dispatch) => {
         dispatch(getAllValesRequest())
-        await clientAxios.get(`/vales/paginate`,{params}, { cancelToken: clientAxios.cancelToken } )
+        await clientAxios.get(`/vales`, {params}, { cancelToken: clientAxios.cancelToken } )
             .then ( res => {
                 dispatch(getAllValesSuccess(res.data.valeSalida))
             }).catch( err => {
@@ -133,19 +133,6 @@ const deliverValeError = error => {
     }
 }
 
-// TODO Falta mejorarlo
-export function searchValeAction(params){
-    return async (dispatch) => {
-        dispatch(getAllValesRequest())
-        await clientAxios.get('/vales/search', {params})
-            .then ( res => {
-                dispatch(getAllValesSuccess(res.data.valeSalida))
-            }).catch( err => {
-                console.log('Error getAllValesAction', err.response);
-                dispatch(getAllValesError(err.response.data))
-            } )
-    }
-}
 
 export function closeValeAction(vale){
     return async (dispatch) => {

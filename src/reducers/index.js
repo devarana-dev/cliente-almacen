@@ -13,6 +13,7 @@ import valesReducer from "./valesReducer";
 import permisosReducer from "./permisosReducer";
 import notificacionReducer from "./notificacionReducer";
 import prestamoReducer from "./prestamoReducer";
+import reportesReducer from "./reportesReducer";
 
 
 export default combineReducers({
@@ -29,4 +30,5 @@ export default combineReducers({
     permisos: permisosReducer,
     notificaciones: notificacionReducer,
     prestamos: prestamoReducer,
+    reportes: reportesReducer,
 })

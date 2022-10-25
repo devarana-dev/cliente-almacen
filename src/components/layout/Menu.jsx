@@ -1,14 +1,15 @@
-import { Menu } from "antd";
+import { Menu} from "antd";
 import { SettingOutlined, AppstoreOutlined, LogoutOutlined,UserOutlined  } from '@ant-design/icons';
 import { useNavigate, useLocation } from "react-router-dom";
 // import { useSelector } from "react-redux";
 import { hasPermission, groupPermission} from "../../utils/hasPermission";
 import { useSelector } from "react-redux";
+import Loading from "../Elements/Loading";
 
 
 export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
 
-    const { userPermission } = useSelector(state => state.permisos);
+    const { userPermission, isLoading } = useSelector(state => state.permisos);
     
     function getItem(label, key, icon, children, type) {
         return {
@@ -53,11 +54,14 @@ export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
                     hasPermission(userPermission, 'ver zonas') ? getItem('Zonas', '/zonas') : null,
                     hasPermission(userPermission, 'ver actividades') ? getItem('Actividades', '/actividades') : null,
                     hasPermission(userPermission, 'ver personal') ? getItem('Trabajadores', '/personal') : null,
+                    // hasPermission(userPermission, 'ver vales') ? getItem('Reportes', '/reportes') : null,
                 ], 'group')
             : null,		
         ])
     : null ,
     ];
+
+    if(isLoading) return <Loading />
 
     return (
         <Menu

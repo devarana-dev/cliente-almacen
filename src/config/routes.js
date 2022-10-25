@@ -35,6 +35,7 @@ import Insumos from "../pages/Insumos"
 import EditInsumos from "../pages/Insumos/edit"
 import CreateInsumos from "../pages/Insumos/create"
 import Prestamos from "../pages/Prestamos"
+import Reportes from "../pages/Reportes"
 
 
 const routesPublic = [
@@ -197,9 +198,11 @@ const routesPrivate = [
         layout: Private,
         component: Prestamos
     },
-
-
-
+    {
+        path: '/reportes',
+        layout: Private,
+        component: Reportes
+    },
 
     {
         path: "*",
