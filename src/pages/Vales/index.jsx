@@ -91,7 +91,7 @@ const ValesSalida = () => {
                 
                 { 
                     record.statusVale === 1 ? 
-                    <div className='flex justify-start'>
+                    <div className='inline-flex justify-start'>
                         { hasPermission(userPermission, 'entregar vales') ? 
                             <Tooltip title="Entrega Completa" placement='topRight'>
                                 <Button type='icon-primary' className='icon' onClick={ () =>  handleEntregaCompleta (record)}> <CheckCircleOutlined className='ml-0 align-middle text-xl' /> </Button>
@@ -630,24 +630,38 @@ const ValesSalida = () => {
                 key: `acciones-${nanoid()}`,
                 render: (text, record, index) => (
                     record.status === 1 || record.status === 2?
-                    <div key={index} className="inline-flex">
+                    <div key={index} className="inline-flex align-middle">
                         {
                             hasPermission(userPermission, 'entregar vales') ? 
                             <>
-                                <Tooltip placement='topRight' title="Entrega Completa"><Button className="icon" htmlType='button' onClick={ () => handleEntregaInsumoCompleta(record) } type='icon-primary'> <CheckCircleOutlined className='align-middle text-xl' /> </Button></Tooltip>
-                                <Tooltip placement='topRight' title="Entrega Parcial"><Button className="icon" htmlType='button' onClick={ () => handleEntregaParcial(record) } type='icon-warning'> <PieChartOutlined className='align-middle text-xl' /> </Button> </Tooltip>
+                                <Tooltip placement='topRight' title="Entrega Completa">
+                                    <Button className="icon" htmlType='button' onClick={ () => handleEntregaInsumoCompleta(record) } type='icon-primary'> 
+                                        <CheckCircleOutlined className='align-middle text-xl' /> 
+                                    </Button>
+                                </Tooltip>
+                                <Tooltip placement='topRight' title="Entrega Parcial">
+                                    <Button className="icon" htmlType='button' onClick={ () => handleEntregaParcial(record) } type='icon-warning'> 
+                                        <PieChartOutlined className='align-middle text-xl' /> 
+                                    </Button> 
+                                </Tooltip>
                             </>
                             : null
                         }
                         {
                             hasPermission(userPermission, 'eliminar vales') ? 
-                            <Tooltip placement='topRight' title="Cancelar Insumo"> <Button className="icon" htmlType='button' onClick={ () => handleCancelInsumo(record) } type='icon-danger'> <StopOutlined className='align-middle text-xl' /> </Button> </Tooltip>
+                            <Tooltip placement='topRight' title="Cancelar Insumo"> 
+                                <Button className="icon" htmlType='button' onClick={ () => handleCancelInsumo(record) } type='icon-danger'> 
+                                    <StopOutlined className='align-middle text-xl' /> 
+                                </Button> 
+                            </Tooltip>
                             : null
                         }
                     </div>
                     :  
-                    <div className="flex justify-start h-6" key={index}> 
-                        <Button type='icon-warning' onClick={ () => { handleShowInformationInsumo(record) } } htmlType='button' className='icon'><BsInfoCircle className='text-xl align-middle' /> </Button>
+                    <div className="inline-flex align-middle py-0.5" key={index}> 
+                        <Button type='icon-warning' onClick={ () => { handleShowInformationInsumo(record) } } htmlType='button' className='icon'>
+                            <BsInfoCircle className='text-xl align-middle' /> 
+                        </Button>
                     </div>
 
                 ),

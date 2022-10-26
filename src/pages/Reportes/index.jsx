@@ -97,6 +97,11 @@ const Reportes = () => {
             case 2:
                 setColumns([
                     {
+                        title: 'ID',
+                        dataIndex: 'folio',
+                        width: 50,
+                    },
+                    {
                         title: 'Clave EK',
                         dataIndex: 'claveEnk',
                         width: 100,
@@ -126,12 +131,12 @@ const Reportes = () => {
                         width: 200,
                     },
                     {
-                        title: 'Registro EK',
+                        title: 'EK',
                         dataIndex: 'salidaEnkontrol',
                         render: (text, record) => {
                             return record.salidaEnkontrol ? record.salidaEnkontrol : 'No registrado o Entregado'
                         },
-                        width: 100,
+                        width: 50,
                         ellipsis: true,
 
                     },
@@ -144,18 +149,18 @@ const Reportes = () => {
                         width: 100,
                     },
                     {
-                        title: 'Centro Costo',
+                        title: 'CC',
                         dataIndex: 'centroCosto',
-                        width: 100,
+                        width: 50,
                         
                     },
                     {
-                        title: 'C. Solicitada',
+                        title: 'Solicitado',
                         dataIndex: 'cantidadSolicitada',
                         width: 100,
                     },
                     {
-                        title: 'C. Entregada',
+                        title: 'Entregado',
                         dataIndex: 'cantidadEntregada',
                         width: 100,
                     },
@@ -185,12 +190,11 @@ const Reportes = () => {
 
     const handleSearchByName = (e) => {
         const {value} = e.target
-        if(value.length > 2 || value.length === 0){
-            setFiltros({
-                ...filtros,
-                busqueda: value
-            })
-        }
+        setFiltros({
+            ...filtros,
+            busqueda: value
+        })
+        
     }
 
     const handleSearchByDate = (value, dateString) => {
@@ -273,7 +277,9 @@ const Reportes = () => {
                         }}
                         placeholder="Filtrar Por Centro de Costo"
                         onChange={ (e) => { handleSearchByCC(e) }}
-                        showSearch={false}
+                        showSearch
+                        optionFilterProp="children"
+                        filterOption={ (input, option) => option.children.toLowerCase().trim().indexOf(input.toLowerCase()) >= 0}
                         >
                         {
                             obra.reduce((acc, item) => {
@@ -302,7 +308,7 @@ const Reportes = () => {
                                     className="hidden lg:flex" 
                                     style={{ width : '350px'}}
                                     onCalendarChange={ (value, dateString) => {handleSearchByDate(value, dateString)}}
-                                    format="DD/MM/YYYY"
+                                    // format="DD/MM/YYYY"
                                 />         
                                 
                                 {
@@ -332,6 +338,7 @@ const Reportes = () => {
                                                 }}
                                                 placeholder="Filtrar Lider Cuadrilla"
                                                 onChange={ (e) => { handleSearchByPersonal(e) }}
+                                                showSearch
                                                 optionFilterProp="children"
                                                 filterOption={ (input, option) => option.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0 }
                                                 >
@@ -348,6 +355,7 @@ const Reportes = () => {
                                                 }}
                                                 placeholder="Filtrar Usuario"
                                                 onChange={ (e) => { handleSearchByUsuario(e) }}
+                                                showSearch
                                                 optionFilterProp="children"
                                                 filterOption={ (input, option) => option.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0 }
                                                 >
