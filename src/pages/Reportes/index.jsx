@@ -1,4 +1,4 @@
-import { Select, DatePicker, Input, Table, Pagination } from 'antd';
+import { Select, DatePicker, Input, Table, Pagination, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import Download from '../../components/Elements/Download';
 import { SearchOutlined } from '@ant-design/icons';
@@ -85,6 +85,9 @@ const Reportes = () => {
                     {
                         title: 'Total Entregado', 
                         dataIndex: 'totalEntregado',
+                        render: (text, record) => (
+                            <p> { record.totalEntregado || 0} </p>
+                        )
                     }
                 ])
                 setFiltros({
@@ -102,19 +105,18 @@ const Reportes = () => {
                         width: 50,
                     },
                     {
-                        title: 'Clave EK',
+                        title: 'ID EK',
                         dataIndex: 'claveEnk',
-                        width: 100,
+                        width: 80,
                     },
                     {
                         title: 'Nombre',
                         dataIndex: 'insumoNombre',
                         ellipsis: true,
                     },
-
                     {
-                        title: 'Actividad',
-                        dataIndex: 'actividadNombre',
+                        title: 'Usuario',
+                        dataIndex: 'usuario',
                         ellipsis: true,
                         width: 200,
                     },
@@ -122,11 +124,11 @@ const Reportes = () => {
                         title: 'Personal',
                         dataIndex: 'personal',
                         ellipsis: true,
+                        width: 200,
                     },
                     {
-                        title: 'Usuario',
-                        dataIndex: 'usuario',
-                       
+                        title: 'Actividad',
+                        dataIndex: 'actividadNombre',
                         ellipsis: true,
                         width: 200,
                     },
@@ -136,7 +138,7 @@ const Reportes = () => {
                         render: (text, record) => {
                             return record.salidaEnkontrol ? record.salidaEnkontrol : 'No registrado o Entregado'
                         },
-                        width: 50,
+                        width: 80,
                         ellipsis: true,
 
                     },
@@ -163,6 +165,16 @@ const Reportes = () => {
                         title: 'Entregado',
                         dataIndex: 'cantidadEntregada',
                         width: 100,
+                    },
+                    {
+                        title: 'Estado',
+                        dataIndex: 'status',
+                        width: 100,
+                        render() {
+                            return (
+                                <Tag className='m-auto w-full' key={nanoid(4)} color="green">Entregado</Tag>
+                            );
+                        }                        
                     },
                 ])
                 setFiltros({
