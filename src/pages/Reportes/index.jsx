@@ -1,7 +1,7 @@
-import { Select, DatePicker, Input, Table, Pagination, Tag } from 'antd';
+import { Select, DatePicker, Input, Table, Pagination, Tag, Button, Spin } from 'antd';
 import { useEffect, useState } from 'react';
 import Download from '../../components/Elements/Download';
-import { SearchOutlined } from '@ant-design/icons';
+import { ClearOutlined, FileExcelOutlined, FilePdfOutlined, SearchOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { getReportesAcumuladosAction, getReportesGeneralAction } from '../../actions/reportesActions';
 import { getAllActividadAction } from '../../actions/actividadActions';
@@ -10,16 +10,28 @@ import { getAllUsuariosAction } from '../../actions/usuarioActions';
 import { nanoid } from 'nanoid';
 import moment from 'moment/moment';
 import { getAllObraAction } from '../../actions/obraActions';
+import openNotificationWithIcon from '../../hooks/useNotification';
+import { generarReporte } from '../../utils/generarReporte';
+
+
+const initialData = {
+    page: 0,
+    limit: 10,
+    ordenSolicitado: 'DESC',
+    type: 'acumulado',
+}
 
 const Reportes = () => {
     const dispatch = useDispatch();
 
-    const { paginate, insumos, isLoading } = useSelector(state => state.reportes);
+    const { paginate, insumos, isLoading, errors } = useSelector(state => state.reportes);
 
-    const { actividades } = useSelector(state => state.actividades);
-    const { personal } = useSelector(state => state.personal);
-    const { usuarios } = useSelector(state => state.usuarios);
+    const { actividades = [] } = useSelector(state => state.actividades);
+    const { personal = [] } = useSelector(state => state.personal);
+    const { usuarios = [] } = useSelector(state => state.usuarios);
     const { obra } = useSelector(state => state.obras);
+
+    const [download, setDownload] = useState(false);
 
     const { RangePicker } = DatePicker;
     const [columns, setColumns] = useState([
@@ -36,12 +48,8 @@ const Reportes = () => {
             dataIndex: 'totalEntregado',
         }
     ])
-    const [filtros, setFiltros] = useState({
-        page: 0,
-        limit: 10,
-        ordenSolicitado: 'DESC',
-        type: 'acumulado',
-    })
+    const [filtros, setFiltros] = useState(initialData)
+    
     const [reportType, setReportType] = useState(1)
 
     useEffect(() => {
@@ -65,6 +73,14 @@ const Reportes = () => {
         setFiltros({
             page: 0,
             limit: 10,
+            centroCosto: [],
+            busqueda: '',
+            actividad: '',
+            lider: '',
+            residente: '',
+            status: '',
+            fechaInicial: "",
+            fechaFinal: "",
         })
     }
 
@@ -170,10 +186,12 @@ const Reportes = () => {
                         title: 'Estado',
                         dataIndex: 'status',
                         width: 100,
-                        render() {
+                        render: (text, record) => {
                             return (
-                                <Tag className='m-auto w-full' key={nanoid(4)} color="green">Entregado</Tag>
-                            );
+                                record.status === 3 ? <Tag color="green">Entregado</Tag> : 
+                                record.status === 1 ? <Tag color="blue">Pendiente</Tag> :
+                                record.status === 4 ? <Tag color="red">Cancelado</Tag> : null 
+                            )
                         }                        
                     },
                 ])
@@ -263,6 +281,63 @@ const Reportes = () => {
         })
     }
 
+    const handleSearchByStatus = (value) => {
+        setFiltros({
+            ...filtros,
+            status: value
+        })
+    }
+
+
+       // ? Alertas
+
+       useEffect(() => {
+        displayAlert()
+        // eslint-disable-next-line
+    }, [errors])
+
+    const displayAlert = () => {
+        if(errors){
+            openNotificationWithIcon('error', errors)
+        }
+    }
+
+    // ? End Alertas
+
+
+    const handleReporteExcel = async () => {
+        setDownload(true)
+        let headerFile = []
+        let fileTitle = ''
+        if(reportType === 1){
+            fileTitle = 'ReporteAcumulado'
+            headerFile = [
+                { key: 'id', header: 'ID EK' },
+                { key: 'nombre', width: 60, header: 'Nombre' },
+                { key: 'centroCosto', header: 'Centro Costo' },
+                { key: 'totalEntregado', header: 'Total Entregado' },
+            ]
+        } else if (reportType === 2){
+            fileTitle = 'ReporteGeneral'
+            headerFile = [
+                { key: "id", header: "ID" },
+                { key: "folio", header: "Folio Vale", width: 13 },
+                { key: "insumoNombre", header: "Nombre Insumo", width: 60 },
+                { key: "claveEnk", header: "Clave Enkontrol", width: 15 },
+                { key: "centroCosto", header: "CC", width: 10 },
+                { key: "cantidadSolicitada", header: "Cantidad Solicitada", width: 20 },
+                { key: "cantidadEntregada", header: "Cantidad Entregada", width: 20 },
+                { key: "actividadNombre", header: "Actividad", width: 25 },
+                { key: "personal", header: "Personal", width: 35 },
+                { key: "usuario", header: "Usuario", width: 30 },
+                { key: "salidaEnkontrol", header: "Folio Salida EK", width: 15 },
+                { key: "fecha", header: "Fecha", width: 15  },
+            ]
+        }
+
+        await generarReporte(headerFile, insumos, fileTitle, setDownload)
+    }
+
 
 
     return ( 
@@ -292,6 +367,8 @@ const Reportes = () => {
                         showSearch
                         optionFilterProp="children"
                         filterOption={ (input, option) => option.children.toLowerCase().trim().indexOf(input.toLowerCase()) >= 0}
+                        defaultValue={filtros.centroCosto}
+                        value={filtros.centroCosto}
                         >
                         {
                             obra.reduce((acc, item) => {
@@ -314,13 +391,14 @@ const Reportes = () => {
                                     allowClear
                                     suffix={<SearchOutlined />}
                                     placeholder="Buscar"
+                                    value={filtros.busqueda}
                                 />
                                 <RangePicker 
                                     showToday={true}  
                                     className="hidden lg:flex" 
                                     style={{ width : '350px'}}
                                     onCalendarChange={ (value, dateString) => {handleSearchByDate(value, dateString)}}
-                                    // format="DD/MM/YYYY"
+                                    value={(filtros.fechaInicial !== '' && filtros.fechaFinal !== '') && (filtros.fechaInicial && filtros.fechaFinal) ? [ moment(filtros.fechaInicial), moment(filtros.fechaFinal)] : ["", ""]}
                                 />         
                                 
                                 {
@@ -336,6 +414,7 @@ const Reportes = () => {
                                                 onChange={ (e) => { handleSearchByActividad(e) }}                                               
                                                 optionFilterProp="children"
                                                 filterOption={ (input, option) => option.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0 }
+                                                value={filtros.actividad}
                                                 >
                                                 {
                                                     actividades.map((actividad) => (
@@ -353,6 +432,7 @@ const Reportes = () => {
                                                 showSearch
                                                 optionFilterProp="children"
                                                 filterOption={ (input, option) => option.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0 }
+                                                value={filtros.lider}
                                                 >
                                                 {
                                                     personal.map((personal) => (
@@ -370,6 +450,7 @@ const Reportes = () => {
                                                 showSearch
                                                 optionFilterProp="children"
                                                 filterOption={ (input, option) => option.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0 }
+                                                value={filtros.residente}
                                                 >
                                                 {
                                                     usuarios.map((usuario) => (
@@ -377,18 +458,20 @@ const Reportes = () => {
                                                     ))
                                                 }
                                             </Select> 
-                                            {/* <Select
+                                            <Select
                                                 style={{
                                                     width: '250px',
                                                 }}
-                                                placeholder="Ordenar por: "
-                                                onChange={ (e) => { handleSortSolicitados(e) }}
+                                                placeholder="Ordenar por Estatus "
+                                                onChange={ (e) => { handleSearchByStatus(e) }}
                                                 showSearch={false}
-                                                defaultValue={"DESC"}
+                                                value={filtros.status}
                                                 >
-                                                <Select.Option key={1} value={'DESC'}> Más Solicitado  </Select.Option>
-                                                <Select.Option key={2} value={'ASC'}> Menos Solicitado </Select.Option>
-                                            </Select> */}
+                                                <Select.Option key={1} value=""> Todos   </Select.Option>
+                                                <Select.Option key={2} value={1}> Pendiente   </Select.Option>
+                                                <Select.Option key={3} value={3}> Entregado   </Select.Option>
+                                                <Select.Option key={4} value={4}> Cancelado </Select.Option>
+                                            </Select>
                                         </>
                                     ) : null
                                 }
@@ -413,8 +496,19 @@ const Reportes = () => {
                         ) : null
                     }
                 </div>
-                <div className="my-auto">
-                    <Download fn={() => console.log('Hola')}/>
+                <div className="my-auto inline-flex gap-x-3">
+                    <Download disabled={download} icon={ <FilePdfOutlined />} fn={() => {}}/>
+                    <Download disabled={download} icon={ <FileExcelOutlined />} fn={() => handleReporteExcel()}/>
+                    <Button type='icon-secondary-new' onClick={
+                        () => {
+                            setFiltros({
+                                ...initialData,
+                                type: filtros.type,
+                                fechaInicial: "",
+                                fechaFinal: "",
+                            })
+                        }
+                    }><ClearOutlined /></Button>
                 </div>
             </div>  
 
