@@ -1,4 +1,4 @@
-import { Select, DatePicker, Input, Table, Pagination, Tag, Button, Spin } from 'antd';
+import { Select, DatePicker, Input, Table, Pagination, Tag, Button } from 'antd';
 import { useEffect, useState } from 'react';
 import Download from '../../components/Elements/Download';
 import { ClearOutlined, FileExcelOutlined, FilePdfOutlined, SearchOutlined } from '@ant-design/icons';
@@ -46,6 +46,9 @@ const Reportes = () => {
         {
             title: 'Total Entregado', 
             dataIndex: 'totalEntregado',
+            render: (text, record) => (
+                <p> { (record.totalEntregado && typeof (record.totalEntregado) !==  'object' )? record.totalEntregado : "0.00" } </p>
+            )
         }
     ])
     const [filtros, setFiltros] = useState(initialData)
@@ -102,7 +105,7 @@ const Reportes = () => {
                         title: 'Total Entregado', 
                         dataIndex: 'totalEntregado',
                         render: (text, record) => (
-                            <p> { record.totalEntregado || 0} </p>
+                            <p> { (record.totalEntregado && typeof (record.totalEntregado) !==  'object' )? record.totalEntregado : 0.00 } </p>
                         )
                     }
                 ])
@@ -335,7 +338,7 @@ const Reportes = () => {
             ]
         }
 
-        await generarReporte(headerFile, insumos, fileTitle, setDownload)
+        await generarReporte(headerFile, insumos, fileTitle, setDownload, filtros, reportType)
     }
 
 
