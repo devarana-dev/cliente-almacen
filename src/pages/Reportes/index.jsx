@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Download from '../../components/Elements/Download';
 import { ClearOutlined, FileExcelOutlined, FilePdfOutlined, SearchOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { getReportesAcumuladosAction, getReportesGeneralAction } from '../../actions/reportesActions';
+import { cleanGenerarReporteAction, generateReporteAcumuladoAction, generateReporteGeneralAction, getReportesAcumuladosAction, getReportesGeneralAction } from '../../actions/reportesActions';
 import { getAllActividadAction } from '../../actions/actividadActions';
 import { getAllPersonalAction } from '../../actions/personalActions';
 import { getAllUsuariosAction } from '../../actions/usuarioActions';
@@ -24,7 +24,7 @@ const initialData = {
 const Reportes = () => {
     const dispatch = useDispatch();
 
-    const { paginate, insumos, isLoading, errors } = useSelector(state => state.reportes);
+    const { paginate, insumos, isLoading, errors, generar } = useSelector(state => state.reportes);
 
     const { actividades = [] } = useSelector(state => state.actividades);
     const { personal = [] } = useSelector(state => state.personal);
@@ -54,6 +54,14 @@ const Reportes = () => {
     const [filtros, setFiltros] = useState(initialData)
     
     const [reportType, setReportType] = useState(1)
+    
+    const [reporte, setReporte] = useState({
+        headerFile: [],
+        fileTitle: '',
+        data: [],
+        reportType: 0
+    })
+
 
     useEffect(() => {
         dispatch(getAllObraAction())
@@ -310,37 +318,55 @@ const Reportes = () => {
 
     const handleReporteExcel = async () => {
         setDownload(true)
-        let headerFile = []
-        let fileTitle = ''
         if(reportType === 1){
-            fileTitle = 'ReporteAcumulado'
-            headerFile = [
-                { key: 'id', header: 'ID EK' },
-                { key: 'nombre', width: 60, header: 'Nombre' },
-                { key: 'centroCosto', header: 'Centro Costo' },
-                { key: 'totalEntregado', header: 'Total Entregado' },
-            ]
+
+            setReporte({
+                ...reporte,
+                fileTitle: 'ReporteAcumulado',
+                headerFile : [
+                    { key: 'id', header: 'ID EK', width: 15},
+                    { key: 'nombre', header: 'Nombre', width: 60},
+                    { key: 'centroCosto', header: 'Centro Costo', width: 15},
+                    { key: 'totalEntregado', header: 'Total Entregado', width: 15},
+                ]
+            })
+            dispatch(generateReporteAcumuladoAction(filtros))
+            
         } else if (reportType === 2){
-            fileTitle = 'ReporteGeneral'
-            headerFile = [
-                { key: "id", header: "ID" },
-                { key: "folio", header: "Folio Vale", width: 13 },
-                { key: "insumoNombre", header: "Nombre Insumo", width: 60 },
-                { key: "claveEnk", header: "Clave Enkontrol", width: 15 },
-                { key: "centroCosto", header: "CC", width: 10 },
-                { key: "cantidadSolicitada", header: "Cantidad Solicitada", width: 20 },
-                { key: "cantidadEntregada", header: "Cantidad Entregada", width: 20 },
-                { key: "actividadNombre", header: "Actividad", width: 25 },
-                { key: "personal", header: "Personal", width: 35 },
-                { key: "usuario", header: "Usuario", width: 30 },
-                { key: "salidaEnkontrol", header: "Folio Salida EK", width: 15 },
-                { key: "fecha", header: "Fecha", width: 15  },
-            ]
+            setReporte({
+                ...reporte,
+                fileTitle: 'ReporteGeneral',
+                headerFile : [
+                    { key: "id", header: "ID" },
+                    { key: "folio", header: "Folio Vale", width: 13 },
+                    { key: "insumoNombre", header: "Nombre Insumo", width: 60 },
+                    { key: "claveEnk", header: "Clave Enkontrol", width: 15 },
+                    { key: "centroCosto", header: "CC", width: 10 },
+                    { key: "cantidadSolicitada", header: "Cantidad Solicitada", width: 20 },
+                    { key: "cantidadEntregada", header: "Cantidad Entregada", width: 20 },
+                    { key: "actividadNombre", header: "Actividad", width: 25 },
+                    { key: "personal", header: "Personal", width: 35 },
+                    { key: "usuario", header: "Usuario", width: 30 },
+                    { key: "salidaEnkontrol", header: "Folio Salida EK", width: 15 },
+                    { key: "fecha", header: "Fecha", width: 15  },
+                ]
+            })
+            dispatch(generateReporteGeneralAction(filtros))
         }
 
-        await generarReporte(headerFile, insumos, fileTitle, setDownload, filtros, reportType)
+        
     }
 
+    useEffect(() => {
+        if(generar.length > 0){
+            generarReporte(reporte.headerFile, generar, reporte.fileTitle, setDownload, filtros, reportType)
+            dispatch(cleanGenerarReporteAction())
+        }    
+    // eslint-disable-next-line
+    }, [generar])
+
+    
+    
 
 
     return ( 
@@ -395,6 +421,7 @@ const Reportes = () => {
                                     suffix={<SearchOutlined />}
                                     placeholder="Buscar"
                                     value={filtros.busqueda}
+                                    name="busqueda"
                                 />
                                 <RangePicker 
                                     showToday={true}  
@@ -418,6 +445,7 @@ const Reportes = () => {
                                                 optionFilterProp="children"
                                                 filterOption={ (input, option) => option.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0 }
                                                 value={filtros.actividad}
+                                                name="actividad"
                                                 >
                                                 {
                                                     actividades.map((actividad) => (
@@ -436,6 +464,7 @@ const Reportes = () => {
                                                 optionFilterProp="children"
                                                 filterOption={ (input, option) => option.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0 }
                                                 value={filtros.lider}
+                                                name="lider"
                                                 >
                                                 {
                                                     personal.map((personal) => (
@@ -454,6 +483,7 @@ const Reportes = () => {
                                                 optionFilterProp="children"
                                                 filterOption={ (input, option) => option.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0 }
                                                 value={filtros.residente}
+                                                name="residente"
                                                 >
                                                 {
                                                     usuarios.map((usuario) => (
@@ -469,6 +499,7 @@ const Reportes = () => {
                                                 onChange={ (e) => { handleSearchByStatus(e) }}
                                                 showSearch={false}
                                                 value={filtros.status}
+                                                name="status"
                                                 >
                                                 <Select.Option key={1} value=""> Todos   </Select.Option>
                                                 <Select.Option key={2} value={1}> Pendiente   </Select.Option>
@@ -530,10 +561,7 @@ const Reportes = () => {
                 onChange={handleLoadVales} 
                 className="w-auto py-4 max-w-max ml-auto"
             />
-
-            {
-                JSON.stringify(filtros)
-            }
+           
         </>
     );
 }

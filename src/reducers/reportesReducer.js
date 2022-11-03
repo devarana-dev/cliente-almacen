@@ -6,6 +6,7 @@ const initialState = {
     paginate: {},
     isLoading: true,
     errors: null,
+    generar: [],
 }
 
 // eslint-disable-next-line
@@ -34,11 +35,33 @@ export default (state = initialState, action) => {
             }
 
         case types.GET_ALL_REPORTE_ERROR:
+        case types.GENERATE_REPORTE_ERROR:
             return {
                 ...state,
                 isLoading: false,
                 errors: action.payload,
             }
+
+        case types.GENERATE_REPORTE:
+            return {
+                ...state,
+                isLoading: true,
+                errors: null,
+                generar: [],
+            }
+        case types.GENERATE_REPORTE_SUCCESS:
+            return {
+                ...state,
+                generar: action.payload,
+                isLoading: false,
+                errors: null,
+            }
+        case types.CLEAN_GENERAR_REPORTE:
+            return {
+                ...state,
+                generar: [],
+            }
+                
         
 
         default:

@@ -63,3 +63,60 @@ const getReporteGeneralError = error => {
         payload: error
     }
 }
+
+
+export function generateReporteGeneralAction(params){
+    return async (dispatch) => {
+        dispatch(generateReporteRequest())
+        await clientAxios.get('/reportes/export-reporte-general', {params})
+            .then ( res => {
+                dispatch(generateReporteSuccess(res.data))
+            }).catch( err => {
+                console.log('Error getAllReportesAction', err.response);
+                dispatch(generateReporteError(err.response.data.message))
+            } )
+    }
+}
+
+
+export function generateReporteAcumuladoAction(params){
+    return async (dispatch) => {
+        dispatch(generateReporteRequest())
+        await clientAxios.get('/reportes/export-reporte-acumulado', {params})
+            .then ( res => {
+                dispatch(generateReporteSuccess(res.data))
+            }).catch( err => {
+                console.log('Error getAllReportesAction', err.response);
+                dispatch(generateReporteError(err.response.data.message))
+            } )
+    }
+}
+
+const generateReporteRequest = () => {
+    return {
+        type: types.GENERATE_REPORTE
+    }
+}
+
+const generateReporteSuccess = payload => {
+    return {
+        type: types.GENERATE_REPORTE_SUCCESS,
+        payload
+    }
+}
+
+const generateReporteError = error => {
+    return {
+        type: types.GENERATE_REPORTE_ERROR,
+        payload: error
+    }
+}
+
+
+export function cleanGenerarReporteAction(){
+    return (dispatch) => {
+        dispatch({
+            type: types.CLEAN_GENERAR_REPORTE
+        })
+    }
+}
