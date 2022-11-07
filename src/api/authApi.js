@@ -3,12 +3,12 @@ import clientAxios from '../config/axios'
 
 
 export function getAccessToken() {
-  const accessToken = localStorage.getItem('accessToken');
-  if (!accessToken || accessToken === 'null' || accessToken === 'undefined') {
-    return null;
-  }
+    const accessToken = localStorage.getItem('accessToken');
+    if (!accessToken || accessToken === 'null' || accessToken === 'undefined') {
+        return null;
+    }
+    return willExpireToken(accessToken) ? null : accessToken;
 
- return willExpireToken(accessToken) ? null : accessToken;
 }
 
 export function getRefreshToken(){
@@ -29,6 +29,7 @@ export async function refreshAccessToken(){
 			const { accessToken, refreshToken } = response.data
 			localStorage.setItem('accessToken', accessToken)
 			localStorage.setItem('refreshToken', refreshToken)
+            return {accessToken, refreshToken}  
 		})
 		
 	} catch (error) {

@@ -1,4 +1,4 @@
-import { Layout, Button, Modal, notification, Switch, Dropdown, Menu } from "antd";
+import { Layout, Button, Modal, notification, Dropdown, Menu } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from 'react-router-dom'
@@ -21,7 +21,6 @@ import {AiOutlineUserAdd,AiOutlineLogout} from 'react-icons/ai'
 import MenuLayout from "../components/layout/Menu";
 import { validateLoginAction } from "../actions/authActions";
 import Notificaciones from "../components/notificaciones";
-import tokenAuth from "../config/tokenAuth";
 import Logotipo from "../assets/img/LogoDevarana.png"
 import { Footer } from "antd/lib/layout/layout";
 
@@ -38,13 +37,14 @@ export default function LayoutPrivate({children}) {
     const [collapsed, setCollapsed] = useState(false);
 
     const { userPermission } = useSelector(state => state.permisos);
-    const { isAuthenticated, token, isLoading, errors, logout } = useSelector( state => state.auth )
+    const { isAuthenticated, isLoading, errors, logout } = useSelector( state => state.auth )
     const [hiddeable, setHiddeable] = useState(localStorage.getItem('sideBar') || false)
     const [visible, setVisible] = useState(false);
     const [visibleNotas, setVisibleNotas] = useState(false);
   
-    tokenAuth(token)
+    // tokenAuth(token)
     const isAuth = authProvider()    
+
     useEffect(() => {
         setHiddeable(localStorage.getItem('sideBar') || false)
         dispatch(validateLoginAction(isAuth))
