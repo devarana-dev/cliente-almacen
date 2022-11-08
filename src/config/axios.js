@@ -1,7 +1,5 @@
 import axios from 'axios'
-import { validateLoginAction } from '../actions/authActions';
 import { getAccessToken } from '../api/authApi';
-import AuthProvider from '../provider/authProvider';
 export const cancelTokenSource = axios.CancelToken.source();
 
 const clientAxios = axios.create({
@@ -13,22 +11,31 @@ const clientAxios = axios.create({
     } 
 })
 
+
 clientAxios.interceptors.request.use( async (config) => {
-    const isAuth = AuthProvider()
-    if(isAuth.isAuthenticated){
-        const accessToken = getAccessToken()
-        if(accessToken !== '' || accessToken !== null) {
-            config.headers['accessToken'] = accessToken
-        }
-        return config;
-    }else {
-        validateLoginAction(isAuth)
+    const accessToken = getAccessToken()
+    if(accessToken){
+        config.headers['accessToken'] = accessToken
     }
+    return config
+
 }, (error) => {
+    console.log('Error request', error);
+    return Promise.reject(error);
+});
+
+clientAxios.interceptors.response.use( (response) => {
+    return response;
+}, async (error) => {
+    // redirect to login if error 401    
+    if(error.response.status === 401){
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('refreshToken')
+        window.location.href = '/login'
+    }
     return Promise.reject(error);
 });
 
 
-
-
 export default clientAxios
+

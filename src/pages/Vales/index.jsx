@@ -14,6 +14,7 @@ import ekIcon from "../../assets/img/Original-EK.png"
 import Card from "../../components/Vales/Card";
 import { BsInfoCircle } from "react-icons/bs";
 import openNotificationWithIcon from "../../hooks/useNotification";
+import brokenUser from "../../utils/brokenUser";
 
 const ValesSalida = () => {
 
@@ -211,7 +212,7 @@ const ValesSalida = () => {
             responsive: ['lg'],
             render: (text, record) => (
                 <div className='flex flex-row items-center'>
-                    <Avatar crossOrigin='anonymous' src={ <Image src={record.residentePicture} /> || '' } />
+                    <Avatar src={ <Image fallback={brokenUser()} src={record.residentePicture} /> || '' } />
                     <p className='ml-4'> { record.residente} </p>
                 </div>
             ),

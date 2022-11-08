@@ -7,6 +7,7 @@ export function getAccessToken() {
     if (!accessToken || accessToken === 'null' || accessToken === 'undefined') {
         return null;
     }
+
     return willExpireToken(accessToken) ? null : accessToken;
 
 }
@@ -24,13 +25,17 @@ export function getRefreshToken(){
 export async function refreshAccessToken(){
 	const refreshToken = localStorage.getItem('refreshToken')
 	try {
-		await clientAxios.post('/auth/refresh-access-token', { refreshToken })
-		.then( response => {
-			const { accessToken, refreshToken } = response.data
-			localStorage.setItem('accessToken', accessToken)
-			localStorage.setItem('refreshToken', refreshToken)
-            return {accessToken, refreshToken}  
-		})
+		if( refreshToken ){
+            await clientAxios.post('/auth/refresh-access-token', { refreshToken })
+            .then( response => {
+                const { accessToken, refreshToken } = response.data
+                localStorage.setItem('accessToken', accessToken)
+                localStorage.setItem('refreshToken', refreshToken)
+                return { accessToken, refreshToken }  
+            })
+        }else{
+            return { accessToken: null, refreshToken: null }
+        }
 		
 	} catch (error) {
         localStorage.removeItem('accessToken')
@@ -38,7 +43,7 @@ export async function refreshAccessToken(){
 	}
 }
 
-function willExpireToken(token) {
+export function willExpireToken(token) {
     const seconds = 60;
     const metaToken = jwtDecode(token);
     const { expiresIn } = metaToken;

@@ -11,6 +11,7 @@ import { cleanErrorAction } from '../../actions/globalActions';
 import { hasPermission } from '../../utils/hasPermission.js';
 import Loading from '../../components/Elements/Loading.js';
 import '../../assets/scss/prestamos.scss'
+import brokenUser from '../../utils/brokenUser.js';
 
 const Prestamo = () => {
 
@@ -94,7 +95,7 @@ const Prestamo = () => {
                 
                  <>
                  <div className='flex flex-row items-center'>
-                 <Avatar crossOrigin='anonymous' src={ <Image src={ record.residente.picture } /> || '' } />
+                 <Avatar crossOrigin='anonymous' src={ <Image fallback={brokenUser()} src={ record.residente.picture } /> || '' } />
                  <p className='ml-4'> { record.residente.nombre  }  </p>
                 </div>
                 </>
@@ -110,7 +111,7 @@ const Prestamo = () => {
             render: (text, record) => (
                 <>
                 <div className='flex flex-row items-center'>
-                <Avatar crossOrigin='anonymous' src={ <Image src={ record.owner.picture  } /> || '' } />
+                <Avatar crossOrigin='anonymous' src={ <Image fallback={brokenUser()} src={ record.owner.picture  } /> || '' } />
                 <p className='ml-4'> { record.owner.nombre}  </p>
                </div>
                </>
@@ -173,7 +174,7 @@ const Prestamo = () => {
             render: (text, record) => (
                 <>
                  <div className='flex flex-row items-center'>
-                 <Avatar crossOrigin='anonymous' src={ <Image src={ record.residente.picture } /> } />
+                 <Avatar crossOrigin='anonymous' src={ <Image fallback={brokenUser()} src={ record.residente.picture } /> } />
                  <p className='ml-4'> { record.residente.nombre  }  </p>
                 </div>
                 </>
@@ -236,7 +237,7 @@ const Prestamo = () => {
             render: (text, record) => (
                 <>
                  <div className='flex flex-row items-center'>
-                 <Avatar crossOrigin='anonymous' src={ <Image src={ record.owner.picture  } /> } />
+                    <Avatar src={ <Image fallback={brokenUser()} src={ record.owner.picture  } /> } />
                  <p className='ml-4'> { record.owner.nombre}  </p>
                 </div>
                 </>

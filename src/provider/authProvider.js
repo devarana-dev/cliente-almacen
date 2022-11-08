@@ -24,19 +24,19 @@ export default function AuthProvider(){
 function checkUserLogin( setAuth ) {
     const accessToken = getAccessToken()
     if(!accessToken){
-        // const refreshToken = getRefreshToken()
-        // if(!refreshToken){
-        //     localStorage.removeItem('accessToken')
-        //     localStorage.removeItem('refreshToken')
+        const refreshToken = getRefreshToken()
+        if(!refreshToken){
+            localStorage.removeItem('accessToken')
+            localStorage.removeItem('refreshToken')
         setAuth({
             userAuth: null,
             token: null,
             isAuthenticated: false,
             isLoading: false,
         })
-        // }else{
-        //     refreshAccessToken(refreshToken)
-        // }
+        }else{
+            refreshAccessToken(refreshToken)
+        }
     }else{
         setAuth({
             userAuth: jwtDecode(accessToken),

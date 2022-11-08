@@ -2,7 +2,6 @@ import { Layout, Button, Modal, notification, Dropdown, Menu } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from 'react-router-dom'
-import authProvider from "../provider/authProvider";
 import "../assets/scss/layout.scss"
 
 import {
@@ -19,7 +18,6 @@ import { IoHome } from 'react-icons/io5'
 import {AiOutlineUserAdd,AiOutlineLogout} from 'react-icons/ai'
 
 import MenuLayout from "../components/layout/Menu";
-import { validateLoginAction } from "../actions/authActions";
 import Notificaciones from "../components/notificaciones";
 import Logotipo from "../assets/img/LogoDevarana.png"
 import { Footer } from "antd/lib/layout/layout";
@@ -28,6 +26,7 @@ import { logoutAction } from '../actions/authActions'
 import { getPermisoAction } from "../actions/permisosActions";
 import Notas from "../components/Notas";
 import { groupPermission, hasPermission } from "../utils/hasPermission";
+import { useAuth } from "../hooks/useAuth";
 
 export default function LayoutPrivate({children}) {
     const dispatch = useDispatch()
@@ -42,20 +41,21 @@ export default function LayoutPrivate({children}) {
     const [visible, setVisible] = useState(false);
     const [visibleNotas, setVisibleNotas] = useState(false);
   
-    // tokenAuth(token)
-    const isAuth = authProvider()    
+
+    useAuth()
 
     useEffect(() => {
         setHiddeable(localStorage.getItem('sideBar') || false)
-        dispatch(validateLoginAction(isAuth))
+
+        dispatch(getPermisoAction())
         // eslint-disable-next-line
         return () => {
-            dispatch(getPermisoAction())
+            
         }
-    }, [dispatch, isAuth])
+    }, [dispatch])
 
  
-    if( (isAuthenticated || isAuth.isAuthenticated) === false && !isLoading ){
+    if( (isAuthenticated) === false && !isLoading ){
         navigate("/login")
     }
 
@@ -73,7 +73,7 @@ export default function LayoutPrivate({children}) {
     useEffect(() => {
         if(logout && !isLoading){
             hideModal()
-            navigate('/login')
+            navigate('/login', { replace: true })
         }
         if(errors){
             // error
@@ -118,7 +118,7 @@ export default function LayoutPrivate({children}) {
                     </div>
                     <div>
                         <Button className="ml-5" type="icon-primary" onClick={showModalNotas }>  <AlertOutlined className="text-xl text-dark"/> </Button>
-                        {isAuth.isAuthenticated ? <Notificaciones/> : null }
+                        {isAuthenticated ? <Notificaciones/> : null }
                         <Button className="ml-5" type="icon-primary" onClick={showModal }>  <LogoutOutlined className="text-xl"/> </Button>
                     </div>
                     
