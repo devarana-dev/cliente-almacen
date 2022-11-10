@@ -2,10 +2,6 @@ import excelJS from "exceljs";
 import moment from "moment";
 
 
-
-
-
-
 export const generarReporte = async (headers, data, titulo, setDownload , filtros, reportType) => {
     try {
         const workbook = new excelJS.Workbook()
@@ -50,7 +46,7 @@ export const generarReporte = async (headers, data, titulo, setDownload , filtro
             }
         })
                 
-
+        const { filterNames } = filtros
 
         if ( reportType === 1) {
             // Reporte acumulado
@@ -81,11 +77,13 @@ export const generarReporte = async (headers, data, titulo, setDownload , filtro
                 tl: { col: .25, row: .5 },
                 ext: { width: 70, height: 70 },
             })
+
+           
             
-            worksheet.getCell("C1:D1").value = `Centro de Costo: ${filtros.centroCosto ? filtros.centroCosto : " - " }` 
-            worksheet.getCell("C2:D2").value = `Fecha Inicio: ${ filtros.fechaInicio?  moment(filtros.fechaInicio).format("DD/MM/YYYY") : " - " } `
-            worksheet.getCell("C3:D3").value = `Fecha Fin: ${ filtros.fechaFin? moment(filtros.fechaFin).format("DD/MM/YYYY") : " - " }` 
-            worksheet.getCell("C4:D4").value = `Busqueda: ${filtros.busqueda? filtros.busqueda : " - " }` 
+            worksheet.getCell("C1:D1").value = `Centro de Costo: ${filterNames.centroCosto ? filterNames.centroCosto : " - " }` 
+            worksheet.getCell("C2:D2").value = `Fecha Inicio: ${ filterNames.fechaInicial?  filterNames.fechaInicial : " - " } `
+            worksheet.getCell("C3:D3").value = `Fecha Fin: ${ filterNames.fechaFinal? filterNames.fechaFinal : " - " }` 
+            worksheet.getCell("C4:D4").value = `Busqueda: ${filterNames.busqueda? filterNames.busqueda : " - " }` 
 
             worksheet.getColumn(1).alignment = { vertical: 'middle', horizontal: 'center' }
             worksheet.getColumn(3).alignment = { vertical: 'middle', horizontal: 'center' }
@@ -139,14 +137,14 @@ export const generarReporte = async (headers, data, titulo, setDownload , filtro
             worksheet.getCell("C3:F4").font = { size: 16, bold: true, color: { argb: "646375" } }
             worksheet.getCell("C3:F4").alignment = { vertical: "middle", horizontal: "center" }
 
-            worksheet.getCell("G1:H1").value = `Centro de Costo: ${filtros.centroCosto ? filtros.centroCosto : " - " }`
-            worksheet.getCell("G2:H2").value = `Fecha Inicio: ${ filtros.fechaInicio?  moment(filtros.fechaInicio).format("DD/MM/YYYY") : " - " } `
-            worksheet.getCell("G3:H3").value = `Fecha Fin: ${ filtros.fechaFin? moment(filtros.fechaFin).format("DD/MM/YYYY") : " - " }`
-            worksheet.getCell("G4:H4").value = `Busqueda: ${filtros.busqueda? filtros.busqueda : " - " }`
-            worksheet.getCell("I1").value = `Actividad: ${filtros.actividad? filtros.actividad : " - " }`
-            worksheet.getCell("I2").value = `Lider de Cuadrilla: ${filtros.lider? filtros.lider : " - " }`
-            worksheet.getCell("I3").value = `Usuario: ${filtros.residente? filtros.residente : " - " }`
-            worksheet.getCell("I4").value = `Estatus: ${filtros.status? filtros.status : " - " }`
+            worksheet.getCell("G1:H1").value = `Centro de Costo: ${filterNames.centroCosto ? filterNames.centroCosto : " - " }`
+            worksheet.getCell("G2:H2").value = `Fecha Inicio: ${ filterNames.fechaInicial?  filterNames.fechaInicial : " - " } `
+            worksheet.getCell("G3:H3").value = `Fecha Fin: ${ filterNames.fechaFinal? filterNames.fechaFinal : " - " }`
+            worksheet.getCell("G4:H4").value = `Busqueda: ${filterNames.busqueda? filterNames.busqueda : " - " }`
+            worksheet.getCell("I1").value = `Actividad: ${filterNames.actividad? filterNames.actividad : " - " }`
+            worksheet.getCell("I2").value = `Lider de Cuadrilla: ${filterNames.personal? filterNames.personal : " - " }`
+            worksheet.getCell("I3").value = `Usuario: ${filterNames.usuario? filterNames.usuario : " - " }`
+            worksheet.getCell("I4").value = `Estatus: ${filterNames.status? filterNames.status : " - " }`
 
             worksheet.getCell("G1:H1").font = { size: 12, bold: true, color: { argb: "646375" } }
             worksheet.getCell("G2:H2").font = { size: 12, bold: true, color: { argb: "646375" } }

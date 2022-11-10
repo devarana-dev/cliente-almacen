@@ -35,7 +35,8 @@ export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
     getItem('Vales', 'sub1', <LogoutOutlined />, [
         hasPermission(userPermission, 'crear vales') ? getItem('Generar', '/vales-salida/nuevo') : null,
         groupPermission(userPermission, ['ver vales', 'ver vale']) ? getItem('Consultar', '/vales-salida') : null,
-        getItem('Préstamos', '/prestamos')
+        getItem('Préstamos', '/prestamos'),
+        hasPermission(userPermission, 'ver reportes') ? getItem('Reportes', '/reportes') : null,
     ]) 
     : null,
     groupPermission( userPermission, ['ver usuarios', 'ver roles', 'ver insumos', 'ver obras', 'ver niveles', 'ver zonas', 'ver actividades', 'ver personal']) ?
@@ -44,6 +45,7 @@ export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
                 getItem('Usuarios', 'subsub1', <UserOutlined />, [
                     hasPermission(userPermission, 'ver usuarios') ? getItem('Usuario', '/usuarios'): null,
                     hasPermission(userPermission, 'ver roles') ? getItem('Roles', '/roles') : null,
+                    
                 ], 'group')
             : null,
             groupPermission( userPermission, ['ver insumos', 'ver obras', 'ver niveles', 'ver zonas', 'ver actividades', 'ver personal']) ?
@@ -54,7 +56,7 @@ export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
                     hasPermission(userPermission, 'ver zonas') ? getItem('Zonas', '/zonas') : null,
                     hasPermission(userPermission, 'ver actividades') ? getItem('Actividades', '/actividades') : null,
                     hasPermission(userPermission, 'ver personal') ? getItem('Trabajadores', '/personal') : null,
-                    // hasPermission(userPermission, 'ver vales') ? getItem('Reportes', '/reportes') : null,
+
                 ], 'group')
             : null,		
         ])

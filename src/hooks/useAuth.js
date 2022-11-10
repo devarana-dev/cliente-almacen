@@ -1,5 +1,5 @@
 import jwtDecode from 'jwt-decode'
-import { getAccessToken, getRefreshToken, refreshAccessToken } from '../api/authApi'
+import { getAccessToken } from '../api/authApi'
 import { useEffect, useRef } from 'react'
 import { logoutAction, validateLoginAction } from '../actions/authActions'
 import { useDispatch } from 'react-redux'
@@ -15,7 +15,6 @@ export const useAuth = () => {
     })
 
     const accessToken = getAccessToken()
-    const refreshToken = getRefreshToken()
 
     useEffect(() => {
      

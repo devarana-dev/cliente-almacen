@@ -1,3 +1,4 @@
+import moment from 'moment';
 import clientAxios from '../config/axios';
 import { types } from '../types';
 
@@ -120,3 +121,72 @@ export function cleanGenerarReporteAction(){
         })
     }
 }
+
+
+
+export function generarReportePdfGeneralAction(params) {
+    params.isReport = true;
+    return async (dispatch) => {
+        dispatch(generarReportePdfRequest())
+        await clientAxios.get('/reportes/export-reporte-general', {params,
+            responseType: 'blob'
+        }).then ( res => {
+                const url = window.URL.createObjectURL(new Blob([res.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', `Reporte-${moment().format('DD-MM-YYYY-hh-mm')}.pdf`);
+                document.body.appendChild(link);
+                link.click();
+                dispatch(generarReportePdfSuccess(res.data))
+            }).catch( err => {
+                console.log('Error getAllReportesAction', err.response);
+                dispatch(generarReportePdfError(err.response.data.message))
+            } )
+    }
+}
+
+export function generarReportePdfAcumuladoAction(params) {
+
+    params.isReport = true;
+
+    return async (dispatch) => {
+        dispatch(generarReportePdfRequest())
+        await clientAxios.get('/reportes/export-reporte-acumulado', {params,  responseType: 'blob'})
+            .then ( res => {
+                const url = window.URL.createObjectURL(new Blob([res.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', `Reporte-${moment().format('DD-MM-YYYY-hh-mm')}.pdf`);
+                document.body.appendChild(link);
+                link.click();
+                dispatch(generarReportePdfSuccess(res.data))
+            }).catch( err => {
+                console.log('Error getAllReportesAction', err.response);
+                dispatch(generarReportePdfError(err.response.data.message))
+            } )
+    }
+}
+
+const generarReportePdfRequest = () => {
+    return {
+        type: types.GENERAR_REPORTE_PDF
+    }
+}
+
+const generarReportePdfSuccess = payload => {
+    return {
+        type: types.GENERAR_REPORTE_PDF_SUCCESS,
+        payload
+    }
+}
+
+const generarReportePdfError = error => {
+    return {
+        type: types.GENERAR_REPORTE_PDF_ERROR,
+        payload: error
+    }
+}
+
+
+
+               

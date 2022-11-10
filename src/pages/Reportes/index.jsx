@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Download from '../../components/Elements/Download';
 import { ClearOutlined, FileExcelOutlined, FilePdfOutlined, SearchOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { cleanGenerarReporteAction, generateReporteAcumuladoAction, generateReporteGeneralAction, getReportesAcumuladosAction, getReportesGeneralAction } from '../../actions/reportesActions';
+import { cleanGenerarReporteAction, generarReportePdfAcumuladoAction, generarReportePdfGeneralAction, generateReporteAcumuladoAction, generateReporteGeneralAction, getReportesAcumuladosAction, getReportesGeneralAction } from '../../actions/reportesActions';
 import { getAllActividadAction } from '../../actions/actividadActions';
 import { getAllPersonalAction } from '../../actions/personalActions';
 import { getAllUsuariosAction } from '../../actions/usuarioActions';
@@ -12,6 +12,9 @@ import moment from 'moment/moment';
 import { getAllObraAction } from '../../actions/obraActions';
 import openNotificationWithIcon from '../../hooks/useNotification';
 import { generarReporte } from '../../utils/generarReporte';
+import Loading from '../../components/Elements/Loading';
+import { hasPermission } from '../../utils/hasPermission';
+import Forbidden from '../../components/Elements/Forbidden';
 
 
 const initialData = {
@@ -19,12 +22,14 @@ const initialData = {
     limit: 10,
     ordenSolicitado: 'DESC',
     type: 'acumulado',
+    filterNames: { }
 }
 
 const Reportes = () => {
     const dispatch = useDispatch();
 
-    const { paginate, insumos, isLoading, errors, generar } = useSelector(state => state.reportes);
+    const { userPermission } = useSelector(state => state.permisos);
+    const { paginate, insumos, isLoading, errors, generar, isGeneratingReport } = useSelector(state => state.reportes);
 
     const { actividades = [] } = useSelector(state => state.actividades);
     const { personal = [] } = useSelector(state => state.personal);
@@ -61,7 +66,7 @@ const Reportes = () => {
         data: [],
         reportType: 0
     })
-
+  
 
     useEffect(() => {
         dispatch(getAllObraAction())
@@ -222,10 +227,18 @@ const Reportes = () => {
         }
     }
 
-    const handleSearchByCC = (value) => {
+    const handleSearchByCC = (value = []) => {
+
+        // obtener el centroCosto de las obras seleccionadas
+        const valueName =  value.toString()
+
         setFiltros({
             ...filtros,
-            centroCosto: value
+            centroCosto: value,
+            filterNames:{
+                ...filtros.filterNames,
+                centroCosto: valueName.trim()
+            }
         })
     }
 
@@ -233,7 +246,11 @@ const Reportes = () => {
         const {value} = e.target
         setFiltros({
             ...filtros,
-            busqueda: value
+            busqueda: value,
+            filterNames:{
+                ...filtros.filterNames,
+                busqueda: value.trim()
+            }
         })
         
     }
@@ -244,7 +261,12 @@ const Reportes = () => {
                 ...filtros,
                 page: 0,
                 fechaInicial: dateString[0],
-                fechaFinal: dateString[1]
+                fechaFinal: dateString[1],
+                filterNames:{
+                    ...filtros.filterNames,
+                    fechaInicial: moment(dateString[0]).format('DD/MM/YYYY'),
+                    fechaFinal: moment(dateString[1]).format('DD/MM/YYYY')
+                }
             })
         }else if (dateString[0] === '' && dateString[1] === ''){
             setFiltros({
@@ -272,30 +294,55 @@ const Reportes = () => {
     }
 
     const handleSearchByActividad = (value) => {
+
+        const actividadNombre = actividades.find(actividad => actividad.id === value)
+
         setFiltros({
             ...filtros,
-            actividad: value
+            actividad: value,
+            filterNames:{
+                ...filtros.filterNames,
+                actividad: actividadNombre ? actividadNombre.nombre : ''
+            }
         })
     }
 
     const handleSearchByPersonal = (value) => {
+
+        const personaNombre = personal.find(item => item.id === value )
+        
         setFiltros({
             ...filtros,
-            lider: value
+            lider: value,
+            filterNames:{
+                ...filtros.filterNames,
+                personal: personaNombre ? `${personaNombre.nombre.trim()} ${personaNombre.apellidoPaterno.trim()} ${personaNombre.apellidoMaterno ? `"${personaNombre.apellidoMaterno.trim()}"` : ''}` : ''
+            }
         })
     }
 
     const handleSearchByUsuario = (value) => {
+
+        const usuarioNombre = usuarios.find(item => item.id === value)
         setFiltros({
             ...filtros,
-            residente: value
+            residente: value,
+            filterNames:{
+                ...filtros.filterNames,
+                usuario: usuarioNombre ? `${usuarioNombre.nombre.trim()} ${usuarioNombre.apellidoPaterno.trim()} ${usuarioNombre.apellidoMaterno ? `"${usuarioNombre.apellidoMaterno.trim()}"` : ''}` : ''
+            }
         })
     }
 
     const handleSearchByStatus = (value) => {
+
         setFiltros({
             ...filtros,
-            status: value
+            status: value,
+            filterNames:{
+                ...filtros.filterNames,
+                status: value === 1 ? 'Pendiente' : value === 3 ? 'Entregado' : value === 4 ? 'Cancelado' : ''
+            }
         })
     }
 
@@ -353,8 +400,6 @@ const Reportes = () => {
             })
             dispatch(generateReporteGeneralAction(filtros))
         }
-
-        
     }
 
     useEffect(() => {
@@ -366,8 +411,17 @@ const Reportes = () => {
     }, [generar])
 
     
+    const getReporteGeneral = () => {
+        if( reportType === 2 ){
+            dispatch(generarReportePdfGeneralAction(filtros))
+        }
+        else if(reportType === 1){
+            dispatch(generarReportePdfAcumuladoAction(filtros))
+        }
+    }
     
 
+    if(!hasPermission(userPermission, 'ver reportes')) return <Forbidden />
 
     return ( 
         <>
@@ -531,7 +585,7 @@ const Reportes = () => {
                     }
                 </div>
                 <div className="my-auto inline-flex gap-x-3">
-                    <Download disabled={download} icon={ <FilePdfOutlined />} fn={() => {}}/>
+                    <Download disabled={download} icon={ <FilePdfOutlined />} fn={() => {getReporteGeneral()}}/>
                     <Download disabled={download} icon={ <FileExcelOutlined />} fn={() => handleReporteExcel()}/>
                     <Button type='icon-secondary-new' onClick={
                         () => {
@@ -561,6 +615,21 @@ const Reportes = () => {
                 onChange={handleLoadVales} 
                 className="w-auto py-4 max-w-max ml-auto"
             />
+
+            {isGeneratingReport ? 
+            <div>
+                <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 z-50 flex justify-center items-center">
+                    <div className="bg-white rounded-lg shadow-lg p-4 max-w-xs w-full">
+                        <div className="flex flex-col gap-y-2">
+                            <div className="flex justify-center items-center">
+                                <Loading text={"Generando Reporte..."}/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            : null}
            
         </>
     );

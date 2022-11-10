@@ -5,6 +5,7 @@ const initialState = {
     insumos: [],
     paginate: {},
     isLoading: true,
+    isGeneratingReport: false,
     errors: null,
     generar: [],
 }
@@ -35,7 +36,6 @@ export default (state = initialState, action) => {
             }
 
         case types.GET_ALL_REPORTE_ERROR:
-        case types.GENERATE_REPORTE_ERROR:
             return {
                 ...state,
                 isLoading: false,
@@ -45,24 +45,48 @@ export default (state = initialState, action) => {
         case types.GENERATE_REPORTE:
             return {
                 ...state,
-                isLoading: true,
+                isGeneratingReport: true,
                 errors: null,
                 generar: [],
+                
             }
         case types.GENERATE_REPORTE_SUCCESS:
             return {
                 ...state,
                 generar: action.payload,
-                isLoading: false,
+                isGeneratingReport: false,
                 errors: null,
             }
         case types.CLEAN_GENERAR_REPORTE:
             return {
                 ...state,
+                isGeneratingReport: false,
                 generar: [],
             }
-                
-        
+
+        case types.GENERAR_REPORTE_PDF:
+            return {
+                ...state,
+                isGeneratingReport: true,
+                errors: null,
+            }
+
+
+        case types.GENERAR_REPORTE_PDF_SUCCESS:
+            return {
+                ...state,
+                isGeneratingReport: false,
+                errors: null,
+            }
+            
+        case types.GENERAR_REPORTE_PDF_ERROR:
+        case types.GENERATE_REPORTE_ERROR:
+            return {
+                ...state,
+                isGeneratingReport: false,
+                errors: action.payload,
+            }
+
 
         default:
             return state

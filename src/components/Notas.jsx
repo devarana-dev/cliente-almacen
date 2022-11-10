@@ -4,16 +4,17 @@ const Notas = () => {
     return ( 
         <div className="max-h-[500px] overflow-y-auto">
 
-            {/* <div>
-                <h1 className="text-primary text-lg font-bold">Actualización <span>30/10/22</span></h1>
+            <div>
+                <h1 className="text-primary text-lg font-bold">Actualización <span>11/11/22</span></h1>
                 <ul className="text-dark">
                     <li className="font-bold"> * Actualización</li>
-                    <li> Se creo nuevo módulo de reportes el cual permite poder la cantidad solicitada por insumo relacionada a los vales.</li>
-                    <li> Se integró una herramienta para la detección de errores lo que facilitará el solucionar los errores que detengan el funcionamiento de la aplicacón. </li>
-                    
+                    <li> Se generó una nueva sección "Reportes" para que se puedan realizar un reporte de los insumos solicitados y los que tienen menor uso. </li>
+                    <li> Se mejoró el sistema de sesiones de la aplicacion, lo cual solicitará iniciar sesión semanalmente, 
+                         el objetivo de esto es que cuando se realicen cambios importantes puedan ser aplicados al re-iniciar sesión. </li>
+                    <li> Se integró una herramienta para la detección de errores lo cual evitará que la aplicación deje de funcionar y se puedan identificar un error sin afectar el funcionamiento de la aplicacón. </li>
                 </ul>
             </div>
-            <Divider/> */}
+            <Divider/>
             <div>
                 <h1 className="text-primary text-lg font-bold">Actualización <span>12/10/22</span></h1>
                 <ul className="text-dark">
