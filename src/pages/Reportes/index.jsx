@@ -97,6 +97,7 @@ const Reportes = () => {
             status: '',
             fechaInicial: "",
             fechaFinal: "",
+            filterNames: { }
         })
     }
 
@@ -127,6 +128,7 @@ const Reportes = () => {
                     type: 'acumulado',
                     page: 0,
                     limit: 10,
+                    filterNames: { }
                 })
                 break;
             case 2:
@@ -215,7 +217,8 @@ const Reportes = () => {
                     page: 0,
                     limit: 10,
                     type: 'general',
-                    orden: 'DESC'
+                    orden: 'DESC',
+                    filterNames: { }
                 })
                 
                 dispatch(getAllActividadAction())
@@ -371,7 +374,7 @@ const Reportes = () => {
                 ...reporte,
                 fileTitle: 'ReporteAcumulado',
                 headerFile : [
-                    { key: 'id', header: 'ID EK', width: 15},
+                    { key: 'claveEnk', header: 'ID EK', width: 15},
                     { key: 'nombre', header: 'Nombre', width: 60},
                     { key: 'centroCosto', header: 'Centro Costo', width: 15},
                     { key: 'totalEntregado', header: 'Total Entregado', width: 15},
@@ -585,7 +588,7 @@ const Reportes = () => {
                     }
                 </div>
                 <div className="my-auto inline-flex gap-x-3">
-                    <Download disabled={download} icon={ <FilePdfOutlined />} fn={() => {getReporteGeneral()}}/>
+                    {/* <Download disabled={download} icon={ <FilePdfOutlined />} fn={() => {getReporteGeneral()}}/> */}
                     <Download disabled={download} icon={ <FileExcelOutlined />} fn={() => handleReporteExcel()}/>
                     <Button type='icon-secondary-new' onClick={
                         () => {

@@ -67,6 +67,7 @@ const getReporteGeneralError = error => {
 
 
 export function generateReporteGeneralAction(params){
+    params.isReport = false;
     return async (dispatch) => {
         dispatch(generateReporteRequest())
         await clientAxios.get('/reportes/export-reporte-general', {params})
@@ -81,6 +82,7 @@ export function generateReporteGeneralAction(params){
 
 
 export function generateReporteAcumuladoAction(params){
+    params.isReport = false;
     return async (dispatch) => {
         dispatch(generateReporteRequest())
         await clientAxios.get('/reportes/export-reporte-acumulado', {params})
