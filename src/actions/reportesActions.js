@@ -3,6 +3,7 @@ import clientAxios from '../config/axios';
 import { types } from '../types';
 
 export function getReportesAcumuladosAction(params){
+    console.log(params);
     return async (dispatch) => {
         dispatch(getAllReportesRequest())
         await clientAxios.get('/reportes', {params})
@@ -35,6 +36,8 @@ const getAllReportesError = error => {
 
 
 export function getReportesGeneralAction(params){
+
+    console.log(params);
     return async (dispatch) => {
         dispatch(getReporteGeneralRequest())
         await clientAxios.get('/reportes/general', {params})

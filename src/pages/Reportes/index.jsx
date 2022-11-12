@@ -30,6 +30,7 @@ const Reportes = () => {
 
     const { userPermission } = useSelector(state => state.permisos);
     const { paginate, insumos, isLoading, errors, generar, isGeneratingReport } = useSelector(state => state.reportes);
+    const { userAuth } = useSelector(state => state.auth);
 
     const { actividades = [] } = useSelector(state => state.actividades);
     const { personal = [] } = useSelector(state => state.personal);
@@ -74,6 +75,7 @@ const Reportes = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+
     useEffect(() => {
         if(filtros.type === 'acumulado') {
             dispatch(getReportesAcumuladosAction(filtros))
@@ -93,7 +95,7 @@ const Reportes = () => {
             busqueda: '',
             actividad: '',
             lider: '',
-            residente: '',
+            residente: hasPermission(userPermission, 'ver reportes') ? '' : userAuth?.id,
             status: '',
             fechaInicial: "",
             fechaFinal: "",
@@ -423,9 +425,6 @@ const Reportes = () => {
         }
     }
     
-
-    if(!hasPermission(userPermission, 'ver reportes')) return <Forbidden />
-
     return ( 
         <>
             <div className="flex gap-10 py-3">
@@ -541,9 +540,15 @@ const Reportes = () => {
                                                 filterOption={ (input, option) => option.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0 }
                                                 value={filtros.residente}
                                                 name="residente"
+                                                defaultValue={ hasPermission(userPermission, 'ver reportes') ? null : userAuth.id }
                                                 >
                                                 {
+                                                    hasPermission(userPermission, 'ver reportes')?
                                                     usuarios.map((usuario) => (
+                                                        <Select.Option key={usuario.id} value={usuario.id}> {usuario.nombre} {usuario.apellidoPaterno} {usuario.apellidoMaterno}  </Select.Option>
+                                                    ))
+                                                    : 
+                                                    usuarios.filter(usuario => usuario.id === userAuth.id).map((usuario) => (
                                                         <Select.Option key={usuario.id} value={usuario.id}> {usuario.nombre} {usuario.apellidoPaterno} {usuario.apellidoMaterno}  </Select.Option>
                                                     ))
                                                 }
