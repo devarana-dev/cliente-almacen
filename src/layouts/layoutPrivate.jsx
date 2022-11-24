@@ -194,7 +194,15 @@ export default function LayoutPrivate({children}) {
                                             Registrar Personal
                                         </Link>
                                         ),
-                                    } : null
+                                    } : null,
+                                    {
+                                        key: '7',
+                                        label: (
+                                        <Link className="dropDownResponsive" to={'/bitacora/create'}>
+                                            Registrar Bitacora
+                                        </Link>
+                                        ),
+                                    }
                                 ]
                             }
                         />}
