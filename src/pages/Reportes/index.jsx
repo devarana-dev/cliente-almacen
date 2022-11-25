@@ -1,7 +1,7 @@
 import { Select, DatePicker, Input, Table, Pagination, Tag, Button } from 'antd';
 import { useEffect, useState } from 'react';
 import Download from '../../components/Elements/Download';
-import { ClearOutlined, FileExcelOutlined, FilePdfOutlined, SearchOutlined } from '@ant-design/icons';
+import { ClearOutlined, FileExcelOutlined, SearchOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { cleanGenerarReporteAction, generarReportePdfAcumuladoAction, generarReportePdfGeneralAction, generateReporteAcumuladoAction, generateReporteGeneralAction, getReportesAcumuladosAction, getReportesGeneralAction } from '../../actions/reportesActions';
 import { getAllActividadAction } from '../../actions/actividadActions';
@@ -14,7 +14,6 @@ import openNotificationWithIcon from '../../hooks/useNotification';
 import { generarReporte } from '../../utils/generarReporte';
 import Loading from '../../components/Elements/Loading';
 import { hasPermission } from '../../utils/hasPermission';
-import Forbidden from '../../components/Elements/Forbidden';
 
 
 const initialData = {
