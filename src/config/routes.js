@@ -37,7 +37,7 @@ import CreateInsumos from "../pages/Insumos/create"
 import Prestamos from "../pages/Prestamos"
 import Reportes from "../pages/Reportes"
 import Bitacora from "../pages/Bitacora"
-import CreateBitacora from "../pages/Bitacora/create"
+import FormBitacora from "../pages/Bitacora/form"
 
 
 const routesPublic = [
@@ -211,9 +211,14 @@ const routesPrivate = [
         component: Bitacora
     },
     {   
-        path: '/bitacora/create',
+        path: '/bitacora/form/:id',
         layout: Private,
-        component: CreateBitacora
+        component: FormBitacora
+    },
+    {   
+        path: '/bitacora/form',
+        layout: Private,
+        component: FormBitacora
     },
 
     {

@@ -23,7 +23,7 @@ const ValesSalida = () => {
 
     const { RangePicker } = DatePicker;
 
-    const { userPermission, isLoading:isLoadingPermisos } = useSelector(state => state.permisos);
+    const { userPermission } = useSelector(state => state.permisos);
     const { vales, isLoading, paginate, count, detalleSalida, isLoadingDetalles, errors, delivered, updated, deleted } = useSelector( state => state.vales )
     
     const [ dataSource, setDataSource ] = useState([])

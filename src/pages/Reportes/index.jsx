@@ -414,7 +414,7 @@ const Reportes = () => {
     // eslint-disable-next-line
     }, [generar])
 
-    
+    // eslint-disable-next-line
     const getReporteGeneral = () => {
         if( reportType === 2 ){
             dispatch(generarReportePdfGeneralAction(filtros))
