@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, DatePicker, Divider, Form, Input, Select, TimePicker } from "antd";
+import { Button, DatePicker, Divider, Form, Image, Input, Select, TimePicker } from "antd";
 import moment from "moment";
 import { getAllObraAction } from "../../actions/obraActions";
 import { getAllNivelesAction } from "../../actions/nivelActions";
@@ -351,7 +351,7 @@ const FormBitacora = () => {
                         <TextArea onChange={handleChange} name="informacionAdicional" />
                     </Form.Item>
 
-                    <div {...getRootProps()} className="flex flex-col items-center justify-center border-2 border-dashed rounded-md p-4">
+                    <div {...getRootProps({className: 'dropzone w-full border border-gray-300 rounded-md p-2 flex flex-col justify-center items-center cursor-pointer'})}>
                         <input {...getInputProps()} />
                         {
                         isDragActive ?
@@ -360,7 +360,9 @@ const FormBitacora = () => {
                         }
                     </div>
                     <div className="flex gap-10 flex-wrap">
-                        {thumbs}
+                        <Image.PreviewGroup>
+                            {thumbs}
+                        </Image.PreviewGroup>
                     </div>
 
                         

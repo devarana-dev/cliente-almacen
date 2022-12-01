@@ -85,18 +85,7 @@ const Bitacora = () => {
             title: 'Titulo',
             dataIndex: 'titulo',
             key: 'titulo',
-        },
-        {
-            title: 'Informacion Adicional',
-            dataIndex: 'informacionAdicional',
-            key: 'informacionAdicional',
-        },
-        {
-            title: 'Archivos',
-            dataIndex: 'galeria_bitacoras',
-            key: 'galeria_bitacoras',
-            render: (text, record) => record.galeria_bitacoras.length
-        },
+        }
     ];
     
     const showDrawer = () => {

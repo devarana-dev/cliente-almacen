@@ -22,19 +22,17 @@ export const useUploadFile = (files, setFiles) => {
         }
     })
 
-    const thumbs = files.map(file => (
-        <div key={file.name}>
+    const thumbs = files.map((file, index) => (
+        <div key={index}>
           <div className="relative py-4">
                 <Image
                     src={file.preview}
                     alt={file.name} 
-                    width={150}
-                    height={150}
+                    width={80}
+                    height={80}
                     className="rounded-md object-contain"
-                    // Revoke data uri after image is loaded
-                    // onLoad={() => { URL.revokeObjectURL(file.preview) }}
                 />
-                <Button className="bottom-0 left-0  absolute w-full" type="icon-secondary-new" onClick={
+                <Button htmlType='button' className="bottom-0 left-0  absolute w-full" type="icon-secondary-new" onClick={
                     () => {
                         setFiles(files.filter(f => f.name !== file.name))
                     }
