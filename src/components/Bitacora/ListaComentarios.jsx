@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Avatar, Comment, Image, Space, Tooltip } from 'antd'
+import { Avatar, Comment, Image, Tooltip } from 'antd'
 import moment from 'moment';
 import brokenUser from '../../utils/brokenUser';
 
@@ -30,8 +30,7 @@ export const ListaComentarios = ({comentarios, preview = true, showDrawer}) => {
                         </div>                        
                     }
                     datetime={
-                        <Tooltip title={moment(comentario.createdAt).format('LT LL')}>
-                            {/* Hace "x" horas */}
+                        <Tooltip title={moment(comentario.createdAt).format('LT - LL')}>
                             <span>{ moment(comentario.createdAt).fromNow() }</span>
                         </Tooltip>
                     } 

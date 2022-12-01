@@ -1,6 +1,6 @@
-import { Button, Divider, Image } from 'antd'
+import { Divider, Image } from 'antd'
 import moment from 'moment'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getBitacoraAction } from '../../actions/bitacoraActions'
 import { Comentarios } from '../../components/Bitacora/Comentarios'
