@@ -1,10 +1,10 @@
 import clientAxios from '../config/axios';
 import { types } from '../types';
 
-export function getBitacorasAction(){
+export function getBitacorasAction(filtros){
     return async (dispatch) => {
         dispatch( getBitacorasRequest())
-        await clientAxios.get('/bitacora').then(res => {
+        await clientAxios.get('/bitacora', { params: filtros }).then(res => {
             dispatch(getBitacorasSuccess(res.data.bitacoras))
         }
         ).catch(err => {

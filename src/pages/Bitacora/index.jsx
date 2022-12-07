@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Drawer, Table } from 'antd';
+import { Button, Drawer, Pagination, Table } from 'antd';
 // import { hasPermission } from "../../utils/hasPermission";
 import { useDispatch, useSelector } from "react-redux";
 import { CloseOutlined, PlusCircleOutlined } from "@ant-design/icons";
@@ -10,10 +10,17 @@ import Loading from "../../components/Elements/Loading";
 import { ViewBitacora } from "./view";
 
 
+const initialData = {
+    page: 0,
+    size: 10,
+    ordenSolitado: 'DESC',
+}
+
+
 const Bitacora = () => {
 
     // const { userPermission } = useSelector(state => state.permisos);
-    const { bitacoras, isLoading, isLoadingBitacora} = useSelector(state => state.bitacoras);
+    const { bitacoras, isLoading, isLoadingBitacora, paginate} = useSelector(state => state.bitacoras);
     const [viewBitacora, setViewBitacora] = useState(0);
     const [open, setOpen] = useState(false);
     const [titleDrawer, setTitleDrawer] = useState('');
@@ -22,11 +29,14 @@ const Bitacora = () => {
 
     const [dataSource, setDataSource] = useState([]);
 
+    const [ filtros, setFiltros ] = useState(initialData);
+    const [ selectedOption, setSelectedOption ] = useState([35]);
+
     useEffect(() => {
-        dispatch(getBitacorasAction())
+        dispatch(getBitacorasAction(filtros))
         
         // eslint-disable-next-line
-    }, [])
+    }, [filtros])
 
     useEffect(() => {
         setDataSource(bitacoras)
@@ -95,6 +105,34 @@ const Bitacora = () => {
       setOpen(false);
       setViewBitacora(0);
     };
+
+    const handleLoadVales = (page, size) => {
+        setFiltros({
+            ...filtros,
+            page: page - 1,
+            size,
+        })
+    }
+
+    const rowSelection = {
+
+        onSelect: (record, selected, selectedRows) => {
+            
+            if(selected){
+                setSelectedOption([...selectedOption, record.id])
+            }else{
+                setSelectedOption(selectedOption.filter(item => item !== record.id))
+            }
+        },
+
+        onLoad: (selected, selectedRows, changeRows) => {
+            console.log(selected, selectedRows, changeRows); 
+        },
+    };
+
+    console.log(selectedOption);
+    
+    // console.log(selectedOption);
     
 
     return ( 
@@ -118,6 +156,19 @@ const Bitacora = () => {
                     };
                 }}
                 rowClassName="cursor-pointer"
+                rowSelection={{
+                    ...rowSelection,
+                    selectedRowKeys: selectedOption,
+                }}
+                pagination={false}                
+            />
+
+            <Pagination 
+                total={(paginate.totalItem)} 
+                current={paginate.currentPage + 1} 
+                pageSize={filtros.size} 
+                onChange={handleLoadVales} 
+                className="w-auto py-4 max-w-max ml-auto"
             />
 
             <div className="relative">

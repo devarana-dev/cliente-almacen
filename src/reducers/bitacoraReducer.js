@@ -13,6 +13,7 @@ const initialState = {
     deleted: false,
     uploading: false,
     bitacora: null,
+    paginate: 0,
 }
 
 
@@ -63,9 +64,14 @@ export default (state = initialState, action) => {
         case types.GET_BITACORAS_SUCCESS:
             return {
                 ...state,
-                bitacoras: action.payload,
+                bitacoras: action.payload.rows,
                 isLoading: false,
                 errors: null,
+                paginate: {
+                    totalItem:action.payload.totalItem,
+                    totalPages:action.payload.totalPages,
+                    currentPage:action.payload.currentPage,
+                },
             }
 
         case types.GET_BITACORA_SUCCESS:
