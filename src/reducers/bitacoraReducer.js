@@ -14,12 +14,17 @@ const initialState = {
     uploading: false,
     bitacora: null,
     paginate: 0,
+    tiposBitacora: [],
 }
 
 
 // eslint-disable-next-line
 export default (state = initialState, action) => {
     switch (action.type) {
+
+// GET_TIPO_BITACORA
+// GET_TIPO_BITACORA_SUCCESS
+// GET_TIPO_BITACORA_ERROR
 
         case types.CREATE_COMENTARIO_BITACORA:
             return {
@@ -47,6 +52,17 @@ export default (state = initialState, action) => {
                 updated: false,
                 deleted: false,
                 uploading: false,
+            }
+        case types.GET_TIPO_BITACORA:
+            return {
+                ...state,
+                isLoading: true,
+                errors: null,
+                created: false,
+                updated: false,
+                deleted: false,
+                uploading: false,
+                tiposBitacora: [],
             }
 
         case types.GET_BITACORA:
@@ -114,8 +130,6 @@ export default (state = initialState, action) => {
                 isCreatingComment: false,
                 errors: null,
                 isCreatedComment: true,
-                // merge the new comment with the existing comments in state.bitacora.comentarios_bitacoras at the 
-                // beginning of the array
                 bitacora: {
                     ...state.bitacora,
                     comentarios_bitacoras: [action.payload, ...state.bitacora.comentarios_bitacoras]
@@ -144,6 +158,22 @@ export default (state = initialState, action) => {
                 uploading: false,
             }
 
+        case types.GET_TIPO_BITACORA_SUCCESS:
+            console.log(action.payload);
+            return {
+                ...state,
+                isLoading: false,
+                errors: null,
+                tiposBitacora: action.payload,
+            }
+
+        case types.GET_TIPO_BITACORA_ERROR:
+            return {
+                ...state,
+                isLoading: false,
+                errors: action.payload,
+                tiposBitacora: [],
+            }
 
         default:
             return state

@@ -67,22 +67,26 @@ const FormBitacora = () => {
             form.resetFields();
             setFiles([]);
         }
-        // eslint-disable-next-line
-    }, [created])
 
-
-
-    useEffect(() => {
-        if(created){
-            openNotificationWithIcon('success', 'Bitacora creada correctamente')
-            form.resetFields();
-            setFiles([]);
-        }
         if(errors){
             openNotificationWithIcon('error', 'Error al crear bitacora')
         }
         // eslint-disable-next-line
-    }, [created, errors])  
+    }, [created, errors])
+
+
+
+    // useEffect(() => {
+    //     if(created){
+    //         openNotificationWithIcon('success', 'Bitacora creada correctamente')
+    //         form.resetFields();
+    //         setFiles([]);
+    //     }
+    //     if(errors){
+    //         openNotificationWithIcon('error', 'Error al crear bitacora')
+    //     }
+    //     // eslint-disable-next-line
+    // }, [created, errors])  
 
     
 

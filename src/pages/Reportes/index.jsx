@@ -33,8 +33,8 @@ const Reportes = () => {
 
     const { actividades = [] } = useSelector(state => state.actividades);
     const { personal = [] } = useSelector(state => state.personal);
-    const { usuarios = [] } = useSelector(state => state.usuarios);
     const { obra } = useSelector(state => state.obras);
+    const { usuarios = [] } = useSelector(state => state.usuarios);
 
     const [download, setDownload] = useState(false);
 

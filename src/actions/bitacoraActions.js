@@ -126,3 +126,31 @@ export function cleanState () {
         type: types.CLEAN_STATE_BITACORA
     }
 }
+
+export function getTipoBitacoraAction () {
+    return async (dispatch) => {
+        dispatch( getTipoBitacoraRequest())
+        await clientAxios.get('/bitacora/tipoBitacoras').then(res => {
+            console.log('res.data.tipoBitacoras', res.data);
+            dispatch(getTipoBitacoraSuccess(res.data.tiposBitacora))
+        }
+        ).catch(err => {
+            console.log('Error getTipoBitacoraAction', err.response);
+            dispatch(getTipoBitacoraError(err.response.data.message))
+        })
+    }
+}
+
+const getTipoBitacoraRequest = () => ({
+    type: types.GET_TIPO_BITACORA
+});
+
+const getTipoBitacoraSuccess = payload => ({
+    type: types.GET_TIPO_BITACORA_SUCCESS,
+    payload
+});
+
+const getTipoBitacoraError = error => ({
+    type: types.GET_TIPO_BITACORA_ERROR,
+    payload: error
+});
