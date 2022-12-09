@@ -13,6 +13,7 @@ import { getAllPersonalAction } from "../../actions/personalActions";
 import { getAllUsuariosAction } from "../../actions/usuarioActions";
 import { getAllObraAction } from "../../actions/obraActions";
 import { getAllNivelesAction } from "../../actions/nivelActions";
+import { ModalBitacora } from "./modal";
 
 
 const initialData = {
@@ -30,6 +31,7 @@ const Bitacora = () => {
     const { personal = [] } = useSelector(state => state.personal);
     const { obra } = useSelector(state => state.obras);
     const { niveles } = useSelector(state => state.niveles);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const [viewBitacora, setViewBitacora] = useState(0);
     const [open, setOpen] = useState(false);
@@ -37,6 +39,7 @@ const Bitacora = () => {
     const [ selectedNivel, setSelectedNivel ] = useState([]);
     const [ selectedActividad, setSelectedActividad ] = useState([]);
     const [ selectedZona, setSelectedZona ] = useState([]);
+    const [ bitacoraPreview, setBitacoraPreview ] = useState([]);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -56,7 +59,7 @@ const Bitacora = () => {
 
         // eslint-disable-next-line
     }, [])
-
+    
     useEffect(() => {
         dispatch(getBitacorasAction(filtros))
         
@@ -67,59 +70,62 @@ const Bitacora = () => {
         setDataSource(bitacoras)
     }, [bitacoras])
 
+    // 
+
     const columns = [
         {
             title: 'Fecha',
             dataIndex: 'fecha',
             key: 'fecha',
-            render: (text, record) => moment(text).format('DD-MM-YYYY HH:mm:ss')
+            render: (text, record) => <span onClick={() => showDrawer(record.id)}>{moment(text).format('DD-MM-YYYY HH:mm:ss')}</span>,
         },
         {
             title: 'Tipo Bitacora',
             key: 'tipoBitacora',
-            render: (text, record) => record.tipo_bitacora.nombre
+            render: (text, record) => <span onClick={() => showDrawer(record.id)}>{record.tipo_bitacora.nombre}</span>
         },
         {
             title: 'Obra',
             dataIndex: 'obra',
             key: 'obra',
-            render: (text, record) => record.obra.nombre
+            render: (text, record) => <span onClick={() => showDrawer(record.id)}>{record.obra.nombre}</span>
         },
         {
             title: 'Nivel',
             dataIndex: 'nivel',
             key: 'nivel',
-            render: (text, record) => record.nivele.nombre
+            render: (text, record) => <span onClick={() => showDrawer(record.id)}>{record.nivele.nombre}</span>
         },
         {
             title: 'Actividad',
             dataIndex: 'actividad',
             key: 'actividad',
-            render: (text, record) => record.actividade.nombre
+            render: (text, record) => <span onClick={() => showDrawer(record.id)}>{record.actividade.nombre}</span>
         },
         {
             title: 'Zona',
             dataIndex: 'zona',
             key: 'zona',
-            render: (text, record) => record.zona.nombre
+            render: (text, record) => <span onClick={() => showDrawer(record.id)}>{record.zona.nombre}</span>
         },
         {
             title: 'Personal',
             dataIndex: 'personal',
             key: 'personal',
-            render: (text, record) => record.personal.nombre
+            render: (text, record) => <span onClick={() => showDrawer(record.id)}>{record.personal.nombre}</span>
         },
         {
             title: 'Responsables',
             dataIndex: 'usuario',
             key: 'usuario',
-            render: (text, record) => record.users.length
+            render: (text, record) => <span onClick={() => showDrawer(record.id)}>{record.users.length}</span>
             
         },
         {
             title: 'Titulo',
             dataIndex: 'titulo',
             key: 'titulo',
+            render: (text, record) => <span onClick={() => showDrawer(record.id)}>{record.titulo}</span>
         }
     ];
 
@@ -186,8 +192,9 @@ const Bitacora = () => {
         }
     }
     
-    const showDrawer = () => {
-      setOpen(true);
+    const showDrawer = (id) => {
+        setViewBitacora(id)
+        setOpen(true);
     };
     const onClose = () => {
       setOpen(false);
@@ -206,15 +213,19 @@ const Bitacora = () => {
         onSelect: (record, selected, selectedRows) => {
             if(selected){
                 setSelectedOption([...selectedOption, record.id])
+                setBitacoraPreview([...bitacoraPreview, record])
             }else{
                 setSelectedOption(selectedOption.filter(item => item !== record.id))
+                setBitacoraPreview(bitacoraPreview.filter(item => item.id !== record.id))
             }
         },
         onSelectAll: (selected, selectedRows, changeRows) => {
             if(selected){
                 setSelectedOption([ ...selectedOption, ...changeRows.map(item => item.id)])
+                setBitacoraPreview([...bitacoraPreview, ...changeRows.map(item => item)])
             }else{
                 setSelectedOption(selectedOption.filter(item => !changeRows.map(item => item.id).includes(item)))
+                setBitacoraPreview(bitacoraPreview.filter(item => !changeRows.map(item => item.id).includes(item.id)))
             }
         },
     };
@@ -378,7 +389,7 @@ const Bitacora = () => {
                 </Select>
 
                 <Input type="text" 
-                            style={{ width : '250px'}} 
+                            style={{ width : '250px', padding: '0 10px'}} 
                             onChange={ (e) => { setFiltros({ ...filtros, busqueda: e.target.value, page: 0 })  } }
                             allowClear
                             suffix={<SearchOutlined />}
@@ -392,25 +403,23 @@ const Bitacora = () => {
                     style={{ width : '350px'}}
                     onCalendarChange={ (value, dateString) => {handleSearchByDate(value, dateString)}}
                     value={(filtros.fechaInicio !== '' && filtros.fechaFin !== '') && (filtros.fechaInicio && filtros.fechaFin) ? [ moment(filtros.fechaInicio), moment(filtros.fechaFin)] : ["", ""]}
-                />      
+                />   
+                {/* Generar Bitacora */}
+                <Button type='ghost' onClick={() => setIsModalOpen(true)} className="" disabled={bitacoraPreview.length === 0}>
+                    Generar Reporte
+                </Button>
         </div>
 
             <Button type='icon-secondary-new' onClick={() => navigate('form')} className="md:flex hidden fixed right-10 lg:bottom-8 bottom-28 z-50"><PlusCircleOutlined className='py-1'/></Button>
 
         </div>
             <Table columns={columns} scroll={{ x: 'auto'}} rowKey={ record => record.id } dataSource={dataSource} loading={isLoading} showSorterTooltip={false}
-                onRow={(record, rowIndex) => {
-                    return {
-                        onClick: event => {
-                            setViewBitacora(record.id)
-                            showDrawer()
-                        }
-                    };
-                }}
                 rowClassName="cursor-pointer"
                 rowSelection={{
                     ...rowSelection,
                     selectedRowKeys: selectedOption,
+                    // default all selected
+                    
                 }}
                 pagination={false}                
             />
@@ -445,6 +454,8 @@ const Bitacora = () => {
                     
                 </Drawer>
             </div>
+
+            <ModalBitacora setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen} bitacoraPreview={bitacoraPreview} selectedOption={selectedOption}/>
         </>
     );
 }

@@ -131,7 +131,6 @@ export function getTipoBitacoraAction () {
     return async (dispatch) => {
         dispatch( getTipoBitacoraRequest())
         await clientAxios.get('/bitacora/tipoBitacoras').then(res => {
-            console.log('res.data.tipoBitacoras', res.data);
             dispatch(getTipoBitacoraSuccess(res.data.tiposBitacora))
         }
         ).catch(err => {

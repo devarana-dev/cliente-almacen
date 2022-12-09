@@ -159,7 +159,6 @@ export default (state = initialState, action) => {
             }
 
         case types.GET_TIPO_BITACORA_SUCCESS:
-            console.log(action.payload);
             return {
                 ...state,
                 isLoading: false,
