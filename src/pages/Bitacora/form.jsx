@@ -12,7 +12,6 @@ import Loading from "../../components/Elements/Loading";
 import openNotificationWithIcon from "../../hooks/useNotification";
 import { useNavigate } from "react-router-dom";
 import { useUploadFile } from "../../hooks/useUploadFile";
-import { useCallback } from "react";
 
 
 const FormBitacora = () => {
@@ -60,33 +59,19 @@ const FormBitacora = () => {
         // eslint-disable-next-line
     }, [])
 
-    useCallback (() => {
+
+    useEffect(() => {
         if(created){
             openNotificationWithIcon('success', 'Bitacora creada correctamente')
-            navigate('/bitacora')
-            form.resetFields();
-            setFiles([]);
+            // form.resetFields();
+            // setFiles([]);
+            // navigate('/bitacora')
         }
-
         if(errors){
             openNotificationWithIcon('error', 'Error al crear bitacora')
         }
         // eslint-disable-next-line
-    }, [created, errors])
-
-
-
-    // useEffect(() => {
-    //     if(created){
-    //         openNotificationWithIcon('success', 'Bitacora creada correctamente')
-    //         form.resetFields();
-    //         setFiles([]);
-    //     }
-    //     if(errors){
-    //         openNotificationWithIcon('error', 'Error al crear bitacora')
-    //     }
-    //     // eslint-disable-next-line
-    // }, [created, errors])  
+    }, [created, errors])  
 
     
 
@@ -129,10 +114,18 @@ const FormBitacora = () => {
     }
 
 
-
-
-
-    
+    const personalOptions = [
+            {
+                label: 'Personal',
+                options: personal.map( item => (
+                {
+                    label: `${item.nombre} ${item.apellidoPaterno ? item.apellidoPaterno : ''} ${item.apellidoMaterno ? '(' + item.apellidoMaterno + ')' : ''}`,
+                    value: item.id
+                }
+                ))
+            },
+    ]
+        
     return ( 
         <>
             <Form
@@ -286,14 +279,15 @@ const FormBitacora = () => {
                             disabled={personal.length === 0 }
                             showSearch
                             onChange={ (e) => { form.setFieldsValue({ personalId: e }) }}
+                            options={personalOptions}
                             >
-                                <Option key={nanoid()} value={0} disabled>{ `Selecciona una opción` }</Option>
+                                {/* <Option key={nanoid()} value={0} disabled>{ `Selecciona una opción` }</Option>
                             {
                                 personal.map(item => (
                                     <Option key={item.id} value={item.id}> { `${item.nombre} (${ item.apellidoMaterno }) ${ item.apellidoPaterno }` }  </Option>
                                 ))
                             }
-                            
+                             */}
                         </Select>
                     </Form.Item>
                     <Form.Item

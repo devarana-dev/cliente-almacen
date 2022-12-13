@@ -221,11 +221,13 @@ const Bitacora = () => {
         },
         onSelectAll: (selected, selectedRows, changeRows) => {
             if(selected){
-                setSelectedOption([ ...selectedOption, ...changeRows.map(item => item.id)])
-                setBitacoraPreview([...bitacoraPreview, ...changeRows.map(item => item)])
+                setSelectedOption([ ...selectedOption, ...bitacoras.map(item => item.id)])
+                setBitacoraPreview([...bitacoraPreview, ...bitacoras.map(item => item)])
+
             }else{
                 setSelectedOption(selectedOption.filter(item => !changeRows.map(item => item.id).includes(item)))
                 setBitacoraPreview(bitacoraPreview.filter(item => !changeRows.map(item => item.id).includes(item.id)))
+
             }
         },
     };
@@ -417,20 +419,19 @@ const Bitacora = () => {
                 rowClassName="cursor-pointer"
                 rowSelection={{
                     ...rowSelection,
-                    selectedRowKeys: selectedOption,
-                    // default all selected
-                    
+                    // selectedRowKeys: allSelected ? bitacoras.map(item => item.id) : selectedOption,
+                    selectedRowKeys: selectedOption,          
                 }}
-                pagination={false}                
+                // pagination={false}                
             />
 
-            <Pagination 
+            {/* <Pagination 
                 total={(paginate.totalItem)} 
                 current={paginate.currentPage + 1} 
                 pageSize={filtros.size} 
                 onChange={handleLoadVales} 
                 className="w-auto py-4 max-w-max ml-auto"
-            />
+            /> */}
 
             <div className="relative">
                 <Drawer 

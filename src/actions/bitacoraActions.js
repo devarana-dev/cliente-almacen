@@ -1,3 +1,4 @@
+import moment from 'moment';
 import clientAxios from '../config/axios';
 import { types } from '../types';
 
@@ -151,5 +152,42 @@ const getTipoBitacoraSuccess = payload => ({
 
 const getTipoBitacoraError = error => ({
     type: types.GET_TIPO_BITACORA_ERROR,
+    payload: error
+});
+
+
+export function generarReporte (params) {
+    return async (dispatch) => {
+        dispatch( generarReporteRequest())
+        await clientAxios.post('/bitacora/generar-reporte', params, { responseType: 'arraybuffer', headers: { 'Accept': 'application/pdf' } } ).then(res => {
+            const file = new Blob([res.data], {type: 'application/pdf'});
+            console.log('file', file);
+            const url = window.URL.createObjectURL(file);
+            const link = document.createElement('a');
+
+            link.href = url;
+            link.setAttribute('download', `${params.titulo}-${moment().format('DD-MM-YYYY-hh-mm')}.pdf`);
+            document.body.appendChild(link);
+            link.click();
+            dispatch(generarReporteSuccess(res.data))
+        }
+        ).catch(err => {
+            console.log('Error generarReporte', err.response);
+            dispatch(generarReporteError(err.response.data.message))
+        })
+    }
+}
+
+const generarReporteRequest = () => ({
+    type: types.GENERAR_REPORTE
+});
+
+const generarReporteSuccess = payload => ({
+    type: types.GENERAR_REPORTE_SUCCESS,
+    payload
+});
+
+const generarReporteError = error => ({
+    type: types.GENERAR_REPORTE_ERROR,
     payload: error
 });

@@ -30,10 +30,13 @@ export const ViewBitacora = ({id = 0, onClose, setTitleDrawer}) => {
     <div className='grid grid-cols-12 gap-3'> 
 
         <div className='col-span-12 grid grid-cols-12 gap-3 sticky'>
-            <div className='col-span-6'>
+            <div className='col-span-4'>
                 <p className='font-medium'>Titulo: <span className='font-light'>{ bitacora.titulo }</span> </p>
             </div>
-            <div className='col-span-6'>
+            <div className='col-span-4'>
+                <p className='font-medium'>Autor: <span className='font-light'>{ `${bitacora.autor.nombre} ${bitacora.autor.apellidoPaterno}` }</span> </p>
+            </div>
+            <div className='col-span-4'>
                 <p className='font-medium'>Tipo Bitacora: <span className='font-light'>{ bitacora.tipo_bitacora.nombre }</span> </p>
             </div>
 

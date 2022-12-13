@@ -1,6 +1,8 @@
 import { Button, Divider, Form, Input, Modal, Switch } from 'antd';
 import moment from 'moment';
 import React from 'react'
+import { useDispatch } from 'react-redux';
+import { generarReporte } from '../../actions/bitacoraActions';
 
 const initialData = {
     titulo: '',
@@ -12,6 +14,7 @@ const initialData = {
 export const ModalBitacora = ({setIsModalOpen, isModalOpen, bitacoraPreview, selectedOption}) => {
 
     const [form] = Form.useForm();
+    const dispatch = useDispatch();
 
     const handleOk = () => {
         setIsModalOpen(false);
@@ -19,25 +22,32 @@ export const ModalBitacora = ({setIsModalOpen, isModalOpen, bitacoraPreview, sel
 
     const handleCancel = () => {
         setIsModalOpen(false);
+        form.resetFields();
     };
 
     const onSubmit = () => {
-        const query = {...form.getFieldsValue(), selectedOption}  ;
-        console.log(query)
+
+        form.validateFields().then( () => {
+            const query = {...form.getFieldsValue(), selectedOption}  ;
+            console.log(query)
+            dispatch(generarReporte(query))
+
+        }).catch( err => console.log(err))
+
     }
 
   return (
-    <Modal title="Configurar Reporte" visible={isModalOpen} onOk={handleOk} onCancel={handleCancel} 
+    <Modal title="Configurar Reporte" visible={isModalOpen} onOk={ handleOk } onCancel={handleCancel} destroyOnClose={true}
         footer={[
             <Button key="back" onClick={handleCancel}>
                 Cancelar
-            </Button>,
-            <Button key="submit" type="primary" onClick={onSubmit}>
+            </Button>,            
+            <Button htmlType='submit' type='primary' onClick={ () => onSubmit()}>
                 Generar
             </Button>,
         ]}
     >
-        <Form action="" layout='vertical' form={form} initialValues={initialData} onFinish={onSubmit}>
+        <Form layout='vertical' form={form} initialValues={initialData} onFinish={onSubmit} noValidate>
 
             <Form.Item 
                 label="Título:" 
@@ -47,7 +57,7 @@ export const ModalBitacora = ({setIsModalOpen, isModalOpen, bitacoraPreview, sel
                         message: 'El título es requerido',
                     }]}
             >
-                <Input type="text" />
+                <Input/>
             </Form.Item>
 
             <Form.Item label="Descripción:" name="descripcion">
