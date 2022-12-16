@@ -63,9 +63,9 @@ const FormBitacora = () => {
     useEffect(() => {
         if(created){
             openNotificationWithIcon('success', 'Bitacora creada correctamente')
-            // form.resetFields();
-            // setFiles([]);
-            // navigate('/bitacora')
+            form.resetFields();
+            setFiles([]);
+            navigate('/bitacora')
         }
         if(errors){
             openNotificationWithIcon('error', 'Error al crear bitacora')
