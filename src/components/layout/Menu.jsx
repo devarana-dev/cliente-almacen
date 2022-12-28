@@ -1,5 +1,5 @@
 import { Menu} from "antd";
-import { SettingOutlined, AppstoreOutlined, LogoutOutlined,UserOutlined  } from '@ant-design/icons';
+import { SettingOutlined, AppstoreOutlined, LogoutOutlined,UserOutlined, ProfileOutlined  } from '@ant-design/icons';
 import { useNavigate, useLocation } from "react-router-dom";
 // import { useSelector } from "react-redux";
 import { hasPermission, groupPermission} from "../../utils/hasPermission";
@@ -61,6 +61,10 @@ export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
             : null,		
         ])
     : null ,
+    groupPermission( userPermission, ['ver usuarios']) ?
+        getItem('Bitacora', '/bitacora', <ProfileOutlined /> )  
+    : null,
+        
     ];
 
     if(isLoading) return <Loading />
