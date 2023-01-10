@@ -1,6 +1,6 @@
 
-import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Table, Popconfirm } from 'antd';
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Table, Popconfirm, Input } from 'antd';
 
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
@@ -45,15 +45,17 @@ const Obras = () => {
         {
           title: 'Nombre',
           dataIndex: 'nombre',
-          key: 'nombre',
-          sorter: (a, b) => a.nombre.localeCompare(b.nombre),
-          ...getColumnSearchProps('nombre'),
+          key: 'nombre'
         },
         {
           title: 'Clave',
           dataIndex: 'clave',
           key: 'obra',
-          ...getColumnSearchProps('clave'),
+        },
+        {
+          title: 'Etapa',
+          key: 'obra',
+          render: (text, record) =>  record.etapa?.nombre || "No asignado",
         },
         {
           title: 'Estatus',
@@ -77,12 +79,12 @@ const Obras = () => {
             title: 'Acciones',
             dataIndex: 'acciones',
             key: 'acciones',
-            render: (id) => 
+            render: (text, record) => 
 			<div className='flex justify-around'> 
-                { hasPermission(userPermission, 'editar obras') ? <Button type='icon-warning' onClick={ () => navigate(`${id}`) }> <EditOutlined className='text-xl'/> </Button>  : null } 
+                { hasPermission(userPermission, 'editar obras') ? <Button type='icon-warning' onClick={ () => navigate(`${record.id}`) }> <EditOutlined className='text-xl'/> </Button>  : null } 
                 {
                     hasPermission(userPermission, 'eliminar obras') ? 
-                <Popconfirm placement='topRight' onConfirm={ () => handleDelete(id) } title="Deseas eliminar este elemento ?"> 
+                <Popconfirm placement='topRight' onConfirm={ () => handleDelete(record.id) } title="Deseas eliminar este elemento ?"> 
                     <Button type='icon-danger'> <DeleteOutlined className='text-xl'/> </Button> 
                 </Popconfirm> : null
                 }
@@ -116,6 +118,12 @@ const Obras = () => {
 
     if(!hasPermission(userPermission, 'ver obras') && !isLoading ) return <Forbidden/>
 
+
+    const handleSearchByName = (e) => {
+        const search = e.target.value
+        dispatch( getAllObraAction({search}) )
+    }
+
     return ( 
     <>
         <div className='py-2 flex justify-end'>
@@ -125,6 +133,17 @@ const Obras = () => {
                 : null 
             }
 		</div>
+        <div className='pb-3 flex justify-end'>
+            <Input type="text" 
+                style={{ width : '250px'}} 
+                onChange={ e => handleSearchByName(e) }
+                allowClear
+                suffix={<SearchOutlined />}
+                placeholder="Buscar"
+                // value={filtros.busqueda}
+                name="busqueda"
+            />
+        </div>
         <Table columns={columns} scroll={{ x: 'auto'}}  dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>
     </>
     );

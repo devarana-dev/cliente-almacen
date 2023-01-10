@@ -51,16 +51,16 @@ export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
             groupPermission( userPermission, ['ver insumos', 'ver obras', 'ver niveles', 'ver zonas', 'ver actividades', 'ver personal']) ?
                 getItem('Generales', 'subsub2', <UserOutlined />, [
                     hasPermission(userPermission, 'ver insumos') ? getItem('Insumos', '/insumos') : null,
+                    hasPermission(userPermission, 'ver personal') ? getItem('Etapas', '/etapas') : null,
                     hasPermission(userPermission, 'ver obras') ? getItem('Obras', '/obra') : null,
                     hasPermission(userPermission, 'ver niveles') ? getItem('Niveles', '/niveles') : null,
                     hasPermission(userPermission, 'ver zonas') ? getItem('Zonas', '/zonas') : null,
                     hasPermission(userPermission, 'ver actividades') ? getItem('Actividades', '/actividades') : null,
                     hasPermission(userPermission, 'ver personal') ? getItem('Trabajadores', '/personal') : null,
-
                 ], 'group')
             : null,		
         ])
-    : null ,
+    : null,
     groupPermission( userPermission, ['ver usuarios']) ?
         getItem('Bitacora', '/bitacora', <ProfileOutlined /> )  
     : null,

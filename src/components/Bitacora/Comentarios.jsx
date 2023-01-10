@@ -22,13 +22,21 @@ export const Comentarios = ({id, onClose, comentarios}) => {
                 <ListaComentarios comentarios={comentarios}/>           
             </Drawer>
 
-            <div>
-                <p className='font-medium'>Comentarios {comentarios.length > 0 && <span className='text-xs cursor-pointer text-blue-500 hover:opacity-60 font-light' onClick={showDrawer}>ver más</span> } </p>
-                <ListaComentarios comentarios={lastComentarios} preview={false} showDrawer={showDrawer} />
-            </div>
+            {
+                comentarios.length > 0 && (
+                <>
+                    <div>
+                        <p className='font-medium'>Comentarios {comentarios.length > 0 && <span className='text-xs cursor-pointer text-blue-500 hover:opacity-60 font-light' onClick={showDrawer}>ver más</span> } </p>
+                        <ListaComentarios comentarios={lastComentarios} preview={false} showDrawer={showDrawer} />
+                    </div>
+                    <Divider/>
+                </>
+                )
+                
+            }
             
 
-            <Divider/>
+            
             <NuevoComentario id={id} onClose={onClose} /> 
         </>
     )

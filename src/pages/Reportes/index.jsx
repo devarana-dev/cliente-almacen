@@ -1,7 +1,7 @@
-import { Select, DatePicker, Input, Table, Pagination, Tag, Button } from 'antd';
+import { Select, DatePicker, Input, Table, Pagination, Tag, Button, Tooltip, Modal } from 'antd';
 import { useEffect, useState } from 'react';
 import Download from '../../components/Elements/Download';
-import { ClearOutlined, FileExcelOutlined, SearchOutlined } from '@ant-design/icons';
+import { ClearOutlined, FileExcelOutlined, QuestionCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { cleanGenerarReporteAction, generarReportePdfAcumuladoAction, generarReportePdfGeneralAction, generateReporteAcumuladoAction, generateReporteGeneralAction, getReportesAcumuladosAction, getReportesGeneralAction } from '../../actions/reportesActions';
 import { getAllActividadAction } from '../../actions/actividadActions';
@@ -35,6 +35,7 @@ const Reportes = () => {
     const { personal = [] } = useSelector(state => state.personal);
     const { obra } = useSelector(state => state.obras);
     const { usuarios = [] } = useSelector(state => state.usuarios);
+    const [ showHelpModal, setShowHelpModal ] = useState(false);
 
     const [download, setDownload] = useState(false);
 
@@ -423,6 +424,10 @@ const Reportes = () => {
             dispatch(generarReportePdfAcumuladoAction(filtros))
         }
     }
+
+    const setShowHelp = () => {
+        setShowHelpModal(!showHelpModal)
+    }   
     
     return ( 
         <>
@@ -593,17 +598,26 @@ const Reportes = () => {
                 </div>
                 <div className="my-auto inline-flex gap-x-3">
                     {/* <Download disabled={download} icon={ <FilePdfOutlined />} fn={() => {getReporteGeneral()}}/> */}
-                    <Download disabled={download} icon={ <FileExcelOutlined />} fn={() => handleReporteExcel()}/>
-                    <Button type='icon-secondary-new' onClick={
-                        () => {
-                            setFiltros({
-                                ...initialData,
-                                type: filtros.type,
-                                fechaInicial: "",
-                                fechaFinal: "",
-                            })
-                        }
-                    }><ClearOutlined /></Button>
+                    <Tooltip title="Descargar Reporte">
+                        <div>
+                            <Download disabled={download} icon={ <FileExcelOutlined />} fn={() => handleReporteExcel()}/>
+                        </div>
+                    </Tooltip>
+                    <Tooltip title="Limpiar Filtros">
+                        <Button type='icon-secondary-new' title='Limpiar Filtros' onClick={
+                            () => {
+                                setFiltros({
+                                    ...initialData,
+                                    type: filtros.type,
+                                    fechaInicial: "",
+                                    fechaFinal: "",
+                                })
+                            }
+                        }><ClearOutlined /></Button>
+                    </Tooltip>
+                    <Tooltip title="Ayuda">
+                        <Button type='icon-primary-new' title='Ayuda' onClick={() => {setShowHelp(!showHelpModal)}}><QuestionCircleOutlined /></Button>
+                    </Tooltip>
                 </div>
             </div>  
 
@@ -637,6 +651,16 @@ const Reportes = () => {
             </div>
             
             : null}
+
+            <Modal
+                visible={showHelpModal}
+                onCancel={() => {setShowHelp(!showHelpModal)}}
+                footer={null}
+                width={1000}
+                destroyOnClose={true}
+            >
+                <video width="100%" height="100%" controls src='https://spaces.erp-devarana.mx/tutoriales/tutorial-reportes.webm' preload='none' autoPlay />
+            </Modal>
            
         </>
     );

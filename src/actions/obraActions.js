@@ -2,10 +2,10 @@ import clientAxios from '../config/axios';
 import { types } from '../types';
 
 
-export function getAllObraAction(){
+export function getAllObraAction(filtros){
     return async (dispatch) => {
         dispatch(getAllObraRequest())
-        await clientAxios.get('/obras')
+        await clientAxios.get('/obras', { params: filtros })
             .then ( res => {
                 dispatch(getAllObraSuccess(res.data.obra))
             }).catch( err => {

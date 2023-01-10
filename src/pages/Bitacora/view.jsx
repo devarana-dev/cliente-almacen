@@ -24,60 +24,81 @@ export const ViewBitacora = ({id = 0, onClose, setTitleDrawer}) => {
     
 
     if( isLoadingBitacora ) return <Loading/>
-    setTitleDrawer(`Bitacora ${bitacora.titulo}`)
+    setTitleDrawer(`${bitacora.titulo}`)
 
   return (
     <div className='grid grid-cols-12 gap-3'> 
 
         <div className='col-span-12 grid grid-cols-12 gap-3 sticky'>
-            <div className='col-span-4'>
-                <p className='font-medium'>Titulo: <span className='font-light'>{ bitacora.titulo }</span> </p>
-            </div>
-            <div className='col-span-4'>
-                <p className='font-medium'>Autor: <span className='font-light'>{ `${bitacora.autor.nombre} ${bitacora.autor.apellidoPaterno}` }</span> </p>
-            </div>
-            <div className='col-span-4'>
-                <p className='font-medium'>Tipo Bitacora: <span className='font-light'>{ bitacora.tipo_bitacora.nombre }</span> </p>
-            </div>
-
             <div className='col-span-6'>
                 <p className='font-medium'>Fecha: <span className='font-light'>{ moment(bitacora.fecha).format('DD/MM/YYYY') }</span> </p>
             </div>
             <div className='col-span-6'>
                 <p className='font-medium'>Hora: <span className='font-light'>{ moment(bitacora.fecha).format('HH:mm') }</span> </p>
             </div>
+
+            <Divider className='col-span-12 my-2'/>
+            <div className='col-span-6'>
+                <p className='font-medium'>Tipo Bitacora: <span className='font-light'>{ bitacora.tipo_bitacora.nombre }</span> </p>
+            </div>
+            <div className='col-span-6'>
+                <p className='font-medium'>Autor: <span className='font-light'>{ 
+                    `${bitacora.autorInt ? `${bitacora.autorInt.nombre} ${bitacora.autorInt.apellidoPaterno} ${bitacora.autorInt.apellidoMaterno} ` : `${bitacora.autorExt.nombre} ${bitacora.autorExt.apellidoPaterno} ${bitacora.autorExt.apellidoMaterno} ` }`
+                }</span> </p>
+            </div>
+            <div className='col-span-6'>
+                <p className='font-medium'>Titulo: <span className='font-light'>{ bitacora.titulo }</span> </p>
+            </div>
+            { bitacora.actividad && <div className='col-span-6'>
+                <p className='font-medium'>Actividad: <span className='font-light'>{ bitacora.actividad }</span> </p>
+            </div> }
+
+            {
+                bitacora.autorExt && (<div className='col-span-4'>
+                    <p className='font-medium'>Empresa: <span className='font-light'>{ bitacora.autorExt.empresa }</span> </p>
+                </div> )
+            }
+            
+
+            
         </div>
         
         <Divider className='col-span-12 my-2'/>
-        <div className='col-span-4'>
-            <p className='font-medium'>Obra: <span className='font-light'>{ bitacora.obra.nombre }</span> </p>
-        </div>
-        <div className='col-span-4'>
-            <p className='font-medium'>Nivel: <span className='font-light'>{ bitacora.nivele.nombre }</span> </p>
-        </div>
-        <div className='col-span-4'>
-            <p className='font-medium'>Zona: <span className='font-light'>{ bitacora.zona.nombre }</span> </p>
-        </div>
-        <div className='col-span-6'>
-            <p className='font-medium'>Actividad: <span className='font-light'>{ bitacora.actividade.nombre }</span> </p>
-        </div>
-        <div className='col-span-6'>
-            <p className='font-medium'>Personal: <span className='font-light'>{ bitacora.personal.nombre } { bitacora.personal.apellidoPaterno } { bitacora.personal.apellidoMaterno } </span> </p>
+        {
+            (bitacora.obra && bitacora.obraId !== 0) && (<div className='col-span-4'>
+                <p className='font-medium'>Obra: <span className='font-light'>{ bitacora.obra.nombre }</span> </p>
+            </div> )
+
+        }
+        {
+            (bitacora.nivele && bitacora.nivelId !== 0) && (<div className='col-span-4'>
+                <p className='font-medium'>Nivel: <span className='font-light'>{ bitacora.nivele.nombre }</span> </p>
+            </div>)
+        }
+        {
+            (bitacora.zona && bitacora.zonaId !== 0) && (<div className='col-span-4'>
+                <p className='font-medium'>Zona: <span className='font-light'>{ bitacora.zona.nombre }</span> </p>
+            </div>)
+        }
+        
+        
+       
+
+        {
+            bitacora.users.length > 0 && (<div className='col-span-12'>
+                <p className='font-medium'>Involucrados: </p> 
+                <div className='font-light grid grid-cols-3'>
+                    { bitacora.users.map( (involucrado, index) => (
+                        <p key={index} prefix={index} className='font-light'>{ involucrado.nombre } { involucrado.apellidoPaterno } { involucrado.apellidoMaterno } </p>
+                    ))}
+                </div>
+            </div>)
+        }
+        <div className='col-span-12'>
+            <p className='font-medium'>Descripción: <span className='font-light'>{ bitacora.descripcion }</span> </p>
         </div>
 
-        <div className='col-span-12'>
-            <p className='font-medium'>Involucrados: </p> 
-            <div className='font-light grid grid-cols-3'>
-                { bitacora.users.map( (involucrado, index) => (
-                    <p key={index} prefix={index} className='font-light'>{ involucrado.nombre } { involucrado.apellidoPaterno } { involucrado.apellidoMaterno } </p>
-                ))}
-            </div>
-        </div>
-        <div className='col-span-12'>
-            <p className='font-medium'>Descripción: <span className='font-light'>{ bitacora.informacionAdicional }</span> </p>
-        </div>
-
-        <div className='col-span-12'>
+        { bitacora.galeria_bitacoras.length > 0 && <div className='col-span-12'>
             <p className='font-medium'>Imagenes Adjuntos: </p>
             <div className='grid grid-cols-4 gap-3 py-2'>
                 <Image.PreviewGroup>
@@ -92,13 +113,13 @@ export const ViewBitacora = ({id = 0, onClose, setTitleDrawer}) => {
                     ))}
                 </Image.PreviewGroup>
             </div>
-        </div>
+        </div>}
 
         <Divider className='col-span-12 my-2'/>
 
         <div className='col-span-12'>
             {
-                bitacora  && <Comentarios id={bitacora.id} onClose={onClose} comentarios={bitacora.comentarios_bitacoras} />
+                bitacora && <Comentarios id={bitacora.id} onClose={onClose} comentarios={bitacora.comentarios_bitacoras} />
             }
         </div>
         

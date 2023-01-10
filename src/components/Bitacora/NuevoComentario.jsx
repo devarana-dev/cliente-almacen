@@ -5,12 +5,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { cleanState, createComentarioAction } from '../../actions/bitacoraActions';
 import openNotificationWithIcon from '../../hooks/useNotification';
 import { useUploadFile } from '../../hooks/useUploadFile'
+import Loading from '../Elements/Loading';
 
 export const NuevoComentario = ({id = 0, onClose}) => {
     
     const [files, setFiles] = useState([]);
     const {getInputProps, getRootProps, isDragActive, thumbs} = useUploadFile(files, setFiles);
-    const {isCreatedComment, isLoadingComment} = useSelector(state => state.bitacoras);
+    const {isCreatedComment, isLoadingComment, isCreatingComment} = useSelector(state => state.bitacoras);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const handleSubmit = () => {
@@ -65,11 +66,28 @@ export const NuevoComentario = ({id = 0, onClose}) => {
                             <Button type='ghost' htmlType='button' onClick={() => onClose()} disabled={isLoadingComment}>
                                 Cancelar
                             </Button>
-                            <Button type='primary' htmlType="submit" disabled={isLoadingComment}>Agregar</Button>
+                            <Button type='primary' htmlType="submit" disabled={isLoadingComment || isCreatingComment }>Agregar</Button>
                         </div>
                     </Form.Item>
                     
                 </Form>
+                {
+                    isCreatingComment && (
+                        <div className='relative'>
+                            <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 z-50 flex justify-center items-center">
+                                <div className="bg-white rounded-lg shadow-lg p-4 max-w-xs w-full">
+                                    <div className="flex flex-col gap-y-2">
+                                        <div className="flex justify-center items-center">
+                                            <Loading text={"Guardando Comentario..."}/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )
+        
+                    
+                }
         </div>
     )
 }

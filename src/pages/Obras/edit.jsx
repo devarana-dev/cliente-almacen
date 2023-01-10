@@ -9,6 +9,7 @@ import { cleanErrorAction } from "../../actions/globalActions";
 import Loading from "../../components/Elements/Loading";
 import { hasPermission } from "../../utils/hasPermission";
 import Forbidden from "../../components/Elements/Forbidden";
+import { getEtapasAction } from "../../actions/etapasActions";
 
 const EditObra = () => {
 
@@ -20,12 +21,14 @@ const EditObra = () => {
 
     const { errors, editedObra, isLoading, updated } = useSelector(state => state.obras);
     const {niveles} = useSelector( state => state.niveles )
+    const { etapas } = useSelector(state => state.etapas);
     const { userPermission } = useSelector(state => state.permisos)
 
     const [obra, setObra] = useState({
         nombre: "",
         clave: "",
         status: "",
+        etapaId: null
     });
 
     useEffect(() =>{
@@ -44,6 +47,11 @@ const EditObra = () => {
         dispatch(getAllNivelesAction())
     // eslint-disable-next-line
     }, [editedObra])
+
+    useEffect(() => {
+        dispatch(getEtapasAction())
+        // eslint-disable-next-line
+    }, [])
 
     const handleChange = (e) => {
         setObra({
@@ -122,6 +130,33 @@ const EditObra = () => {
             >
                 <Input name="clave" onChange={handleChange}/>
             </Form.Item>
+            <Form.Item
+                label="Etapa"
+                name="etapaId"
+                defaultValue={null}
+                rules={[
+                    { required: true, message: "Debes seleccionar una etapa" },
+                ]}
+                hasFeedback
+                
+            >
+                <Select
+                    placeholder="Selecciona una etapa"
+                    showSearch
+                    filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
+                    onChange={ (value) => { setObra({...obra, etapaId:value})} }
+                >
+                    {
+                        etapas && etapas.length > 0 ?
+                        etapas.map( (item, i) => (
+                            <Option key={i} value={item.id}> {item.nombre} </Option>    
+                        ))
+                        :
+                        null
+                    }
+                </Select>
+            </Form.Item>
+
             <Form.Item
                 name="status"
                 label="Estatus"

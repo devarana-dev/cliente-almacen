@@ -1,32 +1,21 @@
-import { Layout, Button, Modal, notification, Dropdown, Menu } from "antd";
+import { Layout, Button, Modal, notification} from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from 'react-router-dom'
+import {  useNavigate } from 'react-router-dom'
 import "../assets/scss/layout.scss"
-
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
     LogoutOutlined,
-    SwapOutlined,
-    PlusCircleOutlined,
     AlertOutlined,
   } from '@ant-design/icons';
-
-import { BiSearchAlt } from 'react-icons/bi'
-import { IoHome } from 'react-icons/io5'
-import {AiOutlineUserAdd,AiOutlineLogout} from 'react-icons/ai'
-
 import MenuLayout from "../components/layout/Menu";
-import Notificaciones from "../components/notificaciones";
 import Logotipo from "../assets/img/LogoDevarana.png"
-import { Footer } from "antd/lib/layout/layout";
-
 import { logoutAction } from '../actions/authActions'
 import { getPermisoAction } from "../actions/permisosActions";
 import Notas from "../components/Notas";
-import { groupPermission, hasPermission } from "../utils/hasPermission";
 import { useAuth } from "../hooks/useAuth";
+import FooterLayout from "../components/layout/Footer";
 
 export default function LayoutPrivate({children}) {
     const dispatch = useDispatch()
@@ -59,6 +48,7 @@ export default function LayoutPrivate({children}) {
         navigate("/login")
     }
 
+    // eslint-disable-next-line no-unused-vars
     const handleSidebar = () => {
         hiddeable ? localStorage.removeItem('sideBar') : localStorage.setItem('sideBar', true)
         setHiddeable(!hiddeable)
@@ -111,114 +101,25 @@ export default function LayoutPrivate({children}) {
             
             </Sider>
             <Layout className="layout-right">
-                <Header className="layout-right__header hidden lg:flex"> 
+                <Header className="layout-right__header hidden lg:flex relative"> 
                     <div>
                         {/* <Switch className="bg-dark" checkedChildren="On" unCheckedChildren="Off" defaultChecked={hiddeable} onChange={() => handleSidebar(!hiddeable)}/> */}
                         <button onClick={() => setCollapsed(!collapsed)}> {collapsed ? <MenuUnfoldOutlined className="text-2xl sm:text-dark sm:bg-transparent bg-primary text-white pb-1 px-2 rounded "/> : <MenuFoldOutlined className="text-2xl sm:text-dark sm:bg-transparent bg-primary text-white pb-1 px-2 rounded "/>} </button>
                     </div>
+                    { process.env.REACT_APP_NODE_ENV === "test" && <div className="text-red-500 bg-red-100 text-center uppercase w-full content-center max-w-sm">Versión de Pruebas</div> }
                     <div>
                         <Button className="ml-5" type="icon-primary" onClick={showModalNotas }>  <AlertOutlined className="text-xl text-dark"/> </Button>
-                        {isAuthenticated ? <Notificaciones/> : null }
                         <Button className="ml-5" type="icon-primary" onClick={showModal }>  <LogoutOutlined className="text-xl"/> </Button>
                     </div>
                     
                 </Header>
                 <Content className="layout-right__content"> 
+                
                     <img src={Logotipo} alt="" className='mx-auto block lg:hidden max-w-full pb-3'/>
                     {children} 
                 </Content>
             </Layout>
-            <Footer className="block lg:hidden">
-                <div className="footer">
-                    <Link to={'/'} className="block w-full h-auto text-center footer__link">
-                        <div className="footer__link-icon"> 
-                            <IoHome className="m-auto"/> 
-                            <p> Home </p>
-                        </div>
-                    </Link>
-                    {/* <Link to={'/vales-salida/nuevo'} className="block w-full h-auto text-center footer__link">
-                        <div className="footer__link-icon"> 
-                            <MdLibraryAddCheck className="m-auto"/> 
-                            <p> Crear Vale </p>
-                        </div>
-                    </Link> */}
-                    <Link to={'/vales-salida'} className="block w-full h-auto text-center footer__link">
-                    <div className="footer__link-icon"> 
-                            <BiSearchAlt className="m-auto"/> 
-                            <p> Consultar </p>
-                        </div>
-                    </Link>
-                    <Link to={'/personal'} className="block w-full h-auto text-center footer__link">
-                        <div className="footer__link-icon"> 
-                            <AiOutlineUserAdd className="m-auto"/> 
-                            <p> Personal </p>
-                        </div>
-                    </Link>
-                    <Link to={'/prestamos'} className="block w-full h-auto text-center footer__link">
-                        <div className="footer__link-icon"> 
-                            <SwapOutlined className="m-auto"/> 
-                            <p> Préstamos </p>
-                        </div>
-                    </Link>
-                    <div className="block w-full h-auto text-center footer__link cursor-pointer">
-                        <div className="footer__link-icon" onClick={showModal }> 
-                            <AiOutlineLogout className="m-auto" />
-                            <p> Salir </p>
-                        </div>
-                    </div>
-                </div>
-
-                {
-                groupPermission(userPermission, ['crear vales', 'crear personal']) ?
-                
-                    <Dropdown
-                        className="fixed right-7 bottom-24 z-50"
-                        overlay={<Menu
-                            items={
-                                [
-                                    hasPermission(userPermission, 'crear vales') ?
-                                    {
-                                        key: '5',
-                                        label: (
-                                        <Link className="dropDownResponsive" to={'/vales-salida/nuevo'}>
-                                            Crear Vale
-                                        </Link>
-                                        ),
-                                    }:
-                                    null,
-                                    hasPermission(userPermission, 'crear personal') ?
-                                    {
-                                        key: '6',
-                                        label: (
-                                        <Link className="dropDownResponsive" to={'/personal/create'}>
-                                            Registrar Personal
-                                        </Link>
-                                        ),
-                                    } : null,
-                                    {
-                                        key: '7',
-                                        label: (
-                                        <Link className="dropDownResponsive" to={'/bitacora/form'}>
-                                            Registrar Bitacora
-                                        </Link>
-                                        ),
-                                    }
-                                ]
-                            }
-                        />}
-                        placement="topRight"
-                        trigger={'click'}
-                        arrow={{
-                            pointAtCenter: true,
-                        }}
-                        >
-                        <Button type='icon-secondary-new'><PlusCircleOutlined className='py-1'/></Button>
-                    </Dropdown>
-                    : null 
-                }
-                
-                
-            </Footer>
+            <FooterLayout showModal={showModal} userPermission={userPermission} />
 
             <Modal
                 title="Salir"

@@ -1,7 +1,11 @@
 import { SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Space, } from 'antd';
 import { createRef } from 'react';
+
+
+// eslint-disable-next-line no-unused-vars
 let searchText = null
+// eslint-disable-next-line no-unused-vars
 let searchedColumn = null
 const searchInput = createRef();
 

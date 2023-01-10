@@ -38,6 +38,9 @@ import Prestamos from "../pages/Prestamos"
 import Reportes from "../pages/Reportes"
 import Bitacora from "../pages/Bitacora"
 import FormBitacora from "../pages/Bitacora/form"
+import Etapas from "../pages/Etapas"
+import CreateEtapas from "../pages/Etapas/create"
+import editEtapas from "../pages/Etapas/edit"
 
 
 const routesPublic = [
@@ -220,7 +223,21 @@ const routesPrivate = [
         layout: Private,
         component: FormBitacora
     },
-
+    {
+        path: '/etapas',
+        layout: Private,
+        component: Etapas
+    },
+    {
+        path: '/etapas/create',
+        layout: Private,
+        component: CreateEtapas
+    },
+    {
+        path: '/etapas/:id',
+        layout: Private,
+        component: editEtapas
+    },
     {
         path: "*",
         layout: Private,

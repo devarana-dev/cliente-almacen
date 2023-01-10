@@ -1,7 +1,6 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, DatePicker, Drawer, Input, Pagination, Select, Table } from 'antd';
-// import { hasPermission } from "../../utils/hasPermission";
+import { Button, DatePicker, Drawer, Input, Select, Table } from 'antd';
 import { useDispatch, useSelector } from "react-redux";
 import { CloseOutlined, PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import { getBitacorasAction, getTipoBitacoraAction } from '../../actions/bitacoraActions'
@@ -14,6 +13,7 @@ import { getAllUsuariosAction } from "../../actions/usuarioActions";
 import { getAllObraAction } from "../../actions/obraActions";
 import { getAllNivelesAction } from "../../actions/nivelActions";
 import { ModalBitacora } from "./modal";
+// import { hasPermission } from "../../utils/hasPermission";
 
 
 const initialData = {
@@ -27,15 +27,15 @@ const Bitacora = () => {
 
     // const { userPermission } = useSelector(state => state.permisos);
     const { RangePicker } = DatePicker;
-    const { bitacoras, isLoading, isLoadingBitacora, paginate} = useSelector(state => state.bitacoras);
+    const { bitacoras, isLoading, isLoadingBitacora} = useSelector(state => state.bitacoras);
     const { personal = [] } = useSelector(state => state.personal);
     const { obra } = useSelector(state => state.obras);
     const { niveles } = useSelector(state => state.niveles);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [ isModalOpen, setIsModalOpen] = useState(false);
 
-    const [viewBitacora, setViewBitacora] = useState(0);
-    const [open, setOpen] = useState(false);
-    const [titleDrawer, setTitleDrawer] = useState('');
+    const [ viewBitacora, setViewBitacora] = useState(0);
+    const [ open, setOpen] = useState(false);
+    const [ titleDrawer, setTitleDrawer] = useState('');
     const [ selectedNivel, setSelectedNivel ] = useState([]);
     const [ selectedActividad, setSelectedActividad ] = useState([]);
     const [ selectedZona, setSelectedZona ] = useState([]);
@@ -100,26 +100,13 @@ const Bitacora = () => {
             title: 'Actividad',
             dataIndex: 'actividad',
             key: 'actividad',
-            render: (text, record) => <span onClick={() => showDrawer(record.id)}>{record.actividade.nombre}</span>
+            render: (text, record) => <span onClick={() => showDrawer(record.id)}>{record.actividad}</span>
         },
         {
             title: 'Zona',
             dataIndex: 'zona',
             key: 'zona',
             render: (text, record) => <span onClick={() => showDrawer(record.id)}>{record.zona.nombre}</span>
-        },
-        {
-            title: 'Personal',
-            dataIndex: 'personal',
-            key: 'personal',
-            render: (text, record) => <span onClick={() => showDrawer(record.id)}>{record.personal.nombre}</span>
-        },
-        {
-            title: 'Responsables',
-            dataIndex: 'usuario',
-            key: 'usuario',
-            render: (text, record) => <span onClick={() => showDrawer(record.id)}>{record.users.length}</span>
-            
         },
         {
             title: 'Titulo',
@@ -201,14 +188,6 @@ const Bitacora = () => {
       setViewBitacora(0);
     };
 
-    const handleLoadVales = (page, size) => {
-        setFiltros({
-            ...filtros,
-            page: page - 1,
-            size,
-        })
-    }
-
     const rowSelection = {
         onSelect: (record, selected, selectedRows) => {
             if(selected){
@@ -220,6 +199,7 @@ const Bitacora = () => {
             }
         },
         onSelectAll: (selected, selectedRows, changeRows) => {
+            console.log(selected);
             if(selected){
                 setSelectedOption([ ...selectedOption, ...bitacoras.map(item => item.id)])
                 setBitacoraPreview([...bitacoraPreview, ...bitacoras.map(item => item)])
@@ -240,7 +220,7 @@ const Bitacora = () => {
                     maxTagCount={"responsive"}
                     allowClear
                     style={{
-                        width: '250px',
+                        width: '200px',
                     }}
                     placeholder="Filtrar Por Obra"
                     onChange={ (value) => { handleChangeObra(value) }}
@@ -260,7 +240,7 @@ const Bitacora = () => {
                     maxTagCount={"responsive"}
                     allowClear
                     style={{
-                        width: '250px',
+                        width: '200px',
                     }}
                     placeholder="Filtrar Nivel"
                     onChange={ (e) => { handleChangeNivel(e) }}
@@ -284,7 +264,7 @@ const Bitacora = () => {
                     maxTagCount={"responsive"}
                     allowClear
                     style={{
-                        width: '250px',
+                        width: '200px',
                     }}
                     placeholder="Filtrar Actividad"
                     onChange={ (e) => { setFiltros({
@@ -312,7 +292,7 @@ const Bitacora = () => {
                     maxTagCount={"responsive"}
                     allowClear
                     style={{
-                        width: '250px',
+                        width: '200px',
                     }}
                     placeholder="Filtrar Zona"
                     onChange={ (e) => { setFiltros({
@@ -361,7 +341,7 @@ const Bitacora = () => {
                 <Select
                     allowClear
                     style={{
-                        width: '250px',
+                        width: '200px',
                     }}
                     placeholder="Filtrar Usuario"
                     // onChange={ (e) => { handleSearchByUsuario(e) }}
@@ -379,7 +359,7 @@ const Bitacora = () => {
                 <Select
                     className='hidden lg:block'
                     style={{
-                        width: '250px',
+                        width: '200px',
                     }}
                     placeholder="Ordenar por: "
                     onChange={ (e) => { setFiltros({ ...filtros, ordenSolicitado: e }) }}
@@ -391,7 +371,7 @@ const Bitacora = () => {
                 </Select>
 
                 <Input type="text" 
-                            style={{ width : '250px', padding: '0 10px'}} 
+                            style={{ width : '200px', padding: '0 10px'}} 
                             onChange={ (e) => { setFiltros({ ...filtros, busqueda: e.target.value, page: 0 })  } }
                             allowClear
                             suffix={<SearchOutlined />}
@@ -419,19 +399,9 @@ const Bitacora = () => {
                 rowClassName="cursor-pointer"
                 rowSelection={{
                     ...rowSelection,
-                    // selectedRowKeys: allSelected ? bitacoras.map(item => item.id) : selectedOption,
                     selectedRowKeys: selectedOption,          
                 }}
-                // pagination={false}                
             />
-
-            {/* <Pagination 
-                total={(paginate.totalItem)} 
-                current={paginate.currentPage + 1} 
-                pageSize={filtros.size} 
-                onChange={handleLoadVales} 
-                className="w-auto py-4 max-w-max ml-auto"
-            /> */}
 
             <div className="relative">
                 <Drawer 

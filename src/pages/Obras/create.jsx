@@ -8,6 +8,7 @@ import openNotificationWithIcon from "../../hooks/useNotification";
 import { cleanErrorAction } from "../../actions/globalActions";
 import { hasPermission } from "../../utils/hasPermission";
 import Forbidden from "../../components/Elements/Forbidden";
+import { getEtapasAction } from "../../actions/etapasActions";
 
 const CreateObra = () => {
 
@@ -16,6 +17,7 @@ const CreateObra = () => {
     const { Option } = Select;
 
     const { errors, created } = useSelector(state => state.obras );
+    const { etapas } = useSelector(state => state.etapas);
     const { niveles } = useSelector( state => state.niveles )
     const { userPermission } = useSelector(state => state.permisos);
 
@@ -23,12 +25,18 @@ const CreateObra = () => {
         nombre: "",
         status: true,
         clave: "",
-        niveles: []
+        niveles: [],
+        etapaId: null
     });
     const {nombre, clave, status} = obra
     
     useEffect(() => {
         dispatch(getAllNivelesAction())
+        // eslint-disable-next-line
+    }, [])
+
+    useEffect(() => {
+        dispatch(getEtapasAction())
         // eslint-disable-next-line
     }, [])
 
@@ -105,6 +113,32 @@ const CreateObra = () => {
                 hasFeedback
             >
                 <Input value={clave} name="clave" onChange={handleChange}/>
+            </Form.Item>
+            <Form.Item
+                label="Etapa"
+                name="etapaId"
+                defaultValue={null}
+                rules={[
+                    { required: true, message: "Debes seleccionar una etapa" },
+                ]}
+                hasFeedback
+                
+            >
+                <Select
+                    placeholder="Selecciona una etapa"
+                    showSearch
+                    filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
+                    onChange={ (value) => { setObra({...obra, etapaId:value})} }
+                >
+                    {
+                        etapas && etapas.length > 0 ?
+                        etapas.map( (item, i) => (
+                            <Option key={i} value={item.id}> {item.nombre} </Option>    
+                        ))
+                        :
+                        null
+                    }
+                </Select>
             </Form.Item>
             <Form.Item
                 label="Estatus"
