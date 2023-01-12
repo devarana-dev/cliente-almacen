@@ -28,6 +28,7 @@ export default (state = initialState, action) => {
                 token: null,
             }
         case types.LOGIN_VALIDATE_REQUEST:
+        case types.LOGIN_REQUEST:
             return {
                 ...state,
                 isLoading: true,
@@ -67,6 +68,12 @@ export default (state = initialState, action) => {
                 token: action.payload.accessToken,
                 errors: null,
                 logout: false,
+            }
+
+        case types.CLEAR_AUTH:
+            return {
+                ...state,
+                errors: null,
             }
         default:
             return state

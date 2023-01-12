@@ -290,7 +290,13 @@ const FormBitacora = () => {
                         <Form.Item
                             name="actividad"
                             label="Actividad"
-                            labelCol={{ span: 4 }}                    
+                            labelCol={{ span: 4 }}   
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Por favor ingrese una actividad',
+                                }                 
+                            ]}
                         >
                             <Select 
                                 filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}

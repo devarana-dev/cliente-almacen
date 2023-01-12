@@ -1,10 +1,10 @@
 import clientAxios from '../config/axios';
 import { types } from '../types';
 
-export function getAllRolesAction(){
+export function getAllRolesAction(filtros){
     return async (dispatch) => {
         dispatch(getAllRolesRequest())
-        await clientAxios.get('/roles')
+        await clientAxios.get('/roles', {params: filtros})
             .then ( res => {
                 dispatch(getAllRolesSuccess(res.data.roles))
             })

@@ -1,4 +1,4 @@
-import { Form, Input, Select, Button } from "antd";
+import { Form, Input, Select, Button, message } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -18,21 +18,19 @@ const CreateUsuario = () => {
     const { roles } = useSelector(state => state.roles);
     const { userPermission } = useSelector(state => state.permisos);
 
-    const [usuario, setUsuario] = useState({
-        nombre: "",
-        apellidoPaterno: "",
-        apellidoMaterno: "",
-        email: "",
-        tipoUsuario_id: "",
-        puesto:  "",
-    });
-    const {nombre, apellidoPaterno, apellidoMaterno, email, telefono, tipoUsuario_id, puesto} = usuario
+    const [esInterno, setEsInterno] = useState(true)
 
+    const [form] = Form.useForm();
 
     useEffect(() => {
         dispatch(getAllRolesAction())
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+
+    useEffect(() => {
+        !esInterno && message.info({ content: 'Los usuarios externos requieren contraseña', duration: 3, key: 'info' })
+    }, [esInterno])
 
     useEffect(() => {
         displayAlert()
@@ -46,19 +44,15 @@ const CreateUsuario = () => {
         }
         if(created){
             openNotificationWithIcon('success', 'El usuario ha sido creado correctamente')
+            form.resetFields()
             navigate('/usuarios')
         }
     }
 
-    const handleChange = (e) => {
-        setUsuario({
-            ...usuario,
-            [e.target.name]: e.target.value,
-        });
-    }
-
 
     const handleSubmit = () => {
+
+        const usuario = { ...form.getFieldsValue(), esInterno }
         dispatch(createUsuarioAction(usuario))
     }
 
@@ -70,7 +64,7 @@ const CreateUsuario = () => {
                 className="max-w-screen-md mx-auto" 
                 onFinish={handleSubmit}
                 layout="vertical"
-                onChange={handleChange}
+                form={form}
                 >
 
                 <Form.Item 
@@ -80,7 +74,7 @@ const CreateUsuario = () => {
                         { required: true, message : 'Debes ingresar un nombre' },
                     ]} 
                     hasFeedback>
-                    <Input name="nombre" value={nombre}/>
+                    <Input name="nombre"/>
                 </Form.Item>
 
                 <Form.Item 
@@ -90,7 +84,7 @@ const CreateUsuario = () => {
                         { required: true, message: 'Debes ingresar un apellido paterno' },
                     ]} 
                     hasFeedback>
-                    <Input name="apellidoPaterno" value={apellidoPaterno}/>
+                    <Input name="apellidoPaterno"/>
                 </Form.Item>
 
                 <Form.Item 
@@ -100,7 +94,7 @@ const CreateUsuario = () => {
                         { required: true, message: 'Debes ingresar un apellido materno' },
                     ]} 
                     hasFeedback>   
-                    <Input name="apellidoMaterno" value={apellidoMaterno}/>
+                    <Input name="apellidoMaterno"/>
                 </Form.Item>
 
                 <Form.Item 
@@ -109,10 +103,44 @@ const CreateUsuario = () => {
                     rules={[
                         { required: true, message: 'Debes ingresar un email', type: 'email' },
                     ]} 
-                    hasFeedback> 
+                    hasFeedback
+                    // onchange si el correo validado con regex no es igual a devarana.mx entonces esInterno = true
+                > 
 
-                <Input name="email" type="email" value={email}/>                   
+                <Input name="email" type="email" onBlur={
+                    (e) => {
+                        const isDevarana = /^[a-zA-Z0-9._-]+@devarana\.mx$/.test(e.target.value);
+                        if(isDevarana){
+                            setEsInterno(true)
+                            form.setFieldsValue({
+                                tipoUsuario_id: undefined
+                            })
+                        }else{
+                            setEsInterno(false)
+                            form.setFieldsValue({
+                                tipoUsuario_id: roles.filter(role => {
+                                    const regex = /externo/gi
+                                    return regex.test(role.nombre)
+                                })[0].id
+                            })
+                        }
+                    }
+                }/>
                 </Form.Item>
+                {
+                    !esInterno ? (
+                        <Form.Item
+                            label="Contraseña"
+                            name="password"
+                            rules={[
+                                { required: true, message: 'Usuarios externos requieren contraseña' },
+                            ]}
+                            hasFeedback
+                        >
+                            <Input.Password/>
+                        </Form.Item>
+                    ) : null 
+                }
                 <Form.Item 
                     label="Telefono" 
                     name="telefono" 
@@ -121,7 +149,7 @@ const CreateUsuario = () => {
                     ]} 
                     hasFeedback> 
 
-                <Input name="telefono" type="telefono" value={telefono}/>                   
+                <Input name="telefono" type="telefono"/>                   
                 </Form.Item>
 
                 <Form.Item 
@@ -132,7 +160,7 @@ const CreateUsuario = () => {
                     ]}
                     hasFeedback
                     >
-                    <Input name="puesto" value={puesto}/>
+                    <Input name="puesto"/>
                 </Form.Item>
 
                 <Form.Item 
@@ -141,13 +169,11 @@ const CreateUsuario = () => {
                     rules={[
                         { required: true, message: 'Debes seleccionar un tipo de usuario' },
                     ]} 
-                    hasFeedback>
+                    >
                     <Select 
                         placeholder="Selecciona un tipo de usuario"
                         filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                         showSearch
-                        value={tipoUsuario_id}
-                        onChange={ (value) => { setUsuario({...usuario, tipoUsuario_id:value})} }
                     >
                         {
                             roles.map(role => (

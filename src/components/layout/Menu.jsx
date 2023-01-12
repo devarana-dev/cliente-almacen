@@ -39,29 +39,29 @@ export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
         getItem('Reportes', '/reportes')
     ]) 
     : null,
-    groupPermission( userPermission, ['ver usuarios', 'ver roles', 'ver insumos', 'ver obras', 'ver niveles', 'ver zonas', 'ver actividades', 'ver personal']) ?
+    groupPermission( userPermission, ['ver usuarios', 'ver roles', 'ver insumos', 'ver obras', 'ver niveles', 'ver zonas', 'ver actividades', 'ver personal', 'ver permisos']) ?
         getItem('Gestión', 'sub3', <SettingOutlined />, [
             groupPermission( userPermission, ['ver usuarios', 'ver roles']) ?
                 getItem('Usuarios', 'subsub1', <UserOutlined />, [
                     hasPermission(userPermission, 'ver usuarios') ? getItem('Usuario', '/usuarios'): null,
                     hasPermission(userPermission, 'ver roles') ? getItem('Roles', '/roles') : null,
-                    
+                    hasPermission(userPermission, 'ver permisos') ? getItem('Permisos', '/permisos') : null,
                 ], 'group')
             : null,
             groupPermission( userPermission, ['ver insumos', 'ver obras', 'ver niveles', 'ver zonas', 'ver actividades', 'ver personal']) ?
                 getItem('Generales', 'subsub2', <UserOutlined />, [
                     hasPermission(userPermission, 'ver insumos') ? getItem('Insumos', '/insumos') : null,
-                    hasPermission(userPermission, 'ver personal') ? getItem('Etapas', '/etapas') : null,
+                    hasPermission(userPermission, 'ver etapas') ? getItem('Etapas', '/etapas') : null,
                     hasPermission(userPermission, 'ver obras') ? getItem('Obras', '/obra') : null,
                     hasPermission(userPermission, 'ver niveles') ? getItem('Niveles', '/niveles') : null,
                     hasPermission(userPermission, 'ver zonas') ? getItem('Zonas', '/zonas') : null,
                     hasPermission(userPermission, 'ver actividades') ? getItem('Actividades', '/actividades') : null,
                     hasPermission(userPermission, 'ver personal') ? getItem('Trabajadores', '/personal') : null,
                 ], 'group')
-            : null,		
+            : null,
         ])
     : null,
-    groupPermission( userPermission, ['ver usuarios']) ?
+    groupPermission( userPermission, ['crear bitacora']) ?
         getItem('Bitacora', '/bitacora', <ProfileOutlined /> )  
     : null,
         

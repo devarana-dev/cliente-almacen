@@ -2,10 +2,10 @@ import clientAxios from '../config/axios';
 import { types } from '../types';
 
 
-export function getAllUsuariosAction(){
+export function getAllUsuariosAction(filtros){
     return async (dispatch) => {
         dispatch(getAllUsuariosRequest())
-        await clientAxios.get('/usuarios')
+        await clientAxios.get('/usuarios', {params: filtros})
             .then ( res => {
                 dispatch(getAllUsuariosSuccess(res.data.usuarios))
             })

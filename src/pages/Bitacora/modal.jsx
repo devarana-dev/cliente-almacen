@@ -11,7 +11,7 @@ const initialData = {
     comentarios: false,
 }
 
-export const ModalBitacora = ({setIsModalOpen, isModalOpen, bitacoraPreview, selectedOption}) => {
+export const ModalBitacora = ({setIsModalOpen, isModalOpen, selectedOption}) => {
 
     const [form] = Form.useForm();
     const dispatch = useDispatch();
@@ -78,7 +78,7 @@ export const ModalBitacora = ({setIsModalOpen, isModalOpen, bitacoraPreview, sel
 
         <p className='font-bold'>Listado de registros a incluir:</p>
         <ul className='max-h-28 h-auto overflow-y-auto'>
-            {bitacoraPreview.length > 0 && bitacoraPreview.map((item, index) => (
+            {selectedOption.length > 0 && selectedOption.map((item, index) => (
                 <li className='list-decimal list-inside' key={index}>{`${item.titulo} - ${item.tipo_bitacora.nombre} - ${moment(item.fecha,'YYYY-MM-DD').format('DD/MM/YYYY')}`}</li>
             ))}            
         </ul>

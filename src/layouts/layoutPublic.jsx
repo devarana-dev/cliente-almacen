@@ -27,8 +27,8 @@ export default function LayoutPublic({children}) {
 
     return (
         <>
-            { process.env.REACT_APP_NODE_ENV === "test" && <div className="bg-red-500 text-white text-center py-2 uppercase fixed left-0 right-0 top-0">Versión de Pruebas</div> }
-            <div className="w-full flex flex-col sm:bg-light bg-homeLogin bg-cover bg-no-repeat bg-center h-screen"> {children} </div>
+            { process.env.REACT_APP_NODE_ENV === "test" && <div className="bg-red-500 text-white text-center py-2 uppercase fixed left-0 right-0 top-0 z-30">Versión de Pruebas</div> }
+            <div className="w-full flex flex-col sm:bg-light bg-homeLogin bg-cover bg-no-repeat bg-center h-screen animate__animated animate__fadeIn animate__faster"> {children} </div>
         </>
     )
 };

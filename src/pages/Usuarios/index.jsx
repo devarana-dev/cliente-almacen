@@ -1,6 +1,6 @@
 
-import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Popconfirm, Table } from 'antd';
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Input, Popconfirm, Table } from 'antd';
 
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 import { cleanErrorAction } from '../../actions/globalActions';
 import { deleteUsuarioAction, getAllUsuariosAction } from '../../actions/usuarioActions';
 import Forbidden from '../../components/Elements/Forbidden';
-import { getColumnSearchProps } from '../../hooks/useFilter'
 import openNotificationWithIcon from '../../hooks/useNotification';
 import { groupPermission, hasPermission } from '../../utils/hasPermission';
 
@@ -63,46 +62,34 @@ const Usuarios = () => {
           title: 'Nombre',
           dataIndex: 'nombre',
           key: 'nombre',
-          sorter: (a, b) => a.nombre.localeCompare(b.nombre),
-          ...getColumnSearchProps('nombre'),
         },
         {
           title: 'Apellido Paterno',
           dataIndex: 'apellidoPaterno',
           key: 'apellidoPaterno',
-          sorter: (a, b) => a.apellidoPaterno.localeCompare(b.apellidoPaterno),
-          ...getColumnSearchProps('apellidoPaterno'),
           ellipsis: true,
         },
         {
           title: 'Apellido Materno',
           dataIndex: 'apellidoMaterno',
           key: 'apellidoMaterno',
-          sorter: (a, b) => a.apellidoMaterno.localeCompare(b.apellidoMaterno),
-          ...getColumnSearchProps('apellidoMaterno'),
           ellipsis: true,
         },
         {
             title: 'Email',
             dataIndex: 'email',
             key: 'email',
-            sorter: (a, b) => a.email.localeCompare(b.email),
-            ...getColumnSearchProps('email'),
         },
         {
             title: 'Rol Usuario',
             dataIndex: 'rol',
             key: 'rol',
-            sorter: (a, b) => a.rol.localeCompare(b.rol),
-            ...getColumnSearchProps('rol'),
             ellipsis: true,
         },
         {
             title: 'Puesto',
             dataIndex: 'puesto',
             key: 'puesto',
-            sorter: (a, b) => a.puesto.localeCompare(b.puesto),
-            ...getColumnSearchProps('puesto'),
         },
         {
             title: 'Acciones',
@@ -124,6 +111,11 @@ const Usuarios = () => {
         
     ];
 
+    const handleSearchByName = (e) => {
+        const search = e.target.value
+        dispatch( getAllUsuariosAction({search}) )
+    }
+
     if(!hasPermission(userPermission, 'ver usuarios') && !isLoading ) return <Forbidden/>
 
     return ( 
@@ -135,7 +127,18 @@ const Usuarios = () => {
             : null 
         }
         </div>
-        <Table scroll={{ x: 'auto' }} columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false}/>
+        <div className='pb-3 flex justify-end'>
+            <Input type="text" 
+                style={{ width : '250px'}} 
+                onChange={ e => handleSearchByName(e) }
+                allowClear
+                suffix={<SearchOutlined />}
+                placeholder="Buscar"
+                // value={filtros.busqueda}
+                name="busqueda"
+            />
+        </div>
+        <Table scroll={{ x: 'auto' }} columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false} rowKey={ record => record.id }/>
     </>
     );
 }

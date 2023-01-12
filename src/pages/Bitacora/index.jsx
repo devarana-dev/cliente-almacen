@@ -1,18 +1,15 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, DatePicker, Drawer, Input, Select, Table } from 'antd';
+import { Button, DatePicker, Drawer, Input, Select, Table, Tooltip } from 'antd';
 import { useDispatch, useSelector } from "react-redux";
 import { CloseOutlined, PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import { getBitacorasAction, getTipoBitacoraAction } from '../../actions/bitacoraActions'
 import moment from "moment";
 import Loading from "../../components/Elements/Loading";
 import { ViewBitacora } from "./view";
-import { getAllActividadAction } from "../../actions/actividadActions";
-import { getAllPersonalAction } from "../../actions/personalActions";
 import { getAllUsuariosAction } from "../../actions/usuarioActions";
-import { getAllObraAction } from "../../actions/obraActions";
-import { getAllNivelesAction } from "../../actions/nivelActions";
 import { ModalBitacora } from "./modal";
+import { getEtapasAction } from "../../actions/etapasActions";
 // import { hasPermission } from "../../utils/hasPermission";
 
 
@@ -28,18 +25,12 @@ const Bitacora = () => {
     // const { userPermission } = useSelector(state => state.permisos);
     const { RangePicker } = DatePicker;
     const { bitacoras, isLoading, isLoadingBitacora} = useSelector(state => state.bitacoras);
-    const { personal = [] } = useSelector(state => state.personal);
-    const { obra } = useSelector(state => state.obras);
-    const { niveles } = useSelector(state => state.niveles);
+    const { etapas } = useSelector(state => state.etapas);
     const [ isModalOpen, setIsModalOpen] = useState(false);
 
     const [ viewBitacora, setViewBitacora] = useState(0);
     const [ open, setOpen] = useState(false);
     const [ titleDrawer, setTitleDrawer] = useState('');
-    const [ selectedNivel, setSelectedNivel ] = useState([]);
-    const [ selectedActividad, setSelectedActividad ] = useState([]);
-    const [ selectedZona, setSelectedZona ] = useState([]);
-    const [ bitacoraPreview, setBitacoraPreview ] = useState([]);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -50,12 +41,9 @@ const Bitacora = () => {
     const [ selectedOption, setSelectedOption ] = useState([]);
 
     useLayoutEffect(() => {
-        dispatch(getAllActividadAction())
-        dispatch(getAllPersonalAction())
         dispatch(getAllUsuariosAction())
-        dispatch(getAllObraAction())
-        dispatch(getAllNivelesAction())
         dispatch(getTipoBitacoraAction())
+        dispatch(getEtapasAction())
 
         // eslint-disable-next-line
     }, [])
@@ -75,9 +63,17 @@ const Bitacora = () => {
     const columns = [
         {
             title: 'Fecha',
-            dataIndex: 'fecha',
             key: 'fecha',
-            render: (text, record) => <span onClick={() => showDrawer(record.id)}>{moment(text).format('DD-MM-YYYY HH:mm:ss')}</span>,
+            render: (text, record) => (
+                <Tooltip title={`${moment(record.fecha).format("DD-MM-YYYY HH:mm:ss")}`} >
+                    {moment(record.fecha).format('D MMM LT')}
+                </Tooltip>
+            ),
+        },
+        {
+            title: 'Titulo',
+            key: 'titulo',
+            render: (text, record) => <span onClick={() => showDrawer(record.id)}>{record.titulo}</span>
         },
         {
             title: 'Tipo Bitacora',
@@ -85,76 +81,23 @@ const Bitacora = () => {
             render: (text, record) => <span onClick={() => showDrawer(record.id)}>{record.tipo_bitacora.nombre}</span>
         },
         {
-            title: 'Obra',
-            dataIndex: 'obra',
-            key: 'obra',
-            render: (text, record) => <span onClick={() => showDrawer(record.id)}>{record.obra.nombre}</span>
-        },
-        {
-            title: 'Nivel',
-            dataIndex: 'nivel',
-            key: 'nivel',
-            render: (text, record) => <span onClick={() => showDrawer(record.id)}>{record.nivele.nombre}</span>
-        },
-        {
             title: 'Actividad',
-            dataIndex: 'actividad',
             key: 'actividad',
             render: (text, record) => <span onClick={() => showDrawer(record.id)}>{record.actividad}</span>
         },
         {
-            title: 'Zona',
-            dataIndex: 'zona',
-            key: 'zona',
-            render: (text, record) => <span onClick={() => showDrawer(record.id)}>{record.zona.nombre}</span>
-        },
-        {
-            title: 'Titulo',
-            dataIndex: 'titulo',
-            key: 'titulo',
-            render: (text, record) => <span onClick={() => showDrawer(record.id)}>{record.titulo}</span>
+            title: 'Autor',
+            key: 'autor',
+            render: (text, record) => 
+                <span onClick={() => showDrawer(record.id)}>
+                    {
+                        record.autorInt ? `${record.autorInt.nombre} ${record.autorInt.apellidoPaterno}` : `${record.autorExt.nombre} ${record.autorExt.apellidoPaterno}`
+                    }
+                </span>
         }
+        
     ];
 
-    const handleChangeObra =  (id) => {
-
-
-        if(id){
-            const result = obra.find(item => item.id === id);
-            setSelectedNivel(result.niveles);
-        }else{
-            setSelectedNivel([]);
-        }
-
-        setFiltros({
-            ...filtros,
-            obraId: id,
-            nivelId: undefined,
-            actividadId: undefined,
-            zonaId: undefined,
-        })
-    }
-
-    const handleChangeNivel = (id) => {
-
-        if(id){
-            const result = niveles.find(item => item.id === id);
-            console.log(result);
-            setSelectedActividad(result.actividades);
-            setSelectedZona(result.zonas);
-        }else{
-            setSelectedActividad([]);
-            setSelectedZona([]);
-        }
-       
-
-        setFiltros({
-            ...filtros,
-            nivelId: id,
-            actividadId: undefined,
-            zonaId: undefined,
-        })
-    }
 
     const handleSearchByDate = (value, dateString) => {
         if ((dateString[0] !== '' && dateString[1] !== '')){
@@ -192,21 +135,16 @@ const Bitacora = () => {
         onSelect: (record, selected, selectedRows) => {
             if(selected){
                 setSelectedOption([...selectedOption, record.id])
-                setBitacoraPreview([...bitacoraPreview, record])
             }else{
                 setSelectedOption(selectedOption.filter(item => item !== record.id))
-                setBitacoraPreview(bitacoraPreview.filter(item => item.id !== record.id))
             }
         },
         onSelectAll: (selected, selectedRows, changeRows) => {
-            console.log(selected);
             if(selected){
                 setSelectedOption([ ...selectedOption, ...bitacoras.map(item => item.id)])
-                setBitacoraPreview([...bitacoraPreview, ...bitacoras.map(item => item)])
 
             }else{
                 setSelectedOption(selectedOption.filter(item => !changeRows.map(item => item.id).includes(item)))
-                setBitacoraPreview(bitacoraPreview.filter(item => !changeRows.map(item => item.id).includes(item.id)))
 
             }
         },
@@ -214,7 +152,6 @@ const Bitacora = () => {
   
     return ( 
     <>
-        <div className='py-2 flex justify-end'>      
             <div className="flex gap-3 py-3 flex-wrap">
                 <Select
                     maxTagCount={"responsive"}
@@ -222,122 +159,35 @@ const Bitacora = () => {
                     style={{
                         width: '200px',
                     }}
-                    placeholder="Filtrar Por Obra"
-                    onChange={ (value) => { handleChangeObra(value) }}
+                    placeholder="Filtrar Por Proyecto"
                     showSearch
                     optionFilterProp="children"
                     filterOption={ (input, option) => option.children.toLowerCase().trim().indexOf(input.toLowerCase()) >= 0}
-                    defaultValue={filtros.centroCosto}
-                    value={filtros.centroCosto}
-                    >
-                    {
-                            obra.map(item => (
-                                <Select.Option key={item.id} value={item.id}>{item.nombre}</Select.Option>
-                            ))
-                    }
-                </Select>  
+                    defaultValue={filtros.proyectoId}
+                    value={filtros.proyectoId}
+                >
+                    <Select.Option key={0} value={0}>Royal View</Select.Option>
+                </Select>
                 <Select
                     maxTagCount={"responsive"}
                     allowClear
                     style={{
                         width: '200px',
                     }}
-                    placeholder="Filtrar Nivel"
-                    onChange={ (e) => { handleChangeNivel(e) }}
+                    placeholder="Filtrar Por Etapa"
                     showSearch
                     optionFilterProp="children"
                     filterOption={ (input, option) => option.children.toLowerCase().trim().indexOf(input.toLowerCase()) >= 0}
-                    defaultValue={filtros.nivelId}
-                    value={filtros.nivelId}
-                    disabled={selectedNivel.length === 0}
-                    >
+                    defaultValue={filtros.etapa}
+                    value={filtros.etapa}
+                    onChange={ (value) => { setFiltros({...filtros, etapaId: value}) }}
+                >
                     {
-                         
-                        selectedNivel.map(item => (
+                        etapas.map(item => (
                             <Select.Option key={item.id} value={item.id}>{item.nombre}</Select.Option>
                         ))
-                            
-                        
                     }
-                </Select> 
-                <Select
-                    maxTagCount={"responsive"}
-                    allowClear
-                    style={{
-                        width: '200px',
-                    }}
-                    placeholder="Filtrar Actividad"
-                    onChange={ (e) => { setFiltros({
-                        ...filtros,
-                        actividadId: e,
-                    }) }}
-
-                    showSearch
-                    optionFilterProp="children"
-                    filterOption={ (input, option) => option.children.toLowerCase().trim().indexOf(input.toLowerCase()) >= 0}
-                    defaultValue={filtros.centroCosto}
-                    value={filtros.actividadId}
-                    disabled={selectedActividad.length === 0}
-                    >
-                    {
-                         
-                        selectedActividad.map(item => (
-                            <Select.Option key={item.id} value={item.id}>{item.nombre}</Select.Option>
-                        ))
-                            
-                        
-                    }
-                </Select> 
-                <Select
-                    maxTagCount={"responsive"}
-                    allowClear
-                    style={{
-                        width: '200px',
-                    }}
-                    placeholder="Filtrar Zona"
-                    onChange={ (e) => { setFiltros({
-                        ...filtros,
-                        zonaId: e,
-                    }) }}
-
-                    showSearch
-                    optionFilterProp="children"
-                    filterOption={ (input, option) => option.children.toLowerCase().trim().indexOf(input.toLowerCase()) >= 0}
-                    defaultValue={filtros.zonaId}
-                    value={filtros.zonaId}
-                    disabled={selectedZona.length === 0}
-                    >
-                    {
-                         
-                        selectedZona.map(item => (
-                            <Select.Option key={item.id} value={item.id}>{item.nombre}</Select.Option>
-                        ))
-                            
-                        
-                    }
-                </Select> 
-                <Select
-                    allowClear
-                    style={{
-                        width: '300px',
-                    }}
-                    placeholder="Filtrar Lider Cuadrilla"
-                    onChange={ (e) => { setFiltros({
-                        ...filtros,
-                        personalId: e,
-                    }) }}
-                    showSearch
-                    optionFilterProp="children"
-                    filterOption={ (input, option) => option.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0 }
-                    value={filtros.personalId}
-                    name="lider"
-                    >
-                    {
-                        personal.map((personal) => (
-                            <Select.Option key={personal.id} value={personal.id}> {personal.nombre} ({personal.apellidoMaterno}) {personal.apellidoPaterno} </Select.Option>
-                        ))
-                    }
-                </Select> 
+                </Select>
                 <Select
                     allowClear
                     style={{
@@ -387,14 +237,11 @@ const Bitacora = () => {
                     value={(filtros.fechaInicio !== '' && filtros.fechaFin !== '') && (filtros.fechaInicio && filtros.fechaFin) ? [ moment(filtros.fechaInicio), moment(filtros.fechaFin)] : ["", ""]}
                 />   
                 {/* Generar Bitacora */}
-                <Button type='ghost' onClick={() => setIsModalOpen(true)} className="" disabled={bitacoraPreview.length === 0}>
+                <Button type='ghost' onClick={() => setIsModalOpen(true)} className="" disabled={selectedOption.length === 0}>
                     Generar Reporte
                 </Button>
-        </div>
-
-            <Button type='icon-secondary-new' onClick={() => navigate('form')} className="md:flex hidden fixed right-10 lg:bottom-8 bottom-28 z-50"><PlusCircleOutlined className='py-1'/></Button>
-
-        </div>
+                <Button type='icon-secondary-new' onClick={() => navigate('form')} className="md:flex hidden fixed right-10 lg:bottom-8 bottom-28 z-50"><PlusCircleOutlined className='py-1'/></Button>
+            </div>
             <Table columns={columns} scroll={{ x: 'auto'}} rowKey={ record => record.id } dataSource={dataSource} loading={isLoading} showSorterTooltip={false}
                 rowClassName="cursor-pointer"
                 rowSelection={{
@@ -426,7 +273,7 @@ const Bitacora = () => {
                 </Drawer>
             </div>
 
-            <ModalBitacora setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen} bitacoraPreview={bitacoraPreview} selectedOption={selectedOption}/>
+            {/* <ModalBitacora setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen}  selectedOption={selectedOption}/> */}
         </>
     );
 }

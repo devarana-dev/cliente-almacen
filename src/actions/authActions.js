@@ -85,3 +85,33 @@ const logoutError = payload => ({
     type: types.LOGOUT_ERROR,
     payload
 })
+
+
+export function loginWithPasswordAction(auth){
+    return async (dispatch) => {
+        dispatch(loginRequest())
+
+        await clientAxios.post('/auth/login', auth).then( res => {
+                dispatch(loginSuccessWithPassword(res.data))
+        }).catch( error => {
+            console.log('Error loginWithPasswordAction', error);
+            dispatch(loginError(error.response.data))
+        })
+    }
+}
+
+const loginRequest = () => ({
+    type: types.LOGIN_REQUEST
+})
+
+const loginSuccessWithPassword = (payload) => ({
+    type: types.LOGIN_SUCCESS,
+    payload
+})
+
+
+// CLEAR_AUTH
+
+export function clearAuthAction(){
+    return dispatch => dispatch({ type: types.CLEAR_AUTH })
+}

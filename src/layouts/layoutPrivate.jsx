@@ -12,7 +12,7 @@ import {
 import MenuLayout from "../components/layout/Menu";
 import Logotipo from "../assets/img/LogoDevarana.png"
 import { logoutAction } from '../actions/authActions'
-import { getPermisoAction } from "../actions/permisosActions";
+import { getPermisoUsuarioAction } from "../actions/permisosActions";
 import Notas from "../components/Notas";
 import { useAuth } from "../hooks/useAuth";
 import FooterLayout from "../components/layout/Footer";
@@ -36,7 +36,7 @@ export default function LayoutPrivate({children}) {
     useEffect(() => {
         setHiddeable(localStorage.getItem('sideBar') || false)
 
-        dispatch(getPermisoAction())
+        dispatch(getPermisoUsuarioAction())
         // eslint-disable-next-line
         return () => {
             
@@ -71,17 +71,13 @@ export default function LayoutPrivate({children}) {
                 message: 'Ha habido un error',
                 description: errors
             })
-        }
-        return () => {
-            dispatch(getPermisoAction())
-        }
-        
+        }       
         // eslint-disable-next-line
     }, [logout])
 
 
     return (        
-        <Layout className="layout">
+        <Layout className="layout animate__animated animate__fadeIn animate__faster">
             
             <Sider 
                 className="layout__sider hidden sm:block" 

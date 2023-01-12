@@ -41,6 +41,9 @@ import FormBitacora from "../pages/Bitacora/form"
 import Etapas from "../pages/Etapas"
 import CreateEtapas from "../pages/Etapas/create"
 import editEtapas from "../pages/Etapas/edit"
+import Permisos from "../pages/Permisos"
+import CreatePermisos from "../pages/Permisos/create"
+import EditPermisos from "../pages/Permisos/edit"
 
 
 const routesPublic = [
@@ -237,6 +240,21 @@ const routesPrivate = [
         path: '/etapas/:id',
         layout: Private,
         component: editEtapas
+    },
+    {
+        path: '/permisos',
+        layout: Private,
+        component: Permisos
+    },
+    {
+        path: '/permisos/create',
+        layout: Private,
+        component: CreatePermisos
+    },
+    {
+        path: '/permisos/:id',
+        layout: Private,
+        component: EditPermisos
     },
     {
         path: "*",

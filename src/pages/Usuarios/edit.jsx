@@ -1,5 +1,5 @@
 import { Form, Input, Select, Button } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { cleanErrorAction } from "../../actions/globalActions";
@@ -28,8 +28,6 @@ const EditUsuario = () => {
         if(!editedUsuario){
             dispatch(getUsuarioAction(id))
         }
-
-        setUsuario({...editedUsuario})
         form.setFieldsValue({...editedUsuario})
         // eslint-disable-next-line
     }, [editedUsuario])
@@ -50,32 +48,16 @@ const EditUsuario = () => {
         }
     }
 
-    const [usuario, setUsuario] = useState({
-        nombre: "",
-        apellidoPaterno: "",
-        apellidoMaterno: "",
-        email: "",
-        tipoUsuario_id: "",
-        puesto:  "",
-    });
-
-
-    const handleChange = (e) => {
-        setUsuario({
-            ...usuario,
-            [e.target.name]: e.target.value,
-        });
-    }
-
-
     const handleSubmit = () => {
+        const usuario = { ...form.getFieldsValue(), id }
+        // console.log(usuario);
         dispatch(updateUsuarioAction(usuario));
     }
 
     if(!hasPermission(userPermission, 'editar usuarios') && !isLoading ) return <Forbidden/>
     
     if(isLoading) return <Loading />
-    if(!editedUsuario) return <div>No se encontro el personal</div>
+    if(!editedUsuario) return <div>No se encontro el usuario</div>
 
     
     return (
@@ -84,7 +66,6 @@ const EditUsuario = () => {
             className="max-w-screen-md mx-auto" 
             onFinish={handleSubmit}
             layout="vertical"
-            onChange={handleChange}
             form={form}
             >
 
@@ -126,8 +107,30 @@ const EditUsuario = () => {
                 ]} 
                 hasFeedback> 
 
-               <Input name="email" type="email" />                   
+               <Input name="email" type="email" onBlur={
+                    (e) => {   
+                        const isDevarana = /^[a-zA-Z0-9._-]+@devarana\.mx$/.test(e.target.value);
+                        if(isDevarana){
+                            form.setFieldsValue({esInterno: true})
+                        }else{
+                            form.setFieldsValue({esInterno: false})
+                        }
+                    }
+                        
+               }/>                   
             </Form.Item>
+            {
+                !form.getFieldValue('esInterno') &&
+                    (
+                        <Form.Item
+                            label="Contraseña"
+                            name="password"
+                            hasFeedback
+                        >
+                            <Input.Password/>
+                        </Form.Item>
+                    )
+            }
             <Form.Item 
                 label="Telefono" 
                 name="telefono" 
@@ -161,7 +164,6 @@ const EditUsuario = () => {
                     placeholder="Selecciona un tipo de usuario"
                     filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                     showSearch
-                    onChange={ (value) => { setUsuario({...usuario, tipoUsuario_id:value})} }
                 >
                     {
                         roles.map(role => (

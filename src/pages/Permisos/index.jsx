@@ -6,21 +6,22 @@ import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { cleanErrorAction } from '../../actions/globalActions';
-import { deleteRoleAction, getAllRolesAction } from '../../actions/roleActions';
-import Forbidden from '../../components/Elements/Forbidden';
+import { deletePermisoAction, getAllPermisosAction } from '../../actions/permisosActions';
 import openNotificationWithIcon from '../../hooks/useNotification';
-import { groupPermission, hasPermission } from '../../utils/hasPermission';
 
-const Roles = () => {
+const Permisos = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const {roles, isLoading, errors, deleted} = useSelector(state => state.roles);
-    const { userPermission } = useSelector(state => state.permisos);
+    const {permisos, isLoadingAlt, errors, deleted} = useSelector(state => state.permisos);
+    const[ filtros, setFiltros ] = useState({
+        search: ''
+    })
+
 
     useEffect(() => {
-        dispatch(getAllRolesAction())
+        dispatch(getAllPermisosAction(filtros))
     // eslint-disable-next-line
     }, [])
 
@@ -34,30 +35,27 @@ const Roles = () => {
             
         },
         {
-            title: 'Descripcion',
-            render: (text, record) => <span>{record.descripcion}</span>,    
+            title: 'Permisos',
+            render: (text, record) => <span>{record.permisos}</span>,    
         },
         
         {
             title: 'Acciones',
             render: (text, record) =>
             <div className='flex justify-around'> 
-                { hasPermission(userPermission, 'editar roles') ? <Button type='icon-warning' onClick={ () => navigate(`${record.id}`) }> <EditOutlined className='text-xl'/> </Button>  : null } 
-                {
-                    hasPermission(userPermission, 'eliminar roles') ? 
+                <Button type='icon-warning' onClick={ () => navigate(`${record.id}`) }> <EditOutlined className='text-xl'/> </Button>
                 <Popconfirm placement='topRight' onConfirm={ () => handleDelete(record.id) } title="Deseas eliminar este elemento ?"> 
                     <Button type='icon-danger'> <DeleteOutlined className='text-xl'/> </Button> 
-                </Popconfirm> : null
-                }
+                </Popconfirm>
 			</div>,
-            width: groupPermission(userPermission, ['editar roles', 'eliminar roles']) ? 100 : 0,
-            className: groupPermission(userPermission, ['editar roles', 'eliminar roles']) ? 'block' : 'hidden',
+            width: 100,
+            className: 'block'
         }
         
     ];
 
 	const handleDelete = (id) => {
-		dispatch(deleteRoleAction(id))
+		dispatch(deletePermisoAction(id))
 	}
 
     useEffect(() => {
@@ -78,19 +76,13 @@ const Roles = () => {
 
     const handleSearchByName = (e) => {
         const search = e.target.value
-        dispatch( getAllRolesAction({search}) )
+        dispatch( getAllPermisosAction({search}) )
     }
-
-    if(!hasPermission(userPermission, 'ver roles') && !isLoading ) return <Forbidden/>
 
     return ( 
     <>
             <div className='py-2 flex justify-end'>          
-            {
-                hasPermission(userPermission, 'crear roles') ?
                 <Button type='icon-secondary-new' onClick={() => navigate('create')} className="md:flex hidden fixed right-10 lg:bottom-8 bottom-28 z-50"><PlusCircleOutlined className='py-1'/></Button>
-                : null 
-            }
             </div>
             <div className='pb-3 flex justify-end'>
             <Input type="text" 
@@ -103,9 +95,9 @@ const Roles = () => {
                 name="busqueda"
             />
         </div>
-        <Table scroll={{ x: 'auto'}}  columns={columns} dataSource={roles} loading={isLoading} showSorterTooltip={false} rowKey={ record => record.id }/>
+        <Table scroll={{ x: 'auto'}}  columns={columns} dataSource={permisos} loading={isLoadingAlt} showSorterTooltip={false} rowKey={ record => record.id }/>
     </>
     );
 }
  
-export default Roles;
+export default Permisos;
