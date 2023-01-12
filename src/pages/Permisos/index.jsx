@@ -15,18 +15,12 @@ const Permisos = () => {
     const navigate = useNavigate();
 
     const {permisos, isLoadingAlt, errors, deleted} = useSelector(state => state.permisos);
-    const[ filtros, setFiltros ] = useState({
-        search: ''
-    })
-
+    const[ filtros, setFiltros ] = useState({ search: '' })
 
     useEffect(() => {
         dispatch(getAllPermisosAction(filtros))
     // eslint-disable-next-line
     }, [])
-
-
-
 
     const columns = [
         {
