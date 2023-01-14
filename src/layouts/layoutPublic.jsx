@@ -1,6 +1,6 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { validateLoginAction } from "../actions/authActions"
 import authProvider from "../provider/authProvider"
 
@@ -10,19 +10,30 @@ export default function LayoutPublic({children}) {
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const location = useLocation()
     const {isAuthenticated} = useSelector( state => state.auth )
     const {isLoading} = useSelector( state => state.auth )
-
+    
+    
+    
+    
     useEffect(() => {
         if(isAuth.isAuthenticated){
             dispatch(validateLoginAction(isAuth))
         }
-         // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isAuth]);
+    
+    const { from } = location.state || { from: { pathname: "/" } };
+    
 
     if((isAuthenticated || isAuth.isAuthenticated) && !isLoading ){
-        navigate("/")
+        navigate(from);
     }
+
+  
+
+    
     
 
     return (

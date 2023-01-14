@@ -212,11 +212,6 @@ const routesPrivate = [
         component: Reportes
     },
     {   
-        path: '/bitacora',
-        layout: Private,
-        component: Bitacora
-    },
-    {   
         path: '/bitacora/form/:id',
         layout: Private,
         component: FormBitacora
@@ -225,6 +220,16 @@ const routesPrivate = [
         path: '/bitacora/form',
         layout: Private,
         component: FormBitacora
+    },
+    {   
+        path: '/bitacora',
+        layout: Private,
+        component: Bitacora
+    },
+    {   
+        path: '/bitacora/:uid',
+        layout: Private,
+        component: Bitacora
     },
     {
         path: '/etapas',

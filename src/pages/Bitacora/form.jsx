@@ -240,12 +240,12 @@ const FormBitacora = () => {
                         name="nivelId"
                         label="Nivel"
                         labelCol={{ span: 4 }}
-                        allowClear
                     >
                         <Select
                             filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                             disabled={selectedNivel.length === 0 }
                             showSearch
+                            allowClear
                             onChange={ (e) => { handleChangeNivel(e) }}
                             name="nivelId"
                         >
@@ -263,12 +263,12 @@ const FormBitacora = () => {
                         name="zonaId"
                         label="Zona"
                         labelCol={{ span: 4 }}
-                        allowClear
                     >
                         <Select 
                             filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                             disabled={selectedZona.length === 0 }
                             showSearch
+                            allowClear
                             name="zonaId"
                             >
                             <Option key={nanoid()} value={0} disabled>{ `Selecciona una opción` }</Option>

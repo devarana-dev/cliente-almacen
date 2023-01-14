@@ -5,8 +5,7 @@ import { types } from '../types';
 export function getEtapasAction(filtros){
     return async (dispatch) => {
         dispatch( getEtapasRequest()) 
-        await clientAxios.get('/etapas', { params: filtros }).then(res => {            
-            console.log(res.data.etapas);
+        await clientAxios.get('/etapas', { params: filtros }).then(res => {
             dispatch(getEtapasSuccess(res.data.etapas))
         }).catch(err => {
             console.log('Error getEtapasAction', err.response);

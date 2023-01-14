@@ -1,40 +1,71 @@
-import { Divider, Image } from 'antd'
+import { Button, Divider, Image, Tooltip } from 'antd'
 import moment from 'moment'
 import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { getBitacoraAction } from '../../actions/bitacoraActions'
 import { Comentarios } from '../../components/Bitacora/Comentarios'
 import Loading from '../../components/Elements/Loading'
+import { CheckSquareOutlined, CloseSquareOutlined, EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons'
+import { updateConfirmedAction, updateVisitaAction } from '../../actions/bitacoraActions'
+import { useDispatch, useSelector } from 'react-redux'
 
 
-export const ViewBitacora = ({id = 0, onClose, setTitleDrawer}) => {
-
+export const ViewBitacora = ({isLoadingBitacora, bitacora, onClose, errorBitacora}) => {
+    
     const dispatch = useDispatch()
-    const { bitacora, isLoadingBitacora } = useSelector(state => state.bitacoras)
 
-
+    const { userAuth } = useSelector(state => state.auth)
 
     useEffect(() => {
-        if(id !== 0){
-            dispatch(getBitacoraAction( id ))
+        if( bitacora ) {
+            setUpdateVisited(bitacora.uid)
         }
-        // eslint-disable-next-line
-    }, [id])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isLoadingBitacora])
 
-    
+    if( errorBitacora && !isLoadingBitacora ) return <Loading text={`${errorBitacora}, es probable que la url esté mal.`}/>
+    if( !bitacora ) return <Loading text='Cargando Bitacora...'/>
 
-    if( isLoadingBitacora ) return <Loading/>
-    setTitleDrawer(`${bitacora.titulo}`)
+    const setUpdateVisited = (uid) => {
 
+        if( 
+            bitacora.users.find( user => user.id === userAuth.id ) && 
+            bitacora.users.find( user => user.id === userAuth.id ).pivot_bitacora_users.visited === false
+        ) {
+            dispatch(updateVisitaAction(uid))
+        }
+    }   
+
+
+    const setUpdateConfirmed = (uid) => {
+        dispatch(updateConfirmedAction(uid))
+    }
   return (
     <div className='grid grid-cols-12 gap-3'> 
 
         <div className='col-span-12 grid grid-cols-12 gap-3 sticky'>
-            <div className='col-span-6'>
+            <div className='col-span-5 flex items-end'>
                 <p className='font-medium'>Fecha: <span className='font-light'>{ moment(bitacora.fecha).format('DD/MM/YYYY') }</span> </p>
             </div>
-            <div className='col-span-6'>
+            <div className='col-span-5 flex items-end'>
                 <p className='font-medium'>Hora: <span className='font-light'>{ moment(bitacora.fecha).format('HH:mm') }</span> </p>
+            </div>
+            <div className="col-span-2 flex items-end">
+                
+                {
+                    bitacora.users.find( user => user.id === userAuth.id ) ?
+                        <>
+                            <p className='pr-2'>Confirmado:</p>
+                            { bitacora.users.find( user => user.id === userAuth.id ).pivot_bitacora_users.confirmed === false ? (
+                                <Tooltip title='Click Para Confirmar' placement="rightTop">
+                                    <Button type='icon-danger' onClick={() => setUpdateConfirmed(bitacora.uid)} className='px-2 flex items-start'><CloseSquareOutlined className='text-red-500 text-xl'/></Button>
+                                </Tooltip>
+                            ) : (
+                                <Tooltip title="Confirmado" placement='rightTop'>
+                                    <CheckSquareOutlined className='text-green-500 text-xl'/>
+                                </Tooltip>
+                            )}
+                    </>
+                    : null
+                }
             </div>
 
             <Divider className='col-span-12 my-2'/>
@@ -58,9 +89,6 @@ export const ViewBitacora = ({id = 0, onClose, setTitleDrawer}) => {
                     <p className='font-medium'>Empresa: <span className='font-light'>{ bitacora.autorExt.empresa }</span> </p>
                 </div> )
             }
-            
-
-            
         </div>
         
         <Divider className='col-span-12 my-2'/>
@@ -89,7 +117,31 @@ export const ViewBitacora = ({id = 0, onClose, setTitleDrawer}) => {
                 <p className='font-medium'>Involucrados: </p> 
                 <div className='font-light grid grid-cols-3'>
                     { bitacora.users.map( (involucrado, index) => (
-                        <p key={index} prefix={index} className='font-light'>{ involucrado.nombre } { involucrado.apellidoPaterno } { involucrado.apellidoMaterno } </p>
+                        <p key={index} prefix={index} className='font-light flex'>
+                            { involucrado.nombre } { involucrado.apellidoPaterno } { involucrado.apellidoMaterno }  
+                            <span className='flex items-center px-2'> 
+                                { 
+                                    involucrado.pivot_bitacora_users.visited ? 
+                                        <Tooltip title="Visto">
+                                            <EyeOutlined className='px-1 text-green-500 cursor-help' /> 
+                                        </Tooltip>
+                                            : 
+                                        <Tooltip title="No se ha visto">
+                                            <EyeInvisibleOutlined className='px-1 text-red-500 cursor-help' /> 
+                                        </Tooltip>
+                                } 
+                                {
+                                    involucrado.pivot_bitacora_users.confirmed ?
+                                        <Tooltip title="Confirmado">
+                                            <CheckSquareOutlined className='px-1 text-green-500 cursor-help' />
+                                        </Tooltip>
+                                            :
+                                        <Tooltip title="No confirmado">
+                                            <CloseSquareOutlined className='px-1 text-red-500 cursor-help' />
+                                        </Tooltip>
+                                }
+                            </span> 
+                        </p>
                     ))}
                 </div>
             </div>)

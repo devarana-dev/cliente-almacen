@@ -1,9 +1,9 @@
 import { useEffect, useLayoutEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button, DatePicker, Drawer, Input, Select, Table, Tooltip } from 'antd';
 import { useDispatch, useSelector } from "react-redux";
-import { CloseOutlined, PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
-import { getBitacorasAction, getTipoBitacoraAction } from '../../actions/bitacoraActions'
+import { CloseOutlined,  PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
+import { getBitacoraAction, getBitacorasAction, getTipoBitacoraAction } from '../../actions/bitacoraActions'
 import moment from "moment";
 import Loading from "../../components/Elements/Loading";
 import { ViewBitacora } from "./view";
@@ -24,14 +24,13 @@ const Bitacora = () => {
 
     // const { userPermission } = useSelector(state => state.permisos);
     const { RangePicker } = DatePicker;
-    const { bitacoras, isLoading, isLoadingBitacora} = useSelector(state => state.bitacoras);
+    const { bitacoras, isLoading, isLoadingBitacora, bitacora, errorBitacora} = useSelector(state => state.bitacoras);
     const { etapas } = useSelector(state => state.etapas);
     const [ isModalOpen, setIsModalOpen] = useState(false);
 
-    const [ viewBitacora, setViewBitacora] = useState(0);
     const [ open, setOpen] = useState(false);
-    const [ titleDrawer, setTitleDrawer] = useState('');
-
+    const {uid} = useParams()
+    
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -39,6 +38,7 @@ const Bitacora = () => {
 
     const [ filtros, setFiltros ] = useState(initialData);
     const [ selectedOption, setSelectedOption ] = useState([]);
+    const [ selectedPreview, setSelectedPreview ] = useState([]);
 
     useLayoutEffect(() => {
         dispatch(getAllUsuariosAction())
@@ -50,15 +50,28 @@ const Bitacora = () => {
     
     useEffect(() => {
         dispatch(getBitacorasAction(filtros))
-        
         // eslint-disable-next-line
     }, [filtros])
+
+    useEffect(() => {
+        if (uid){
+            dispatch(getBitacoraAction( uid ))
+        }
+        // eslint-disable-next-line
+    }, [uid])
 
     useEffect(() => {
         setDataSource(bitacoras)
     }, [bitacoras])
 
-    // 
+    useEffect(() => {
+        if(uid ){
+            showDrawer(uid)
+        }  
+        // eslint-disable-next-line 
+    }, [uid])
+
+    
 
     const columns = [
         {
@@ -73,29 +86,28 @@ const Bitacora = () => {
         {
             title: 'Titulo',
             key: 'titulo',
-            render: (text, record) => <span onClick={() => showDrawer(record.id)}>{record.titulo}</span>
+            render: (text, record) => <span onClick={() => showDrawer(record.uid)}>{record.titulo}</span>
         },
         {
             title: 'Tipo Bitacora',
             key: 'tipoBitacora',
-            render: (text, record) => <span onClick={() => showDrawer(record.id)}>{record.tipo_bitacora.nombre}</span>
+            render: (text, record) => <span onClick={() => showDrawer(record.uid)}>{record.tipo_bitacora.nombre}</span>
         },
         {
             title: 'Actividad',
             key: 'actividad',
-            render: (text, record) => <span onClick={() => showDrawer(record.id)}>{record.actividad}</span>
+            render: (text, record) => <span onClick={() => showDrawer(record.uid)}>{record.actividad}</span>
         },
         {
             title: 'Autor',
             key: 'autor',
             render: (text, record) => 
-                <span onClick={() => showDrawer(record.id)}>
+                <span onClick={() => showDrawer(record.uid)}>
                     {
                         record.autorInt ? `${record.autorInt.nombre} ${record.autorInt.apellidoPaterno}` : `${record.autorExt.nombre} ${record.autorExt.apellidoPaterno}`
                     }
                 </span>
-        }
-        
+        },        
     ];
 
 
@@ -122,33 +134,40 @@ const Bitacora = () => {
         }
     }
     
-    const showDrawer = (id) => {
-        setViewBitacora(id)
+    const showDrawer = (uid) => {
+        dispatch(getBitacoraAction( uid ))
         setOpen(true);
     };
     const onClose = () => {
       setOpen(false);
-      setViewBitacora(0);
+    //   clean params
+        navigate('/bitacora')
     };
 
     const rowSelection = {
         onSelect: (record, selected, selectedRows) => {
-            if(selected){
-                setSelectedOption([...selectedOption, record.id])
+            if (selected){
+                setSelectedOption([...selectedOption, record.uid])
+                setSelectedPreview([...selectedPreview, record])
             }else{
-                setSelectedOption(selectedOption.filter(item => item !== record.id))
+                setSelectedOption(selectedOption.filter(item => item !== record.uid))
             }
         },
         onSelectAll: (selected, selectedRows, changeRows) => {
-            if(selected){
-                setSelectedOption([ ...selectedOption, ...bitacoras.map(item => item.id)])
-
+            if (selected){
+                setSelectedOption([...selectedOption, ...bitacoras.map(item => item.uid) ])
+                setSelectedPreview([...selectedPreview, ...bitacoras])
             }else{
-                setSelectedOption(selectedOption.filter(item => !changeRows.map(item => item.id).includes(item)))
-
+                setSelectedOption([])
+                setSelectedPreview([])
             }
-        },
+        }
     };
+
+
+    if(isLoading){
+        return <Loading />
+    }
   
     return ( 
     <>
@@ -242,7 +261,7 @@ const Bitacora = () => {
                 </Button>
                 <Button type='icon-secondary-new' onClick={() => navigate('form')} className="md:flex hidden fixed right-10 lg:bottom-8 bottom-28 z-50"><PlusCircleOutlined className='py-1'/></Button>
             </div>
-            <Table columns={columns} scroll={{ x: 'auto'}} rowKey={ record => record.id } dataSource={dataSource} loading={isLoading} showSorterTooltip={false}
+            <Table columns={columns} scroll={{ x: 'auto'}} rowKey={ record => record.uid } dataSource={dataSource} loading={isLoading} showSorterTooltip={false}
                 rowClassName="cursor-pointer"
                 rowSelection={{
                     ...rowSelection,
@@ -252,7 +271,7 @@ const Bitacora = () => {
 
             <div className="relative">
                 <Drawer 
-                    title={titleDrawer}
+                    title={ bitacora ? `${bitacora.titulo}` : 'Reporte'}
                     placement="right"
                     closable={true}
                     onClose={onClose}
@@ -266,14 +285,14 @@ const Bitacora = () => {
                 >
 
                     {
-                            // true   &&  // False 
-                        isLoadingBitacora && !viewBitacora ?  <Loading/> : <ViewBitacora id={viewBitacora} onClose={onClose} setTitleDrawer={setTitleDrawer}/>
+                        
+                        isLoadingBitacora && isLoading && !isLoadingBitacora && !bitacora ?  <Loading/> : <ViewBitacora isLoadingBitacora={isLoadingBitacora} bitacora={bitacora} onClose={onClose} errorBitacora = {errorBitacora}/>
                     }
                     
                 </Drawer>
             </div>
 
-            {/* <ModalBitacora setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen}  selectedOption={selectedOption}/> */}
+            <ModalBitacora setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen} selectedPreview={selectedPreview} selectedOption={selectedOption} />
         </>
     );
 }

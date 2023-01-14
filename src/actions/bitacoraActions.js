@@ -65,10 +65,10 @@ const createBitacoraError = error => ({
 
 // Get Bitacora id
 
-export function getBitacoraAction(id){
+export function getBitacoraAction(filtros){
     return async (dispatch) => {
         dispatch( getBitacoraRequest())
-        await clientAxios.get(`/bitacora/${id}`).then(res => {
+        await clientAxios.get(`/bitacora/${filtros}`, { params: filtros }).then(res => {
             dispatch(getBitacoraSuccess(res.data.bitacora))
         }
         ).catch(err => {
@@ -190,4 +190,50 @@ const generarReporteSuccess = payload => ({
 const generarReporteError = error => ({
     type: types.GENERAR_REPORTE_ERROR,
     payload: error
+});
+
+
+export function updateVisitaAction(uid){
+    return async (dispatch) => {
+        await clientAxios.get(`/bitacora/set-visto/${uid}`)
+        .then(res => {
+            dispatch(updateVisitaSuccess(res.data.id))
+        })
+        .catch(err => {
+            console.log('Error updateVisitaAction', err.response);
+            dispatch(updateVisitaError(err.response.data.message))
+        })
+    }
+}
+
+const updateVisitaSuccess = payload => ({
+    type: types.UPDATE_VISITA_SUCCESS,
+    payload
+});
+
+const updateVisitaError = error => ({
+    type: types.UPDATE_VISITA_ERROR,
+});
+
+
+export function updateConfirmedAction(uid){
+    return async (dispatch) => {
+        await clientAxios.get(`/bitacora/set-confirmado/${uid}`)
+        .then(res => {
+            dispatch(updateConfirmedSuccess(res.data.id))
+        })
+        .catch(err => {
+            console.log('Error updateConfirmedAction', err.response);
+            dispatch(updateConfirmedError(err.response.data.message))
+        })
+    }
+}
+
+const updateConfirmedSuccess = payload => ({
+    type: types.UPDATE_CONFIRMED_SUCCESS,
+    payload
+});
+
+const updateConfirmedError = error => ({
+    type: types.UPDATE_CONFIRMED_ERROR,
 });

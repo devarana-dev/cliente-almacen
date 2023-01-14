@@ -96,6 +96,7 @@ export default (state = initialState, action) => {
                 bitacora: action.payload,
                 isLoadingBitacora: false,
                 errors: null,
+                errorBitacora: null,
             }
         
         case types.CREATE_BITACORA_SUCCESS:
@@ -111,7 +112,6 @@ export default (state = initialState, action) => {
             }
         case types.CREATE_BITACORA_ERROR:
         case types.GET_BITACORAS_ERROR:
-        case types.GET_BITACORA_ERROR:
             return {
                 ...state,
                 isLoading: false,
@@ -122,6 +122,17 @@ export default (state = initialState, action) => {
                 deleted: false,
                 uploading: false,
                 bitacora: null,
+            }
+        case types.GET_BITACORA_ERROR:
+            return {
+                ...state,
+                isLoading: false,
+                isLoadingBitacora: false,
+                errorBitacora: action.payload,
+                created: false,
+                updated: false,
+                deleted: false,
+                uploading: false,
             }
         
         case types.CREATE_COMENTARIO_BITACORA_SUCCESS:
@@ -173,6 +184,29 @@ export default (state = initialState, action) => {
                 errors: action.payload,
                 tiposBitacora: [],
             }
+
+        case types.UPDATE_VISITA_SUCCESS:
+            return {
+                ...state,
+                errors: null,
+                bitacora: {
+                    ...state.bitacora,
+                    users: state.bitacora.users.map(user => {
+                        if(user.id === action.payload){
+                            return {
+                                ...user,
+                                pivot_bitacora_users: {
+                                    ...user.pivot_bitacora_users,
+                                    visited: true
+                                }
+                            }
+                        }
+                        return user
+                    })
+                }
+
+            }
+                
 
         default:
             return state

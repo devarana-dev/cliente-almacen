@@ -45,7 +45,7 @@ export default function LayoutPrivate({children}) {
 
  
     if( (isAuthenticated) === false && !isLoading ){
-        navigate("/login")
+        navigate("/login", { state: { from: window.location.pathname } });
     }
 
     // eslint-disable-next-line no-unused-vars
