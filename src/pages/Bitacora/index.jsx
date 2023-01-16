@@ -24,7 +24,7 @@ const Bitacora = () => {
 
     // const { userPermission } = useSelector(state => state.permisos);
     const { RangePicker } = DatePicker;
-    const { bitacoras, isLoading, isLoadingBitacora, bitacora, errorBitacora} = useSelector(state => state.bitacoras);
+    const { bitacoras, isLoading, isLoadingBitacora, bitacora, errorBitacora, isLoadingReport, generatedReporte} = useSelector(state => state.bitacoras);
     const { etapas } = useSelector(state => state.etapas);
     const [ isModalOpen, setIsModalOpen] = useState(false);
 
@@ -292,7 +292,7 @@ const Bitacora = () => {
                 </Drawer>
             </div>
 
-            <ModalBitacora setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen} selectedPreview={selectedPreview} selectedOption={selectedOption} />
+            <ModalBitacora setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen} selectedPreview={selectedPreview} selectedOption={selectedOption} isLoadingReport={isLoadingReport} generatedReporte={generatedReporte} />
         </>
     );
 }

@@ -270,7 +270,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
             > 
                 <Option key={0} value={0}> </Option>
                 {
-                usuarios.filter( item => item.role.permisos.map( item => item.permisos === 'acciones prestamos' ).includes(true) && userAuth.id !== item.id )
+                usuarios.filter( item => item.role.permisos.map( item => item.permisos === 'acciones prestamos' ).includes(true) && userAuth.id !== item.id)
                 .map( item => ( <Option key={item.id} value={item.id}>{`${item.nombre} ${item.apellidoPaterno} `}</Option> )
                 )
                 }

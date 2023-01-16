@@ -13,6 +13,7 @@ import openNotificationWithIcon from "../../hooks/useNotification";
 import { useNavigate } from "react-router-dom";
 import { useUploadFile } from "../../hooks/useUploadFile";
 import { getAllActividadAction } from "../../actions/actividadActions";
+import { Mask } from "../../components/Mask";
 
 
 const FormBitacora = () => {
@@ -78,7 +79,7 @@ const FormBitacora = () => {
             navigate('/bitacora')
         }
         if(errors){
-            openNotificationWithIcon('error', 'Error al crear bitacora')
+            openNotificationWithIcon('error', errors)
         }
         // eslint-disable-next-line
     }, [created, errors])  
@@ -340,7 +341,7 @@ const FormBitacora = () => {
                     {/* Destajista */}
                     <Form.Item
                         name="personalId" 
-                        label="Destajista "
+                        label="Personal "
                         labelCol={{ span: 4 }}
                     >
                             <Select 
@@ -365,9 +366,18 @@ const FormBitacora = () => {
                     >
                             <Select 
                             filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
-                            disabled={personal.length === 0 }
+                            disabled={usuarios.length === 0 }
                             showSearch
                             >
+                                <Option key={nanoid()} value={0} disabled>{ `Selecciona una opción` }</Option>
+                            
+                            {/* Mostrar unicamente usuarios esInterno false */}
+                            {
+                                usuarios.filter(item => item.esInterno === false).map(item => (
+                                    <Option key={item.id} value={item.id}> { `${item.nombre} ${ item.apellidoPaterno }` }  </Option>
+                                ))
+                            }
+
                             
                         </Select>
                     </Form.Item>
@@ -449,19 +459,9 @@ const FormBitacora = () => {
             </Form> 
 
             { uploading ? 
-                <div>
-                    <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 z-50 flex justify-center items-center">
-                        <div className="bg-white rounded-lg shadow-lg p-4 max-w-xs w-full">
-                            <div className="flex flex-col gap-y-2">
-                                <div className="flex justify-center items-center">
-                                    <Loading text={"Generando Bitacora..."}/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            
-            : null}
+                <Mask text={"Generando Bitacora..."} />            
+                : null
+            }
         </>
      );
 }

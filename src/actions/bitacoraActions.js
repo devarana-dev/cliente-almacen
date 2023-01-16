@@ -156,7 +156,7 @@ const getTipoBitacoraError = error => ({
 });
 
 
-export function generarReporte (params) {
+export function generarReporteAction (params) {
     return async (dispatch) => {
         dispatch( generarReporteRequest())
         await clientAxios.post('/bitacora/generar-reporte', params, { responseType: 'arraybuffer', headers: { 'Accept': 'application/pdf' } } ).then(res => {

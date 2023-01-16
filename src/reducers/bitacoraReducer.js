@@ -4,9 +4,11 @@ import { types } from '../types'
 const initialState = {
     bitacoras: [],
     isLoading: true,
-    isLoadingBitacora: true,
+    isLoadingBitacora: false,
+    isLoadingReport: false,
     isCreatingComment: false,
     isCreatedComment: false,
+    generatedReport: null,
     errors: null,
     created: false,
     updated: false,
@@ -206,6 +208,29 @@ export default (state = initialState, action) => {
                 }
 
             }
+        case types.GENERAR_REPORTE:
+            return {
+                ...state,
+                isLoadingReport: true,
+                errors: null,
+            }
+
+        case types.GENERAR_REPORTE_SUCCESS:
+            return {
+                ...state,
+                isLoadingReport: false,
+                errors: null,
+                generatedReport: true,
+            }
+
+        case types.GENERAR_REPORTE_ERROR:
+            return {
+                ...state,
+                isLoadingReport: false,
+                errors: action.payload,
+                generatedReport: false,
+            }
+
                 
 
         default:

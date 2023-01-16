@@ -27,8 +27,8 @@ export const ViewBitacora = ({isLoadingBitacora, bitacora, onClose, errorBitacor
     const setUpdateVisited = (uid) => {
 
         if( 
-            bitacora.users.find( user => user.id === userAuth.id ) && 
-            bitacora.users.find( user => user.id === userAuth.id ).pivot_bitacora_users.visited === false
+            bitacora.participantes.find( user => user.id === userAuth.id ) && 
+            bitacora.participantes.find( user => user.id === userAuth.id ).pivot_bitacora_users.visited === false
         ) {
             dispatch(updateVisitaAction(uid))
         }
@@ -51,10 +51,10 @@ export const ViewBitacora = ({isLoadingBitacora, bitacora, onClose, errorBitacor
             <div className="col-span-2 flex items-end">
                 
                 {
-                    bitacora.users.find( user => user.id === userAuth.id ) ?
+                    bitacora.participantes.find( user => user.id === userAuth.id ) ?
                         <>
                             <p className='pr-2'>Confirmado:</p>
-                            { bitacora.users.find( user => user.id === userAuth.id ).pivot_bitacora_users.confirmed === false ? (
+                            { bitacora.participantes.find( user => user.id === userAuth.id ).pivot_bitacora_users.confirmed === false ? (
                                 <Tooltip title='Click Para Confirmar' placement="rightTop">
                                     <Button type='icon-danger' onClick={() => setUpdateConfirmed(bitacora.uid)} className='px-2 flex items-start'><CloseSquareOutlined className='text-red-500 text-xl'/></Button>
                                 </Tooltip>
@@ -113,10 +113,10 @@ export const ViewBitacora = ({isLoadingBitacora, bitacora, onClose, errorBitacor
        
 
         {
-            bitacora.users.length > 0 && (<div className='col-span-12'>
+            bitacora.participantes.length > 0 && (<div className='col-span-12'>
                 <p className='font-medium'>Involucrados: </p> 
                 <div className='font-light grid grid-cols-3'>
-                    { bitacora.users.map( (involucrado, index) => (
+                    { bitacora.participantes.map( (involucrado, index) => (
                         <p key={index} prefix={index} className='font-light flex'>
                             { involucrado.nombre } { involucrado.apellidoPaterno } { involucrado.apellidoMaterno }  
                             <span className='flex items-center px-2'> 

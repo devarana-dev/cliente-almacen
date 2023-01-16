@@ -23,7 +23,7 @@ export const NuevoComentario = ({id = 0, onClose}) => {
 
     useEffect(() => {
         if(isCreatedComment){
-            openNotificationWithIcon('success', 'El usuario ha sido creado correctamente')
+            openNotificationWithIcon('success', 'Comentario agregado')
             form.resetFields();
             setFiles([]);
             dispatch(cleanState());
