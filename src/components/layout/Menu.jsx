@@ -71,7 +71,9 @@ export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
 
     return (
         <Menu
-			className="layout__menu"
+			className="layout__menu overflow-y-auto overflow-x-hidden"
+            // calc height screen - 60px
+            style={{ height: 'calc(100vh - 80px)' }}
 			mode="inline"
 			items={items}
 			onClick={ (item) =>  { navigate(item.key);  }}
