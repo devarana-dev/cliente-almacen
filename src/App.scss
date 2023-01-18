@@ -14,6 +14,21 @@ html{
     scroll-behavior: smooth;
     --antd-wave-shadow-color: $secondary !important;
 }
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: $primary;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: lightgrey;
+    border-radius: 5px;
+}
+
 .ant-input-affix-wrapper:focus, .ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover{
     border-color: $secondary !important;
 }
