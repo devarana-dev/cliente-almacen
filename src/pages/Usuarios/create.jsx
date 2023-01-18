@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { cleanErrorAction } from "../../actions/globalActions";
 import { getAllRolesAction } from "../../actions/roleActions";
 import { createUsuarioAction } from "../../actions/usuarioActions";
+import { getAllEmpresaAction } from "../../actions/empresaActions";
 import Forbidden from "../../components/Elements/Forbidden";
 import openNotificationWithIcon  from '../../hooks/useNotification'
 import { hasPermission } from "../../utils/hasPermission";
@@ -15,6 +16,7 @@ const CreateUsuario = () => {
     const { Option } = Select;
 
     const { errors, created } = useSelector(state => state.usuarios);
+    const { empresas } = useSelector(state => state.empresas);
     const { roles } = useSelector(state => state.roles);
     const { userPermission } = useSelector(state => state.permisos);
 
@@ -24,6 +26,7 @@ const CreateUsuario = () => {
 
     useEffect(() => {
         dispatch(getAllRolesAction())
+        dispatch(getAllEmpresaAction())
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -129,16 +132,41 @@ const CreateUsuario = () => {
                 </Form.Item>
                 {
                     !esInterno ? (
-                        <Form.Item
-                            label="Contraseña"
-                            name="password"
-                            rules={[
-                                { required: true, message: 'Usuarios externos requieren contraseña' },
-                            ]}
-                            hasFeedback
-                        >
-                            <Input.Password/>
-                        </Form.Item>
+                        <>
+                        
+                            <Form.Item
+                                label="Contraseña"
+                                name="password"
+                                rules={[
+                                    { required: true, message: 'Usuarios externos requieren contraseña' },
+                                ]}
+                                hasFeedback
+                            >
+                                <Input.Password/>
+                            </Form.Item>
+
+                            <Form.Item
+                                label="Empresa"
+                                name="empresa"
+                                rules={[
+                                    { required: true, message: 'Debes ingresar una empresa' },
+                                ]}
+                                hasFeedback
+                            >
+                                <Select
+                                    placeholder="Selecciona una empresa"
+                                    allowClear
+                                    filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0 }
+                                >
+                                    {
+                                        empresas.map(empresa => (
+                                            <Option key={empresa.id} value={empresa.id}>{empresa.nombreCorto}</Option>
+                                        ))
+                                    }
+                                </Select>
+                            </Form.Item>
+                        
+                        </>
                     ) : null 
                 }
                 <Form.Item 
@@ -149,7 +177,7 @@ const CreateUsuario = () => {
                     ]} 
                     hasFeedback> 
 
-                <Input name="telefono" type="telefono"/>                   
+                <Input name="telefono" type="tel"/>                   
                 </Form.Item>
 
                 <Form.Item 

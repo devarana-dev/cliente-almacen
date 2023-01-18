@@ -57,6 +57,7 @@ export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
                     hasPermission(userPermission, 'ver zonas') ? getItem('Zonas', '/zonas') : null,
                     hasPermission(userPermission, 'ver actividades') ? getItem('Actividades', '/actividades') : null,
                     hasPermission(userPermission, 'ver personal') ? getItem('Trabajadores', '/personal') : null,
+                    hasPermission(userPermission, 'ver empresas') ? getItem('Empresas', '/empresas') : null,
                 ], 'group')
             : null,
         ])

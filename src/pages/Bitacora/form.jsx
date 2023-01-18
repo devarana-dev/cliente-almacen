@@ -74,9 +74,9 @@ const FormBitacora = () => {
     useEffect(() => {
         if(created){
             openNotificationWithIcon('success', 'Bitacora creada correctamente')
-            form.resetFields();
-            setFiles([]);
-            navigate('/bitacora')
+            // form.resetFields();
+            // setFiles([]);
+            // navigate('/bitacora')
         }
         if(errors){
             openNotificationWithIcon('error', errors)
@@ -348,11 +348,12 @@ const FormBitacora = () => {
                                 filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                                 disabled={personal.length === 0 }
                                 showSearch
+                                
                                 >
                                     <Option key={nanoid()} value={0} disabled>{ `Selecciona una opción` }</Option>
                                 {
                                     personal.map(item => (
-                                        <Option key={item.id} value={item.id}> { `${item.nombre} (${ item.apellidoMaterno }) ${ item.apellidoPaterno }` }  </Option>
+                                        <Option key={item.id} value={item.id}> { `${item.nombre}  ${item.apellidoMaterno ? `( ${item.apellidoMaterno} )` : '' } ${ item.apellidoPaterno }` }  </Option>
                                     ))
                                 }
                                 
@@ -368,6 +369,7 @@ const FormBitacora = () => {
                             filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                             disabled={usuarios.length === 0 }
                             showSearch
+                            allowClear
                             >
                                 <Option key={nanoid()} value={0} disabled>{ `Selecciona una opción` }</Option>
                             
@@ -392,19 +394,28 @@ const FormBitacora = () => {
                     rules={[{ required: tipoUsuario === 2, message: 'Selecciona al menos un participante' }]}
                 >
                     <Select 
-                        filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
+                        filterOption={(input, option) => option.label.toLowerCase().includes(input.toLowerCase())}
                         disabled={usuarios.length === 0 }
                         showSearch
                         mode = "multiple"
-                        >
-                            <Option key={nanoid()} value={0} disabled>{ `Selecciona una opción` }</Option>
-                        {
-                            usuarios.map(item => (
-                                <Option key={item.id} value={item.id}>{item.nombre} { item.apellidoPaterno } { item.apellidoMaterno } </Option>
-                            ))
-                        }
-                        
-                    </Select>
+                        options = { 
+                            // Agrupar  label: Internos y label: Externos a los que usuarios.esInterno sea true y false respectivamente
+                            [
+                                {
+                                    label: 'Internos',
+                                    options: usuarios.filter(item => item.esInterno === true).map(item => (
+                                        { label: `${item.nombre} ${ item.apellidoPaterno }`, value: item.id }
+                                    ))
+                                },
+                                {
+                                    label: 'Externos',
+                                    options: usuarios.filter(item => item.esInterno === false).map(item => (
+                                        { label: `${item.nombre} ${ item.apellidoPaterno }`, value: item.id }
+                                    ))
+                                }
+                            ]
+                         }
+                    />
                 </Form.Item>
                 {/* Titulo */}
                 <Form.Item

@@ -9,6 +9,7 @@ import Forbidden from "../../components/Elements/Forbidden";
 import Loading from "../../components/Elements/Loading";
 import openNotificationWithIcon from "../../hooks/useNotification";
 import { hasPermission } from "../../utils/hasPermission";
+import { getAllEmpresaAction } from "../../actions/empresaActions";
 
 const EditUsuario = () => {
     const dispatch = useDispatch();
@@ -20,15 +21,27 @@ const EditUsuario = () => {
 
     const { editedUsuario, isLoading, errors, updated } = useSelector(state => state.usuarios);
     const { roles } = useSelector(state => state.roles);
+    const { empresas } = useSelector(state => state.empresas);
     const { userPermission } = useSelector(state => state.permisos);
+
 
     useEffect(() => {
         dispatch(getAllRolesAction())
+        dispatch(getAllEmpresaAction())
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
+    useEffect(() => {
         if(!editedUsuario){
             dispatch(getUsuarioAction(id))
         }
+        // eslint-disable-next-line
+    }, [editedUsuario])
+
+    useEffect(() => {
         form.setFieldsValue({...editedUsuario})
+        // first
+        form.setFieldsValue({ empresa: editedUsuario?.empresas?.map(empresa => empresa.id) })
         // eslint-disable-next-line
     }, [editedUsuario])
 
@@ -36,6 +49,8 @@ const EditUsuario = () => {
         displayAlert()
         // eslint-disable-next-line
     }, [errors, updated])
+
+    console.log(form.getFieldsValue());
 
     const displayAlert = () => {
         if(errors){
@@ -122,13 +137,36 @@ const EditUsuario = () => {
             {
                 !form.getFieldValue('esInterno') &&
                     (
-                        <Form.Item
-                            label="Contraseña"
-                            name="password"
-                            hasFeedback
-                        >
-                            <Input.Password/>
-                        </Form.Item>
+                        <>
+                            <Form.Item
+                                label="Contraseña"
+                                name="password"
+                                hasFeedback
+                            >
+                                <Input.Password/>
+                            </Form.Item>
+                            <Form.Item
+                                label="Empresa"
+                                name="empresa"
+                                rules={[
+                                    { required: true, message: 'Debes ingresar una empresa' },
+                                ]}
+                                hasFeedback
+                            >
+                                <Select
+                                    placeholder="Selecciona una empresa"
+                                    allowClear
+                                    filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0 }
+
+                                >
+                                    {
+                                        empresas.map(empresa => (
+                                            <Option key={empresa.id} value={empresa.id}>{empresa.nombreCorto}</Option>
+                                        ))
+                                    }
+                            </Select>
+                            </Form.Item>
+                        </>
                     )
             }
             <Form.Item 

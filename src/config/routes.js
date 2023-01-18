@@ -44,6 +44,9 @@ import editEtapas from "../pages/Etapas/edit"
 import Permisos from "../pages/Permisos"
 import CreatePermisos from "../pages/Permisos/create"
 import EditPermisos from "../pages/Permisos/edit"
+import Empresa from "../pages/Empresa"
+import CreateEmpresa from "../pages/Empresa/create"
+import EditEmpresa from "../pages/Empresa/edit"
 
 
 const routesPublic = [
@@ -260,6 +263,21 @@ const routesPrivate = [
         path: '/permisos/:id',
         layout: Private,
         component: EditPermisos
+    },
+    {
+        path: '/empresas',
+        layout: Private,
+        component: Empresa
+    },
+    {
+        path: '/empresas/create',
+        layout: Private,
+        component: CreateEmpresa
+    },
+    {
+        path: '/empresas/:id',
+        layout: Private,
+        component: EditEmpresa
     },
     {
         path: "*",

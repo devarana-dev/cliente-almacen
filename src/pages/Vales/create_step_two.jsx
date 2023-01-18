@@ -34,7 +34,7 @@ const ListaInsumos = ({current, setCurrent, setVale, vale}) => {
 
     useEffect(() => {
         dispatch(getAllInsumosAction())
-        dispatch(getAllUsuariosAction())
+        dispatch(getAllUsuariosAction({ esInterno: 1 }))
         // eslint-disable-next-line
     }, [])
 

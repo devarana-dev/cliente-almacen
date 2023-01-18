@@ -225,7 +225,7 @@ const Reportes = () => {
                 
                 dispatch(getAllActividadAction())
                 dispatch(getAllPersonalAction())
-                dispatch(getAllUsuariosAction())
+                dispatch(getAllUsuariosAction({ esInterno: 1 }))
                 break;
             default:
                 break;

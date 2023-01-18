@@ -1,6 +1,6 @@
 
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Popconfirm, Table } from 'antd';
+import { Button, Input, Popconfirm, Select, Table } from 'antd';
 
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
@@ -116,6 +116,11 @@ const Usuarios = () => {
         dispatch( getAllUsuariosAction({search}) )
     }
 
+    const handleSearchByInterno = (e) => {
+        const esInterno = e
+        dispatch( getAllUsuariosAction({esInterno}) )
+    }
+
     if(!hasPermission(userPermission, 'ver usuarios') && !isLoading ) return <Forbidden/>
 
     return ( 
@@ -128,6 +133,15 @@ const Usuarios = () => {
         }
         </div>
         <div className='pb-3 flex justify-end'>
+            <Select 
+                placeholder = 'Interno/Externo'
+                onChange={ e => handleSearchByInterno(e) }
+                style={{ width : '150px', marginRight: '10px'}}
+            >
+                <Select.Option value={null}>Todos</Select.Option>
+                <Select.Option value={1}>Interno</Select.Option>
+                <Select.Option value={0}>Externo</Select.Option>
+            </Select>
             <Input type="text" 
                 style={{ width : '250px'}} 
                 onChange={ e => handleSearchByName(e) }
@@ -136,7 +150,7 @@ const Usuarios = () => {
                 placeholder="Buscar"
                 // value={filtros.busqueda}
                 name="busqueda"
-            />
+            />            
         </div>
         <Table scroll={{ x: 'auto' }} columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false} rowKey={ record => record.id }/>
     </>

@@ -2,10 +2,10 @@ import { types } from '../types'
 
 
 const initialState = {
-    actividades: [],
+    empresas: [],
     isLoading: false,
     errors: null,
-    editedActividad: null,
+    editedEmpresa: null,
     created: false,
     updated: false,
     deleted: false,
@@ -14,11 +14,11 @@ const initialState = {
 // eslint-disable-next-line
 export default (state = initialState, action) => {
     switch (action.type) {
-        case types.GET_ALL_ACTIVIDAD:
-        case types.GET_ACTIVIDAD:
-        case types.CREATE_ACTIVIDAD:
-        case types.UPDATE_ACTIVIDAD:
-        case types.DELETE_ACTIVIDAD:
+        case types.GET_ALL_EMPRESA:
+        case types.GET_EMPRESA:
+        case types.CREATE_EMPRESA:
+        case types.UPDATE_EMPRESA:
+        case types.DELETE_EMPRESA:
             return {
                 ...state,
                 isLoading: true,
@@ -28,16 +28,16 @@ export default (state = initialState, action) => {
                 updated: false,
                 deleted: false,
             }
-        case types.GET_ALL_ACTIVIDAD_SUCCESS:
+        case types.GET_ALL_EMPRESA_SUCCESS:
             return {
                 ...state,
                 isLoading: false,
                 errors: null,
-                actividades: action.payload,
+                empresas: action.payload,
                 editedActividad: null
             }
 
-        case types.GET_ACTIVIDAD_SUCCESS:
+        case types.GET_EMPRESA_SUCCESS:
             return {
                 ...state,
                 isLoading: false,
@@ -45,12 +45,12 @@ export default (state = initialState, action) => {
                 editedActividad: action.payload
             }
 
-        case types.CREATE_ACTIVIDAD_SUCCESS:
+        case types.CREATE_EMPRESA_SUCCESS:
             return {
                 ...state,
                 isLoading: false,
                 errors: null,
-                actividades: [...state.actividades, action.payload],
+                empresas: [...state.empresas, action.payload],
                 created: true
             }
         case types.CLEAN_ERROR_STATE:
@@ -58,30 +58,30 @@ export default (state = initialState, action) => {
                 ...state,
                 errors: null
             }
-        case types.UPDATE_ACTIVIDAD_SUCCESS:
+        case types.UPDATE_EMPRESA_SUCCESS:
             return {
                 ...state,
                 isLoading: false,
                 errors: null,
-                actividades: state.actividades.map(actividad => actividad.id === action.payload.id ? action.payload : actividad),
+                empresas: state.empresas.map(actividad => actividad.id === action.payload.id ? action.payload : actividad),
                 updated: true,
                 editedActividad: null,
             }
         
-        case types.DELETE_ACTIVIDAD_SUCCESS:
+        case types.DELETE_EMPRESA_SUCCESS:
             return {
                 ...state,
                 isLoading: false,
                 errors: null,
-                actividades: state.actividades.filter(actividad => actividad.id !== action.payload.id),
+                empresas: state.empresas.filter(actividad => actividad.id !== action.payload.id),
                 deleted: true,
             }
 
-        case types.DELETE_ACTIVIDAD_ERROR:
-        case types.UPDATE_ACTIVIDAD_ERROR:    
-        case types.CREATE_ACTIVIDAD_ERROR:
-        case types.GET_ACTIVIDAD_ERROR:
-        case types.GET_ALL_ACTIVIDAD_ERROR:
+        case types.DELETE_EMPRESA_ERROR:
+        case types.UPDATE_EMPRESA_ERROR:    
+        case types.CREATE_EMPRESA_ERROR:
+        case types.GET_EMPRESA_ERROR:
+        case types.GET_ALL_EMPRESA_ERROR:
             return {
                 ...state,
                 isLoading: false,

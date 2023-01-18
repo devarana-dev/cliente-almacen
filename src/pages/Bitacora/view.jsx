@@ -89,6 +89,11 @@ export const ViewBitacora = ({isLoadingBitacora, bitacora, onClose, errorBitacor
                     <p className='font-medium'>Empresa: <span className='font-light'>{ bitacora.autorExt.empresa }</span> </p>
                 </div> )
             }
+            {
+                bitacora.contratista && (<div className='col-span-4'>
+                    <p className='font-medium'>Contratista: <span className='font-light'>{bitacora.contratista.nombre} {bitacora.contratista.apellidoPaterno} {bitacora.contratista.apellidoMaterno}</span> </p>
+                </div> )
+            }
         </div>
         
         <Divider className='col-span-12 my-2'/>
@@ -115,10 +120,12 @@ export const ViewBitacora = ({isLoadingBitacora, bitacora, onClose, errorBitacor
         {
             bitacora.participantes.length > 0 && (<div className='col-span-12'>
                 <p className='font-medium'>Involucrados: </p> 
-                <div className='font-light grid grid-cols-3'>
+                <div className='font-light flex flex-wrap gap-x-10'>
                     { bitacora.participantes.map( (involucrado, index) => (
-                        <p key={index} prefix={index} className='font-light flex'>
-                            { involucrado.nombre } { involucrado.apellidoPaterno } { involucrado.apellidoMaterno }  
+                        <div className='flex'>
+                            <p key={index} prefix={index} className='font-light inline-block whitespace-nowrap'>
+                            { involucrado.nombre } { involucrado.apellidoPaterno }
+                            </p>
                             <span className='flex items-center px-2'> 
                                 { 
                                     involucrado.pivot_bitacora_users.visited ? 
@@ -141,7 +148,7 @@ export const ViewBitacora = ({isLoadingBitacora, bitacora, onClose, errorBitacor
                                         </Tooltip>
                                 }
                             </span> 
-                        </p>
+                        </div>
                     ))}
                 </div>
             </div>)
