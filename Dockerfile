@@ -1,8 +1,11 @@
 # Stage 0, "build-stage"
 FROM node:16-alpine as build-stage
+
 WORKDIR /app/cliente
-RUN npm install -g npm@8.19.2
+
+RUN npm install -g npm@latest
 COPY . .
+COPY .env.development ./.env
 RUN npm install
 RUN npm run build
 
