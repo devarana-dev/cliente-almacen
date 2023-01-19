@@ -14,7 +14,7 @@ export default function FooterLayout({showModal, userPermission}) {
     return (
     <>
         <Footer className="block lg:hidden z-50">
-            { process.env.REACT_APP_NODE_ENV === "test" && <div className="text-red-500 bg-red-100 text-center uppercase w-full content-center absolute bottom-0 left-0 right-0 text-xs">Versión de Pruebas</div> }
+            { import.meta.env.VITE_NODE_ENV === "test" && <div className="text-red-500 bg-red-100 text-center uppercase w-full content-center absolute bottom-0 left-0 right-0 text-xs">Versión de Pruebas</div> }
             <div className="footer">
                 <Link to={'/'} className="block w-full h-auto text-center footer__link">
                     <div className="footer__link-icon"> 
