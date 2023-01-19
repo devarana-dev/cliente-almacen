@@ -33,8 +33,13 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+<<<<<<< HEAD
     "start": "vite",
     "build": "vite build",
+=======
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+>>>>>>> parent of b92a1dd (Ajustes Vite)
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "build-test": "react-scripts build --max_old_space_size=1024"
@@ -60,11 +65,23 @@
   "devDependencies": {
     "autoprefixer": "^10.4.7",
     "postcss": "^8.4.14",
+<<<<<<< HEAD
 
     "sass": "^1.57.1",
     "tailwindcss": "^3.1.4",
     "vite": "^4.0.4",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-dynamic-import": "^1.2.6"
+=======
+<<<<<<< HEAD
+    "sass": "^1.57.1",
+    "tailwindcss": "^3.1.4",
+    "vite": "^4.0.4",
+    "vite-plugin-compression": "^0.5.1"
+=======
+    "sass": "^1.53.0",
+    "tailwindcss": "^3.1.4"
+>>>>>>> parent of b92a1dd (Ajustes Vite)
+>>>>>>> 329761b97492bc0c7da79d027999ec7a6850708c
   }
 }
