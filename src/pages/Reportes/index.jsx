@@ -11,7 +11,7 @@ import { nanoid } from 'nanoid';
 import moment from 'moment/moment';
 import { getAllObraAction } from '../../actions/obraActions';
 import openNotificationWithIcon from '../../hooks/useNotification';
-import { generarReporte } from '../../utils/generarReporte';
+// import { generarReporte } from '../../utils/generarReporte';
 import Loading from '../../components/Elements/Loading';
 import { hasPermission } from '../../utils/hasPermission';
 
@@ -409,7 +409,7 @@ const Reportes = () => {
 
     useEffect(() => {
         if(generar.length > 0){
-            generarReporte(reporte.headerFile, generar, reporte.fileTitle, setDownload, filtros, reportType)
+            // generarReporte(reporte.headerFile, generar, reporte.fileTitle, setDownload, filtros, reportType)
             dispatch(cleanGenerarReporteAction())
         }    
     // eslint-disable-next-line

@@ -17,7 +17,7 @@ export default () => {
             output: {            
                 manualChunks: {
                     "react-dropzone": ["react-dropzone"],
-                    "exceljs": ["exceljs"],
+                    // "exceljs": ["exceljs"],
                     "moment": ["moment"],
                     "react-dom": ["react-dom"],
                     "chart.js": ["chart.js"],
