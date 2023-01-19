@@ -1,9 +1,10 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import viteCompression from 'vite-plugin-compression';
 
 export default () => {
   return defineConfig({
-    plugins: [react()],
+    plugins: [react(), viteCompression()],
     server: {
         port: 3000,
     },
@@ -13,7 +14,7 @@ export default () => {
         // Optimization
         brotliSize: false,
         rollupOptions: {
-            output: {
+            output: {            
                 manualChunks: {
                     "react-dom": ["react-dom"],
                     "react": ["react"],
@@ -32,10 +33,13 @@ export default () => {
                     "react-dropzone": ["react-dropzone"],
                     "react-icons": ["react-icons"],
                     "icons": ["@ant-design/icons"],
+                    "exceljs": ["exceljs"],
+                    "jwt-decode": ["jwt-decode"],
+                    "react-resizable": ["react-resizable"],
                 },
+                
             },
         },
-
     }
   })
 }
