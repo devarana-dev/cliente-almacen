@@ -1,16 +1,10 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import viteCompression from 'vite-plugin-compression';
-import dynamicImport from 'vite-plugin-dynamic-import'
-
-const exceljsChunk = chunk => `exceljs/chunks/${chunk}.js`;
-const dynamicImportFunction = specifier => `import('./${exceljsChunk(specifier)}').then(exceljsChunk${specifier} => exceljsChunk${specifier}.default)`;
 
 export default () => {
   return defineConfig({
-    plugins: [react(), viteCompression(), dynamicImport({
-        dynamicImportFunction,
-    })],
+    plugins: [react(), viteCompression()],
     server: {
         port: 3000,
     },
