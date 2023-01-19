@@ -10,6 +10,7 @@ export default () => {
     // rename the output file
     build: {
         outDir: "build",
+        chunkSizeWarningLimit: 10000,
     }
   })
 }
