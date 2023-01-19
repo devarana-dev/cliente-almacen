@@ -1,10 +1,11 @@
-import excelJS from "exceljs";
+
+import { Workbook } from "exceljs";
 import moment from "moment";
 
 
 export const generarReporte = async (headers, data, titulo, setDownload , filtros, reportType) => {
     try {
-        const workbook = new excelJS.Workbook()
+        const workbook = new Workbook();
         workbook.addWorksheet("Reporte")
         const worksheet = workbook.getWorksheet("Reporte")
 
