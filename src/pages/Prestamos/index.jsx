@@ -4,14 +4,14 @@ import { Avatar, Button, Image, Modal, Segmented, Table, Tag } from 'antd';
 
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
-import { getPrestamosAction, getAllPrestamosAction, updatePrestamoAction } from '../../actions/prestamoActions';
+import { getPrestamosAction, getAllPrestamosAction, updatePrestamoAction } from '../../actions/prestamoActions.js';
 import { getColumnSearchProps } from '../../hooks/useFilter'
 import openNotificationWithIcon from '../../hooks/useNotification';
 import { cleanErrorAction } from '../../actions/globalActions';
-import { hasPermission } from '../../utils/hasPermission';
-import Loading from '../../components/Elements/Loading';
+import { hasPermission } from '../../utils/hasPermission.js';
+import Loading from '../../components/Elements/Loading.js';
 import '../../assets/scss/prestamos.scss'
-import brokenUser from '../../utils/brokenUser';
+import brokenUser from '../../utils/brokenUser.js';
 
 const Prestamo = () => {
 

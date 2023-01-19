@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, DatePicker, Divider, Form, Image, Input, Select, TimePicker } from "antd";
 import moment from "moment";
 import { getAllObraAction } from "../../actions/obraActions";
@@ -24,21 +24,12 @@ const FormBitacora = () => {
     const { personal } = useSelector(state => state.personal);
     const { usuarios }  = useSelector(state => state.usuarios);
     const { actividades } = useSelector(state => state.actividades);
-    const { userAuth } = useSelector(state => state.auth);
+
     
+    const [tipoUsuario, setTipoUsuario] = useState(1);
     const [tipoBitacora, setTipoBitacora] = useState(1);
     const [ selectedNivel, setSelectedNivel ] = useState([]);
     const [ selectedZona, setSelectedZona ] = useState([]);
-
-    const tipoUsuario = useMemo(() => {
-        if( userAuth)
-        {
-            return userAuth.esInterno
-        }
-    }, [userAuth])
-
-    console.log(tipoUsuario);
-
 
 
     // get query params
@@ -119,7 +110,7 @@ const FormBitacora = () => {
 
         // si tipoUsuario es === 2 entonces validar participantesId es required sino no
 
-        if(!tipoUsuario){
+        if(tipoUsuario === 2){
             form.setFieldsValue({
                 participantesId: 0
             })
@@ -222,7 +213,7 @@ const FormBitacora = () => {
                     </Select>
                 </Form.Item>
                 {
-                    tipoUsuario &&
+                    tipoUsuario === 1 &&
                     ( <>
                     {/* Obra */}
                     <Form.Item
@@ -294,7 +285,7 @@ const FormBitacora = () => {
                     </> )
                 }
                {
-                 tipoUsuario ?
+                 tipoUsuario === 1 ?
                     ( <>    
                         {/* Actividad */}
                         <Form.Item
@@ -345,7 +336,7 @@ const FormBitacora = () => {
 
                 }
                 {
-                    tipoUsuario &&
+                    tipoUsuario === 1 &&
                     (<>
                     {/* Destajista */}
                     <Form.Item
@@ -400,7 +391,7 @@ const FormBitacora = () => {
                     label="Participantes"
                     labelCol={{ span: 4 }}
                     // si tipoUsuario es == 2 es requerido
-                    rules={[{ required: !tipoUsuario, message: 'Selecciona al menos un participante' }]}
+                    rules={[{ required: tipoUsuario === 2, message: 'Selecciona al menos un participante' }]}
                 >
                     <Select 
                         filterOption={(input, option) => option.label.toLowerCase().includes(input.toLowerCase())}

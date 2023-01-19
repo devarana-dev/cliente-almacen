@@ -3,8 +3,7 @@ import { getAccessToken } from '../api/authApi';
 export const cancelTokenSource = axios.CancelToken.source();
 
 const clientAxios = axios.create({
-    // VITE_URL
-    baseURL: import.meta.env.VITE_URL,
+    baseURL: process.env.REACT_APP_URL,
     cancelToken: cancelTokenSource.token,
     headers: {
         'Content-Type': 'application/json',
