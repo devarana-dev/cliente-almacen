@@ -12,6 +12,7 @@
     "axios": "^0.27.2",
     "chart.js": "^3.9.1",
     "dotenv": "^16.0.1",
+    "esbuild-loader": "^2.21.0",
     "exceljs": "^4.3.0",
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.3",
@@ -25,7 +26,6 @@
     "react-redux": "^8.0.2",
     "react-resizable": "^3.0.4",
     "react-router-dom": "^6.3.0",
-    "react-scripts": "5.0.1",
     "redux": "^4.2.0",
     "redux-thunk": "^2.4.1",
     "socket.io-client": "^4.5.1",
@@ -33,16 +33,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-<<<<<<< HEAD
     "start": "vite",
     "build": "vite build",
-=======
-    "start": "react-scripts start",
-    "build": "react-scripts build",
->>>>>>> parent of b92a1dd (Ajustes Vite)
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "build-test": "react-scripts build --max_old_space_size=1024"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
@@ -63,25 +57,12 @@
     ]
   },
   "devDependencies": {
+    "@vitejs/plugin-react": "^3.0.1",
     "autoprefixer": "^10.4.7",
     "postcss": "^8.4.14",
-<<<<<<< HEAD
-
-    "sass": "^1.57.1",
-    "tailwindcss": "^3.1.4",
-    "vite": "^4.0.4",
-    "vite-plugin-compression": "^0.5.1",
-    "vite-plugin-dynamic-import": "^1.2.6"
-=======
-<<<<<<< HEAD
     "sass": "^1.57.1",
     "tailwindcss": "^3.1.4",
     "vite": "^4.0.4",
     "vite-plugin-compression": "^0.5.1"
-=======
-    "sass": "^1.53.0",
-    "tailwindcss": "^3.1.4"
->>>>>>> parent of b92a1dd (Ajustes Vite)
->>>>>>> 329761b97492bc0c7da79d027999ec7a6850708c
   }
 }
