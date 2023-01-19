@@ -36,8 +36,6 @@ export const ModalBitacora = ({setIsModalOpen, isModalOpen, selectedPreview, sel
 
     }
 
-    console.log(isLoadingReport);
-
   return (
     <>
     

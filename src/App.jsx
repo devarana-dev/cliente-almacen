@@ -2,8 +2,8 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './config/store';
 import routes from './config/routes';
+import 'antd/dist/antd.css';
 import './App.scss';
-
 import 'animate.css';
 
 function App() {
