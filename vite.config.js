@@ -11,8 +11,6 @@ export default () => {
     build: {
         outDir: "build",
         chunkSizeWarningLimit: 10000,
-        // Optimization
-        brotliSize: false,
         rollupOptions: {
             output: {            
                 manualChunks: {
