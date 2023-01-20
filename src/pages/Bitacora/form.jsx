@@ -25,20 +25,10 @@ const FormBitacora = () => {
     const { usuarios }  = useSelector(state => state.usuarios);
     const { actividades } = useSelector(state => state.actividades);
     const { userAuth } = useSelector(state => state.auth);
-    
+
     const [tipoBitacora, setTipoBitacora] = useState(1);
     const [ selectedNivel, setSelectedNivel ] = useState([]);
     const [ selectedZona, setSelectedZona ] = useState([]);
-
-    const tipoUsuario = useMemo(() => {
-        if( userAuth)
-        {
-            return userAuth.esInterno
-        }
-    }, [userAuth])
-
-    console.log(tipoUsuario);
-
 
 
     // get query params
@@ -59,6 +49,10 @@ const FormBitacora = () => {
         return () => files.forEach(file => URL.revokeObjectURL(file.preview));
         // eslint-disable-next-line
     }, []);
+
+    const tipoUsuario = useMemo(() => {
+        if(userAuth) userAuth.esInterno
+    }, [userAuth])
 
     useEffect(() =>{
             dispatch(getAllObraAction())

@@ -16,28 +16,13 @@ export default () => {
         rollupOptions: {
             output: {            
                 manualChunks: {
-                    "react-dom": ["react-dom"],
-                    "react": ["react"],
-                    "react-router-dom": ["react-router-dom"],
-                    "react-router": ["react-router"],
-                    "react-redux": ["react-redux"],
-                    "redux": ["redux"],
-                    "redux-thunk": ["redux-thunk"],
-                    "axios": ["axios"],
-                    "moment": ["moment"],
-                    "antd": ["antd"],
-                    "chart.js": ["chart.js"],
-                    "react-chartjs-2": ["react-chartjs-2"],
-                    "nanoid": ["nanoid"],
-                    "animate.css": ["animate.css"],
                     "react-dropzone": ["react-dropzone"],
-                    "react-icons": ["react-icons"],
-                    "icons": ["@ant-design/icons"],
-                    "exceljs": ["exceljs"],
-                    "jwt-decode": ["jwt-decode"],
-                    "react-resizable": ["react-resizable"],
+                    // "exceljs": ["exceljs"],
+                    "moment": ["moment"],
+                    "react-dom": ["react-dom"],
+                    "chart.js": ["chart.js"],
+                    "antd": ["antd"],
                 },
-                
             },
         },
     }
