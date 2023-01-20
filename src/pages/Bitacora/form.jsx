@@ -51,7 +51,7 @@ const FormBitacora = () => {
     }, []);
 
     const tipoUsuario = useMemo(() => {
-        if(userAuth) userAuth.esInterno
+        if(userAuth) return userAuth.esInterno
     }, [userAuth])
 
     useEffect(() =>{
@@ -113,10 +113,8 @@ const FormBitacora = () => {
 
         // si tipoUsuario es === 2 entonces validar participantesId es required sino no
 
-        if(!tipoUsuario){
-            form.setFieldsValue({
-                participantesId: 0
-            })
+        if(tipoUsuario){
+            form.validateFields(['participantesId'])
         }
         const query = {...form.getFieldsValue(), files}  ;
 
@@ -393,8 +391,6 @@ const FormBitacora = () => {
                     name="participantesId"
                     label="Participantes"
                     labelCol={{ span: 4 }}
-                    // si tipoUsuario es == 2 es requerido
-                    rules={[{ required: !tipoUsuario, message: 'Selecciona al menos un participante' }]}
                 >
                     <Select 
                         filterOption={(input, option) => option.label.toLowerCase().includes(input.toLowerCase())}
