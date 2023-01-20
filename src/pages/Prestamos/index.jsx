@@ -389,7 +389,7 @@ const Prestamo = () => {
             showSorterTooltip={false}
         />
         <Modal
-        visible={visible}
+        open={visible}
         okText="Si"
         cancelText="Cancelar"
         title="Confirmación"

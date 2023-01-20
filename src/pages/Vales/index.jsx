@@ -15,6 +15,7 @@ import Card from "../../components/Vales/Card";
 import { BsInfoCircle } from "react-icons/bs";
 import openNotificationWithIcon from "../../hooks/useNotification";
 import brokenUser from "../../utils/brokenUser";
+import { useSocket } from "../../hooks/useSocket";
 
 const ValesSalida = () => {
 
@@ -25,6 +26,7 @@ const ValesSalida = () => {
 
     const { userPermission } = useSelector(state => state.permisos);
     const { vales, isLoading, paginate, count, detalleSalida, isLoadingDetalles, errors, delivered, updated, deleted } = useSelector( state => state.vales )
+    const { socket, online } = useSelector( state => state.socket )
     
     const [ dataSource, setDataSource ] = useState([])
     const [ loadedColumn , setLoad ] = useState(false)
@@ -708,6 +710,15 @@ const ValesSalida = () => {
     // ? End Alertas
 
 
+    useEffect(() => {
+        if( online ){
+            socket.on('nuevo-vale', (data) => {
+                dispatch(getCountValeSalidaAction())
+                dispatch(getAllValesAction(filter)) 
+            })
+        }  
+    // eslint-disable-next-line
+    }, [online])
 
     
     return ( 
@@ -842,7 +853,7 @@ const ValesSalida = () => {
                     <Button key={1} type='default' onClick={() => setVisible(false)}> Cancelar </Button>,
                     <Button key={2} type='ghost' onClick={modalProps.fn} disabled={ !( response !== "" || Number(amount) > 0) }> Enviar</Button>
                 ]}
-                visible={visible}
+                open={visible}
                 onCancel={() => { setVisible(false); clearFields() }}
                 width={600}
                 icon={modalProps.icon}

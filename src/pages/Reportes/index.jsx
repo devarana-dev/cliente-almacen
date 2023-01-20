@@ -653,7 +653,7 @@ const Reportes = () => {
             : null}
 
             <Modal
-                visible={showHelpModal}
+                open={showHelpModal}
                 onCancel={() => {setShowHelp(!showHelpModal)}}
                 footer={null}
                 width={1000}

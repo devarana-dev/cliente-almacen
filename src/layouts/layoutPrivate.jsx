@@ -16,6 +16,8 @@ import { getPermisoUsuarioAction } from "../actions/permisosActions";
 import Notas from "../components/Notas";
 import { useAuth } from "../hooks/useAuth";
 import FooterLayout from "../components/layout/Footer";
+import { useSocket } from "../hooks/useSocket";
+import { connectSocket } from "../actions/socketsActions";
 
 export default function LayoutPrivate({children}) {
     const dispatch = useDispatch()
@@ -76,6 +78,10 @@ export default function LayoutPrivate({children}) {
     }, [logout])
 
 
+
+    const socket = useSocket(import.meta.env.VITE_SERVER)
+    dispatch(connectSocket(socket))
+
     return (        
         <Layout className="layout animate__animated animate__fadeIn animate__faster">
             
@@ -119,7 +125,7 @@ export default function LayoutPrivate({children}) {
 
             <Modal
                 title="Salir"
-                visible={visible}
+                open={visible}
                 onOk={handleLogout}
                 onCancel={hideModal}
                 okText="Si"
@@ -130,7 +136,7 @@ export default function LayoutPrivate({children}) {
 
             <Modal 
                 title="Notas de Versión"
-                visible={visibleNotas}
+                open={visibleNotas}
                 footer={false}
                 onCancel={hideModalNotas}
                 width={ 1000 }

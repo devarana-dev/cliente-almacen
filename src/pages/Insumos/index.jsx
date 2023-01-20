@@ -160,7 +160,7 @@ const Insumos = () => {
 		</div>
         <Table scroll={{ x: 'auto'}} columns={columns} dataSource={dataSource} loading={isLoading} showSorterTooltip={false} />
 
-        <Modal title="Cargar Insumo" visible={isModalVisible} footer={null} onCancel={handleCancel}>
+        <Modal title="Cargar Insumo" open={isModalVisible} footer={null} onCancel={handleCancel}>
             <UploadFile/>
         </Modal>
     </>

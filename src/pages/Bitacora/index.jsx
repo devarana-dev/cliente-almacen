@@ -26,6 +26,7 @@ const Bitacora = () => {
     const { RangePicker } = DatePicker;
     const { bitacoras, isLoading, isLoadingBitacora, bitacora, errorBitacora, isLoadingReport, generatedReporte} = useSelector(state => state.bitacoras);
     const { etapas } = useSelector(state => state.etapas);
+    const { socket, online } = useSelector(state => state.socket);
     const [ isModalOpen, setIsModalOpen] = useState(false);
 
     const [ open, setOpen] = useState(false);
@@ -165,6 +166,16 @@ const Bitacora = () => {
     };
 
 
+    useEffect(() => {
+        if( online ){
+            socket.on('nueva-bitacora', (data) => {
+                dispatch(getBitacorasAction(filtros))
+            })
+        }  
+    // eslint-disable-next-line
+    }, [online])
+
+
     if(isLoading){
         return <Loading />
     }
@@ -275,7 +286,7 @@ const Bitacora = () => {
                     placement="right"
                     closable={true}
                     onClose={onClose}
-                    visible={open}
+                    open={open}
                     bodyStyle={{ paddingBottom: 80 }}
                     destroyOnClose={true}
                     width={window.innerWidth > 1200 ? 800 : 'auto'}

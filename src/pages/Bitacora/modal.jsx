@@ -39,7 +39,7 @@ export const ModalBitacora = ({setIsModalOpen, isModalOpen, selectedPreview, sel
   return (
     <>
     
-        <Modal title="Configurar Reporte" visible={isModalOpen} onOk={ handleOk } onCancel={handleCancel} destroyOnClose={true}
+        <Modal title="Configurar Reporte" open={isModalOpen} onOk={ handleOk } onCancel={handleCancel} destroyOnClose={true}
             footer={[
                 <Button key="back" onClick={handleCancel}>
                     Cancelar

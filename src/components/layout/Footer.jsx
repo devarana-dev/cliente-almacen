@@ -9,7 +9,6 @@ const { Footer } = Layout;
 
 export default function FooterLayout({showModal, userPermission}) {
 
-    console.log(hasPermission(userPermission, 'crear bitacora'));
     const navigate = useNavigate();
 
     return (

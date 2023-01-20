@@ -17,6 +17,7 @@ import reportesReducer from "./reportesReducer";
 import bitacoraReducer from "./bitacoraReducer";
 import etapaReducer from "./etapaReducer";
 import empresaReducer from "./empresaReducer";
+import socketReducer from "./socketReducer";
 
 
 export default combineReducers({
@@ -37,4 +38,5 @@ export default combineReducers({
     bitacoras: bitacoraReducer,
     etapas: etapaReducer,
     empresas: empresaReducer,
+    socket: socketReducer
 })
