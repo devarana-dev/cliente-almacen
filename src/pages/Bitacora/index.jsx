@@ -26,6 +26,7 @@ const Bitacora = () => {
     const { RangePicker } = DatePicker;
     const { bitacoras, isLoading, isLoadingBitacora, bitacora, errorBitacora, isLoadingReport, generatedReporte} = useSelector(state => state.bitacoras);
     const { etapas } = useSelector(state => state.etapas);
+    const { usuarios } = useSelector(state => state.usuarios);
     const { socket, online } = useSelector(state => state.socket);
     const [ isModalOpen, setIsModalOpen] = useState(false);
 
@@ -176,9 +177,6 @@ const Bitacora = () => {
     }, [online])
 
 
-    if(isLoading){
-        return <Loading />
-    }
   
     return ( 
     <>
@@ -228,12 +226,15 @@ const Bitacora = () => {
                     showSearch
                     optionFilterProp="children"
                     filterOption={ (input, option) => option.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0 }
-                    value={filtros.residente}
-                    name="residente"
-                    // defaultValue={ hasPermission(userPermission, 'ver reportes') ? null : userAuth.id }
+                    value={filtros.userId}
+                    onChange={ (e) => { setFiltros({ ...filtros, userId: e }) }}
+                    name="userId"
                     >
                     {
                         
+                        usuarios.map(item => (
+                            <Select.Option key={item.id} value={item.id}>{`${item.nombre} ${item.apellidoPaterno}`}</Select.Option>
+                        ))
                     }
                 </Select> 
                 <Select
@@ -251,13 +252,14 @@ const Bitacora = () => {
                 </Select>
 
                 <Input type="text" 
-                            style={{ width : '200px', padding: '0 10px'}} 
-                            onChange={ (e) => { setFiltros({ ...filtros, busqueda: e.target.value, page: 0 })  } }
-                            allowClear
-                            suffix={<SearchOutlined />}
-                            placeholder="Buscar"
-                            // value={filtros.busqueda}
-                            name="busqueda"
+                        style={{ width : '200px', padding: '0 10px'}} 
+                        onChange={ (e) => { setFiltros({ ...filtros, busqueda: e.target.value, page: 0 })  } }
+                        allowClear
+                        suffix={<SearchOutlined />}
+                        placeholder="Buscar"
+                        // value={filtros.busqueda}
+                        name="busqueda"
+                        value={filtros.busqueda}
                 />
                 <RangePicker 
                     showToday={true}
