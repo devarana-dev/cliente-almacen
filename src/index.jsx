@@ -9,6 +9,8 @@ import moment from "moment";
 import "moment/locale/es-mx"
 moment.locale('es-mx')
 
+
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <ConfigProvider locale={es_ES}>
