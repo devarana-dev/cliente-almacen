@@ -6,12 +6,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 
 export default () => {
-    const cacheNetworkFirst = [
-        '/api/login/validate',
-        '/api/auth/login',    
-        '/api/permisos/usuario',
-        '/api/bitacora',
-    ]
+   
 
     return defineConfig({
         plugins: [react(), viteCompression(), 
@@ -25,6 +20,12 @@ export default () => {
                         {
                             // Routing via a matchCallback function:
                             urlPattern: ({request, url}) => { 
+                                const cacheNetworkFirst = [
+                                    '/api/login/validate',
+                                    '/api/auth/login',    
+                                    '/api/permisos/usuario',
+                                    '/api/bitacora',
+                                ]
                                 console.log(url.pathname);
                                 return cacheNetworkFirst.includes(url.pathname)
                             },
