@@ -468,7 +468,7 @@ const FormBitacora = () => {
                 </div>
             </Form> 
 
-            { uploading ? 
+            { true ? 
                 <Mask text={"Generando Bitacora..."} />            
                 : null
             }

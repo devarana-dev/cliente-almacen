@@ -32,11 +32,7 @@
     "socket.io-client": "^4.5.1",
     "sweetalert2": "^11.4.19",
     "vite-plugin-pwa": "^0.14.1",
-    "web-vitals": "^2.1.4",
-    "workbox-background-sync": "^6.5.4",
-    "workbox-precaching": "^6.5.4",
-    "workbox-routing": "^6.5.4",
-    "workbox-strategies": "^6.5.4"
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "vite",
@@ -71,6 +67,10 @@
     "sass": "^1.57.1",
     "tailwindcss": "^3.1.4",
     "vite": "^4.0.4",
-    "vite-plugin-compression": "^0.5.1"
+    "vite-plugin-compression": "^0.5.1",
+    "workbox-background-sync": "^6.5.4",
+    "workbox-precaching": "^6.5.4",
+    "workbox-routing": "^6.5.4",
+    "workbox-strategies": "^6.5.4"
   }
 }

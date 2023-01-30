@@ -31,10 +31,6 @@ export default function LayoutPublic({children}) {
         navigate(from);
     }
 
-  
-
-    
-    
 
     return (
         <>

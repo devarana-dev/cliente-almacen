@@ -4,49 +4,95 @@ import viteCompression from 'vite-plugin-compression';
 import { VitePWA } from 'vite-plugin-pwa'
 
 
-
 export default () => {
-   
-
+    
     return defineConfig({
         plugins: [react(), viteCompression(), 
             VitePWA({
+                
                 injectRegister: 'auto',
                 workbox:{
                     globPatterns: [
                         '**/*.{json,ico,html,png,txt,css,js}'
                     ],
+                    cleanupOutdatedCaches: true,
                     runtimeCaching: [
                         {
-                            // Routing via a matchCallback function:
                             urlPattern: ({request, url}) => { 
-                                const cacheNetworkFirst = [
+                                const CacheNetworkFirstRoutes = [
                                     '/api/login/validate',
                                     '/api/auth/login',    
                                     '/api/permisos/usuario',
                                     '/api/bitacora',
+                                    '/api/obras',
+                                    '/api/niveles',
+                                    '/api/personal',
+                                    '/api/usuarios',
+                                    '/api/actividades',
                                 ]
-                                console.log(url.pathname);
-                                return cacheNetworkFirst.includes(url.pathname)
+                                return CacheNetworkFirstRoutes.includes(url.pathname)
                             },
                             handler: 'NetworkFirst',
+                            options: {
+                                cacheName: 'api-cache',
+                                expiration: {
+                                    maxEntries: 25,
+                                    maxAgeSeconds: 60 * 60 * 24 * 365,
+                                },
+                            }
                         },
                         {
-                            // cacheFirst https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap
-                            urlPattern: 'https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap',
+                            urlPattern: ({request, url}) => {
+                                const CacheFirstRoutes = [
+                                    'https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap',
+                                ]
+                                return CacheFirstRoutes.includes(url.pathname)
+                            },
                             handler: 'CacheFirst',
                             options: {
                                 cacheName: 'google-fonts',
                                 expiration: {
-                                    maxEntries: 10,
+                                    maxEntries: 25,
                                     maxAgeSeconds: 60 * 60 * 24 * 365,
                                 },
                             },                       
+                        },
+
+                        // NetworkOnly
+                        {
+                            handler: 'NetworkOnly',
+                            urlPattern: new RegExp('http://localhost:5000/api/bitacora'),
+                            method: 'POST',
+                            options: {
+                                backgroundSync: {
+                                    name: 'bitacoraQueue',
+                                    options: {
+                                        maxRetentionTime: 24 * 60,
+                                    },
+                                },
+                            },
+                        },
+                        {
+                            handler: 'NetworkOnly',
+                            urlPattern: new RegExp('http://localhost:5000/api/vales'),
+                            method: 'POST',
+                            options: {
+                                backgroundSync: {
+                                    name: 'valesQueue',
+                                    options: {
+                                        maxRetentionTime: 24 * 60,
+                                    },
+                                },
+                            },
                         }
-                    ]
+                    ],
                     
-                },          
-                
+
+                },
+                // strategies: 'injectManifest',
+                // srcDir: 'src',
+                // filename: 'my-sw.js',
+                // registerType: 'autoUpdate',
         })],
         server: {
             port: 3000,

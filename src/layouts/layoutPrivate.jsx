@@ -19,7 +19,7 @@ import FooterLayout from "../components/layout/Footer";
 import { useSocket } from "../hooks/useSocket";
 import { connectSocket } from "../actions/socketsActions";
 
-import { Offline } from "react-detect-offline";
+import { Detector } from "react-detect-offline";
 
 export default function LayoutPrivate({children}) {
     const dispatch = useDispatch()
@@ -42,9 +42,6 @@ export default function LayoutPrivate({children}) {
 
         dispatch(getPermisoUsuarioAction())
         // eslint-disable-next-line
-        return () => {
-            
-        }
     }, [dispatch])
 
  
@@ -111,7 +108,31 @@ export default function LayoutPrivate({children}) {
                         <button onClick={() => setCollapsed(!collapsed)}> {collapsed ? <MenuUnfoldOutlined className="text-2xl sm:text-dark sm:bg-transparent bg-primary text-white pb-1 px-2 rounded "/> : <MenuFoldOutlined className="text-2xl sm:text-dark sm:bg-transparent bg-primary text-white pb-1 px-2 rounded "/>} </button>
                     </div>
                     { import.meta.env.VITE_NODE_ENV === "test" && <div className="text-red-500 bg-red-100 text-center uppercase w-full content-center max-w-sm">Versión de Pruebas</div> }
-                    <Offline> <span className="text-red-500"> Offline </span> </Offline>
+
+                    <Detector
+                        onChange={
+                            (status) => {
+                                if(status){
+                                    notification['success']({
+                                        message: 'Conexión Restablecida',
+                                        description: 'La conexión a internet se ha restablecido',
+                                        key: 'connection-open',
+                                        duration: 3,
+                                    })
+                                }else{
+                                    notification['error']({
+                                        message: 'Conexión Perdida',
+                                        description: 'La conexión a internet se ha perdido, algunas funciones pueden no funcionar correctamente',
+                                        key: 'connection-close',
+                                        duration: 3
+                                    })
+                                }
+                            }
+                        }
+                        render={({ online }) => (
+                            !!!online && <span className="text-red-500"> Sin Conexión </span>
+                        )}
+                    />
                     <div>
                         <Button className="ml-5" type="icon-primary" onClick={showModalNotas }>  <AlertOutlined className="text-xl text-dark"/> </Button>
                         <Button className="ml-5" type="icon-primary" onClick={showModal }>  <LogoutOutlined className="text-xl"/> </Button>
