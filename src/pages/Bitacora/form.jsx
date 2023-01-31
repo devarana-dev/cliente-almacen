@@ -31,6 +31,7 @@ const FormBitacora = () => {
     const [ selectedZona, setSelectedZona ] = useState([]);
 
 
+
     // get query params
     // const { id } = useParams()
 
@@ -122,6 +123,25 @@ const FormBitacora = () => {
         dispatch(createBitacoraAction(query))
 
     }
+
+
+    const validateExtraMail = () => {
+        const correos = form.getFieldValue('correos');        
+       
+        const isValidEmail = email => {
+            const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return regex.test(email);
+        };
+          
+        const filteredOptions = correos.filter(option => isValidEmail(option));
+
+
+        form.setFieldsValue({
+            correos: filteredOptions
+        })
+    
+    }
+
 
     return ( 
         <>
@@ -416,6 +436,25 @@ const FormBitacora = () => {
                          }
                     />
                 </Form.Item>
+
+                {/* Correos */}
+                <Form.Item
+                    name="correos"
+                    label="Correo"
+                    labelCol={{ span: 4 }}
+                >
+                    <Select
+                        mode="tags"
+                        tokenSeparators={[',']}
+                        
+                        onSelect={
+                            () => validateExtraMail()
+                            // Validar con regex si es email
+                            
+                        }
+                        
+                    />
+                </Form.Item>
                 {/* Titulo */}
                 <Form.Item
                     name="titulo"
@@ -468,7 +507,7 @@ const FormBitacora = () => {
                 </div>
             </Form> 
 
-            { true ? 
+            { uploading ? 
                 <Mask text={"Generando Bitacora..."} />            
                 : null
             }

@@ -44,10 +44,12 @@ export default function LayoutPrivate({children}) {
         // eslint-disable-next-line
     }, [dispatch])
 
- 
-    if( (isAuthenticated) === false && !isLoading ){
-        navigate("/login", { state: { from: window.location.pathname } });
-    }
+    
+    useEffect(() => {
+        if( (isAuthenticated) === false && !isLoading ){
+            navigate("/login", { state: { from: window.location.pathname } });
+        }
+    }, [isAuthenticated, isLoading])
 
     // eslint-disable-next-line no-unused-vars
     const handleSidebar = () => {
