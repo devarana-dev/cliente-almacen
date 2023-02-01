@@ -61,7 +61,7 @@ export default () => {
                         // NetworkOnly
                         {
                             handler: 'NetworkOnly',
-                            urlPattern: new RegExp('http://localhost:5000/api/bitacora'),
+                            urlPattern: new RegExp(`${import.meta.env.VITE_URL}/bitacora`),
                             method: 'POST',
                             options: {
                                 backgroundSync: {
@@ -74,7 +74,7 @@ export default () => {
                         },
                         {
                             handler: 'NetworkOnly',
-                            urlPattern: new RegExp('http://localhost:5000/api/vales'),
+                            urlPattern: new RegExp(`${import.meta.env.VITE_URL}/vales`),
                             method: 'POST',
                             options: {
                                 backgroundSync: {
@@ -89,13 +89,9 @@ export default () => {
                     
 
                 },
-                // strategies: 'injectManifest',
-                // srcDir: 'src',
-                // filename: 'my-sw.js',
-                // registerType: 'autoUpdate',
         })],
         server: {
-            port: 3000,
+            port: import.meta.env.VITE_PORT || 3000,
         },
         build: {
             outDir: "build",
