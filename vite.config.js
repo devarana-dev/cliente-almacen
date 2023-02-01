@@ -10,85 +10,85 @@ export default () => {
         plugins: [react(), viteCompression(), 
             VitePWA({
                 
-                injectRegister: 'auto',
-                workbox:{
-                    globPatterns: [
-                        '**/*.{json,ico,html,png,txt,css,js}'
-                    ],
-                    cleanupOutdatedCaches: true,
-                    runtimeCaching: [
-                        {
-                            urlPattern: ({request, url}) => { 
-                                const CacheNetworkFirstRoutes = [
-                                    '/api/login/validate',
-                                    '/api/auth/login',    
-                                    '/api/permisos/usuario',
-                                    '/api/bitacora',
-                                    '/api/obras',
-                                    '/api/niveles',
-                                    '/api/personal',
-                                    '/api/usuarios',
-                                    '/api/actividades',
-                                ]
-                                return CacheNetworkFirstRoutes.includes(url.pathname)
-                            },
-                            handler: 'NetworkFirst',
-                            options: {
-                                cacheName: 'api-cache',
-                                expiration: {
-                                    maxEntries: 25,
-                                    maxAgeSeconds: 60 * 60 * 24 * 365,
-                                },
-                            }
-                        },
-                        {
-                            urlPattern: ({request, url}) => {
-                                const CacheFirstRoutes = [
-                                    'https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap',
-                                ]
-                                return CacheFirstRoutes.includes(url.pathname)
-                            },
-                            handler: 'CacheFirst',
-                            options: {
-                                cacheName: 'google-fonts',
-                                expiration: {
-                                    maxEntries: 25,
-                                    maxAgeSeconds: 60 * 60 * 24 * 365,
-                                },
-                            },                       
-                        },
+                // injectRegister: 'auto',
+                // workbox:{
+                //     globPatterns: [
+                //         '**/*.{json,ico,html,png,txt,css,js}'
+                //     ],
+                //     cleanupOutdatedCaches: true,
+                //     runtimeCaching: [
+                //         {
+                //             urlPattern: ({request, url}) => { 
+                //                 const CacheNetworkFirstRoutes = [
+                //                     '/api/login/validate',
+                //                     '/api/auth/login',    
+                //                     '/api/permisos/usuario',
+                //                     '/api/bitacora',
+                //                     '/api/obras',
+                //                     '/api/niveles',
+                //                     '/api/personal',
+                //                     '/api/usuarios',
+                //                     '/api/actividades',
+                //                 ]
+                //                 return CacheNetworkFirstRoutes.includes(url.pathname)
+                //             },
+                //             handler: 'NetworkFirst',
+                //             options: {
+                //                 cacheName: 'api-cache',
+                //                 expiration: {
+                //                     maxEntries: 25,
+                //                     maxAgeSeconds: 60 * 60 * 24 * 365,
+                //                 },
+                //             }
+                //         },
+                //         {
+                //             urlPattern: ({request, url}) => {
+                //                 const CacheFirstRoutes = [
+                //                     'https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap',
+                //                 ]
+                //                 return CacheFirstRoutes.includes(url.pathname)
+                //             },
+                //             handler: 'CacheFirst',
+                //             options: {
+                //                 cacheName: 'google-fonts',
+                //                 expiration: {
+                //                     maxEntries: 25,
+                //                     maxAgeSeconds: 60 * 60 * 24 * 365,
+                //                 },
+                //             },                       
+                //         },
 
-                        // NetworkOnly
-                        {
-                            handler: 'NetworkOnly',
-                            urlPattern: new RegExp(`${process.env.VITE_URL}/bitacora`),
-                            method: 'POST',
-                            options: {
-                                backgroundSync: {
-                                    name: 'bitacoraQueue',
-                                    options: {
-                                        maxRetentionTime: 24 * 60,
-                                    },
-                                },
-                            },
-                        },
-                        {
-                            handler: 'NetworkOnly',
-                            urlPattern: new RegExp(`${process.env.VITE_URL}/vales`),
-                            method: 'POST',
-                            options: {
-                                backgroundSync: {
-                                    name: 'valesQueue',
-                                    options: {
-                                        maxRetentionTime: 24 * 60,
-                                    },
-                                },
-                            },
-                        }
-                    ],
+                //         // NetworkOnly
+                //         {
+                //             handler: 'NetworkOnly',
+                //             urlPattern: new RegExp(`${process.env.VITE_URL}/bitacora`),
+                //             method: 'POST',
+                //             options: {
+                //                 backgroundSync: {
+                //                     name: 'bitacoraQueue',
+                //                     options: {
+                //                         maxRetentionTime: 24 * 60,
+                //                     },
+                //                 },
+                //             },
+                //         },
+                //         {
+                //             handler: 'NetworkOnly',
+                //             urlPattern: new RegExp(`${process.env.VITE_URL}/vales`),
+                //             method: 'POST',
+                //             options: {
+                //                 backgroundSync: {
+                //                     name: 'valesQueue',
+                //                     options: {
+                //                         maxRetentionTime: 24 * 60,
+                //                     },
+                //                 },
+                //             },
+                //         }
+                //     ],
                     
 
-                },
+                // },
         })],
         server: {
             port: process.env.VITE_PORT || 3000,
