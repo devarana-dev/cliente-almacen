@@ -14,25 +14,22 @@ export default function LayoutPublic({children}) {
     const {isAuthenticated} = useSelector( state => state.auth )
     const {isLoading} = useSelector( state => state.auth )
     
+
     
-    
-    
-    // useEffect(() => {
+    useEffect(() => {
         if(isAuth.isAuthenticated){
             dispatch(validateLoginAction(isAuth))
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [isAuth]);
+    }, [isAuth]);
     
-    const { from } = location.state || { from: { pathname: "/" } };
+    // const { from } = location.state || { from: { pathname: "/" } };
     
-    console.log(from);
+    // console.log(from);
 
     if((isAuthenticated || isAuth.isAuthenticated) && !isLoading ){
-        navigate(from);
+        navigate('/');
     }
-
-    console.log(import.meta.env.VITE_TEST);
     return (
         <>
             { import.meta.env.VITE_TEST && <div className="bg-red-500 text-white text-center py-2 uppercase fixed left-0 right-0 top-0 z-30">Versión de Pruebas</div> }
