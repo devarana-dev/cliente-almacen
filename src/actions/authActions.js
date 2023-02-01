@@ -3,12 +3,12 @@ import { types } from '../types';
 
 export function getUserAction () {
     return async (dispatch) => {
-        await clientAxios.get('/login/validate', { withCredentials: true })
+        await clientAxios.get('/google-login/validate', { withCredentials: true })
             .then ( res => {
                 dispatch(loginSuccess(res.data))
             })
             .catch( err => {
-                // console.log('Error getUserAction', err.response.data.message);
+                console.log('Error getUserAction', err.response.data.message);
                 dispatch(loginError(err.response.data.message))
             })
     }

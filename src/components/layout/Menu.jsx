@@ -39,6 +39,9 @@ export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
         getItem('Reportes', '/reportes')
     ]) 
     : null,
+    groupPermission( userPermission, ['crear bitacora']) ?
+    getItem('Bitacora', '/bitacora', <ProfileOutlined /> )  
+    : null,
     groupPermission( userPermission, ['ver usuarios', 'ver roles', 'ver insumos', 'ver obras', 'ver niveles', 'ver zonas', 'ver actividades', 'ver personal', 'ver permisos']) ?
         getItem('Gestión', 'sub3', <SettingOutlined />, [
             groupPermission( userPermission, ['ver usuarios', 'ver roles']) ?
@@ -62,9 +65,7 @@ export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
             : null,
         ])
     : null,
-    groupPermission( userPermission, ['crear bitacora']) ?
-        getItem('Bitacora', '/bitacora', <ProfileOutlined /> )  
-    : null,
+
         
     ];
 

@@ -17,7 +17,7 @@ export default function Login() {
     const {errors} = useSelector( state => state.auth )
 
     const redirectToGoogleSSO = async ()  => {
-        const googleLoginUrl = `${import.meta.env.VITE_URL}/login`
+        const googleLoginUrl = `${import.meta.env.VITE_URL}/google-login`
         const newWindow = window.open(googleLoginUrl, "_blank", "width=500,height=600")
 
         if(newWindow){
