@@ -109,7 +109,7 @@ export default function LayoutPrivate({children}) {
                         {/* <Switch className="bg-dark" checkedChildren="On" unCheckedChildren="Off" defaultChecked={hiddeable} onChange={() => handleSidebar(!hiddeable)}/> */}
                         <button onClick={() => setCollapsed(!collapsed)}> {collapsed ? <MenuUnfoldOutlined className="text-2xl sm:text-dark sm:bg-transparent bg-primary text-white pb-1 px-2 rounded "/> : <MenuFoldOutlined className="text-2xl sm:text-dark sm:bg-transparent bg-primary text-white pb-1 px-2 rounded "/>} </button>
                     </div>
-                    { import.meta.env.VITE_NODE_ENV === "test" && <div className="text-red-500 bg-red-100 text-center uppercase w-full content-center max-w-sm">Versión de Pruebas</div> }
+                    { import.meta.env.VITE_TEST === true && <div className="text-red-500 bg-red-100 text-center uppercase w-full content-center max-w-sm">Versión de Pruebas</div> }
 
                     <Detector
                         onChange={
