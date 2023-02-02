@@ -47,7 +47,6 @@ import EditPermisos from "../pages/Permisos/edit"
 import Empresa from "../pages/Empresa"
 import CreateEmpresa from "../pages/Empresa/create"
 import EditEmpresa from "../pages/Empresa/edit"
-import LayoutError from "../layouts/layoutError"
 
 
 
@@ -66,13 +65,7 @@ const routesPublic = [
         path: "/error",
         layout: Public,
         component: LoginError,
-    },
-    {
-        path: "*",
-        layout: Private,
-        component: Error404,
     }
-
 ]
 
 const routesPrivate = [
@@ -287,6 +280,11 @@ const routesPrivate = [
         layout: Private,
         component: EditEmpresa
     },
+    {
+        path: "*",
+        layout: Private,
+        component: Error404,
+    }
 ]
 
 
