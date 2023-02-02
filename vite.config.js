@@ -89,6 +89,31 @@ export default () => {
                     
 
                 },
+                
+                manifest:{
+                    name: 'Sistema de Control de Obra',
+                    short_name: 'SCO',
+                    description: 'Sistema de Control de Obra',
+                    theme_color: '#ffffff',
+                    icons: [
+                        {
+                            src: '/img/favicon/icon-192x192.png',
+                            sizes: '192x192',
+                            type: 'image/png',
+                        },
+                        {
+                            src: '/img/favicon/icon-512x512.png',
+                            sizes: '512x512',
+                            type: 'image/png',
+                            purpose: 'any maskable',
+                        },
+                    ],
+                    start_url: '/',
+                    display: 'standalone',
+                    background_color: '#ffffff',
+
+                }
+                
         })],
         server: {
             port: process.env.VITE_PORT || 3000,

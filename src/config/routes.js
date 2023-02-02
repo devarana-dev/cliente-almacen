@@ -47,6 +47,8 @@ import EditPermisos from "../pages/Permisos/edit"
 import Empresa from "../pages/Empresa"
 import CreateEmpresa from "../pages/Empresa/create"
 import EditEmpresa from "../pages/Empresa/edit"
+import Loading from "../components/Elements/Loading"
+
 
 
 const routesPublic = [
@@ -64,7 +66,13 @@ const routesPublic = [
         path: "/error",
         layout: Public,
         component: LoginError,
+    },
+    {
+        path: "/api/google-login",
+        layout: Public,
+        component: Loading,
     }
+
 ]
 
 const routesPrivate = [
@@ -278,11 +286,6 @@ const routesPrivate = [
         path: '/empresas/:id',
         layout: Private,
         component: EditEmpresa
-    },
-    {
-        path: "*",
-        layout: Private,
-        component: Error404,
     },
 ]
 
