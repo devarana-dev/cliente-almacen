@@ -12,6 +12,7 @@ export default () => {
                 
                 injectRegister: 'auto',
                 workbox:{
+                    
                     globPatterns: [
                         '**/*.{json,ico,html,png,txt,css,js}'
                     ],
@@ -20,8 +21,7 @@ export default () => {
                         {
                             urlPattern: ({request, url}) => { 
                                 const CacheNetworkFirstRoutes = [
-                                    '/api/login/validate',
-                                    '/api/auth/login',    
+                                    // '/api/google-login/validate',
                                     '/api/permisos/usuario',
                                     '/api/bitacora',
                                     '/api/obras',
@@ -89,6 +89,8 @@ export default () => {
                     
 
                 },
+
+                
                 
                 manifest:{
                     name: 'Sistema de Gestión de Obra',
