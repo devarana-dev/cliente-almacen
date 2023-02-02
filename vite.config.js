@@ -12,7 +12,9 @@ export default () => {
                 
                 injectRegister: 'auto',
                 workbox:{
-                    navigateFallbackDenylist: new RegExp('api/google-login'),
+
+                    // deny exact routes "api/google-login" and "/login"
+                    navigateFallbackDenylist: [/^\/api\/google-login/, /^\/login/],
                     globPatterns: [
                         '**/*.{json,ico,html,png,txt,css,js}'
                     ],
