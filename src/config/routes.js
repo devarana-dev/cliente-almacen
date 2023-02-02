@@ -47,7 +47,7 @@ import EditPermisos from "../pages/Permisos/edit"
 import Empresa from "../pages/Empresa"
 import CreateEmpresa from "../pages/Empresa/create"
 import EditEmpresa from "../pages/Empresa/edit"
-import Loading from "../components/Elements/Loading"
+import LayoutError from "../layouts/layoutError"
 
 
 
@@ -68,9 +68,9 @@ const routesPublic = [
         component: LoginError,
     },
     {
-        path: "/api/google-login",
-        layout: Public,
-        component: Loading,
+        path: "*",
+        layout: LayoutError,
+        component: Error404,
     }
 
 ]

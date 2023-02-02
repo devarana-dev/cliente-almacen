@@ -159,8 +159,6 @@ const FormBitacora = () => {
                     <Select 
                         filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                         showSearch
-                        onChange={value => setTipoBitacora(value)}
-                        className="inline-block w-full"
                         
                         >
                             <Option key={nanoid()} value={1}>Incidencias</Option>
@@ -410,7 +408,7 @@ const FormBitacora = () => {
                     <TextArea />
                 </Form.Item>
 
-                <div {...getRootProps({className: 'dropzone w-full border border-gray-300 rounded-md p-2 flex flex-col justify-center items-center cursor-pointer'})}>
+                <div {...getRootProps({className: 'dropzone w-full border rounded-md p-3 flex flex-col justify-center items-center cursor-pointer border-dashed border-secondary'})}>
                     <input {...getInputProps()} />
                     {
                     isDragActive ?

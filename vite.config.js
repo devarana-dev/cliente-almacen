@@ -91,9 +91,9 @@ export default () => {
                 },
                 
                 manifest:{
-                    name: 'Sistema de Control de Obra',
-                    short_name: 'SCO',
-                    description: 'Sistema de Control de Obra',
+                    name: 'Sistema de Gestión de Obra',
+                    short_name: 'SGO',
+                    description: 'Sistema de Gestión de Obra',
                     theme_color: '#ffffff',
                     icons: [
                         {

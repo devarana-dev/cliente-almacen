@@ -64,7 +64,7 @@ export function logoutAction(){
     return async (dispatch) => {
         dispatch(logoutRequest())
         try {
-            await clientAxios.get('/auth/logout', {withCredentials: true})
+            await clientAxios.get('/auth/logout', { withCredentials: true })
             dispatch(logoutSuccess())
         } catch (error) {
             dispatch(logoutError(error.response.data))

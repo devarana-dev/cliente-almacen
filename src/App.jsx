@@ -7,7 +7,9 @@ import './App.scss';
 
 import 'animate.css';
 
+
 function App() {
+
   return (
     <BrowserRouter>
 		<Provider store={store}>
