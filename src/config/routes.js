@@ -47,6 +47,7 @@ import EditPermisos from "../pages/Permisos/edit"
 import Empresa from "../pages/Empresa"
 import CreateEmpresa from "../pages/Empresa/create"
 import EditEmpresa from "../pages/Empresa/edit"
+import LayoutLoad from "../layouts/layoutLoad"
 
 
 
@@ -58,7 +59,7 @@ const routesPublic = [
     },
     {
         path: "/success",
-        layout: Public,
+        layout: LayoutLoad,
         component: LoginSuccess,
     },
     {
