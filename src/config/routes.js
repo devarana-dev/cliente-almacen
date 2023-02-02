@@ -69,7 +69,7 @@ const routesPublic = [
     },
     {
         path: "*",
-        layout: LayoutError,
+        layout: Private,
         component: Error404,
     }
 
