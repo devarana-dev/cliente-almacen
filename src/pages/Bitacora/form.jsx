@@ -1,40 +1,31 @@
 import { useEffect, useMemo, useState } from "react";
 import { Button, DatePicker, Divider, Form, Image, Input, Select, TimePicker } from "antd";
 import moment from "moment";
-import { getAllObraAction } from "../../actions/obraActions";
-import { getAllNivelesAction } from "../../actions/nivelActions";
 import { getAllPersonalAction } from "../../actions/personalActions";
 import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
 import { getAllUsuariosAction } from "../../actions/usuarioActions";
 import { createBitacoraAction } from "../../actions/bitacoraActions";
-import Loading from "../../components/Elements/Loading";
 import openNotificationWithIcon from "../../hooks/useNotification";
 import { useNavigate } from "react-router-dom";
 import { useUploadFile } from "../../hooks/useUploadFile";
 import { getAllActividadAction } from "../../actions/actividadActions";
 import { Mask } from "../../components/Mask";
+import { getEtapasAction } from "../../actions/etapasActions";
+import { Detector } from "react-detect-offline";
 
 
 const FormBitacora = () => {
 
     const { uploading, created, errors } = useSelector(state => state.bitacoras)
-    const { obra } = useSelector(state => state.obras);
-    const { niveles } = useSelector(state => state.niveles);
     const { personal } = useSelector(state => state.personal);
     const { usuarios }  = useSelector(state => state.usuarios);
     const { actividades } = useSelector(state => state.actividades);
+    const { etapas } = useSelector(state => state.etapas);
     const { userAuth } = useSelector(state => state.auth);
 
-    const [tipoBitacora, setTipoBitacora] = useState(1);
-    const [ selectedNivel, setSelectedNivel ] = useState([]);
-    const [ selectedZona, setSelectedZona ] = useState([]);
-
-
-
-    // get query params
-    // const { id } = useParams()
-
+    const [ isOffline, setIsOffline] = useState(true);
+    
     const [form] = Form.useForm();
     const {TextArea} = Input;
     const { Option } = Select;
@@ -42,7 +33,7 @@ const FormBitacora = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     
-    const {getInputProps, getRootProps, isDragActive, thumbs} = useUploadFile(files, setFiles);
+    const {getInputProps, getRootProps, isDragActive, thumbs, fileRejections, totalSize} = useUploadFile(files, setFiles);
     
 
     useEffect(() => {
@@ -56,11 +47,10 @@ const FormBitacora = () => {
     }, [userAuth])
 
     useEffect(() =>{
-            dispatch(getAllObraAction())
-            dispatch(getAllNivelesAction())
             dispatch(getAllPersonalAction())
             dispatch(getAllUsuariosAction())
             dispatch(getAllActividadAction())
+            dispatch(getEtapasAction())
         // eslint-disable-next-line
     }, [])
 
@@ -72,7 +62,6 @@ const FormBitacora = () => {
         })
         // eslint-disable-next-line
     }, [])
-        
 
 
     useEffect(() => {
@@ -89,26 +78,6 @@ const FormBitacora = () => {
     }, [created, errors])  
 
     
-
-    const handleChangeObra = (id) => {
-        const [result] = obra.filter( item => item.id === id)
-
-        setSelectedNivel(result.niveles)
-        form.setFieldsValue({
-            obraId: id,
-            nivelId: undefined,
-            zonaId: undefined,
-        })
-    }
-
-    const handleChangeNivel = (id) => {
-        const [result] = niveles.filter( item => item.id === id)
-        setSelectedZona(result.zonas);
-        form.setFieldsValue({
-            nivelId: id,
-            zonaId: undefined,
-        })
-    }
 
     const handleSubmit = () => {
 
@@ -145,47 +114,60 @@ const FormBitacora = () => {
 
     return ( 
         <>
+
+            <Detector onChange={
+                (online) => {
+                    console.log('Detector:', online);
+                    setIsOffline(online)
+                }
+            } render={ ({ online }) => online ?? <> </> }
+             />
+
             <Form
                 className="max-w-screen-md mx-auto pt-2 pb-24"
                 onFinish={handleSubmit}
                 form={form}
+                layout="vertical"
+                scrollToFirstError
+                size="middle"
             >
-                <div className="flex justify-between gap-2">
+                <div className="flex justify-between">
                     <Form.Item
                         name="fecha"
-                        label="Fecha de Registro"
+                        label="Fecha"
                     >
                         <DatePicker disabled format={'DD-MM-YYYY'} />
                     </Form.Item>
 
                     <Form.Item
                         name="hora"
-                        label="Hora de Registro"
+                        label="Hora"
                     >
                         <TimePicker disabled />
                     </Form.Item>
                 </div>
-                <Divider className="pb-8 my-2"/>
 
+                <Divider className="pb-2 my-2"/>
 
                 <Form.Item
                     name="tipoBitacoraId"
                     label="Tipo Bitacora"
                     labelCol={{ span: 4 }}
                     rules={[{ required: true, message: 'Por favor ingrese un tipo de bitacora' }]}
+                    className="mb-3"
                 >
                     <Select 
-                            filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
-                            showSearch
-                            onChange={value => setTipoBitacora(value)}
-                            className="inline-block w-full"
-                            
-                            >
-                                <Option key={nanoid()} value={1}>Incidencias</Option>
-                                <Option key={nanoid()} value={2}>Acuerdos</Option>
-                                <Option key={nanoid()} value={3}>Inicio de trabajos</Option>
-                                <Option key={nanoid()} value={4}>Fin de trabajos</Option>          
-                        </Select>
+                        filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
+                        showSearch
+                        onChange={value => setTipoBitacora(value)}
+                        className="inline-block w-full"
+                        
+                        >
+                            <Option key={nanoid()} value={1}>Incidencias</Option>
+                            <Option key={nanoid()} value={2}>Acuerdos</Option>
+                            <Option key={nanoid()} value={3}>Inicio de trabajos</Option>
+                            <Option key={nanoid()} value={4}>Fin de trabajos</Option>          
+                    </Select>
                 </Form.Item>
 
                     
@@ -200,6 +182,7 @@ const FormBitacora = () => {
                             message: 'Por favor ingrese un proyecto',
                         },
                     ]}
+                    className="mb-3"
                 >
                     <Select 
                         filterOption={(input, option) => option.children.toString().toLowerCase().includes(input.toLowerCase())}
@@ -221,92 +204,24 @@ const FormBitacora = () => {
                             message: 'Por favor ingrese un etapa',
                         },
                     ]}
+                    className="mb-3"
                 >
                     <Select 
                         filterOption={(input, option) => option.children.toString().toLowerCase().includes(input.toLowerCase())}
                         showSearch
                     >
                         <Option key={nanoid()} value={0} disabled>{ `Selecciona una opción` }</Option>
-                        <Option key={nanoid()} value={1}>Torre A</Option>
-                        <Option key={nanoid()} value={2}>Torre B</Option>
-                        <Option key={nanoid()} value={3}>Torre C</Option>
+                        {
+                            etapas.map( item => (
+                                <Option key={nanoid()} value={item.id}>{item.nombre}</Option>
+                            ))
+                        }
 
                     </Select>
                 </Form.Item>
-                {
-                    tipoUsuario &&
-                    ( <>
-                    {/* Obra */}
-                    <Form.Item
-                        name="obraId"
-                        label="Obra / CC"
-                        labelCol={{ span: 4 }}                    
-                    >
-                        <Select 
-                            filterOption={(input, option) => option.children.toString().toLowerCase().includes(input.toLowerCase())}
-                            showSearch
-                            onChange= { (e) => { handleChangeObra(e);  } }
-                            allowClear
-
-                    >
-                        <Option key={nanoid()} value={0} disabled>{ `Selecciona una opción` }</Option>
-                        {
-                            obra.map(item => (
-                                <Option key={item.id} value={item.id}>{item.nombre} | { item.clave }</Option>
-                            ))
-                        }
-                    </Select>
-                    </Form.Item>
-                    {/* Nivel */}
-                    <Form.Item
-                        name="nivelId"
-                        label="Nivel"
-                        labelCol={{ span: 4 }}
-                    >
-                        <Select
-                            filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
-                            disabled={selectedNivel.length === 0 }
-                            showSearch
-                            allowClear
-                            onChange={ (e) => { handleChangeNivel(e) }}
-                            name="nivelId"
-                        >
-                            <Option key={nanoid()} value={0} disabled>{ `Selecciona una opción` }</Option>
-                            {
-                                selectedNivel.map(item => (
-                                    <Option key={item.id} value={item.id}>{item.nombre}</Option>
-                                ))
-                            }
-                            
-                        </Select>
-                    </Form.Item>
-                    {/* Zona */}
-                    <Form.Item
-                        name="zonaId"
-                        label="Zona"
-                        labelCol={{ span: 4 }}
-                    >
-                        <Select 
-                            filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
-                            disabled={selectedZona.length === 0 }
-                            showSearch
-                            allowClear
-                            name="zonaId"
-                            >
-                            <Option key={nanoid()} value={0} disabled>{ `Selecciona una opción` }</Option>
-                            {
-                                selectedZona.map(item => (
-                                    <Option key={item.id} value={item.id}>{item.nombre}</Option>
-                                ))
-                            }
-                            
-    
-                        </Select>
-                    </Form.Item>
-                    </> )
-                }
+               
                {
-                 tipoUsuario ?
+                 tipoUsuario && isOffline ?
                     ( <>    
                         {/* Actividad */}
                         <Form.Item
@@ -319,6 +234,7 @@ const FormBitacora = () => {
                                     message: 'Por favor ingrese una actividad',
                                 }                 
                             ]}
+                            className="mb-3"
                         >
                             <Select 
                                 filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
@@ -349,6 +265,7 @@ const FormBitacora = () => {
                                         message: 'Por favor ingrese una actividad',
                                     },
                                 ]}
+                                className="mb-3"
                             >
                                 <Input />
                             </Form.Item>
@@ -362,8 +279,9 @@ const FormBitacora = () => {
                     {/* Destajista */}
                     <Form.Item
                         name="personalId" 
-                        label="Personal "
+                        label="Destajista"
                         labelCol={{ span: 4 }}
+                        className="mb-3"
                     >
                             <Select 
                                 filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
@@ -385,6 +303,7 @@ const FormBitacora = () => {
                         name="externoId"
                         label="Contratista"
                         labelCol={{ span: 4 }}
+                        className="mb-3"
                     >
                             <Select 
                             filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
@@ -411,6 +330,7 @@ const FormBitacora = () => {
                     name="participantesId"
                     label="Participantes"
                     labelCol={{ span: 4 }}
+                    className="mb-3"
                 >
                     <Select 
                         filterOption={(input, option) => option.label.toLowerCase().includes(input.toLowerCase())}
@@ -455,11 +375,14 @@ const FormBitacora = () => {
                         
                     />
                 </Form.Item>
+
+                <Divider/>
                 {/* Titulo */}
                 <Form.Item
                     name="titulo"
                     label="Titulo"
                     labelCol={{ span: 4 }}
+                    className="mb-3"
                     rules={[
                         {
                             required: true,
@@ -475,6 +398,7 @@ const FormBitacora = () => {
                     name="descripcion"
                     label="Descripcion"
                     labelCol={{ span: 4 }}
+                    className="mb-3"
                     rules={[
                         {
                             required: true,
@@ -491,17 +415,40 @@ const FormBitacora = () => {
                     {
                     isDragActive ?
                         <p>Suelta el archivo aquí...</p> :
-                        <p className="text-center">Arrastra y suelta los archivos aquí, o haz clic para seleccionar archivos</p>
+                        <p className="text-center">Arrastra y suelta los archivos aquí, o haz clic para seleccionar archivos. </p>
                     }
                 </div>
+                <p className={`text-right text-xs py-1 ${ totalSize > 25000000 ? 'text-red-500' : 'text-gray-500' }`}> 
+                    { (totalSize / 1024 / 1024).toFixed(2) } MB / 25 MB 
+                </p>
+                <span>
+                    {
+                        fileRejections.length > 0 &&
+                        fileRejections.map(({ file, errors }) => (
+                            <div key={file.path}>
+                                {/* to MB with 2 decimal */}
+                               <span className="text-red-500 text-center py-2 block"> {(file.size / 1000000).toFixed(2)} MB - { errors[1].message } </span>
+                            </div>
+                        ))                    
+                    }
+                </span>
+                
                 <div className="flex gap-10 flex-wrap">
                     <Image.PreviewGroup>
                         {thumbs}
                     </Image.PreviewGroup>
                 </div>               
+                <span className="text-red-500 text-center py-2 block">
+                    {
+                        totalSize > 25000000 && <span>El tamaño total de los archivos no debe ser mayor a 25MB.</span>
+                    }
+                </span>
                 <div className="flex py-10 justify-between">
                     <Button type="default" htmlType="button" onClick={ () => navigate(-1)}> Cancelar </Button>
-                    <Button type="ghost" htmlType="submit">
+                    <Button type="ghost" htmlType="submit" disabled={
+                        // totalSize es mayor a 25MB true
+                        totalSize > 25000000
+                    }>
                         Registrar
                     </Button>
                 </div>

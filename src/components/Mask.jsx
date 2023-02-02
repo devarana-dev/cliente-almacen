@@ -13,7 +13,7 @@ export const Mask = ({text}) => {
     useEffect(() => {
         setTimeout(() => {
             setView(true)
-        }, 5000)
+        }, 15000)
     
         return () => {
             clearTimeout()

@@ -19,6 +19,7 @@
         overflow-y: auto;        
         overflow-x: hidden;
         color: $dark;
+        max-height: calc(100vh - 10px)
     }
 
     &__menu{
@@ -26,6 +27,14 @@
         color: $dark !important;
         border: none !important;
         padding: 10px !important;
+        display: flex;
+        flex-direction: column;
+
+    // last li in menu
+        li:last-child{
+            margin-top: auto;
+        }        
+        
 
         .ant-menu{
 
@@ -129,6 +138,7 @@
 
 .layout-right{
     background-color: $background !important;
+    max-height: calc(100vh);
     &__header{
         background-color: $white !important;
         box-shadow: 0 0 5px rgba(0,0,0,.1);
@@ -144,6 +154,8 @@
         border-radius: 10px;
         padding: 10px;
         background-color: $white!important;
+        max-height: calc(100vh - 50px);
+        overflow-y: auto;
     }
 }
 

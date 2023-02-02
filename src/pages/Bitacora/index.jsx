@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, DatePicker, Drawer, Input, Select, Table, Tooltip } from 'antd';
 import { useDispatch, useSelector } from "react-redux";
-import { CloseOutlined,  PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
+import { CloseOutlined,  FileTextOutlined,  PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import { getBitacoraAction, getBitacorasAction, getTipoBitacoraAction } from '../../actions/bitacoraActions'
 import moment from "moment";
 import Loading from "../../components/Elements/Loading";
@@ -10,6 +10,7 @@ import { ViewBitacora } from "./view";
 import { getAllUsuariosAction } from "../../actions/usuarioActions";
 import { ModalBitacora } from "./modal";
 import { getEtapasAction } from "../../actions/etapasActions";
+import Card from "../../components/Vales/Card";
 // import { hasPermission } from "../../utils/hasPermission";
 
 
@@ -77,6 +78,11 @@ const Bitacora = () => {
 
     const columns = [
         {
+            title: 'Folio',
+            key: 'uid',
+            render: (text, record) => <span>RV-{record.id}</span>
+        },
+        {
             title: 'Fecha',
             key: 'fecha',
             render: (text, record) => (
@@ -86,30 +92,35 @@ const Bitacora = () => {
             ),
         },
         {
-            title: 'Titulo',
-            key: 'titulo',
-            render: (text, record) => <span onClick={() => showDrawer(record.uid)}>{record.titulo}</span>
-        },
-        {
-            title: 'Tipo Bitacora',
-            key: 'tipoBitacora',
-            render: (text, record) => <span onClick={() => showDrawer(record.uid)}>{record.tipo_bitacora.nombre}</span>
-        },
-        {
-            title: 'Actividad',
-            key: 'actividad',
-            render: (text, record) => <span onClick={() => showDrawer(record.uid)}>{record.actividad}</span>
-        },
-        {
             title: 'Autor',
             key: 'autor',
             render: (text, record) => 
-                <span onClick={() => showDrawer(record.uid)}>
+                <span>
                     {
                         record.autorInt ? `${record.autorInt.nombre} ${record.autorInt.apellidoPaterno}` : `${record.autorExt.nombre} ${record.autorExt.apellidoPaterno}`
                     }
                 </span>
-        },        
+        },{
+            title: 'Proyecto',
+            key: 'proyecto',
+            render: (text, record) => <span>{record.proyecto?.nombre || 'Royal View'}</span>
+        },
+        
+        {
+            title: 'Tipo de Registro',
+            key: 'tipoBitacora',
+            render: (text, record) => <span>{record.tipo_bitacora.nombre}</span>
+        },
+        {
+            title: 'Titulo',
+            key: 'titulo',
+            render: (text, record) => <span>{record.titulo}</span>
+        },
+        {
+            title: 'Actividad',
+            key: 'actividad',
+            render: (text, record) => <span>{record.actividad}</span>
+        }       
     ];
 
 
@@ -177,9 +188,64 @@ const Bitacora = () => {
     }, [online])
 
 
+    const handleSearch = (value) => {
+
+    }
+
+
   
     return ( 
     <>
+            <div className="lg:grid hidden grid-cols-6 gap-10 py-5 ">
+                <Card 
+                    text="Todos"
+                    icon={<FileTextOutlined className='align-middle'/>}
+                    fn={() => handleSearch()}
+                    count={1}
+                    color={'dark'}
+                    size="sm"
+                />
+                <Card 
+                    text="Nuevos"
+                    icon={<FileTextOutlined className='align-middle'/>}
+                    fn={() => handleSearch()}
+                    count={1}
+                    color={'dark'}
+                    size="sm"
+                />
+                <Card 
+                    text="Incidencias"
+                    icon={<FileTextOutlined className='align-middle'/>}
+                    fn={() => handleSearch()}
+                    count={1}
+                    color={'dark'}
+                    size="sm"
+                />
+                <Card 
+                    text="Acuerdos"
+                    icon={<FileTextOutlined className='align-middle'/>}
+                    fn={() => handleSearch()}
+                    count={1}
+                    color={'dark'}
+                    size="sm"
+                />
+                <Card 
+                    text="Inicio de Trabajos"
+                    icon={<FileTextOutlined className='align-middle'/>}
+                    fn={() => handleSearch()}
+                    count={1}
+                    color={'dark'}
+                    size="sm"
+                />
+                <Card 
+                    text="Cierre de Trabajos"
+                    icon={<FileTextOutlined className='align-middle'/>}
+                    fn={() => handleSearch()}
+                    count={1}
+                    color={'dark'}
+                    size="sm"
+                />
+            </div>
             <div className="flex gap-3 py-3 flex-wrap">
                 <Select
                     maxTagCount={"responsive"}
@@ -280,6 +346,14 @@ const Bitacora = () => {
                     ...rowSelection,
                     selectedRowKeys: selectedOption,          
                 }}
+                onRow={(record, rowIndex) => {
+                    return {
+                        onClick: event => {
+                            showDrawer(record.uid)
+                        }, // click row
+                    
+                    }}
+                }
             />
 
             <div className="relative">

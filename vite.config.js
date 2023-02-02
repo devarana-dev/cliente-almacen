@@ -61,7 +61,7 @@ export default () => {
                         // NetworkOnly
                         {
                             handler: 'NetworkOnly',
-                            urlPattern: new RegExp(`${process.env.VITE_URL}/bitacora`),
+                            urlPattern: new RegExp(`/bitacora`),
                             method: 'POST',
                             options: {
                                 backgroundSync: {
@@ -74,7 +74,7 @@ export default () => {
                         },
                         {
                             handler: 'NetworkOnly',
-                            urlPattern: new RegExp(`${process.env.VITE_URL}/vales`),
+                            urlPattern: new RegExp(`/vales`),
                             method: 'POST',
                             options: {
                                 backgroundSync: {

@@ -40,7 +40,11 @@ export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
     ]) 
     : null,
     groupPermission( userPermission, ['crear bitacora']) ?
-    getItem('Bitacora', '/bitacora', <ProfileOutlined /> )  
+        getItem('Bitacoras', 'sub2', <ProfileOutlined />,
+        [
+            getItem('Generar', '/bitacora/form'),
+            getItem('Consultar', '/bitacora'),
+        ] )  
     : null,
     groupPermission( userPermission, ['ver usuarios', 'ver roles', 'ver insumos', 'ver obras', 'ver niveles', 'ver zonas', 'ver actividades', 'ver personal', 'ver permisos']) ?
         getItem('Gestión', 'sub3', <SettingOutlined />, [
@@ -74,8 +78,8 @@ export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
     return (
         <Menu
 			className="layout__menu overflow-y-auto overflow-x-hidden"
-            // calc height screen - 60px
-            style={{ height: 'calc(100vh - 80px)' }}
+            
+            style={{ height: 'calc(100vh - 80px)', }}
 			mode="inline"
 			items={items}
 			onClick={ (item) =>  { navigate(item.key);  }}
