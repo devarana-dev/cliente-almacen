@@ -12,7 +12,7 @@ export default () => {
                 
                 injectRegister: 'auto',
                 workbox:{
-                    
+                    navigateFallbackDenylist: new RegExp('api/google-login'),
                     globPatterns: [
                         '**/*.{json,ico,html,png,txt,css,js}'
                     ],

@@ -281,11 +281,11 @@ const routesPrivate = [
         layout: Private,
         component: EditEmpresa
     },
-    // {
-    //     path: "*",
-    //     layout: Private,
-    //     component: Error404,
-    // }
+    {
+        path: "*",
+        layout: Private,
+        component: Error404,
+    }
 ]
 
 
