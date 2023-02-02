@@ -1,18 +1,22 @@
 import { useEffect } from "react";
+import { getUserAction } from "../../actions/authActions";
+import { useDispatch } from "react-redux";
+import Loading from "../../components/Elements/Loading";
 
 const LoginSuccess = () => {
+
+    const dispatch = useDispatch()
     
     useEffect(() => {
         setTimeout(() => {
-            window.close()
-        }, 100)
-    })
+            dispatch(getUserAction())
+        }, 1000)
+    }, [])
 
     return ( 
         <div className="p-5 text-dark text-center bg-white h-screen w-full flex">
             <div className="m-auto">
-                <h1 className="text-3xl">Inicio de sesión correcto</h1>
-                <p className="text-2xl">Esta ventana se cerrará automáticamente</p>
+                <Loading text="Iniciando Sesión" />
             </div>
         </div>
      );
