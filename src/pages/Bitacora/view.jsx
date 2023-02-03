@@ -51,22 +51,7 @@ export const ViewBitacora = ({isLoadingBitacora, bitacora, onClose, errorBitacor
             </div>
             <div className="col-span-2 flex items-end">
                 
-                {
-                    bitacora.participantes.find( user => user.id === userAuth.id ) ?
-                        <>
-                            <p className='pr-2'>Confirmado:</p>
-                            { bitacora.participantes.find( user => user.id === userAuth.id ).pivot_bitacora_users.confirmed === false ? (
-                                <Tooltip title='Click Para Confirmar' placement="rightTop">
-                                    <Button type='icon-danger' onClick={() => setUpdateConfirmed(bitacora.uid)} className='px-2 flex items-start'><CloseSquareOutlined className='text-red-500 text-xl'/></Button>
-                                </Tooltip>
-                            ) : (
-                                <Tooltip title="Confirmado" placement='rightTop'>
-                                    <CheckSquareOutlined className='text-green-500 text-xl'/>
-                                </Tooltip>
-                            )}
-                    </>
-                    : null
-                }
+               
             </div>
 
             <Divider className='col-span-12 my-2'/>
@@ -108,7 +93,7 @@ export const ViewBitacora = ({isLoadingBitacora, bitacora, onClose, errorBitacor
                 <p className='font-medium'>Participantes: </p> 
                 <div className='font-light flex flex-wrap gap-x-10'>
                     { bitacora.participantes.map( (involucrado, index) => (
-                        <div className='flex'>
+                        <div className='flex' key={index}>
                             <p key={index} prefix={index} className='font-light inline-block whitespace-nowrap'>
                             { involucrado.nombre } { involucrado.apellidoPaterno }
                             </p>
@@ -120,7 +105,7 @@ export const ViewBitacora = ({isLoadingBitacora, bitacora, onClose, errorBitacor
                                         </Tooltip>
                                             : 
                                         <Tooltip title="No se ha visto">
-                                            <EyeInvisibleOutlined className='px-1 text-red-500 cursor-help' /> 
+                                            <EyeInvisibleOutlined className='px-1 text-gray-400 cursor-help' /> 
                                         </Tooltip>
                                 } 
                                 {
@@ -130,7 +115,7 @@ export const ViewBitacora = ({isLoadingBitacora, bitacora, onClose, errorBitacor
                                         </Tooltip>
                                             :
                                         <Tooltip title="No confirmado">
-                                            <CloseSquareOutlined className='px-1 text-red-500 cursor-help' />
+                                            <CloseSquareOutlined className='px-1 text-gray-400 cursor-help' />
                                         </Tooltip>
                                 }
                             </span> 
@@ -191,6 +176,7 @@ export const ViewBitacora = ({isLoadingBitacora, bitacora, onClose, errorBitacor
                             href={`https://spaces.erp-devarana.mx/${item.url}`} 
                             target='_blank'
                             rel='noopener noreferrer'
+                            key={item.id}
                             className='text-blue-500 flex items-center justify-center rounded-md bg-gray-100 w-20 h-20'
                         >
                             <FilePdfFilled className='text-red-500 text-3xl m-auto'/>
@@ -200,6 +186,27 @@ export const ViewBitacora = ({isLoadingBitacora, bitacora, onClose, errorBitacor
                 </Image.PreviewGroup>
             </div>
         </div>}
+
+
+        {
+            bitacora.participantes.find( user => user.id === userAuth.id ) ?
+                <div className='flex align-middle items-center w-full col-span-12'>
+                    { bitacora.participantes.find( user => user.id === userAuth.id ).pivot_bitacora_users.confirmed === false ? (
+                        <>
+                            <p className=''>Confirmar</p>
+                            <Button type='icon-danger' onClick={() => setUpdateConfirmed(bitacora.uid)} className='px-2 flex items-start'><CheckSquareOutlined className='text-gray-500 text-xl'/></Button>
+                         
+                        </>
+                    ) : (
+                        <>
+                            <p className='pr-2'>Confirmado:</p>
+                            <CheckSquareOutlined className='text-green-500 text-xl'/>
+                        </>
+                        
+                    )}
+            </div>
+            : null
+        }
 
         <Divider className='col-span-12 my-2'/>
 

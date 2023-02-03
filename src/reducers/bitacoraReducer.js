@@ -185,12 +185,13 @@ export default (state = initialState, action) => {
             }
 
         case types.UPDATE_VISITA_SUCCESS:
+            console.log(action.payload);
             return {
                 ...state,
                 errors: null,
                 bitacora: {
                     ...state.bitacora,
-                    users: state.bitacora.users.map(user => {
+                    participantes: state.bitacora.participantes.map(user => {
                         if(user.id === action.payload){
                             return {
                                 ...user,
@@ -205,6 +206,29 @@ export default (state = initialState, action) => {
                 }
 
             }
+
+        case types.UPDATE_CONFIRMED_SUCCESS:
+            return {
+                ...state,
+                errors: null,
+                bitacora: {
+                    ...state.bitacora,
+                    participantes: state.bitacora.participantes.map(user => {
+                        if(user.id === action.payload){
+                            return {
+                                ...user,
+                                pivot_bitacora_users: {
+                                    ...user.pivot_bitacora_users,
+                                    confirmed: true
+                                }
+                            }
+                        }
+                        return user
+                    })
+                }
+            }
+
+
         case types.GENERAR_REPORTE:
             return {
                 ...state,
@@ -227,6 +251,13 @@ export default (state = initialState, action) => {
                 errors: action.payload,
                 generatedReport: false,
             }
+        
+        case types.UPDATE_CONFIRMED_ERROR:
+            return {
+                ...state,
+                errors: action.payload,
+            }
+            
 
                 
 

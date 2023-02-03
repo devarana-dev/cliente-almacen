@@ -1,8 +1,8 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Avatar, Button, DatePicker, Drawer, Image, Input, Select, Table, Tooltip } from 'antd';
+import { Avatar, Button, DatePicker, Drawer, Image, Input, Modal, Select, Table, Tooltip } from 'antd';
 import { useDispatch, useSelector } from "react-redux";
-import { CloseOutlined,  FileTextOutlined,  PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
+import { ClearOutlined, CloseOutlined,  FilePdfFilled,  FileTextOutlined,  PlusCircleOutlined, QuestionCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import { getBitacoraAction, getBitacorasAction, getTipoBitacoraAction } from '../../actions/bitacoraActions'
 import moment from "moment";
 import Loading from "../../components/Elements/Loading";
@@ -13,8 +13,11 @@ import { getEtapasAction } from "../../actions/etapasActions";
 import Card from "../../components/Vales/Card";
 import brokenUser from "../../utils/brokenUser";
 import { getProyectosAction } from "../../actions/proyectosActions";
-// import { hasPermission } from "../../utils/hasPermission";
 
+import { MdOutlineMarkChatUnread } from "react-icons/md";
+import { RiFileWarningLine } from "react-icons/ri";
+import { FaRegHandshake } from "react-icons/fa";
+import { BsFillCalendarCheckFill, BsFillForwardFill } from "react-icons/bs";
 
 const initialData = {
     page: 0,
@@ -33,6 +36,7 @@ const Bitacora = () => {
     const { socket, online } = useSelector(state => state.socket);
     const { proyectos } = useSelector(state => state.proyectos);
     const [ isModalOpen, setIsModalOpen] = useState(false);
+    const [ showHelpModal, setShowHelpModal ] = useState(false);
 
     const [ open, setOpen] = useState(false);
     const {uid} = useParams()
@@ -199,25 +203,34 @@ const Bitacora = () => {
     }, [online])
 
 
-    const handleSearch = (value) => {
+    const handleSearchNew = () => {
+        setFiltros({
+            ...filtros,
+            page: 0,
+            isNew: 1
+        })
     }
 
     const handleSearchTipo = (value) => {
         setFiltros({
             ...filtros,
             page: 0,
-            tipoBitacoraId: value
+            tipoBitacoraId: value,
+            isNew: 0
         })
     }
 
 
-  
+    const setShowHelp = () => {
+        setShowHelpModal(!showHelpModal)
+    }   
+
     return ( 
     <>
             <div className="lg:grid hidden grid-cols-6 gap-10 py-5 ">
                 <Card 
                     text="Todos"
-                    icon={<FileTextOutlined className='align-middle'/>}
+                    icon={<FileTextOutlined className='align-middle text-[20px]'/>}
                     fn={() => handleSearchTipo()}
                     count={conteoBitacoras.total}
                     color={'dark'}
@@ -225,42 +238,42 @@ const Bitacora = () => {
                 />
                 <Card 
                     text="Nuevos"
-                    icon={<FileTextOutlined className='align-middle'/>}
-                    fn={() => handleSearch()}
+                    icon={<MdOutlineMarkChatUnread className='align-middle text-2xl flex items-center'/>}
+                    fn={() => handleSearchNew()}
                     count={conteoBitacoras.noVisto}
-                    color={'dark'}
+                    color={'info'}
                     size="sm"
                 />
                 <Card 
                     text="Incidencias"
-                    icon={<FileTextOutlined className='align-middle'/>}
+                    icon={<RiFileWarningLine className='align-middle text-2xl flex items-center'/>}
                     fn={() => handleSearchTipo(1)}
                     count={conteoBitacoras.incidencias}
-                    color={'dark'}
+                    color={'warning'}
                     size="sm"
                 />
                 <Card 
                     text="Acuerdos"
-                    icon={<FileTextOutlined className='align-middle'/>}
+                    icon={<FaRegHandshake className='align-middle text-2xl flex items-center'/>}
                     fn={() => handleSearchTipo(2)}
                     count={conteoBitacoras.acuerdos}
-                    color={'dark'}
+                    color={'primary'}
                     size="sm"
                 />
                 <Card 
                     text="Inicio de Trabajos"
-                    icon={<FileTextOutlined className='align-middle'/>}
+                    icon={<BsFillForwardFill className='align-middle text-2xl flex items-center'/>}
                     fn={() => handleSearchTipo(3)}
                     count={conteoBitacoras.inicio}
-                    color={'dark'}
+                    color={'secondary'}
                     size="sm"
                 />
                 <Card 
                     text="Cierre de Trabajos"
-                    icon={<FileTextOutlined className='align-middle'/>}
+                    icon={<BsFillCalendarCheckFill className='align-middle text-2xl flex items-center'/>}
                     fn={() => handleSearchTipo(4)}
                     count={conteoBitacoras.cierre}
-                    color={'dark'}
+                    color={'orange'}
                     size="sm"
                 />
             </div>
@@ -357,10 +370,25 @@ const Bitacora = () => {
                     onCalendarChange={ (value, dateString) => {handleSearchByDate(value, dateString)}}
                     value={(filtros.fechaInicio !== '' && filtros.fechaFin !== '') && (filtros.fechaInicio && filtros.fechaFin) ? [ moment(filtros.fechaInicio), moment(filtros.fechaFin)] : ["", ""]}
                 />   
-                {/* Generar Bitacora */}
-                <Button type='ghost' onClick={() => setIsModalOpen(true)} className="" disabled={selectedOption.length === 0}>
-                    Generar Reporte
-                </Button>
+                <Tooltip title={`${selectedOption.length === 0 ? 'Para generar un reporte selecciona una opción' : 'Generar Reporte'} `} placement="topRight">
+                    <Button type='icon-secondary-new' onClick={() => setIsModalOpen(true)} className="" disabled={selectedOption.length === 0}>
+                        <FilePdfFilled className='py-0'/> 
+                    </Button>
+                </Tooltip>
+                <Tooltip title="Limpiar Filtros">
+                    <Button type='icon-secondary-new' title='Limpiar Filtros' onClick={
+                        () => {
+                            setFiltros({
+                                ...initialData,
+                            })
+                        }
+                    }><ClearOutlined /></Button>
+                </Tooltip>
+                <Tooltip title="Ayuda">
+                    <Button type='icon-primary-new' title='Ayuda' onClick={() => {setShowHelp(!showHelpModal)}}><QuestionCircleOutlined /></Button>
+                </Tooltip>
+
+                
                 <Button type='icon-secondary-new' onClick={() => navigate('form')} className="md:flex hidden fixed right-10 lg:bottom-8 bottom-28 z-50"><PlusCircleOutlined className='py-1'/></Button>
             </div>
             <Table columns={columns} scroll={{ x: 'auto'}} rowKey={ record => record.uid } dataSource={dataSource} loading={isLoading} showSorterTooltip={false}
@@ -403,6 +431,16 @@ const Bitacora = () => {
             </div>
 
             <ModalBitacora setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen} selectedPreview={selectedPreview} selectedOption={selectedOption} isLoadingReport={isLoadingReport} generatedReporte={generatedReporte} />
+
+            <Modal
+                open={showHelpModal}
+                onCancel={() => {setShowHelp(!showHelpModal)}}
+                footer={null}
+                width={1000}
+                destroyOnClose={true}
+             >
+            
+            </Modal>
         </>
     );
 }

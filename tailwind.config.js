@@ -20,7 +20,9 @@ module.exports = {
             "danger-lighter": "#f72500",
             "warning-lighter": "#f5d0a2",
             "dark-lighter": "#646375",
+            "success-lighter": "#07db85",
             "orange" : "#ff6b2c",
+            "orange-lighter" : "#ff6b2c",
 		},
 		backgroundImage:{
 			'homeLogin' : "url('assets/img/HomeLogin.jpg')",

@@ -13,6 +13,7 @@ import { getAllActividadAction } from "../../actions/actividadActions";
 import { Mask } from "../../components/Mask";
 import { getEtapasAction } from "../../actions/etapasActions";
 import { Detector } from "react-detect-offline";
+import { getProyectosAction } from "../../actions/proyectosActions";
 
 
 const FormBitacora = () => {
@@ -21,6 +22,7 @@ const FormBitacora = () => {
     const { personal } = useSelector(state => state.personal);
     const { usuarios }  = useSelector(state => state.usuarios);
     const { actividades } = useSelector(state => state.actividades);
+    const { proyectos } = useSelector(state => state.proyectos);
     const { etapas } = useSelector(state => state.etapas);
     const { userAuth } = useSelector(state => state.auth);
 
@@ -51,6 +53,7 @@ const FormBitacora = () => {
             dispatch(getAllUsuariosAction())
             dispatch(getAllActividadAction())
             dispatch(getEtapasAction())
+            dispatch(getProyectosAction())
         // eslint-disable-next-line
     }, [])
 
@@ -58,7 +61,6 @@ const FormBitacora = () => {
         form.setFieldsValue({
             fecha: moment(),
             hora: moment(),
-            proyectoId: 1,
         })
         // eslint-disable-next-line
     }, [])
@@ -151,7 +153,7 @@ const FormBitacora = () => {
 
                 <Form.Item
                     name="tipoBitacoraId"
-                    label="Tipo Bitacora"
+                    label="Tipo de Registro"
                     labelCol={{ span: 4 }}
                     rules={[{ required: true, message: 'Por favor ingrese un tipo de bitacora' }]}
                     className="mb-3"
@@ -159,6 +161,7 @@ const FormBitacora = () => {
                     <Select 
                         filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                         showSearch
+                        placeholder="Seleccione de la lista"
                         
                         >
                             <Option key={nanoid()} value={1}>Incidencias</Option>
@@ -185,10 +188,13 @@ const FormBitacora = () => {
                     <Select 
                         filterOption={(input, option) => option.children.toString().toLowerCase().includes(input.toLowerCase())}
                         showSearch
+                        placeholder="Seleccione de la lista"
                     >
-                        <Option key={nanoid()} value={0} disabled>{ `Selecciona una opción` }</Option>
-                        <Option key={nanoid()} value={1}>Royal View</Option>
-
+                        {
+                            proyectos.map( item => (
+                                <Option key={nanoid()} value={item.id}>{item.nombre}</Option>
+                            ))
+                        }
                     </Select>
                 </Form.Item>
                 {/* Etapa */}
@@ -207,8 +213,8 @@ const FormBitacora = () => {
                     <Select 
                         filterOption={(input, option) => option.children.toString().toLowerCase().includes(input.toLowerCase())}
                         showSearch
+                        placeholder="Seleccione de la lista"
                     >
-                        <Option key={nanoid()} value={0} disabled>{ `Selecciona una opción` }</Option>
                         {
                             etapas.map( item => (
                                 <Option key={nanoid()} value={item.id}>{item.nombre}</Option>
@@ -238,8 +244,8 @@ const FormBitacora = () => {
                                 filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                                 disabled={actividades.length === 0 }
                                 showSearch
+                                placeholder="Seleccione de la lista"
                                 >
-                                    <Option key={nanoid()} value={0} disabled>{ `Selecciona una opción` }</Option>
                                 {
                                     actividades.map(item => (
                                         <Option key={item.id} value={item.nombre}>{item.nombre}</Option>
@@ -255,7 +261,7 @@ const FormBitacora = () => {
                             {/* Actividad Externo */}
                             <Form.Item
                                 name="actividadExterno"
-                                label="Actividad"
+                                label="Actividad Relacionada"
                                 labelCol={{ span: 4 }}
                                 rules={[
                                     {
@@ -265,7 +271,7 @@ const FormBitacora = () => {
                                 ]}
                                 className="mb-3"
                             >
-                                <Input />
+                                <Input placeholder="Escribe una actividad" />
                             </Form.Item>
                         </>
                     )
@@ -277,7 +283,7 @@ const FormBitacora = () => {
                     {/* Destajista */}
                     <Form.Item
                         name="personalId" 
-                        label="Destajista"
+                        label="Destajista Relacionado"
                         labelCol={{ span: 4 }}
                         className="mb-3"
                     >
@@ -285,9 +291,10 @@ const FormBitacora = () => {
                                 filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                                 disabled={personal.length === 0 }
                                 showSearch
+                                allowClear
+                                placeholder="Seleccione de la lista"
                                 
                                 >
-                                    <Option key={nanoid()} value={0} disabled>{ `Selecciona una opción` }</Option>
                                 {
                                     personal.map(item => (
                                         <Option key={item.id} value={item.id}> { `${item.nombre}  ${item.apellidoMaterno ? `( ${item.apellidoMaterno} )` : '' } ${ item.apellidoPaterno }` }  </Option>
@@ -299,7 +306,7 @@ const FormBitacora = () => {
                     {/* Contratista */}
                     <Form.Item
                         name="externoId"
-                        label="Contratista"
+                        label="Contratista Relacionado"
                         labelCol={{ span: 4 }}
                         className="mb-3"
                     >
@@ -307,11 +314,10 @@ const FormBitacora = () => {
                             filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                             disabled={usuarios.length === 0 }
                             showSearch
+                            placeholder="Seleccione de la lista"
                             allowClear
                             >
-                                <Option key={nanoid()} value={0} disabled>{ `Selecciona una opción` }</Option>
-                            
-                            {/* Mostrar unicamente usuarios esInterno false */}
+                        
                             {
                                 usuarios.filter(item => item.esInterno === false).map(item => (
                                     <Option key={item.id} value={item.id}> { `${item.nombre} ${ item.apellidoPaterno }` }  </Option>
@@ -334,20 +340,22 @@ const FormBitacora = () => {
                         filterOption={(input, option) => option.label.toLowerCase().includes(input.toLowerCase())}
                         disabled={usuarios.length === 0 }
                         showSearch
+                        allowClear
                         mode = "multiple"
+                        placeholder="Seleccione de la lista"
                         options = { 
                             // Agrupar  label: Internos y label: Externos a los que usuarios.esInterno sea true y false respectivamente
                             [
                                 {
                                     label: 'Internos',
                                     options: usuarios.filter(item => item.esInterno === true).map(item => (
-                                        { label: `${item.nombre} ${ item.apellidoPaterno }`, value: item.id }
+                                        { key: nanoid(), label: `${item.nombre} ${ item.apellidoPaterno }`, value: item.id }
                                     ))
                                 },
                                 {
                                     label: 'Externos',
                                     options: usuarios.filter(item => item.esInterno === false).map(item => (
-                                        { label: `${item.nombre} ${ item.apellidoPaterno }`, value: item.id }
+                                        { key: nanoid(), label: `${item.nombre} ${ item.apellidoPaterno }`, value: item.id }
                                     ))
                                 }
                             ]
@@ -358,23 +366,19 @@ const FormBitacora = () => {
                 {/* Correos */}
                 <Form.Item
                     name="correos"
-                    label="Correo"
+                    label="Notificar A"
                     labelCol={{ span: 4 }}
                 >
                     <Select
                         mode="tags"
                         tokenSeparators={[',']}
-                        
-                        onSelect={
-                            () => validateExtraMail()
-                            // Validar con regex si es email
-                            
-                        }
-                        
+                        placeholder="Ingrese dirección de correo electrónico"
+                        allowClear
+                        onSelect={ () => validateExtraMail() }
                     />
                 </Form.Item>
 
-                <Divider/>
+                <Divider className="my-6"/>
                 {/* Titulo */}
                 <Form.Item
                     name="titulo"
@@ -389,7 +393,7 @@ const FormBitacora = () => {
                     ]}
                 >
                     
-                    <Input />
+                    <Input placeholder="Titulo del registro" /> 
                 </Form.Item>
                  {/* Descripción */}
                 <Form.Item
@@ -405,8 +409,10 @@ const FormBitacora = () => {
                     ]}
 
                 >
-                    <TextArea />
+                    <TextArea placeholder="Descripción detallada del registro" />
                 </Form.Item>
+
+                <Divider className="my-10" />
 
                 <div {...getRootProps({className: 'dropzone w-full border rounded-md p-3 flex flex-col justify-center items-center cursor-pointer border-dashed border-secondary'})}>
                     <input {...getInputProps()} />

@@ -6,8 +6,6 @@ export function getBitacorasAction(filtros){
     return async (dispatch) => {
         dispatch( getBitacorasRequest())
         await clientAxios.get('/bitacora', { params: filtros }).then(res => {
-
-            console.log('res.data.bitacoras', res.data);
             dispatch(getBitacorasSuccess(res.data))
         }
         ).catch(err => {
@@ -203,7 +201,7 @@ export function updateVisitaAction(uid){
         })
         .catch(err => {
             console.log('Error updateVisitaAction', err.response);
-            dispatch(updateVisitaError(err.response.data.message))
+            dispatch(updateVisitaError(err.response.message))
         })
     }
 }

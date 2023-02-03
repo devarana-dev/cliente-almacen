@@ -52,7 +52,7 @@ export const ModalBitacora = ({setIsModalOpen, isModalOpen, selectedPreview, sel
             <Form layout='vertical' form={form} initialValues={initialData} onFinish={onSubmit} noValidate>
 
                 <Form.Item 
-                    label="Título:" 
+                    label="Ingresa el título de tu reporte:" 
                     name="titulo" 
                     rules={[{
                             required: true,
@@ -62,28 +62,21 @@ export const ModalBitacora = ({setIsModalOpen, isModalOpen, selectedPreview, sel
                     <Input/>
                 </Form.Item>
 
-                <Form.Item label="Descripción:" name="descripcion">
+                <Form.Item label="Ingresa una descripción de tu reporte" name="descripcion">
                     <Input.TextArea />
                 </Form.Item>
                 <div className='grid grid-cols-2'>
-                    <Form.Item label="Incluir Imágenes" name="imagenes" id="imagenes" valuePropName="checked" className='col-span-1'>
+                    <Form.Item label="Incluir Imágenes" name="imagenes" id="imagenes" valuePropName="checked" className='col-span-1 '>
                         <Switch />
                     </Form.Item>
-                    <Form.Item label="Incluir Comentarios" name="comentarios" id="comentarios" valuePropName="checked" className='col-span-1'>
+                    <Form.Item label="Incluir Comentarios" name="comentarios" id="comentarios" valuePropName="checked" className='col-span-1 '>
                         <Switch />
                     </Form.Item>
                 </div>
 
             </Form>
 
-            <Divider />
-
-            <p className='font-bold'>Listado de registros a incluir:</p>
-            <ul className='max-h-28 h-auto overflow-y-auto'>
-                {selectedPreview.length > 0 && selectedPreview.map((item, index) => (
-                    <li className='list-decimal list-inside' key={index}>{`${item.titulo} - ${item.tipo_bitacora.nombre} - ${moment(item.fecha,'YYYY-MM-DD').format('DD/MM/YYYY')}`}</li>
-                ))}            
-            </ul>
+            <p className='text-xs text-black text-opacity-40 text-center text-bold'>Tu archivo incluye { selectedPreview.length } reporte{ selectedPreview.length > 1 ? 's' : '' }</p>
             { 
                 isLoadingReport ?
                     <Mask text= "Generando Reporte..."/>

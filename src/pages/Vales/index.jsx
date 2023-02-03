@@ -735,21 +735,21 @@ const ValesSalida = () => {
             <div className="lg:grid hidden grid-cols-4 gap-10 py-5 ">
                 <Card   
                     text="Todos"
-                    icon={<FileTextOutlined className='align-middle'/>}
+                    icon={<FileTextOutlined className='align-middle text-base sm:text-3xl'/>}
                     fn={() => handleCleanSearch()}
                     count={count.todos}
                     color={'dark'}
                 />
                 <Card   
                     text="Nuevos"
-                    icon={ <BellOutlined className='align-middle'/>}
+                    icon={ <BellOutlined className='align-middle text-base sm:text-3xl'/>}
                     fn={() => handleSearchByStatus([1]) }
                     count={count.nuevo}
                     color={'info'}
                 />
                 <Card   
                     text="Parciales"
-                    icon={<PieChartOutlined className='align-middle'/>}
+                    icon={<PieChartOutlined className='align-middle text-base sm:text-3xl'/>}
                     fn={() => handleSearchByStatus( [2] )}
                     count={count.parcialAbierto}
                     color={'warning'}
