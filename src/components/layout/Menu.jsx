@@ -50,7 +50,7 @@ export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
         getItem('Gestión', 'sub3', <SettingOutlined />, [
             groupPermission( userPermission, ['ver usuarios', 'ver roles']) ?
                 getItem('Usuarios', 'subsub1', <UserOutlined />, [
-                    hasPermission(userPermission, 'ver usuarios') ? getItem('Usuario', '/usuarios'): null,
+                    hasPermission(userPermission, 'ver usuarios') ? getItem('Usuarios', '/usuarios'): null,
                     hasPermission(userPermission, 'ver roles') ? getItem('Roles', '/roles') : null,
                     hasPermission(userPermission, 'ver permisos') ? getItem('Permisos', '/permisos') : null,
                 ], 'group')
@@ -63,7 +63,7 @@ export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
                     hasPermission(userPermission, 'ver niveles') ? getItem('Niveles', '/niveles') : null,
                     hasPermission(userPermission, 'ver zonas') ? getItem('Zonas', '/zonas') : null,
                     hasPermission(userPermission, 'ver actividades') ? getItem('Actividades', '/actividades') : null,
-                    hasPermission(userPermission, 'ver personal') ? getItem('Trabajadores', '/personal') : null,
+                    hasPermission(userPermission, 'ver personal') ? getItem('Destajistas', '/personal') : null,
                     hasPermission(userPermission, 'ver empresas') ? getItem('Empresas', '/empresas') : null,
                 ], 'group')
             : null,

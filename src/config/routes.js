@@ -48,6 +48,9 @@ import Empresa from "../pages/Empresa"
 import CreateEmpresa from "../pages/Empresa/create"
 import EditEmpresa from "../pages/Empresa/edit"
 import LayoutLoad from "../layouts/layoutLoad"
+import Proyectos from "../pages/Proyectos"
+import CreateProyectos from "../pages/Proyectos/create"
+import EditProyectos from "../pages/Proyectos/edit"
 
 
 
@@ -280,6 +283,21 @@ const routesPrivate = [
         path: '/empresas/:id',
         layout: Private,
         component: EditEmpresa
+    },
+    {
+        path: '/proyectos',
+        layout: Private,
+        component: Proyectos
+    },
+    {
+        path: '/proyectos/create',
+        layout: Private,
+        component: CreateProyectos
+    },
+    {
+        path: '/proyectos/:id',
+        layout: Private,
+        component: EditProyectos
     },
     {
         path: "*",

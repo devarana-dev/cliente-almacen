@@ -17,6 +17,7 @@ const initialState = {
     bitacora: null,
     paginate: 0,
     tiposBitacora: [],
+    conteoBitacoras:  {total: 0, incidencias: 0, acuerdos: 0, inicio: 0, cierre: 0, avance: 0, noVisto: 0}
 }
 
 
@@ -82,14 +83,10 @@ export default (state = initialState, action) => {
         case types.GET_BITACORAS_SUCCESS:
             return {
                 ...state,
-                bitacoras: action.payload.rows,
+                bitacoras: action.payload.bitacoras,
+                conteoBitacoras: action.payload.conteoBitacoras,
                 isLoading: false,
                 errors: null,
-                paginate: {
-                    totalItem:action.payload.totalItem,
-                    totalPages:action.payload.totalPages,
-                    currentPage:action.payload.currentPage,
-                },
             }
 
         case types.GET_BITACORA_SUCCESS:

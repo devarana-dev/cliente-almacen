@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button, DatePicker, Drawer, Input, Select, Table, Tooltip } from 'antd';
+import { Avatar, Button, DatePicker, Drawer, Image, Input, Select, Table, Tooltip } from 'antd';
 import { useDispatch, useSelector } from "react-redux";
 import { CloseOutlined,  FileTextOutlined,  PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import { getBitacoraAction, getBitacorasAction, getTipoBitacoraAction } from '../../actions/bitacoraActions'
@@ -11,6 +11,8 @@ import { getAllUsuariosAction } from "../../actions/usuarioActions";
 import { ModalBitacora } from "./modal";
 import { getEtapasAction } from "../../actions/etapasActions";
 import Card from "../../components/Vales/Card";
+import brokenUser from "../../utils/brokenUser";
+import { getProyectosAction } from "../../actions/proyectosActions";
 // import { hasPermission } from "../../utils/hasPermission";
 
 
@@ -25,10 +27,11 @@ const Bitacora = () => {
 
     // const { userPermission } = useSelector(state => state.permisos);
     const { RangePicker } = DatePicker;
-    const { bitacoras, isLoading, isLoadingBitacora, bitacora, errorBitacora, isLoadingReport, generatedReporte} = useSelector(state => state.bitacoras);
+    const { bitacoras, isLoading, isLoadingBitacora, bitacora, errorBitacora, isLoadingReport, generatedReporte, conteoBitacoras} = useSelector(state => state.bitacoras);
     const { etapas } = useSelector(state => state.etapas);
     const { usuarios } = useSelector(state => state.usuarios);
     const { socket, online } = useSelector(state => state.socket);
+    const { proyectos } = useSelector(state => state.proyectos);
     const [ isModalOpen, setIsModalOpen] = useState(false);
 
     const [ open, setOpen] = useState(false);
@@ -47,6 +50,7 @@ const Bitacora = () => {
         dispatch(getAllUsuariosAction())
         dispatch(getTipoBitacoraAction())
         dispatch(getEtapasAction())
+        dispatch(getProyectosAction())
 
         // eslint-disable-next-line
     }, [])
@@ -97,7 +101,14 @@ const Bitacora = () => {
             render: (text, record) => 
                 <span>
                     {
-                        record.autorInt ? `${record.autorInt.nombre} ${record.autorInt.apellidoPaterno}` : `${record.autorExt.nombre} ${record.autorExt.apellidoPaterno}`
+                        <div className="flex align-middle items-center gap-x-2">
+                            <Avatar src={ <Image preview={false} fallback={brokenUser()} src={  record.autorInt?.picture || record.autorExt?.picture || '' } /> } /> 
+                            <p>
+                                {
+                                    `${record.autorInt ? `${record.autorInt.nombre} ${record.autorInt.apellidoPaterno} ${record.autorInt.apellidoMaterno} ` : `${record.autorExt.nombre} ${record.autorExt.apellidoPaterno} ${record.autorExt.apellidoMaterno} ` }`
+                                }
+                            </p>
+                        </div>
                     }
                 </span>
         },{
@@ -189,7 +200,14 @@ const Bitacora = () => {
 
 
     const handleSearch = (value) => {
+    }
 
+    const handleSearchTipo = (value) => {
+        setFiltros({
+            ...filtros,
+            page: 0,
+            tipoBitacoraId: value
+        })
     }
 
 
@@ -200,8 +218,8 @@ const Bitacora = () => {
                 <Card 
                     text="Todos"
                     icon={<FileTextOutlined className='align-middle'/>}
-                    fn={() => handleSearch()}
-                    count={1}
+                    fn={() => handleSearchTipo()}
+                    count={conteoBitacoras.total}
                     color={'dark'}
                     size="sm"
                 />
@@ -209,39 +227,39 @@ const Bitacora = () => {
                     text="Nuevos"
                     icon={<FileTextOutlined className='align-middle'/>}
                     fn={() => handleSearch()}
-                    count={1}
+                    count={conteoBitacoras.noVisto}
                     color={'dark'}
                     size="sm"
                 />
                 <Card 
                     text="Incidencias"
                     icon={<FileTextOutlined className='align-middle'/>}
-                    fn={() => handleSearch()}
-                    count={1}
+                    fn={() => handleSearchTipo(1)}
+                    count={conteoBitacoras.incidencias}
                     color={'dark'}
                     size="sm"
                 />
                 <Card 
                     text="Acuerdos"
                     icon={<FileTextOutlined className='align-middle'/>}
-                    fn={() => handleSearch()}
-                    count={1}
+                    fn={() => handleSearchTipo(2)}
+                    count={conteoBitacoras.acuerdos}
                     color={'dark'}
                     size="sm"
                 />
                 <Card 
                     text="Inicio de Trabajos"
                     icon={<FileTextOutlined className='align-middle'/>}
-                    fn={() => handleSearch()}
-                    count={1}
+                    fn={() => handleSearchTipo(3)}
+                    count={conteoBitacoras.inicio}
                     color={'dark'}
                     size="sm"
                 />
                 <Card 
                     text="Cierre de Trabajos"
                     icon={<FileTextOutlined className='align-middle'/>}
-                    fn={() => handleSearch()}
-                    count={1}
+                    fn={() => handleSearchTipo(4)}
+                    count={conteoBitacoras.cierre}
                     color={'dark'}
                     size="sm"
                 />
@@ -259,8 +277,13 @@ const Bitacora = () => {
                     filterOption={ (input, option) => option.children.toLowerCase().trim().indexOf(input.toLowerCase()) >= 0}
                     defaultValue={filtros.proyectoId}
                     value={filtros.proyectoId}
+                    onChange={ (value) => { setFiltros({...filtros, proyectoId: value}) }}
                 >
-                    <Select.Option key={0} value={0}>Royal View</Select.Option>
+                    {
+                        proyectos.map(item => (
+                            <Select.Option key={item.id} value={item.id}>{item.nombre}</Select.Option>
+                        ))
+                    }
                 </Select>
                 <Select
                     maxTagCount={"responsive"}
@@ -318,7 +341,7 @@ const Bitacora = () => {
                 </Select>
 
                 <Input type="text" 
-                        style={{ width : '200px', padding: '0 10px'}} 
+                        style={{ width : '200px', height: '32px'}} 
                         onChange={ (e) => { setFiltros({ ...filtros, busqueda: e.target.value, page: 0 })  } }
                         allowClear
                         suffix={<SearchOutlined />}
@@ -330,7 +353,7 @@ const Bitacora = () => {
                 <RangePicker 
                     showToday={true}
                     className="hidden lg:flex" 
-                    style={{ width : '350px'}}
+                    style={{ width : '350px', height: '32px'}}
                     onCalendarChange={ (value, dateString) => {handleSearchByDate(value, dateString)}}
                     value={(filtros.fechaInicio !== '' && filtros.fechaFin !== '') && (filtros.fechaInicio && filtros.fechaFin) ? [ moment(filtros.fechaInicio), moment(filtros.fechaFin)] : ["", ""]}
                 />   

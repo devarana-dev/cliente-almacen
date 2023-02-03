@@ -5,7 +5,6 @@ import { Avatar, Button, Image, Modal, Segmented, Table, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { getPrestamosAction, getAllPrestamosAction, updatePrestamoAction } from '../../actions/prestamoActions';
-import { getColumnSearchProps } from '../../hooks/useFilter'
 import openNotificationWithIcon from '../../hooks/useNotification';
 import { cleanErrorAction } from '../../actions/globalActions';
 import { hasPermission } from '../../utils/hasPermission';
@@ -75,10 +74,6 @@ const Prestamo = () => {
     useEffect(() => {
 		setDataSource( prestamos )
         setColumns(hasPermission(userPermission, 'acciones prestamos') ?  defaultColumns.concat(actionsColumns)  : defaultColumns )
-        
-
-        
-        
     // eslint-disable-next-line
     }, [prestamos])
 
@@ -88,8 +83,6 @@ const Prestamo = () => {
             title: 'Propietario',
             dataIndex: 'record',
             key: 'record',
-            sorter: (a, b) => a.residente.nombre.localeCompare(b.residente.nombre),
-            ...getColumnSearchProps('record'),
             ellipsis: true,
             render: (text, record) => (
                 
@@ -105,8 +98,6 @@ const Prestamo = () => {
             title: 'Solicitante',
             dataIndex: 'record',
             key: 'record',
-            sorter: (a, b) => a.residente.nombre.localeCompare(b.residente.nombre),
-            ...getColumnSearchProps('record'),
             ellipsis: true,
             render: (text, record) => (
                 <>
@@ -119,19 +110,14 @@ const Prestamo = () => {
         },
         {
           title: 'Insumo',
-          dataIndex: 'insumo',
           key: 'insumo',
-          sorter: (a, b) => a.insumo.localeCompare(b.insumo),
-          ...getColumnSearchProps('insumo'),
           ellipsis: true,
           render: (text, record) => record.detalle_salida.insumo.nombre
         },
         
         {
           title: 'Cantidad',
-          dataIndex: 'cantidad',
           key: 'cantidad',
-          sorter: (a, b) => a.nombre.localeCompare(b.cantidad),
           ellipsis: true,
           render: (text, record) => record.detalle_salida.cantidadSolicitada
         },
@@ -166,10 +152,7 @@ const Prestamo = () => {
     const prestamosColumns = [
         {
             title: 'Propietario',
-            dataIndex: 'record',
             key: 'record',
-            sorter: (a, b) => a.residente.nombre.localeCompare(b.residente.nombre),
-            ...getColumnSearchProps('record'),
             ellipsis: true,
             render: (text, record) => (
                 <>
@@ -182,26 +165,20 @@ const Prestamo = () => {
         },
         {
           title: 'Insumo',
-          dataIndex: 'insumo',
           key: 'insumo',
-          sorter: (a, b) => a.insumo.localeCompare(b.insumo),
-          ...getColumnSearchProps('insumo'),
           ellipsis: true,
           render: (text, record) => record.detalle_salida.insumo.nombre
         },
         
         {
           title: 'Cantidad',
-          dataIndex: 'cantidad',
           key: 'cantidad',
-          sorter: (a, b) => a.nombre.localeCompare(b.cantidad),
           ellipsis: true,
           render: (text, record) => record.detalle_salida.cantidadSolicitada
         },
 
         {
             title: 'Estatus',
-            dataIndex: 'status',
             key: 'status',
             width: '5%',
             render: (text, record) => (
@@ -229,10 +206,7 @@ const Prestamo = () => {
     const solicitudesColumns = [
         {
             title: 'Solicitante',
-            dataIndex: 'record',
             key: 'record',
-            sorter: (a, b) => a.residente.nombre.localeCompare(b.residente.nombre),
-            ...getColumnSearchProps('record'),
             ellipsis: true,
             render: (text, record) => (
                 <>
@@ -245,26 +219,20 @@ const Prestamo = () => {
         },
         {
           title: 'Insumo',
-          dataIndex: 'insumo',
           key: 'insumo',
-          sorter: (a, b) => a.insumo.localeCompare(b.insumo),
-          ...getColumnSearchProps('insumo'),
           ellipsis: true,
           render: (text, record) => record.detalle_salida.insumo.nombre
         },
         
         {
           title: 'Cantidad',
-          dataIndex: 'cantidad',
           key: 'cantidad',
-          sorter: (a, b) => a.nombre.localeCompare(b.cantidad),
           ellipsis: true,
           render: (text, record) => record.detalle_salida.cantidadSolicitada
         },
 
         {
             title: 'Estatus',
-            dataIndex: 'status',
             key: 'status',
             width: '5%',
             render: (text, record) => (
@@ -290,7 +258,6 @@ const Prestamo = () => {
 
     const actionsColumns = [{
         title: 'Acciones',
-        dataIndex: 'acciones',
         key: 'acciones',
         render: (text, record) => 
         <div className='flex justify-start'> 

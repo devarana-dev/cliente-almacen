@@ -18,6 +18,7 @@ import bitacoraReducer from "./bitacoraReducer";
 import etapaReducer from "./etapaReducer";
 import empresaReducer from "./empresaReducer";
 import socketReducer from "./socketReducer";
+import proyectosReducer from "./proyectosReducer";
 
 
 export default combineReducers({
@@ -38,5 +39,6 @@ export default combineReducers({
     bitacoras: bitacoraReducer,
     etapas: etapaReducer,
     empresas: empresaReducer,
+    proyectos: proyectosReducer,
     socket: socketReducer
 })

@@ -6,7 +6,9 @@ export function getBitacorasAction(filtros){
     return async (dispatch) => {
         dispatch( getBitacorasRequest())
         await clientAxios.get('/bitacora', { params: filtros }).then(res => {
-            dispatch(getBitacorasSuccess(res.data.bitacoras))
+
+            console.log('res.data.bitacoras', res.data);
+            dispatch(getBitacorasSuccess(res.data))
         }
         ).catch(err => {
             console.log('Error getBitacoraAction', err.response);

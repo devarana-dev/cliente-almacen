@@ -768,7 +768,7 @@ const ValesSalida = () => {
                     placeholder='Buscar'
                     allowClear
                     className='mx-3' 
-                    style={{ width : '250px'}} 
+                    style={{ width : '250px', height: '32px'}} 
                     onChange={ handleSearchByText }
                     suffix={ <SearchOutlined className='text-xl' /> }
                 />
