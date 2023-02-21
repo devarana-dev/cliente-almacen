@@ -76,7 +76,7 @@ export const ModalBitacora = ({setIsModalOpen, isModalOpen, selectedPreview, sel
 
             </Form>
 
-            <p className='text-xs text-black text-opacity-40 text-center text-bold'>Tu archivo incluye { selectedPreview.length } reporte{ selectedPreview.length > 1 ? 's' : '' }</p>
+            <p className='text-xs text-black text-opacity-40 text-center text-bold'>Tu archivo incluye { selectedOption.length } reporte{ selectedOption.length > 1 ? 's' : '' }</p>
             { 
                 isLoadingReport ?
                     <Mask text= "Generando Reporte..."/>

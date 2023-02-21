@@ -124,6 +124,24 @@ export const ViewBitacora = ({isLoadingBitacora, bitacora, onClose, errorBitacor
                 </div>
             </div>)
         }
+        {
+            bitacora.ext_mail_bitacoras.length > 0 && (
+            <div className='col-span-12'>
+                <p className='font-medium'>Correos Externos: </p>
+                <div className='font-light flex flex-wrap gap-x-10'>
+
+                    { bitacora.ext_mail_bitacoras.map( (mail, index) => (
+                        <div className='flex' key={index}>
+                            <p key={index} prefix={index} className='font-light inline-block whitespace-nowrap'>
+                            { mail.mail }
+                            </p>
+                            
+                        </div>
+                    ))}
+                </div>
+            </div>
+            )
+        }
             
         </div>
         
