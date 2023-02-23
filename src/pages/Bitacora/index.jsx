@@ -55,7 +55,9 @@ const Bitacora = () => {
         dispatch(getAllUsuariosAction())
         dispatch(getTipoBitacoraAction())
         dispatch(getEtapasAction())
-        dispatch(getProyectosAction())
+        dispatch(getProyectosAction({
+            status: 1
+        }))
 
         // eslint-disable-next-line
     }, [])

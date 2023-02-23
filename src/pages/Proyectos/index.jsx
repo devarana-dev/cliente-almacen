@@ -46,16 +46,16 @@ const Proyectos = () => {
             title: 'Acciones',
             render: (render) => 
             <div className='flex justify-around'> 
-                { hasPermission(userPermission, 'editar personal') ? <Button type='icon-warning' onClick={ () => navigate(`${render.id}`) }> <EditOutlined className='text-xl'/> </Button>  : null } 
+                { hasPermission(userPermission, 'editar proyectos') ? <Button type='icon-warning' onClick={ () => navigate(`${render.id}`) }> <EditOutlined className='text-xl'/> </Button>  : null } 
                 {
-                    hasPermission(userPermission, 'eliminar personal') ? 
+                    hasPermission(userPermission, 'eliminar proyectos') ? 
                 <Popconfirm placement='topRight' onConfirm={ () => handleDelete(render.id) } title="Deseas eliminar este elemento ?"> 
                     <Button type='icon-danger'> <DeleteOutlined className='text-xl'/> </Button> 
                 </Popconfirm> : null
                 }
             </div>,
-            width: groupPermission(userPermission, ['editar personal', 'eliminar personal']) ? 100 : 0,
-            className: groupPermission(userPermission, ['editar personal', 'eliminar personal']) ? 'block' : 'hidden',
+            width: groupPermission(userPermission, ['editar proyectos', 'eliminar proyectos']) ? 100 : 0,
+            className: groupPermission(userPermission, ['editar proyectos', 'eliminar proyectos']) ? 'block' : 'hidden',
         }
         
     ];
@@ -75,7 +75,7 @@ const Proyectos = () => {
             dispatch( cleanErrorAction() )            
         }
         if(deleted){
-            openNotificationWithIcon('success', 'El insumo se ha eliminado')
+            openNotificationWithIcon('success', 'El proyecto se ha desactivado correctamente')
         }
     }
 
@@ -85,13 +85,13 @@ const Proyectos = () => {
     }
 
 
-    if(!hasPermission(userPermission, 'ver personal')) return <Forbidden />
+    if(!hasPermission(userPermission, 'ver proyectos')) return <Forbidden />
 
     return ( 
     <>
         <div className='py-2 flex justify-end'>          
         {
-            hasPermission(userPermission, 'crear personal') ?
+            hasPermission(userPermission, 'crear proyectos') ?
             <Button type='icon-secondary-new' onClick={() => navigate('create')} className="md:flex hidden fixed right-10 lg:bottom-8 bottom-28 z-50"><PlusCircleOutlined className='py-1'/></Button>
             : null 
         }

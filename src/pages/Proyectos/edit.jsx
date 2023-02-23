@@ -1,4 +1,4 @@
-import { Button, Form, Image, Input } from "antd";
+import { Button, Form, Image, Input, Select } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -62,6 +62,7 @@ const EditProyectos = () => {
         // eslint-disable-next-line
     }, [updated, errors])  
 
+    console.log(form.getFieldsValue());
 
     return (
     <>
@@ -95,6 +96,20 @@ const EditProyectos = () => {
             >
                 <Input />
             </Form.Item>
+
+            <Form.Item
+                label="Estatus"
+                name="status"
+            >
+                <Select
+                
+                    defaultValue={editedProyecto?.status ? 1 : 0}
+                >
+                    <Select.Option value={true}>Activo</Select.Option>
+                    <Select.Option value={false}>Inactivo</Select.Option>
+                </Select>
+            </Form.Item>                   
+                 
 
             {
                 editedProyecto &&
