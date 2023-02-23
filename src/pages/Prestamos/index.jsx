@@ -1,6 +1,6 @@
 
-import { CheckCircleOutlined, ScheduleOutlined, StopOutlined, SwapOutlined } from '@ant-design/icons';
-import { Avatar, Button, Image, Modal, Segmented, Table, Tag } from 'antd';
+import { CheckCircleOutlined, ScheduleOutlined, SearchOutlined, StopOutlined, SwapOutlined } from '@ant-design/icons';
+import { Avatar, Button, Image, Input, Modal, Segmented, Table, Tag } from 'antd';
 
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
@@ -24,6 +24,8 @@ const Prestamo = () => {
     const { userAuth } = useSelector(state => state.auth)
     const [visible, setVisible] = useState(false);
     const [segment, setSegment] = useState(['Todos'])
+
+    const [filtros, setFiltros] = useState({})
 
     const showModal = () => {
       setVisible(true);
@@ -58,18 +60,17 @@ const Prestamo = () => {
 
     useEffect(() => {
         if(!isLoadingPermission){
-
             if(hasPermission(userPermission, 'ver prestamos')){
-                dispatch(getAllPrestamosAction())
+                dispatch(getAllPrestamosAction(filtros))
                 setSegment(['Todos'])
             }else{
-                dispatch(getPrestamosAction())
+                dispatch(getPrestamosAction(filtros))
                 setSegment(['Todos', 'Solicité', 'Me Solicitaron'])
             }
         }
         
     // eslint-disable-next-line
-    }, [userPermission])
+    }, [userPermission, filtros])
 
     useEffect(() => {
 		setDataSource( prestamos )
@@ -337,8 +338,13 @@ const Prestamo = () => {
         })
     }
     
+    const handleSearch = (e) => {
+        const { value } = e.target
+        setFiltros({search: value})
+    }
     
-    if( isLoading || isLoadingPermission ) return <Loading />
+    
+    // if( isLoading || isLoadingPermission ) return <Loading />
 
     return ( 
     <>
@@ -346,8 +352,19 @@ const Prestamo = () => {
             <Segmented block options={segment} value={value} onChange={setloadDataSource} />
         </div>
 
+        <div className='pb-3 flex justify-end'>
+            <Input type="text" 
+                style={{ width : '250px'}} 
+                onChange={ e => handleSearch(e) }
+                allowClear
+                suffix={<SearchOutlined />}
+                placeholder="Buscar"
+                name="busqueda"
+            />
+        </div>
+
         <Table 
-            className='prestamosTable'
+            className=''
             scroll={{ x: 'auto'}} 
             rowKey={record => record.id} 
             columns={columns} 

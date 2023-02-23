@@ -2,10 +2,10 @@ import clientAxios from '../config/axios';
 import { types } from '../types';
 
 
-export function getAllPrestamosAction(){
+export function getAllPrestamosAction(filtros){
     return async (dispatch) => {
         dispatch(getPrestamoRequest())
-        await clientAxios.get('/prestamos/all')
+        await clientAxios.get('/prestamos/all', { params: filtros })
             .then ( res => {
                 dispatch(getPrestamoSuccess(res.data.prestamos))
             })
@@ -16,10 +16,10 @@ export function getAllPrestamosAction(){
     }
 }
 
-export function getPrestamosAction(){
+export function getPrestamosAction(filtros){
     return async (dispatch) => {
         dispatch(getPrestamoRequest())
-        await clientAxios.get('/prestamos')
+        await clientAxios.get('/prestamos', { params: filtros })
             .then ( res => {
                 dispatch(getPrestamoSuccess(res.data.prestamos))
             })
