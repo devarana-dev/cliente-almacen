@@ -1,9 +1,10 @@
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, Select } from "antd";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import openNotificationWithIcon from "../../hooks/useNotification";
 import { createEtapaAction } from "../../actions/etapasActions";
+import { getProyectosAction } from "../../actions/proyectosActions";
 
 
 const initialValues = {
@@ -14,6 +15,7 @@ const initialValues = {
 const CreateEtapas = () => {
 
     const { created, errors } = useSelector(state => state.etapas);
+    const {proyectos} = useSelector(state => state.proyectos)
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -23,6 +25,11 @@ const CreateEtapas = () => {
     const handleSubmit = (values) => {
         dispatch(createEtapaAction(values))
     }
+
+    useEffect(() => {
+        dispatch(getProyectosAction())  
+        // eslint-disable-next-line
+    }, [])
 
     useEffect(() => {
         if(created){
@@ -57,6 +64,31 @@ const CreateEtapas = () => {
                 ]} 
             >
                 <Input />
+            </Form.Item>
+            <Form.Item
+                label="Proyecto"
+                name="proyectoId"
+                rules={[
+                    {
+                        required: true,
+                        message: "Por favor seleccione el proyecto",
+                    },
+                ]}
+            >
+                <Select
+                    showSearch
+                    placeholder="Seleccione el proyecto"
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                >
+                    {
+                        proyectos.map( proyecto => (
+                            <Option key={proyecto.id} value={proyecto.id}>{proyecto.nombre}</Option>
+                        ))
+                    }
+                </Select>
             </Form.Item>
             <Form.Item
                 label="Descripción"

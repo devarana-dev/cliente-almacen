@@ -5,8 +5,17 @@ import {useDropzone} from 'react-dropzone'
 
 
 
-export const useUploadFile = (files, setFiles) => {
+export const useUploadFile = (files, setFiles, options = {}) => {
 
+    const { 
+        maxFiles, 
+        fileTypes = [
+        'image/png', 
+        'image/jpeg',
+        'image/jpg',
+        'application/pdf'
+        ]
+    } = options;
     
     const {getRootProps, getInputProps, isDragActive, fileRejections} = useDropzone({
         onDrop: (acceptedFiles, fileRejections) => {
@@ -16,21 +25,36 @@ export const useUploadFile = (files, setFiles) => {
             ]);
         
     },
-    // accept images and pdf
-    accept: {
-        'image/*': ['.jpg', '.jpeg', '.png'],
-        'application/pdf': ['.pdf']
-    },
-    // max file size 25MB
-    maxSize: 25 * 1024 * 1024,
+    maxFiles: maxFiles,    
     validator: (file) => {
+
+        const errors = [];
+
+        // max size
         if (file.size > 25 * 1024 * 1024) {
-            return {
+            errors.push({
                 code: 'file-too-large',
                 message: 'El archivo es demasiado grande - 25MB max.'
-            }
+            })
         }
-        return null
+
+        // file type
+        if (!fileTypes.includes(file.type)) {
+            errors.push({
+                code: 'file-type-not-allowed',
+                message: 'El tipo de archivo no es permitido'
+            })
+        }
+
+        // max files
+        if (maxFiles && files.length >= maxFiles) {
+            errors.push({
+                code: 'too-many-files',
+                message: 'Demasiados archivos'
+            })
+        }
+
+        return errors.length ? errors : null;
         }
     });
 
@@ -71,8 +95,6 @@ export const useUploadFile = (files, setFiles) => {
                 </Button>
             </div>
             <div className='text-xs font-extralight w-full'>
-                {/* short name */}
-                {/* {file.name.length > 15 ? file.name.substring(0, 15) + '...' : file.name} -  */}
                 <p className='text-center py-1'>{(file.size / 1024 / 1024).toFixed(2)} MB</p>
             </div>
         </div>

@@ -23,6 +23,7 @@ const initialData = {
     page: 0,
     size: 10,
     ordenSolicitado: 'DESC',
+    proyectoId: 1,
 }
 
 
@@ -279,8 +280,6 @@ const Bitacora = () => {
             </div>
             <div className="flex gap-3 py-3 flex-wrap">
                 <Select
-                    maxTagCount={"responsive"}
-                    allowClear
                     style={{
                         width: '200px',
                     }}
@@ -288,7 +287,7 @@ const Bitacora = () => {
                     showSearch
                     optionFilterProp="children"
                     filterOption={ (input, option) => option.children.toLowerCase().trim().indexOf(input.toLowerCase()) >= 0}
-                    defaultValue={filtros.proyectoId}
+                    defaultValue={1}
                     value={filtros.proyectoId}
                     onChange={ (value) => { setFiltros({...filtros, proyectoId: value}) }}
                 >
@@ -430,7 +429,7 @@ const Bitacora = () => {
                 </Drawer>
             </div>
 
-            <ModalBitacora setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen} selectedPreview={selectedPreview} selectedOption={selectedOption} isLoadingReport={isLoadingReport} generatedReporte={generatedReporte} />
+            <ModalBitacora setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen} selectedPreview={selectedPreview} selectedOption={selectedOption} isLoadingReport={isLoadingReport} generatedReporte={generatedReporte} proyectoId = { filtros.proyectoId } />
 
             <Modal
                 open={showHelpModal}

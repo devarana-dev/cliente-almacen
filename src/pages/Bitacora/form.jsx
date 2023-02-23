@@ -35,7 +35,11 @@ const FormBitacora = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     
-    const {getInputProps, getRootProps, isDragActive, thumbs, fileRejections, totalSize} = useUploadFile(files, setFiles);
+    const options = {
+        maxFiles: 100,
+    }
+
+    const {getInputProps, getRootProps, isDragActive, thumbs, fileRejections, totalSize} = useUploadFile(files, setFiles, options);
     
 
     useEffect(() => {
@@ -52,7 +56,6 @@ const FormBitacora = () => {
             dispatch(getAllPersonalAction())
             dispatch(getAllUsuariosAction())
             dispatch(getAllActividadAction())
-            dispatch(getEtapasAction())
             dispatch(getProyectosAction())
         // eslint-disable-next-line
     }, [])
@@ -111,6 +114,10 @@ const FormBitacora = () => {
             correos: filteredOptions
         })
     
+    }
+
+    const handleSelectProyecto = (value) => {
+        dispatch(getEtapasAction({proyectoId: value}))
     }
 
 
@@ -189,6 +196,7 @@ const FormBitacora = () => {
                         filterOption={(input, option) => option.children.toString().toLowerCase().includes(input.toLowerCase())}
                         showSearch
                         placeholder="Seleccione de la lista"
+                        onChange={handleSelectProyecto}
                     >
                         {
                             proyectos.map( item => (
@@ -213,6 +221,7 @@ const FormBitacora = () => {
                     <Select 
                         filterOption={(input, option) => option.children.toString().toLowerCase().includes(input.toLowerCase())}
                         showSearch
+                        disabled={etapas.length === 0}
                         placeholder="Seleccione de la lista"
                     >
                         {
@@ -262,7 +271,6 @@ const FormBitacora = () => {
                             <Form.Item
                                 name="actividadExterno"
                                 label="Actividad Relacionada"
-                                labelCol={{ span: 4 }}
                                 rules={[
                                     {
                                         required: true,
@@ -430,8 +438,11 @@ const FormBitacora = () => {
                         fileRejections.length > 0 &&
                         fileRejections.map(({ file, errors }) => (
                             <div key={file.path}>
-                                {/* to MB with 2 decimal */}
-                               <span className="text-red-500 text-center py-2 block"> {(file.size / 1000000).toFixed(2)} MB - { errors[1].message } </span>
+                               {
+                                    errors.map(e => (
+                                            <span className="text-red-500 text-center py-2 block" key={e.code}>{e.message}</span>
+                                    ))  
+                               }
                             </div>
                         ))                    
                     }

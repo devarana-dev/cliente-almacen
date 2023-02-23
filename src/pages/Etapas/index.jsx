@@ -34,6 +34,10 @@ const Etapas = () => {
             dataIndex: 'nombre',
         },
         {
+            title: 'Proyecto',
+            render: (record) => record.proyecto.nombre,
+        },
+        {
             title: 'Estatus',
             render: (record) => record.status ? 'Activo' : 'Inactivo',
         },

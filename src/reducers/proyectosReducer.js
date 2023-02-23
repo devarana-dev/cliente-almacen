@@ -30,6 +30,8 @@ export default (state = initialState, action) => {
                 proyectos: action.payload,
                 isLoading: false,
                 errors: null,
+                created: false,
+                updated: false,
             }   
         
         case types.GET_ALL_PROYECTO_ERROR:

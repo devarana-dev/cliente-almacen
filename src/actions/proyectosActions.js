@@ -59,7 +59,7 @@ const getProyectoError = payload => ({
 export function createProyectoAction(proyecto){
     return async (dispatch) => {
         dispatch( createProyectoRequest()) 
-        await clientAxios.post('/proyectos', proyecto).then(res => { 
+        await clientAxios.post('/proyectos', proyecto, { headers: { 'Content-Type': 'multipart/form-data' }}).then(res => { 
             dispatch(createProyectoSuccess(res.data.proyecto))
         }).catch(err => {
             console.log('Error createProyectoAction', err.response);
@@ -86,7 +86,7 @@ const createProyectoError = payload => ({
 export function updateProyectoAction(proyecto){
     return async (dispatch) => {
         dispatch( updateProyectoRequest()) 
-        await clientAxios.put(`/proyectos/${proyecto.id}`, proyecto).then(res => { 
+        await clientAxios.put(`/proyectos/${proyecto.id}`, proyecto, { headers: { 'Content-Type': 'multipart/form-data' }}).then(res => { 
             dispatch(updateProyectoSuccess(res.data.proyecto))
         }).catch(err => {
             console.log('Error updateProyectoAction', err.response);

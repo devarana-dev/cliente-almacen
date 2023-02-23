@@ -1,13 +1,15 @@
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, Select } from "antd";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import openNotificationWithIcon from "../../hooks/useNotification";
 import { cleanEtapaAction, getEtapaAction, updateEtapaAction } from "../../actions/etapasActions";
+import { getProyectosAction } from "../../actions/proyectosActions";
 
 const EditEtapas = () => {
 
     const { updated, errors, editedEtapa } = useSelector(state => state.etapas);
+    const {proyectos} = useSelector(state => state.proyectos)
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -26,6 +28,7 @@ const EditEtapas = () => {
 
     useEffect(() => {
         dispatch(getEtapaAction(id))
+        dispatch(getProyectosAction())
         // eslint-disable-next-line
     }, [])
 
@@ -51,6 +54,7 @@ const EditEtapas = () => {
         // eslint-disable-next-line
     }, [updated, errors])  
 
+    console.log(form.getFieldsValue());
 
     return (
     <>
@@ -72,6 +76,33 @@ const EditEtapas = () => {
             >
                 <Input />
             </Form.Item>
+            <Form.Item
+                label="Proyecto"
+                name="proyectoId"
+                rules={[
+                    {
+                        required: true,
+                        message: "Por favor seleccione el proyecto",
+                    },
+                ]}
+            >
+                <Select
+                    showSearch
+                    placeholder="Seleccione el proyecto"
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                    defaultValue={editedEtapa?.proyecto?.id}
+                >
+                    {
+                        proyectos.map( proyecto => (
+                            <Option key={proyecto.id} value={proyecto.id}>{proyecto.nombre}</Option>
+                        ))
+                    }
+                </Select>
+            </Form.Item>
+
             <Form.Item
                 label="Descripción"
                 name="descripcion"

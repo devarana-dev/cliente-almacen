@@ -2,13 +2,14 @@ import React, { useState } from 'react'
 import { Avatar, Comment, Image, Tooltip } from 'antd'
 import moment from 'moment';
 import brokenUser from '../../utils/brokenUser';
+import { nanoid } from 'nanoid';
 
 
 export const ListaComentarios = ({comentarios, preview = true, showDrawer}) => {
     const [visible, setVisible] = useState(false);  
     const [galeria, setGaleria] = useState([]);
   return (
-    <div>
+    <div key={nanoid()}>
         {
             comentarios.map( comentario => {
             

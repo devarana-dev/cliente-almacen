@@ -60,10 +60,10 @@ export const ViewBitacora = ({isLoadingBitacora, bitacora, onClose, errorBitacor
                 <div className='font-light flex items-center gap-2'>
                     <span className='font-medium'>Autor: </span>
                     { 
-                        <Avatar src={ <Image fallback={brokenUser()} src={bitacora.autorInt.picture || bitacora.autorExt.picture } /> || '' } /> }
+                        <Avatar src={ <Image fallback={brokenUser()} src={bitacora.autorInt.picture  || '' } /> } /> }
                         <p>
                             {
-                                `${bitacora.autorInt ? `${bitacora.autorInt.nombre} ${bitacora.autorInt.apellidoPaterno} ${bitacora.autorInt.apellidoMaterno} ` : `${bitacora.autorExt.nombre} ${bitacora.autorExt.apellidoPaterno} ${bitacora.autorExt.apellidoMaterno} ` }`
+                                `${bitacora.autorInt.nombre} ${bitacora.autorInt.apellidoPaterno} ${bitacora.autorInt.apellidoMaterno} `
                             }
                         </p>
                      </div>

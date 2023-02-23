@@ -12,7 +12,7 @@ const initialData = {
     comentarios: false,
 }
 
-export const ModalBitacora = ({setIsModalOpen, isModalOpen, selectedPreview, selectedOption, isLoadingReport, generatedReporte}) => {
+export const ModalBitacora = ({setIsModalOpen, isModalOpen, selectedPreview, selectedOption, isLoadingReport, generatedReporte, proyectoId}) => {
 
     const [form] = Form.useForm();
     const dispatch = useDispatch();
@@ -30,6 +30,7 @@ export const ModalBitacora = ({setIsModalOpen, isModalOpen, selectedPreview, sel
 
         form.validateFields().then( () => {
             const query = {...form.getFieldsValue(), selectedOption}  ;
+            query.proyectoId = proyectoId;
             dispatch(generarReporteAction(query))
 
         }).catch( err => console.log(err))
@@ -50,7 +51,6 @@ export const ModalBitacora = ({setIsModalOpen, isModalOpen, selectedPreview, sel
             ]}
         >
             <Form layout='vertical' form={form} initialValues={initialData} onFinish={onSubmit} noValidate>
-
                 <Form.Item 
                     label="Ingresa el título de tu reporte:" 
                     name="titulo" 
