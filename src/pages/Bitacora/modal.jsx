@@ -42,6 +42,24 @@ export const ModalBitacora = ({setIsModalOpen, isModalOpen, selectedPreview, sel
             form.resetFields();
         }      
     }, [generatedReport])
+
+
+    const validateExtraMail = () => {
+        const destinatarios = form.getFieldValue('destinatarios');        
+       
+        const isValidEmail = email => {
+            const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return regex.test(email);
+        };
+          
+        const filteredMail = destinatarios.filter( correo => isValidEmail(correo) );
+
+
+        form.setFieldsValue({
+            destinatarios: filteredMail
+        })
+    
+    }
     
 
     console.log('', form.getFieldsValue());
@@ -83,18 +101,20 @@ export const ModalBitacora = ({setIsModalOpen, isModalOpen, selectedPreview, sel
                         mode='tags'
                         placeholder="Puedes buscar o ingresar a los destinatarios"
                         // agrupar usuarios si esInterno = true y si esInterno = false internos y externos
+                        onChange={validateExtraMail}
                         options = {[
                             {
                                 label: 'Interno',
-                                options: usuarios.filter( usuario => usuario.esInterno === true).map( usuario => ({
-                                    label: `${usuario.nombre} ${usuario.apellidoPaterno} <${usuario.email}>`,
+                                // filtrar usuarios si esInterno = true y si su role.id  = 4 y 7
+                                options: usuarios.filter( usuario => usuario.esInterno === true && (usuario.role.id === 4 || usuario.role.id === 7)).map( usuario => ({
+                                    label: `${usuario.nombre} ${usuario.apellidoPaterno}`,
                                     value: usuario.email
                                 }))
                             },
                             {
                                 label: 'Externo',
                                 options: usuarios.filter( usuario => usuario.esInterno === false).map( usuario => ({
-                                    label: `${usuario.nombre} ${usuario.apellidoPaterno} <${usuario.email}>`,
+                                    label: `${usuario.nombre} ${usuario.apellidoPaterno}`,
                                     value: usuario.email
                                 }))
                             }
