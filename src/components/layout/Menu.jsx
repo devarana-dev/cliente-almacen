@@ -40,7 +40,7 @@ export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
     ]) 
     : null,
     groupPermission( userPermission, ['crear bitacora']) ?
-        getItem('Bitacoras', 'sub2', <ProfileOutlined />,
+        getItem('Bitácora', 'sub2', <ProfileOutlined />,
         [
             getItem('Generar', '/bitacora/form'),
             getItem('Consultar', '/bitacora'),

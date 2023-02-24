@@ -1,6 +1,5 @@
-import { Button, Divider, Form, Input, Modal, Switch } from 'antd';
-import moment from 'moment';
-import React from 'react'
+import { Button, Form, Input, Modal, Select, Switch } from 'antd';
+import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux';
 import { generarReporteAction } from '../../actions/bitacoraActions';
 import { Mask } from '../../components/Mask';
@@ -12,7 +11,7 @@ const initialData = {
     comentarios: false,
 }
 
-export const ModalBitacora = ({setIsModalOpen, isModalOpen, selectedPreview, selectedOption, isLoadingReport, generatedReporte, proyectoId}) => {
+export const ModalBitacora = ({setIsModalOpen, isModalOpen, selectedPreview, selectedOption, isLoadingReport, generatedReport, proyectoId, usuarios}) => {
 
     const [form] = Form.useForm();
     const dispatch = useDispatch();
@@ -34,8 +33,18 @@ export const ModalBitacora = ({setIsModalOpen, isModalOpen, selectedPreview, sel
             dispatch(generarReporteAction(query))
 
         }).catch( err => console.log(err))
-
     }
+
+    useEffect(() => {
+        
+        if(generatedReport){
+            setIsModalOpen(false);
+            form.resetFields();
+        }      
+    }, [generatedReport])
+    
+
+    console.log('', form.getFieldsValue());
 
   return (
     <>
@@ -64,6 +73,37 @@ export const ModalBitacora = ({setIsModalOpen, isModalOpen, selectedPreview, sel
 
                 <Form.Item label="Ingresa una descripción de tu reporte" name="descripcion">
                     <Input.TextArea />
+                </Form.Item>
+
+                <Form.Item
+                    label="Enviar a:"
+                    name="destinatarios"
+                >
+                    <Select
+                        mode='tags'
+                        placeholder="Puedes buscar o ingresar a los destinatarios"
+                        // agrupar usuarios si esInterno = true y si esInterno = false internos y externos
+                        options = {[
+                            {
+                                label: 'Interno',
+                                options: usuarios.filter( usuario => usuario.esInterno === true).map( usuario => ({
+                                    label: `${usuario.nombre} ${usuario.apellidoPaterno} <${usuario.email}>`,
+                                    value: usuario.email
+                                }))
+                            },
+                            {
+                                label: 'Externo',
+                                options: usuarios.filter( usuario => usuario.esInterno === false).map( usuario => ({
+                                    label: `${usuario.nombre} ${usuario.apellidoPaterno} <${usuario.email}>`,
+                                    value: usuario.email
+                                }))
+                            }
+                        ]}
+                    >
+                    
+                         
+                         
+                    </Select>
                 </Form.Item>
                 <div className='grid grid-cols-2'>
                     <Form.Item label="Incluir Imágenes" name="imagenes" id="imagenes" valuePropName="checked" className='col-span-1 '>

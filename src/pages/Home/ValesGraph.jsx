@@ -5,11 +5,10 @@ import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCountValeSalidaAction } from '../actions/valeActions';
-import Loading from '../components/Elements/Loading';
+import { getCountValeSalidaAction } from '../../actions/valeActions';
+import Loading from '../../components/Elements/Loading';
 
-
-export default function Home() {
+export const ValesGraph = () => {
 
     const dispatch = useDispatch()
     const { count, isLoading } = useSelector( state => state.vales)
@@ -254,14 +253,12 @@ export default function Home() {
     if(isLoading) return <Loading/>
 
     return (
-       <> 
-        <div className="flex content-center align-middle m-auto h-full w-full sm:max-w-screen-sm">
-            <div className='grid grid-cols-12 m-auto w-full'>
-            <div className="col-span-12">
-                <h1 className='text-center text-dark lg:text-3xl text-base font-bold py-2'> Estatus de Vales de Salida de Almacén </h1>
-                <p className='uppercase text-center text-dark lg:text-2xl text-base font-medium'>  { filterDate }  </p>
+        <>
+            <div className="w-full">
+                <h1 className='text-center text-dark font-bold py-2' style={{ fontSize: "clamp(16px, 2.5vw, 24px)" }}> Vales de Salida de Almacén </h1>
+                <p className='uppercase text-center text-dark lg:text-xl text-base font-medium'>  { filterDate }  </p>
             </div>
-            <div className="col-span-12 order-2">
+            <div className="col-span-12 order-2 max-w-md mx-auto">
                 <Doughnut data={data} options={options} plugins={plugins} />
             </div>
             <div className="col-span-12 order-1">
@@ -273,9 +270,6 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-            </div>
-        </div>
         </>
-
     )
-};
+}

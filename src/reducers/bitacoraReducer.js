@@ -8,7 +8,7 @@ const initialState = {
     isLoadingReport: false,
     isCreatingComment: false,
     isCreatedComment: false,
-    generatedReport: null,
+    generatedReport: false,
     errors: null,
     created: false,
     updated: false,
