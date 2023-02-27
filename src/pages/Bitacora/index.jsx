@@ -16,7 +16,6 @@ import { getProyectosAction } from "../../actions/proyectosActions";
 
 import { RiFileWarningLine } from "react-icons/ri";
 import { FaRegHandshake } from "react-icons/fa";
-import { BsFillCalendarCheckFill, BsFillForwardFill } from "react-icons/bs";
 
 const initialData = {
     page: 0,
@@ -95,7 +94,8 @@ const Bitacora = () => {
         {
             title: 'Folio',
             key: 'uid',
-            render: (text, record) => <span>RV-{record.id}</span>
+            render: (text, record) => <span>RV-{record.id}</span>,
+            ellipsis: true,
         },
         {
             title: 'Fecha',
@@ -110,6 +110,7 @@ const Bitacora = () => {
                     </p>
                 </Tooltip>
             ),
+            ellipsis: true,
         },
         {
             title: 'Autor',
@@ -118,7 +119,7 @@ const Bitacora = () => {
                 <span>
                     {
                         <div className="flex align-middle items-center gap-x-2">
-                            <Avatar className='hidden lg:block' src={ <Image preview={false} fallback={brokenUser()} src={  record.autorInt?.picture || record.autorExt?.picture || '' } /> } /> 
+                            <Avatar className='hidden lg:block' src={ <Image preview={false} fallback={brokenUser()} src={  record.autorInt.picture || '' } /> } /> 
                             <p>
                                 {
                                     `${record.autorInt ? `${record.autorInt.nombre} ${record.autorInt.apellidoPaterno}` : `${record.autorExt.nombre} ${record.autorExt.apellidoPaterno} ` }`
@@ -126,7 +127,8 @@ const Bitacora = () => {
                             </p>
                         </div>
                     }
-                </span>
+                </span>,
+            ellipsis: true,
         },{
             title: 'Proyecto',
             key: 'proyecto',
@@ -138,6 +140,8 @@ const Bitacora = () => {
             title: 'Tipo de Registro',
             key: 'tipoBitacora',
             render: (text, record) => <span>{record.tipo_bitacora.nombre}</span>,
+            ellipsis: true,
+
         },
         {
             title: 'Titulo',
@@ -152,6 +156,7 @@ const Bitacora = () => {
                     </p>
                 </Tooltip>
             </span>,
+            ellipsis: true,
         },
         {
             title: 'Actividad',
@@ -239,10 +244,19 @@ const Bitacora = () => {
             ...filtros,
             page: 0,
             tipoBitacoraId: value,
-            isNew: 0
+            isNew: 0,
+            etapa: "",
         })
     }
 
+    const handleChangeProyecto = (value) => {
+        setFiltros({
+            proyectoId: value,
+        })
+
+        setSelectedOption([])
+        setSelectedPreview([])
+    }
 
     const setShowHelp = () => {
         setShowHelpModal(!showHelpModal)
@@ -304,7 +318,7 @@ const Bitacora = () => {
                     filterOption={ (input, option) => option.children.toLowerCase().trim().indexOf(input.toLowerCase()) >= 0}
                     defaultValue={1}
                     value={filtros.proyectoId}
-                    onChange={ (value) => { setFiltros({...filtros, proyectoId: value}) }}
+                    onChange={ handleChangeProyecto }
                 >
                     {
                         proyectos.map(item => (
@@ -324,8 +338,8 @@ const Bitacora = () => {
                     showSearch
                     optionFilterProp="children"
                     filterOption={ (input, option) => option.children.toLowerCase().trim().indexOf(input.toLowerCase()) >= 0}
-                    defaultValue={filtros.etapa}
-                    value={filtros.etapa}
+                    defaultValue={filtros.etapaId}
+                    value={filtros.etapaId}
                     onChange={ (value) => { setFiltros({...filtros, etapaId: value}) }}
                 >
                     {
@@ -406,23 +420,26 @@ const Bitacora = () => {
                     onCalendarChange={ (value, dateString) => {handleSearchByDate(value, dateString)}}
                     value={(filtros.fechaInicio !== '' && filtros.fechaFin !== '') && (filtros.fechaInicio && filtros.fechaFin) ? [ moment(filtros.fechaInicio), moment(filtros.fechaFin)] : ["", ""]}
                 />   
-                <Tooltip title={`${selectedOption.length === 0 ? 'Para generar un reporte selecciona una opción' : 'Generar Reporte'} `} placement="topRight">
-                    <Button type='icon-secondary-new' onClick={() => setIsModalOpen(true)} className="" disabled={selectedOption.length === 0}>
-                        <FilePdfFilled className='py-0'/> 
-                    </Button>
-                </Tooltip>
-                <Tooltip title="Limpiar Filtros">
-                    <Button type='icon-secondary-new' title='Limpiar Filtros' onClick={
-                        () => {
-                            setFiltros({
-                                ...initialData,
-                            })
-                        }
-                    }><ClearOutlined /></Button>
-                </Tooltip>
-                <Tooltip title="Ayuda">
-                    <Button type='icon-primary-new' title='Ayuda' onClick={() => {setShowHelp(!showHelpModal)}}><QuestionCircleOutlined /></Button>
-                </Tooltip>
+                <div className="flex gap-3">
+                    <Tooltip title={`${selectedOption.length === 0 ? 'Para generar un reporte selecciona uno o más registros.' : 'Generar Reporte'} `} placement="topRight">
+                        <Button type='icon-secondary-new' onClick={() => setIsModalOpen(true)} className="" disabled={selectedOption.length === 0}>
+                            <FilePdfFilled className='py-0'/> 
+                        </Button>
+                    </Tooltip>
+                    <Tooltip title="Limpiar Filtros">
+                        <Button type='icon-secondary-new' title='Limpiar Filtros' onClick={
+                            () => {
+                                setFiltros({
+                                    ...initialData,
+                                })
+                            }
+                        }><ClearOutlined /></Button>
+                    </Tooltip>
+                    <Tooltip title="Ayuda">
+                        <Button type='icon-primary-new' title='Ayuda' onClick={() => {setShowHelp(!showHelpModal)}}><QuestionCircleOutlined /></Button>
+                    </Tooltip>
+
+                </div>
 
                 
                 <Button type='icon-secondary-new' onClick={() => navigate('form')} className="md:flex hidden fixed right-10 lg:bottom-8 bottom-28 z-50"><PlusCircleOutlined className='py-1'/></Button>

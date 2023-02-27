@@ -1,6 +1,8 @@
 import { useSelector } from "react-redux";
 import { groupPermission, hasPermission } from "../../utils/hasPermission";
 import { ValesGraph } from "./ValesGraph";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -8,7 +10,13 @@ export default function Home() {
 
     const { userPermission } = useSelector(state => state.permisos);
 
+    const navigate = useNavigate()
 
+    useEffect(() => {
+        if(!hasPermission(userPermission, 'crear vales') && hasPermission(userPermission, 'crear bitacora')) {
+            navigate('/bitacora')
+        }
+    }, [userPermission])
 
 
     return (

@@ -90,13 +90,22 @@ export const ModalBitacora = ({setIsModalOpen, isModalOpen, selectedPreview, sel
                     <Input.TextArea />
                 </Form.Item>
 
+                
+                <div className='grid grid-cols-2'>
+                    <Form.Item label="Incluir Imágenes" name="imagenes" id="imagenes" valuePropName="checked" className='col-span-1 '>
+                        <Switch />
+                    </Form.Item>
+                    <Form.Item label="Incluir Comentarios" name="comentarios" id="comentarios" valuePropName="checked" className='col-span-1 '>
+                        <Switch />
+                    </Form.Item>
+                </div>
                 <Form.Item
                     label="Enviar a:"
                     name="destinatarios"
                 >
                     <Select
                         mode='tags'
-                        placeholder="Puedes buscar o ingresar a los destinatarios"
+                        placeholder="Selecciona de la lista o ingresa el correo electrónico"
                         // agrupar usuarios si esInterno = true y si esInterno = false internos y externos
                         onChange={validateExtraMail}
                         options = {[
@@ -122,14 +131,6 @@ export const ModalBitacora = ({setIsModalOpen, isModalOpen, selectedPreview, sel
                          
                     </Select>
                 </Form.Item>
-                <div className='grid grid-cols-2'>
-                    <Form.Item label="Incluir Imágenes" name="imagenes" id="imagenes" valuePropName="checked" className='col-span-1 '>
-                        <Switch />
-                    </Form.Item>
-                    <Form.Item label="Incluir Comentarios" name="comentarios" id="comentarios" valuePropName="checked" className='col-span-1 '>
-                        <Switch />
-                    </Form.Item>
-                </div>
 
             </Form>
 

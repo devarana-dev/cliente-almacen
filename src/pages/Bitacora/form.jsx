@@ -76,7 +76,7 @@ const FormBitacora = () => {
 
     useEffect(() => {
         if(created){
-            openNotificationWithIcon('success', 'Bitacora creada correctamente')
+            openNotificationWithIcon('success', 'Registro creado correctamente')
             form.resetFields();
             setFiles([]);
             navigate('/bitacora')
@@ -380,7 +380,7 @@ const FormBitacora = () => {
                 {/* Correos */}
                 <Form.Item
                     name="correos"
-                    label="Notificar A"
+                    label="Notificar a"
                     labelCol={{ span: 4 }}
                 >
                     <Select
@@ -476,7 +476,7 @@ const FormBitacora = () => {
             </Form> 
 
             { uploading ? 
-                <Mask text={"Generando Bitacora..."} />            
+                <Mask text={"Creando registro en Bitácora..."} />
                 : null
             }
         </>

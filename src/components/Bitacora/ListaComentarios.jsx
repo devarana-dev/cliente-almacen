@@ -20,7 +20,7 @@ export const ListaComentarios = ({comentarios, preview = true, showDrawer}) => {
                         key={comentario.id}
                         author={`${comentario.user.nombre} ${ comentario.user.apellidoPaterno }`}
                         avatar={
-                            <Avatar src={ <Image fallback={brokenUser()} src={comentario.user.picture} /> || '' } />
+                            <Avatar src={ <Image fallback={brokenUser()} src={comentario.user.picture || '' } />  } />
                         }
                         content={
                             <div className={!preview && `max-h-20 h-auto overflow-y-auto `}>

@@ -23,7 +23,7 @@ export default () => {
                         {
                             urlPattern: ({request, url}) => { 
                                 const CacheNetworkFirstRoutes = [
-                                    // '/api/google-login/validate',
+                                    '/api/google-login/validate',
                                     '/api/permisos/usuario',
                                     '/api/bitacora',
                                     '/api/obras',
@@ -95,9 +95,9 @@ export default () => {
                 
                 
                 manifest:{
-                    name: 'Sistema de Gestión de Obra',
-                    short_name: 'SGO',
-                    description: 'Sistema de Gestión de Obra',
+                    name: 'Software de Gestión de Obra',
+                    short_name: 'SGO DEVARANA',
+                    description: 'Software de Gestión de Obra',
                     theme_color: '#ffffff',
                     icons: [
                         {

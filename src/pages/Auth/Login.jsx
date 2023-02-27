@@ -103,13 +103,13 @@ export default function Login() {
                             className='flex items-center rounded-3xl border 
                             text-dark font-bold px-4 py-1 bg-white justify-around mt-auto mb-5 mx-auto shadow-md hover:opacity-70 max-w-[200px] w-full' 
                             onClick={redirectToGoogleSSO}>  
-                            <FcGoogle className='mx-2 text-lg'/> Ingresar con Google 
+                            <FcGoogle className='mx-2 text-lg'/> Acceso DEVARANA
                         </button>
                         <button 
                             className='flex items-center rounded-3xl border 
                             text-dark font-bold px-4 py-1 bg-white justify-around mt-5 mb-auto mx-auto shadow-md hover:opacity-70 max-w-[200px] w-full' 
                             onClick={showForm}>  
-                            Acceso a Externos
+                            Acceso Externos
                         </button>
                     </div>
                 </div>
