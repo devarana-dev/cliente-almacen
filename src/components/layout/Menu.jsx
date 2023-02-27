@@ -5,11 +5,13 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { hasPermission, groupPermission} from "../../utils/hasPermission";
 import { useSelector } from "react-redux";
 import Loading from "../Elements/Loading";
+import { useState } from "react";
 
 
 export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
 
     const { userPermission, isLoading } = useSelector(state => state.permisos);
+    const [openKeys, setOpenKeys] = useState(['sub1']);
     
     function getItem(label, key, icon, children, type) {
         return {
@@ -29,6 +31,16 @@ export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
         if(!hiddeable) setCollapsed(!collapsed)
 	}
 
+    const onOpenChange = (keys) => {
+        const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
+        if (rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
+          setOpenKeys(keys);
+        } else {
+          setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
+        }
+      };
+    
+    const rootSubmenuKeys = ['sub1', 'sub2', 'sub3'];
     const items = [
 	getItem('Inicio', '/', <AppstoreOutlined />),
     groupPermission( userPermission, ['crear vales', 'ver vales', 'ver vale' ]) ?
@@ -85,6 +97,8 @@ export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
 			onClick={ (item) =>  { navigate(item.key);  }}
 			onSelect={ () =>  validateCollapsed()}
 			defaultSelectedKeys={[`${url}`]}
+            onOpenChange={onOpenChange}
+            openKeys={openKeys}
         />
     )
     
