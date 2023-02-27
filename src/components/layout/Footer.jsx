@@ -22,29 +22,29 @@ export default function FooterLayout({showModal, userPermission}) {
                         <p> Home </p>
                     </div>
                 </Link>
-                {/* <Link to={'/vales-salida/nuevo'} className="block w-full h-auto text-center footer__link">
-                    <div className="footer__link-icon"> 
-                        <MdLibraryAddCheck className="m-auto"/> 
-                        <p> Crear Vale </p>
-                    </div>
-                </Link> */}
-                <Link to={'/vales-salida'} className="block w-full h-auto text-center footer__link">
-                <div className="footer__link-icon"> 
-                        <BiSearchAlt className="m-auto"/> 
-                        <p> Consultar </p>
-                    </div>
-                </Link>
+                {
+                    hasPermission(userPermission, 'crear vales') ?  
+                    <Link to={'/vales-salida'} className="block w-full h-auto text-center footer__link">
+                        <div className="footer__link-icon"> 
+                            <BiSearchAlt className="m-auto"/> 
+                            <p> Vales </p>
+                        </div>
+                    </Link>
+                    : null
+                }
+                
                 <Link to={'/bitacora'} className="block w-full h-auto text-center footer__link">
                     <div className="footer__link-icon">
                         <ProfileOutlined className="m-auto"/>
                         <p> Bitácora </p>
                     </div>
                 </Link>
-                <div className="block w-full h-auto text-center footer__link cursor-pointer">
+               {
+                    groupPermission(userPermission, ['crear vales', 'crear personal']) ?
+                    <div className="block w-full h-auto text-center footer__link cursor-pointer">
                     <Dropdown 
-                        overlay={
-                            <Menu 
-                                items={[
+                        menu={{
+                            items : [
                                     {
                                         key: '2',
                                         label: 'Prestamos',
@@ -63,8 +63,7 @@ export default function FooterLayout({showModal, userPermission}) {
                                         icon: <AiOutlineLogout />,
                                         onClick: () => showModal()
                                     }
-                                ]}
-                            />
+                            ]}
                         }
                         trigger={['click']}
                         placement="topRight"
@@ -73,23 +72,32 @@ export default function FooterLayout({showModal, userPermission}) {
                             <MoreOutlined /> Ver más
                         </div>
                     </Dropdown>
-                </div>
+                    </div>
+                    :
+                    // Logout
+
+                    <div className="block w-full h-auto text-center footer__link" onClick={() => showModal()}>
+                        <div className="footer__link-icon cursor-pointer" >
+                        <AiOutlineLogout className="m-auto"/>
+                        <p> Salir </p>
+                        </div>
+                    </div>
+               }
             </div>
 
             {
-                groupPermission(userPermission, ['crear vales', 'crear personal']) ?
+                groupPermission(userPermission, ['crear vales', 'crear personal', 'crear bitacora']) ?
             
                 <Dropdown
                     className="fixed right-7 bottom-24 z-50"
-                    overlay={<Menu
-                        items={
-                            [
+                    menu={{
+                        items:[
                                 hasPermission(userPermission, 'crear vales') ?
                                 {
                                     key: '5',
                                     label: (
                                     <Link className="dropDownResponsive" to={'/vales-salida/nuevo'}>
-                                        Crear Vale
+                                        Registrar Vale
                                     </Link>
                                     ),
                                 }:
@@ -111,9 +119,8 @@ export default function FooterLayout({showModal, userPermission}) {
                                     </Link>
                                     ),
                                 }
-                            ]
-                        }
-                    />}
+                            ]}
+                    }
                     placement="topRight"
                     trigger={'click'}
                     arrow={{

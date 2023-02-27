@@ -26,6 +26,8 @@ const FormBitacora = () => {
     const { etapas } = useSelector(state => state.etapas);
     const { userAuth } = useSelector(state => state.auth);
 
+    const { empresaId } = userAuth || {};
+
     const [ isOffline, setIsOffline] = useState(true);
     
     const [form] = Form.useForm();
@@ -52,9 +54,12 @@ const FormBitacora = () => {
         if(userAuth) return userAuth.esInterno
     }, [userAuth])
 
+
     useEffect(() =>{
             dispatch(getAllPersonalAction())
-            dispatch(getAllUsuariosAction())
+            dispatch(getAllUsuariosAction({
+                roles: [4, 7, 8]
+            }))
             dispatch(getAllActividadAction())
             dispatch(getProyectosAction())
         // eslint-disable-next-line
@@ -91,9 +96,8 @@ const FormBitacora = () => {
         if(tipoUsuario){
             form.validateFields(['participantesId'])
         }
-        const query = {...form.getFieldsValue(), files}  ;
+        const query = {...form.getFieldsValue(), files};
 
-        console.log(query);
         dispatch(createBitacoraAction(query))
 
     }
@@ -171,10 +175,10 @@ const FormBitacora = () => {
                         placeholder="Seleccione de la lista"
                         
                         >
-                            <Option key={nanoid()} value={1}>Incidencias</Option>
-                            <Option key={nanoid()} value={2}>Acuerdos</Option>
+                            <Option key={nanoid()} value={1}>Incidencia</Option>
+                            <Option key={nanoid()} value={2}>Acuerdo</Option>
                             <Option key={nanoid()} value={3}>Inicio de trabajos</Option>
-                            <Option key={nanoid()} value={4}>Fin de trabajos</Option>          
+                            <Option key={nanoid()} value={4}>Cierre de trabajos</Option>          
                     </Select>
                 </Form.Item>
 
@@ -362,9 +366,11 @@ const FormBitacora = () => {
                                 },
                                 {
                                     label: 'Externos',
-                                    options: usuarios.filter(item => item.esInterno === false).map(item => (
+                                    // si userAuth es interno entonces todos los externos y si es externo solo los externos de su empresa
+                                    options: usuarios.filter(item => item.esInterno === false && item.empresas[0].id === empresaId).map(item => (
                                         { key: nanoid(), label: `${item.nombre} ${ item.apellidoPaterno }`, value: item.id }
                                     ))
+
                                 }
                             ]
                          }

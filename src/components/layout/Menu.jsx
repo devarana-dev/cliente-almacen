@@ -32,12 +32,12 @@ export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
     const items = [
 	getItem('Inicio', '/', <AppstoreOutlined />),
     groupPermission( userPermission, ['crear vales', 'ver vales', 'ver vale' ]) ?
-    getItem('Vales', 'sub1', <LogoutOutlined />, [
-        hasPermission(userPermission, 'crear vales') ? getItem('Generar', '/vales-salida/nuevo') : null,
-        groupPermission(userPermission, ['ver vales', 'ver vale']) ? getItem('Consultar', '/vales-salida') : null,
-        getItem('Préstamos', '/prestamos'),
-        getItem('Reportes', '/reportes')
-    ]) 
+        getItem('Vales', 'sub1', <LogoutOutlined />, [
+            hasPermission(userPermission, 'crear vales') ? getItem('Generar', '/vales-salida/nuevo') : null,
+            groupPermission(userPermission, ['ver vales', 'ver vale']) ? getItem('Consultar', '/vales-salida') : null,
+            getItem('Préstamos', '/prestamos'),
+            getItem('Reportes', '/reportes')
+        ]) 
     : null,
     groupPermission( userPermission, ['crear bitacora']) ?
         getItem('Bitácora', 'sub2', <ProfileOutlined />,
@@ -79,7 +79,6 @@ export default function LayoutMenu ({collapsed, setCollapsed, hiddeable}) {
     return (
         <Menu
 			className="layout__menu overflow-y-auto overflow-x-hidden"
-            
             style={{ height: 'calc(100vh - 80px)', }}
 			mode="inline"
 			items={items}

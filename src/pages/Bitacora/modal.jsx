@@ -61,9 +61,6 @@ export const ModalBitacora = ({setIsModalOpen, isModalOpen, selectedPreview, sel
     
     }
     
-
-    console.log('', form.getFieldsValue());
-
   return (
     <>
     

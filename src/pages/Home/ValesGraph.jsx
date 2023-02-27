@@ -219,9 +219,7 @@ export const ValesGraph = () => {
         }
     }
 
-    const menu = (
-        <Menu
-          items={[
+    const items = [
             {
               key: '1',
               label: (
@@ -245,10 +243,8 @@ export const ValesGraph = () => {
               label: (
                 <p className={`pl-8 cursor-pointer ${filter === 'mes' ? 'font-bold': ''}`} onClick={() => dispatch(handleFilter("mes"))}>Este mes</p>
               ),
-            },
-          ]}
-        />
-    );
+            }
+    ]
 
     if(isLoading) return <Loading/>
 
@@ -264,7 +260,7 @@ export const ValesGraph = () => {
             <div className="col-span-12 order-1">
                 <div className='flex justify-end'>
                     <div>
-                    <Dropdown overlay={menu} placement="bottomRight">
+                    <Dropdown menu={{items}} placement="bottomRight">
                         <Button type='link' className="inline-flex items-center text-dark font-medium"><FilterOutlined className='text-xl mr-2'/> Filtrar </Button>
                     </Dropdown>
                     </div>

@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Avatar, Button, DatePicker, Drawer, Image, Input, Modal, Select, Table, Tooltip } from 'antd';
 import { useDispatch, useSelector } from "react-redux";
-import { ClearOutlined, CloseOutlined,  FilePdfFilled,  FileTextOutlined,  PlusCircleOutlined, QuestionCircleOutlined, SearchOutlined } from "@ant-design/icons";
+import { ClearOutlined, CloseOutlined,  FilePdfFilled,  FileTextOutlined,  LockOutlined,  PlusCircleOutlined, QuestionCircleOutlined, SearchOutlined, UnlockOutlined } from "@ant-design/icons";
 import { getBitacoraAction, getBitacorasAction, getTipoBitacoraAction } from '../../actions/bitacoraActions'
 import moment from "moment";
 import Loading from "../../components/Elements/Loading";
@@ -14,7 +14,6 @@ import Card from "../../components/Vales/Card";
 import brokenUser from "../../utils/brokenUser";
 import { getProyectosAction } from "../../actions/proyectosActions";
 
-import { MdOutlineMarkChatUnread } from "react-icons/md";
 import { RiFileWarningLine } from "react-icons/ri";
 import { FaRegHandshake } from "react-icons/fa";
 import { BsFillCalendarCheckFill, BsFillForwardFill } from "react-icons/bs";
@@ -38,9 +37,12 @@ const Bitacora = () => {
     const { proyectos } = useSelector(state => state.proyectos);
     const [ isModalOpen, setIsModalOpen] = useState(false);
     const [ showHelpModal, setShowHelpModal ] = useState(false);
+    const { userAuth } = useSelector(state => state.auth);
+
+    const { empresaId } = userAuth || {};
 
     const [ open, setOpen] = useState(false);
-    const {uid} = useParams()
+    const { uid } = useParams()
     
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -52,7 +54,9 @@ const Bitacora = () => {
     const [ selectedPreview, setSelectedPreview ] = useState([]);
 
     useLayoutEffect(() => {
-        dispatch(getAllUsuariosAction())
+        dispatch(getAllUsuariosAction({
+            roles: [4, 7, 8]
+        }))
         dispatch(getTipoBitacoraAction())
         dispatch(getEtapasAction())
         dispatch(getProyectosAction({
@@ -98,7 +102,12 @@ const Bitacora = () => {
             key: 'fecha',
             render: (text, record) => (
                 <Tooltip title={`${moment(record.fecha).format("DD-MM-YYYY HH:mm:ss")}`} >
-                    {moment(record.fecha).format('D MMM LT')}
+                    <p className='hidden lg:block'>
+                        {moment(record.fecha).format('D MMM LT')}
+                    </p>
+                    <p className="block lg:hidden">
+                        {moment(record.fecha).format('D MMM')}
+                    </p>
                 </Tooltip>
             ),
         },
@@ -109,10 +118,10 @@ const Bitacora = () => {
                 <span>
                     {
                         <div className="flex align-middle items-center gap-x-2">
-                            <Avatar src={ <Image preview={false} fallback={brokenUser()} src={  record.autorInt?.picture || record.autorExt?.picture || '' } /> } /> 
+                            <Avatar className='hidden lg:block' src={ <Image preview={false} fallback={brokenUser()} src={  record.autorInt?.picture || record.autorExt?.picture || '' } /> } /> 
                             <p>
                                 {
-                                    `${record.autorInt ? `${record.autorInt.nombre} ${record.autorInt.apellidoPaterno} ${record.autorInt.apellidoMaterno} ` : `${record.autorExt.nombre} ${record.autorExt.apellidoPaterno} ${record.autorExt.apellidoMaterno} ` }`
+                                    `${record.autorInt ? `${record.autorInt.nombre} ${record.autorInt.apellidoPaterno}` : `${record.autorExt.nombre} ${record.autorExt.apellidoPaterno} ` }`
                                 }
                             </p>
                         </div>
@@ -121,23 +130,34 @@ const Bitacora = () => {
         },{
             title: 'Proyecto',
             key: 'proyecto',
-            render: (text, record) => <span>{record.proyecto?.nombre || 'Royal View'}</span>
+            render: (text, record) => <span>{record.proyecto.nombre}</span>,
+            responsive: ['lg']
         },
         
         {
             title: 'Tipo de Registro',
             key: 'tipoBitacora',
-            render: (text, record) => <span>{record.tipo_bitacora.nombre}</span>
+            render: (text, record) => <span>{record.tipo_bitacora.nombre}</span>,
         },
         {
             title: 'Titulo',
             key: 'titulo',
-            render: (text, record) => <span>{record.titulo}</span>
+            render: (text, record) => <span>
+                <Tooltip title={record.titulo}>
+                    <p className='hidden lg:block'>
+                        {record.titulo}
+                    </p>
+                    <p className="block lg:hidden">
+                        {record.titulo.substring(0, 20)}...
+                    </p>
+                </Tooltip>
+            </span>,
         },
         {
             title: 'Actividad',
             key: 'actividad',
-            render: (text, record) => <span>{record.actividad}</span>
+            render: (text, record) => <span>{record.actividad}</span>,
+            responsive: ['lg']
         }       
     ];
 
@@ -230,30 +250,22 @@ const Bitacora = () => {
 
     return ( 
     <>
-            <div className="lg:grid hidden grid-cols-6 gap-10 py-5 ">
+            <div className="lg:grid hidden grid-cols-5 gap-10 py-5 ">
                 <Card 
                     text="Todos"
                     icon={<FileTextOutlined className='align-middle text-[20px]'/>}
                     fn={() => handleSearchTipo()}
                     count={conteoBitacoras.total}
                     color={'dark'}
-                    size="sm"
-                />
-                <Card 
-                    text="Nuevos"
-                    icon={<MdOutlineMarkChatUnread className='align-middle text-2xl flex items-center'/>}
-                    fn={() => handleSearchNew()}
-                    count={conteoBitacoras.noVisto}
-                    color={'info'}
-                    size="sm"
+                    size="md"
                 />
                 <Card 
                     text="Incidencias"
                     icon={<RiFileWarningLine className='align-middle text-2xl flex items-center'/>}
                     fn={() => handleSearchTipo(1)}
                     count={conteoBitacoras.incidencias}
-                    color={'warning'}
-                    size="sm"
+                    color={'info'}
+                    size="md"
                 />
                 <Card 
                     text="Acuerdos"
@@ -261,29 +273,30 @@ const Bitacora = () => {
                     fn={() => handleSearchTipo(2)}
                     count={conteoBitacoras.acuerdos}
                     color={'primary'}
-                    size="sm"
+                    size="md"
                 />
                 <Card 
                     text="Inicio de Trabajos"
-                    icon={<BsFillForwardFill className='align-middle text-2xl flex items-center'/>}
+                    icon={<UnlockOutlined className='align-middle text-2xl flex items-center'/>}
                     fn={() => handleSearchTipo(3)}
                     count={conteoBitacoras.inicio}
-                    color={'secondary'}
-                    size="sm"
+                    color={'success'}
+                    size="md"
                 />
                 <Card 
                     text="Cierre de Trabajos"
-                    icon={<BsFillCalendarCheckFill className='align-middle text-2xl flex items-center'/>}
+                    icon={<LockOutlined className='align-middle text-2xl flex items-center'/>}
                     fn={() => handleSearchTipo(4)}
                     count={conteoBitacoras.cierre}
-                    color={'orange'}
-                    size="sm"
+                    color={'danger'}
+                    size="md"
                 />
             </div>
             <div className="flex gap-3 py-3 flex-wrap">
                 <Select
                     style={{
-                        width: '200px',
+                        width: '100%',
+                        maxWidth: '200px'
                     }}
                     placeholder="Filtrar Por Proyecto"
                     showSearch
@@ -302,8 +315,10 @@ const Bitacora = () => {
                 <Select
                     maxTagCount={"responsive"}
                     allowClear
+                    className='hidden lg:block'
                     style={{
-                        width: '200px',
+                        width: '100%',
+                        maxWidth: '200px'
                     }}
                     placeholder="Filtrar Por Etapa"
                     showSearch
@@ -322,8 +337,10 @@ const Bitacora = () => {
                 <Select
                     allowClear
                     style={{
-                        width: '200px',
+                        width: '100%',
+                        maxWidth: '200px'
                     }}
+                    className='hidden lg:block'
                     placeholder="Filtrar Usuario"
                     // onChange={ (e) => { handleSearchByUsuario(e) }}
                     showSearch
@@ -332,18 +349,36 @@ const Bitacora = () => {
                     value={filtros.userId}
                     onChange={ (e) => { setFiltros({ ...filtros, userId: e }) }}
                     name="userId"
-                    >
-                    {
-                        
-                        usuarios.map(item => (
-                            <Select.Option key={item.id} value={item.id}>{`${item.nombre} ${item.apellidoPaterno}`}</Select.Option>
-                        ))
+                    options={
+                        [
+                            {
+                                label: 'Interno',
+                                options: usuarios.filter(item => item.esInterno === true).map(item => (
+                                    {
+                                        value: item.id,
+                                        label: `${item.nombre} ${item.apellidoPaterno}`
+                                    }
+                                ))
+                            },
+                            {
+                                label: 'Externo',
+                                options: usuarios.filter(item => item.esInterno === false && item.empresas[0].id === empresaId).map(item => (
+                                    {
+                                        value: item.id,
+                                        label: `${item.nombre} ${item.apellidoPaterno}`
+                                    }
+                                ))
+                            }
+                        ]
                     }
+                >
+                   
                 </Select> 
                 <Select
                     className='hidden lg:block'
                     style={{
-                        width: '200px',
+                        width: '100%',
+                        maxWidth: '200px'
                     }}
                     placeholder="Ordenar por: "
                     onChange={ (e) => { setFiltros({ ...filtros, ordenSolicitado: e }) }}

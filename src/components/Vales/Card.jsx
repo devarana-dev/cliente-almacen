@@ -10,6 +10,8 @@ export default function Card({fn, icon, text, count, color, size = 'md'}) {
         <div className="from-primary to-primary-lighter hidden" />
         <div className="from-orange to-orange-lighter hidden" />
         <div className="from-secondary to-secondary-lighter hidden" />
+        <div className="from-success to-success-lighter hidden" />
+        <div className="from-danger to-danger-lighter hidden" />
         
         <div className="p-1 sm:p-4 shadow-md bg-white rounded-sm col-span-1 cursor-pointer" onClick={ fn }>
             <div className="flex sm:justify-between justify-center flex-wrap gap-x-5 content-center">
