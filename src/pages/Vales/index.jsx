@@ -417,6 +417,8 @@ const ValesSalida = () => {
     }
 
     const handleAltaEnkontrol = (record) => {
+        console.log('registro enkontrol');
+
         setVisible(true)
 
         let onTimeFolio = ""
