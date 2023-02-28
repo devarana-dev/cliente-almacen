@@ -437,7 +437,6 @@ const ValesSalida = () => {
         })
     }    
 
-    console.log(visible, modalProps);
 
     const handleShowInformationVale = (record) => {
         Modal.info({
@@ -858,6 +857,7 @@ const ValesSalida = () => {
                     <Button key={2} type='ghost' onClick={modalProps.fn} disabled={ !( response !== "" || Number(amount) > 0) }> Enviar</Button>
                 ]}
                 open={visible}
+                visible={visible}
                 onCancel={() => { setVisible(false); clearFields() }}
                 width={600}
                 icon={modalProps.icon}
