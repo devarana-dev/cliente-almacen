@@ -420,7 +420,7 @@ const ValesSalida = () => {
         
         setVisible(true)
         
-        console.log('registro enkontrol', visible, modalProps);
+        
         let onTimeFolio = ""
         setModalProps({
             title: 'Registro Enkontrol',
@@ -436,6 +436,8 @@ const ValesSalida = () => {
                 }
         })
     }    
+
+    console.log(visible, modalProps);
 
     const handleShowInformationVale = (record) => {
         Modal.info({
