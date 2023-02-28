@@ -417,10 +417,10 @@ const ValesSalida = () => {
     }
 
     const handleAltaEnkontrol = (record) => {
-        console.log('registro enkontrol');
-
+        
         setVisible(true)
-
+        
+        console.log('registro enkontrol', visible, modalProps);
         let onTimeFolio = ""
         setModalProps({
             title: 'Registro Enkontrol',
