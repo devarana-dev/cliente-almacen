@@ -61,7 +61,9 @@ const FormBitacora = () => {
                 roles: [4, 7, 8]
             }))
             dispatch(getAllActividadAction())
-            dispatch(getProyectosAction())
+            dispatch(getProyectosAction({
+                status: 1
+            }))
         // eslint-disable-next-line
     }, [])
 
@@ -121,7 +123,7 @@ const FormBitacora = () => {
     }
 
     const handleSelectProyecto = (value) => {
-        dispatch(getEtapasAction({proyectoId: value}))
+        dispatch(getEtapasAction({proyectoId: value, status: 1}))
     }
 
 

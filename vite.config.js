@@ -9,7 +9,7 @@ export default () => {
     return defineConfig({
         plugins: [react(), viteCompression(), 
             VitePWA({
-                
+                registerType: 'autoUpdate',                
                 injectRegister: 'auto',
                 workbox:{
 
@@ -18,7 +18,6 @@ export default () => {
                     globPatterns: [
                         '**/*.{json,ico,html,png,txt,css,js}'
                     ],
-                    cleanupOutdatedCaches: true,
                     runtimeCaching: [
                         {
                             urlPattern: ({request, url}) => { 
@@ -85,7 +84,11 @@ export default () => {
                                         maxRetentionTime: 24 * 60,
                                     },
                                 },
+                                cacheableResponse: {
+                                    statuses: [0, 200],
+                                },
                             },
+                            
                         }
                     ],
                     
