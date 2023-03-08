@@ -8,32 +8,24 @@ import Forbidden from "../../components/Elements/Forbidden";
 import openNotificationWithIcon from "../../hooks/useNotification";
 import { hasPermission } from "../../utils/hasPermission";
 
-const CreateActividades = () => {
+const initialValues = {
+    nombre: "",
+    status: true,
+    type: "vales_bitacora",
+};
 
+const CreateActividades = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { Option } = Select;
-    const { TextArea } = Input;
+    const [form] = Form.useForm();
 
     const { errors, created } = useSelector(state => state.actividades);
     const { userPermission } = useSelector(state => state.permisos);
 
-    const [actividad, setActividad] = useState({
-        nombre: "",
-        status: true,
-        descripcion: "",
-    });
-    const {nombre, descripcion, status} = actividad
-
-    const handleChange = (e) => {
-        setActividad({
-            ...actividad,
-            [e.target.name]: e.target.value,
-        });
-    }
-
     const handleSubmit = () => {
-        dispatch(createActividadAction(actividad));
+        const query = form.getFieldsValue();
+        dispatch(createActividadAction(query));
     }
 
     useEffect(() => {
@@ -54,12 +46,14 @@ const CreateActividades = () => {
 
     if(!hasPermission(userPermission, 'crear actividades')) return <Forbidden/>
     
+
     return ( 
         <Form
             className="max-w-screen-md mx-auto"
-            onFinish={() => handleSubmit()}
+            onFinish={handleSubmit}
             layout="vertical"
-            onChange={handleChange}
+            form={form}
+            initialValues={initialValues}
         >
             <Form.Item
                 label="Nombre"
@@ -69,30 +63,17 @@ const CreateActividades = () => {
                 ]}
                 hasFeedback
             >
-                <Input value={nombre} name="nombre" />
+                <Input/>
             </Form.Item>
             <Form.Item
-                label="Descripción"
-                name="descripcion"
-                rules={[
-                    { required: true, message: "Debes ingresar una descripción" },
-                ]}
-                hasFeedback
+                label="Categoría"
+                name="type"
+                hasFeedback                
             >
-                <TextArea value={descripcion} name="descripcion"/>
-            </Form.Item>
-
-            <Form.Item
-                name="status"
-                rules={[
-                    { required: true, message: "Debes seleccionar un estatus" },
-                ]}
-                hasFeedback
-                initialValue={status}
-            >
-                <Select value={status} placeholder="Selecciona un estatus" name="status" onChange={ (value) => { setActividad({...actividad, status:value})} }>
-                    <Option value={true}>Activo</Option>
-                    <Option value={false}>Inactivo</Option> 
+                <Select>
+                    <Option value="vales_bitacora">Vales y Bitácora</Option>
+                    <Option value="vales">Vales</Option>
+                    <Option value="bitacora">Bitácora</Option>
                 </Select>
             </Form.Item>
 

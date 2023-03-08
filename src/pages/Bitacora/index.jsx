@@ -525,10 +525,13 @@ return (
                     {
                             currentSlide === 0 && <h2 className="text-2xl text-dark"> Funciones Generales </h2> ||
                             currentSlide === 1 && <h2 className="text-2xl text-dark"> Nuevo Registro </h2> ||
-                            currentSlide === 2 && <h2 className="text-2xl text-dark"> Generar Reporte </h2>
+                            currentSlide === 2 && <h2 className="text-2xl text-dark"> Generar Reporte </h2> ||
+                            currentSlide === 3 && <h2 className="text-2xl text-dark"> Funciones Generales | Celular </h2> ||
+                            currentSlide === 4 && <h2 className="text-2xl text-dark"> Nuevo Registro | Celular </h2> ||
+                            currentSlide === 5 && <h2 className="text-2xl text-dark"> Generar Reporte | Celular </h2>
 
                     }
-                    <Button type="primary" onClick={handleNext} disabled={currentSlide === 2}>
+                    <Button type="primary" onClick={handleNext} disabled={currentSlide === 5}>
                         Siguiente
                     </Button>
                 </div>
@@ -548,6 +551,18 @@ return (
                 <div>
                     <video width="100%" controls src="https://spaces.erp-devarana.mx/tutoriales/tutorial-reporte-bitacora.webm" 
                         poster="https://spaces.erp-devarana.mx/tutoriales/poster/tutorial-reporte-bitacora.png" preload='metadata' />
+                </div>
+                <div>
+                    <video width="100%" controls src="https://spaces.erp-devarana.mx/tutoriales/tutorial-funciones-generales-bitacora-mobile.webm" 
+                        poster="https://spaces.erp-devarana.mx/tutoriales/poster/tutorial-funciones-generales-bitacora-mobile.png" preload='metadata' />
+                </div>
+                <div>
+                    <video width="100%" controls src="https://spaces.erp-devarana.mx/tutoriales/tutorial-registro-bitacora-mobile.webm"
+                        poster="https://spaces.erp-devarana.mx/tutoriales/poster/tutorial-registro-bitacora-mobile.png" preload='metadata' />
+                </div>
+                <div>
+                    <video width="100%" controls src="https://spaces.erp-devarana.mx/tutoriales/tutorial-reporte-bitacora-mobile.webm" 
+                        poster="https://spaces.erp-devarana.mx/tutoriales/poster/tutorial-reporte-bitacora-mobile.png" preload='metadata' />
                 </div>
             </Carousel> 
         </Modal>

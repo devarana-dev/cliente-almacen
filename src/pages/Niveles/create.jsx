@@ -32,7 +32,9 @@ const CreateNiveles = () => {
 
     useEffect(() => {
         dispatch(getAllZonaAction())
-        dispatch(getAllActividadAction())
+        dispatch(getAllActividadAction({
+            type: 'vales_bitacora'
+        }))
     // eslint-disable-next-line
     }, [])
 

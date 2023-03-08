@@ -35,7 +35,9 @@ const EditNiveles = () => {
         }
 
         dispatch(getAllZonaAction())
-        dispatch(getAllActividadAction())
+        dispatch(getAllActividadAction({
+            type: 'vales_bitacora'
+        }))
 
         setNivel({
             ...editedNivel,

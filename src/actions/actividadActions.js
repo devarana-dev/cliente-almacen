@@ -2,10 +2,10 @@ import clientAxios from '../config/axios';
 import { types } from '../types';
 
 
-export function getAllActividadAction(){
+export function getAllActividadAction(filtros){
     return async (dispatch) => {
         dispatch(getAllActividadRequest())
-        await clientAxios.get('/actividades')
+        await clientAxios.get('/actividades', { params: filtros })
             .then ( res => {
                 dispatch(getAllActividadSuccess(res.data.actividades))
             })

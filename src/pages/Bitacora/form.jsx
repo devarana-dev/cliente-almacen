@@ -45,7 +45,6 @@ const FormBitacora = () => {
     
 
     useEffect(() => {
-        // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
         return () => files.forEach(file => URL.revokeObjectURL(file.preview));
         // eslint-disable-next-line
     }, []);
@@ -60,7 +59,10 @@ const FormBitacora = () => {
             dispatch(getAllUsuariosAction({
                 roles: [4, 7, 8]
             }))
-            dispatch(getAllActividadAction())
+            dispatch(getAllActividadAction({
+                type: ['vales_bitacora', 'bitacora'],
+                status: 1
+            }))
             dispatch(getProyectosAction({
                 status: 1
             }))
@@ -181,6 +183,7 @@ const FormBitacora = () => {
                             <Option key={nanoid()} value={2}>Acuerdo</Option>
                             <Option key={nanoid()} value={3}>Inicio de trabajos</Option>
                             <Option key={nanoid()} value={4}>Cierre de trabajos</Option>          
+                            <Option key={nanoid()} value={5}>Eventos</Option>          
                     </Select>
                 </Form.Item>
 

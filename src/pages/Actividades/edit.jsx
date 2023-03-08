@@ -1,5 +1,5 @@
 import { Form, Input, Select, Button } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams} from "react-router-dom";
 import { getActividadAction, updateActividadAction } from "../../actions/actividadActions";
@@ -16,35 +16,24 @@ const EditActividades = () => {
     const {id} = useParams()
     const [form] = Form.useForm();
     const { Option } = Select;
-    const { TextArea } = Input;
+    
 
     const { errors, editedActividad, isLoading, updated } = useSelector(state => state.actividades);
     const { userPermission } = useSelector(state => state.permisos);
-
-    const [actividad, setActividad] = useState({
-        nombre: "",
-        descripcion: "",
-        status: "",
-    });
 
     useEffect(() =>{
         if(!editedActividad){
             dispatch(getActividadAction(id))
         }
-        setActividad({...editedActividad})
         form.setFieldsValue({...editedActividad})
     // eslint-disable-next-line
     },[editedActividad])
 
-    const handleChange = (e) => {
-        setActividad({
-            ...actividad,
-            [e.target.name]: e.target.value,
-        });
-    }
 
     const handleSubmit = () => {
-        dispatch(updateActividadAction(actividad));
+        const query = form.getFieldsValue();
+        query.id = id
+        dispatch(updateActividadAction(query));
     }
 
     useEffect(() => {
@@ -62,14 +51,15 @@ const EditActividades = () => {
             navigate('/actividades')
         }
     }
+
     if(!hasPermission(userPermission, 'editar actividades') && !isLoading ) return <Forbidden/>
     if(isLoading) return <Loading />
+
     return ( 
         <Form
             className="max-w-screen-md mx-auto"
             onFinish={handleSubmit}
             layout="vertical"
-            onChange={handleChange}
             form={form}
         >
             <Form.Item
@@ -80,17 +70,21 @@ const EditActividades = () => {
                 ]}
                 hasFeedback
             >
-                <Input name="nombre" />
+                <Input />
             </Form.Item>
             <Form.Item
-                label="Descripción"
-                name="descripcion"
+                label="Tipo de actividad"
+                name="type"
                 rules={[
-                    { required: true, message: "Debes ingresar una descripción" },
+                    { required: true, message: "Debes ingresar un tipo" },
                 ]}
                 hasFeedback
             >
-                <TextArea name="descripcion"/>
+                <Select>
+                    <Option value="vales_bitacora">Vales y Bitácora</Option>
+                    <Option value="vales">Vales</Option>
+                    <Option value="bitacora">Bitácora</Option>
+                </Select>
             </Form.Item>
             <Form.Item
                 name="status"
@@ -99,7 +93,7 @@ const EditActividades = () => {
                 ]}
                 hasFeedback
             >
-                <Select placeholder="Selecciona un estatus" name="status" onChange={ (value) => { setActividad({...actividad, status:value})} }>
+                <Select>
                     <Option value={true}>Activo</Option>
                     <Option value={false}>Inactivo</Option> 
                 </Select>
