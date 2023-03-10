@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Avatar, Button, Carousel, DatePicker, Drawer, Image, Input, Modal, Select, Table, Tooltip } from 'antd';
 import { useDispatch, useSelector } from "react-redux";
-import { ClearOutlined, CloseOutlined,  FilePdfFilled,  FileTextOutlined,  LeftOutlined,  LockOutlined,  PlusCircleOutlined, QuestionCircleOutlined, RightOutlined, SearchOutlined, UnlockOutlined } from "@ant-design/icons";
+import { ClearOutlined, ClockCircleOutlined, CloseOutlined,  FilePdfFilled,  FileTextOutlined, LockOutlined,  PlusCircleOutlined, QuestionCircleOutlined, SearchOutlined, UnlockOutlined } from "@ant-design/icons";
 import { getBitacoraAction, getBitacorasAction, getTipoBitacoraAction } from '../../actions/bitacoraActions'
 import moment from "moment";
 import Loading from "../../components/Elements/Loading";
@@ -282,7 +282,7 @@ const handlePrev = () => {
 
 return ( 
 <>
-        <div className="lg:grid hidden grid-cols-5 gap-10 py-5 ">
+        <div className="lg:grid hidden grid-cols-6 gap-10 py-5 ">
             <Card 
                 text="Todos"
                 icon={<FileTextOutlined className='align-middle text-[20px]'/>}
@@ -308,6 +308,14 @@ return (
                 size="md"
             />
             <Card 
+                text="Eventos"
+                icon={<ClockCircleOutlined className='align-middle text-2xl flex items-center'/>}
+                fn={() => handleSearchTipo(5)}
+                count={conteoBitacoras.eventos}
+                color={'secondary'}
+                size="md"
+            />
+            <Card 
                 text="Inicio de Trabajos"
                 icon={<UnlockOutlined className='align-middle text-2xl flex items-center'/>}
                 fn={() => handleSearchTipo(3)}
@@ -323,6 +331,7 @@ return (
                 color={'danger'}
                 size="md"
             />
+            
         </div>
         <div className="flex gap-3 py-3 flex-wrap">
             <Select
@@ -484,7 +493,7 @@ return (
                 placement="right"
                 closable={true}
                 onClose={onClose}
-                open={open}
+                visible={open}
                 bodyStyle={{ paddingBottom: 80 }}
                 destroyOnClose={true}
                 width={window.innerWidth > 1200 ? 800 : 'auto'}
@@ -508,7 +517,6 @@ return (
         />
 
         <Modal
-            open={showHelpModal}
             visible={showHelpModal}
             onCancel={() => {setShowHelp(!showHelpModal); handleAfterChange(0) }}
             footer={null}

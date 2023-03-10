@@ -151,7 +151,7 @@ export default function LayoutPrivate({children}) {
 
             <Modal
                 title="Salir"
-                open={visible}
+                visible={visible}
                 onOk={handleLogout}
                 onCancel={hideModal}
                 okText="Si"
@@ -162,7 +162,7 @@ export default function LayoutPrivate({children}) {
 
             <Modal 
                 title="Notas de Versión"
-                open={visibleNotas}
+                visible={visibleNotas}
                 footer={false}
                 onCancel={hideModalNotas}
                 width={ 1000 }
