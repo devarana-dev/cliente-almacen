@@ -38,6 +38,7 @@ export function createBitacoraAction(bitacora){
         dispatch( createBitacoraRequest())
         await clientAxios.post('/bitacora', bitacora, { headers: { 'Content-Type': 'multipart/form-data' }
         }).then(res => {
+            console.log('res', res.data.bitacora);
             dispatch(createBitacoraSuccess(res.data.bitacora))
         }
         ).catch(err => {

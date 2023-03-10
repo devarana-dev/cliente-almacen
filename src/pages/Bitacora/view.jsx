@@ -66,25 +66,26 @@ export const ViewBitacora = ({isLoadingBitacora, bitacora, onClose, errorBitacor
                                 `${bitacora.autorInt.nombre} ${bitacora.autorInt.apellidoPaterno} ${bitacora.autorInt.apellidoMaterno} `
                             }
                         </p>
-                     </div>
+                </div>
             </div>
 
-            { bitacora.actividad && <div className='col-span-6'>
-                <p className='font-medium'>Actividad Relacionada: <span className='font-light'>{ bitacora.actividad }</span> </p>
-            </div> }
-            <div className='col-span-4'>
-            {
-                bitacora.contratista && (
-                    <p className='font-medium'>Contratista: <span className='font-light'>{bitacora.contratista.nombre} {bitacora.contratista.apellidoPaterno} {bitacora.contratista.apellidoMaterno}</span> </p>
-                 )
+            { bitacora.actividad && 
+                <div className='col-span-6'>
+                    <p className='font-medium'>Actividad Relacionada: <span className='font-light'>{ bitacora.actividad }</span> </p>
+                </div> 
             }
-            </div>  
+            {
+                bitacora.contratista && 
+                <div className='col-span-6'>
+                    <p className='font-medium'>Contratista: <span className='font-light'>{bitacora.contratista.nombre} {bitacora.contratista.apellidoPaterno} {bitacora.contratista.apellidoMaterno}</span> </p>
+                </div>
+            }
 
             
 
             {
-                bitacora.autorExt && (<div className='col-span-4'>
-                    <p className='font-medium'>Empresa: <span className='font-light'>{ bitacora.autorExt.empresa }</span> </p>
+                bitacora.empresa && (<div className='col-span-6'>
+                    <p className='font-medium'>Empresa: <span className='font-light'>{ bitacora.empresa.nombreCompleto }</span> </p>
                 </div> )
             }
 
@@ -154,21 +155,20 @@ export const ViewBitacora = ({isLoadingBitacora, bitacora, onClose, errorBitacor
         </div>
 
         <div className='col-span-4'>
-            {/* Proyecto */}
             <p className='font-medium'>Proyecto: <span className='font-light'>{ 'Royal View' }</span> </p>
         </div>
         <div className='col-span-4'>
-            {/* Proyecto */}
             <p className='font-medium'>Etapa: <span className='font-light'>{ bitacora.etapa.nombre }</span> </p>
         </div>
 
         <div className='col-span-12'>
-            <p className='font-medium'>Titulo: <span className='font-light'>{ bitacora.titulo }</span> </p>
+            <p className='font-medium'>Título: <span className='font-light'>{ bitacora.titulo }</span> </p>
         </div>
      
         <div className='col-span-12'>
             <p className='font-medium'>Descripción: <span className='font-light'>{ bitacora.descripcion }</span> </p>
         </div>
+        
 
         { bitacora.galeria_bitacoras.length > 0 && <div className='col-span-12'>
             <p className='font-medium'>Evidencia: </p>

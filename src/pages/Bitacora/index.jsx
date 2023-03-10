@@ -148,7 +148,7 @@ const columns = [
 
     },
     {
-        title: 'Titulo',
+        title: 'Título',
         key: 'titulo',
         render: (text, record) => <span>
             <Tooltip title={record.titulo}>

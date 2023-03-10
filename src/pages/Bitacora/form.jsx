@@ -14,6 +14,7 @@ import { Mask } from "../../components/Mask";
 import { getEtapasAction } from "../../actions/etapasActions";
 import { Detector } from "react-detect-offline";
 import { getProyectosAction } from "../../actions/proyectosActions";
+import { getAllEmpresaAction } from "../../actions/empresaActions";
 
 
 const FormBitacora = () => {
@@ -24,11 +25,14 @@ const FormBitacora = () => {
     const { actividades } = useSelector(state => state.actividades);
     const { proyectos } = useSelector(state => state.proyectos);
     const { etapas } = useSelector(state => state.etapas);
+    const { empresas } = useSelector(state => state.empresas);
     const { userAuth } = useSelector(state => state.auth);
 
     const { empresaId } = userAuth || {};
 
     const [ isOffline, setIsOffline] = useState(true);
+
+    const [ contratistas, setContratistas ] = useState([]);
     
     const [form] = Form.useForm();
     const {TextArea} = Input;
@@ -56,6 +60,7 @@ const FormBitacora = () => {
 
     useEffect(() =>{
             dispatch(getAllPersonalAction())
+            dispatch(getAllEmpresaAction())
             dispatch(getAllUsuariosAction({
                 roles: [4, 7, 8]
             }))
@@ -126,6 +131,12 @@ const FormBitacora = () => {
 
     const handleSelectProyecto = (value) => {
         dispatch(getEtapasAction({proyectoId: value, status: 1}))
+    }
+
+    const handleSelectEmpresa = (value) => {
+        setContratistas(
+            usuarios.filter(item => item.esInterno === false && item.empresas[0].id === value)
+        )
     }
 
 
@@ -320,10 +331,10 @@ const FormBitacora = () => {
                                 
                             </Select>
                     </Form.Item>
-                    {/* Contratista */}
+                    {/* EMpresa */}
                     <Form.Item
-                        name="externoId"
-                        label="Contratista Relacionado"
+                        name="empresaId"
+                        label="Empresas"
                         labelCol={{ span: 4 }}
                         className="mb-3"
                     >
@@ -333,11 +344,33 @@ const FormBitacora = () => {
                             showSearch
                             placeholder="Seleccione de la lista"
                             allowClear
+                            onChange={handleSelectEmpresa}
+                            >
+                            {
+                                empresas.map(item => (
+                                    <Option key={item.id} value={item.id}> { `${item.nombreCompleto}` }  </Option>
+                                ))
+                            }
+                        </Select>
+                    </Form.Item>
+                    {/* Contratista */}
+                    <Form.Item
+                        name="externoId"
+                        label="Contratista Relacionado"
+                        labelCol={{ span: 4 }}
+                        className="mb-3"
+                    >
+                            <Select 
+                            filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
+                            disabled={contratistas.length === 0 }
+                            showSearch
+                            placeholder="Seleccione de la lista"
+                            allowClear
                             >
                         
                             {
-                                usuarios.filter(item => item.esInterno === false).map(item => (
-                                    <Option key={item.id} value={item.id}> { `${item.nombre} ${ item.apellidoPaterno }` }  </Option>
+                                contratistas.map(item => (
+                                    <Option key={item.id} value={item.id}> { `${item.nombre}  ${item.apellidoMaterno ? `( ${item.apellidoMaterno} )` : '' } ${ item.apellidoPaterno }` }  </Option>
                                 ))
                             }
 
@@ -398,10 +431,10 @@ const FormBitacora = () => {
                 </Form.Item>
 
                 <Divider className="my-6"/>
-                {/* Titulo */}
+                {/* Título */}
                 <Form.Item
                     name="titulo"
-                    label="Titulo"
+                    label="Título"
                     labelCol={{ span: 4 }}
                     className="mb-3"
                     rules={[
@@ -412,7 +445,7 @@ const FormBitacora = () => {
                     ]}
                 >
                     
-                    <Input placeholder="Titulo del registro" /> 
+                    <Input placeholder="Título del registro" /> 
                 </Form.Item>
                  {/* Descripción */}
                 <Form.Item
