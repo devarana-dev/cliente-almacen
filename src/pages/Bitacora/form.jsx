@@ -253,58 +253,33 @@ const FormBitacora = () => {
                     </Select>
                 </Form.Item>
                
-               {
-                 tipoUsuario && isOffline ?
-                    ( <>    
-                        {/* Actividad */}
-                        <Form.Item
-                            name="actividad"
-                            label="Actividad"
-                            labelCol={{ span: 4 }}   
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Por favor ingrese una actividad',
-                                }                 
-                            ]}
-                            className="mb-3"
+                {/* Actividad */}
+                <Form.Item
+                    name="actividad"
+                    label="Actividad"
+                    labelCol={{ span: 4 }}   
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Por favor ingrese una actividad',
+                        }                 
+                    ]}
+                    className="mb-3"
+                >
+                    <Select 
+                        filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
+                        disabled={actividades.length === 0 }
+                        showSearch
+                        placeholder="Seleccione de la lista"
                         >
-                            <Select 
-                                filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
-                                disabled={actividades.length === 0 }
-                                showSearch
-                                placeholder="Seleccione de la lista"
-                                >
-                                {
-                                    actividades.map(item => (
-                                        <Option key={item.id} value={item.nombre}>{item.nombre}</Option>
-                                    ))
-                                }
-                                
-                            </Select>
-                        </Form.Item>
-                    </> )
-                    :
-                    (
-                        <>
-                            {/* Actividad Externo */}
-                            <Form.Item
-                                name="actividadExterno"
-                                label="Actividad Relacionada"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Por favor ingrese una actividad',
-                                    },
-                                ]}
-                                className="mb-3"
-                            >
-                                <Input placeholder="Escribe una actividad" />
-                            </Form.Item>
-                        </>
-                    )
-
-                }
+                        {
+                            actividades.map(item => (
+                                <Option key={item.id} value={item.nombre}>{item.nombre}</Option>
+                            ))
+                        }
+                        
+                    </Select>
+                </Form.Item>
                 {
                     tipoUsuario &&
                     (<>
