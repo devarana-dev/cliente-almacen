@@ -136,6 +136,7 @@ export default () => {
                         "react-dom": ["react-dom"],
                         "chart.js": ["chart.js"],
                         "antd": ["antd"],
+                        "exceljs": ["exceljs"],
                     },
                 },
             },
