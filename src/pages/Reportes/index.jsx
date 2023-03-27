@@ -1,7 +1,7 @@
 import { Select, DatePicker, Input, Table, Pagination, Tag, Button, Tooltip, Modal } from 'antd';
 import { useEffect, useState } from 'react';
 import Download from '../../components/Elements/Download';
-import { ClearOutlined, FileExcelOutlined, QuestionCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import { ClearOutlined, FileExcelOutlined, FilePdfOutlined, QuestionCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { cleanGenerarReporteAction, generarReportePdfAcumuladoAction, generarReportePdfGeneralAction, generateReporteAcumuladoAction, generateReporteGeneralAction, getReportesAcumuladosAction, getReportesGeneralAction } from '../../actions/reportesActions';
 import { getAllActividadAction } from '../../actions/actividadActions';
