@@ -315,7 +315,7 @@ const FormBitacora = () => {
                     >
                             <Select 
                             filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
-                            disabled={usuarios.length === 0 }
+                            disabled={empresas.length === 0 }
                             showSearch
                             placeholder="Seleccione de la lista"
                             allowClear
