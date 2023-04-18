@@ -7,11 +7,9 @@ export function getAllEmpresaAction(){
         dispatch(getAllEmpresaRequest())
         await clientAxios.get('/empresas')
             .then ( res => {
-                console.log('res getAllEmpresaAction', res.data.empresas);
                 dispatch(getAllEmpresaSuccess(res.data.empresas))
             })
             .catch( err => {
-                console.log('Error getAllEmpresaAction', err.response);
                 dispatch(getAllEmpresaError(err.response.data.message))
             })
     }
