@@ -62,7 +62,7 @@ const FormBitacora = () => {
             dispatch(getAllPersonalAction())
             dispatch(getAllEmpresaAction())
             dispatch(getAllUsuariosAction({
-                roles: [4, 7, 8]
+                roles: [4, 6, 7, 8, 10]
             }))
             dispatch(getAllActividadAction({
                 type: ['vales_bitacora', 'bitacora'],
@@ -377,14 +377,13 @@ const FormBitacora = () => {
                                         { key: nanoid(), label: `${item.nombre} ${ item.apellidoPaterno }`, value: item.id }
                                     ))
                                 },
-                                {
-                                    label: 'Externos',
-                                    // si userAuth es interno entonces todos los externos y si es externo solo los externos de su empresa
-                                    options: usuarios.filter(item => item.esInterno === false && item.empresas[0].id === empresaId).map(item => (
-                                        { key: nanoid(), label: `${item.nombre} ${ item.apellidoPaterno }`, value: item.id }
-                                    ))
-
-                                }
+                                // {
+                                //     label: 'Externos',
+                                //     // si userAuth es interno entonces todos los externos y si es externo solo los externos de su empresa
+                                //     options: usuarios.filter(item => item.esInterno === false && item.empresas[0].id === empresaId).map(item => (
+                                //         { key: nanoid(), label: `${item.nombre} ${ item.apellidoPaterno }`, value: item.id }
+                                //     ))
+                                // }
                             ]
                          }
                     />
