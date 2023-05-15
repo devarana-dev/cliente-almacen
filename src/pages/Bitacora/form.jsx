@@ -291,7 +291,7 @@ const FormBitacora = () => {
                         className="mb-3"
                     >
                             <Select 
-                                filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
+                                filterOption={(input, option) => option.children.toString().toLowerCase().includes(input.toLowerCase())}
                                 disabled={personal.length === 0 }
                                 showSearch
                                 allowClear
@@ -314,7 +314,7 @@ const FormBitacora = () => {
                         className="mb-3"
                     >
                             <Select 
-                            filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
+                            filterOption={(input, option) => option.children.toString().toLowerCase().includes(input.toLowerCase())}
                             disabled={empresas.length === 0 }
                             showSearch
                             placeholder="Seleccione de la lista"
@@ -336,7 +336,7 @@ const FormBitacora = () => {
                         className="mb-3"
                     >
                             <Select 
-                            filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
+                            filterOption={(input, option) => option.children.toString().toLowerCase().includes(input.toLowerCase())}
                             disabled={contratistas.length === 0 }
                             showSearch
                             placeholder="Seleccione de la lista"
