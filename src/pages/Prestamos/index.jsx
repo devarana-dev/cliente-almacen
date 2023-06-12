@@ -8,9 +8,10 @@ import { getPrestamosAction, getAllPrestamosAction, updatePrestamoAction } from 
 import openNotificationWithIcon from '../../hooks/useNotification';
 import { cleanErrorAction } from '../../actions/globalActions';
 import { hasPermission } from '../../utils/hasPermission';
-import Loading from '../../components/Elements/Loading';
 import '../../assets/scss/prestamos.scss'
 import brokenUser from '../../utils/brokenUser';
+import moment from 'moment';
+
 
 const Prestamo = () => {
 
@@ -80,6 +81,17 @@ const Prestamo = () => {
 
 
     const defaultColumns = [
+        {
+            title: 'Fecha',
+            dataIndex: 'fecha',
+            key: 'fecha',
+            ellipsis: true,
+            render: (text, record) => (
+                <>
+                    <p className='ml-4'> { moment(record.fecha).format('DD MMM') }  </p>
+                </>
+            )
+        },
         {
             title: 'Propietario',
             dataIndex: 'record',
@@ -373,7 +385,7 @@ const Prestamo = () => {
             showSorterTooltip={false}
         />
         <Modal
-        open={visible}
+        visible={visible}
         okText="Si"
         cancelText="Cancelar"
         title="Confirmación"

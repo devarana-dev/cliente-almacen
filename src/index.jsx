@@ -5,10 +5,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ConfigProvider } from "antd";
 import es_ES from 'antd/es/locale/es_ES';
-import moment from "moment";
-import "moment/locale/es-mx"
-moment.locale('es-mx')
 
+import './utils/momentFormat'
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
