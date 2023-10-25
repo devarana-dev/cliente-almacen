@@ -112,7 +112,7 @@ const CreateUsuario = () => {
 
                 <Input name="email" type="email" onBlur={
                     (e) => {
-                        const isDevarana = /^[a-zA-Z0-9._-]+@devarana\.mx$/.test(e.target.value);
+                        const isDevarana = /^[a-zA-Z0-9._ñ-]+@devarana\.mx$/.test(e.target.value);
                         if(isDevarana){
                             setEsInterno(true)
                             form.setFieldsValue({
