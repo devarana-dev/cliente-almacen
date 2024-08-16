@@ -18,7 +18,7 @@ export const Comentarios = ({id, onClose, comentarios}) => {
 
     return (
         <>
-            <Drawer title="Comentarios" placement="right" closable={true} onClose={onCloseSecond} open={open} 
+            <Drawer title="Comentarios" placement="right" closable={true} onClose={onCloseSecond} visible={open}
                 width={window.innerWidth > 768 ? 500 : '100%'}
             >
                 <ListaComentarios comentarios={comentarios}/>           
