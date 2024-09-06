@@ -16,6 +16,7 @@ import { BsInfoCircle } from "react-icons/bs";
 import openNotificationWithIcon from "../../hooks/useNotification";
 import brokenUser from "../../utils/brokenUser";
 import { useSocket } from "../../hooks/useSocket";
+import { getProyectosAction } from "../../actions/proyectosActions";
 
 const ValesSalida = () => {
 
@@ -32,6 +33,7 @@ const ValesSalida = () => {
     const [ loadedColumn , setLoad ] = useState(false)
     const [ current, setCurrent ] = useState(1)
     const [ tableReady , setTableReady ] = useState(false)
+    const { proyectos } = useSelector(state => state.proyectos);
     const [ activeExpRow, setActiveExpRow] = useState();
     const [ dataNestedSource, setDataNestedSource ] = useState([])
     const [ visible, setVisible ] = useState(false)
@@ -49,6 +51,7 @@ const ValesSalida = () => {
         status: [],
         dateInit: '',
         dateEnd: '',
+        proyectoId: 1,
         sort: 'DESC',
     })
  
@@ -56,6 +59,7 @@ const ValesSalida = () => {
     useEffect(() => {
         dispatch(getCountValeSalidaAction())
         dispatch(getAllValesAction(filter))
+        dispatch(getProyectosAction({ status: 1 }))
         setCurrent(current)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filter])
@@ -723,6 +727,14 @@ const ValesSalida = () => {
     // eslint-disable-next-line
     }, [online])
 
+    const handleChangeProyecto = (value) => {
+        
+        setFilter({
+            ...filter,
+            proyectoId: value,
+        })
+    }
+
     
     return ( 
 
@@ -767,6 +779,26 @@ const ValesSalida = () => {
             </div> 
 
             <div className='inline-flex items-center pb-3 w-full'>
+            <Select
+                style={{
+                    width: '100%',
+                    maxWidth: '200px'
+                }}
+                placeholder="Filtrar Por Proyecto"
+                showSearch
+                optionFilterProp="children"
+                filterOption={ (input, option) => option.children.toLowerCase().trim().indexOf(input.toLowerCase()) >= 0}
+                defaultValue={1}
+                value={filter.proyectoId}
+                onChange={ handleChangeProyecto }
+            >
+                {
+                    proyectos.map(item => (
+                        <Select.Option key={item.id} value={item.id}>{item.nombre}</Select.Option>
+                    ))
+                }
+            </Select>
+
                 <Input type="text" 
                     placeholder='Buscar'
                     allowClear

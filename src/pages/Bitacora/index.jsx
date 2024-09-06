@@ -98,7 +98,7 @@ const columns = [
     {
         title: 'Folio',
         key: 'uid',
-        render: (text, record) => <span>RV-{record.id}</span>,
+        render: (text, record) => <span>{record.folio}</span>,
         ellipsis: true,
     },
     {
