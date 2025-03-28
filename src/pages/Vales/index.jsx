@@ -42,6 +42,7 @@ const ValesSalida = () => {
     const [ response, setResponse ] = useState("")
     const [ amount, setAmount ] = useState(0)
 
+    console.log(vales);
 
 
     const [ filter, setFilter ]  = useState({
@@ -222,7 +223,19 @@ const ValesSalida = () => {
                     <p className='ml-4'> { record.residente} </p>
                 </div>
             ),
-            width: '25%'
+            width: '20%'
+        },
+        {
+            title: 'Obra - CC',
+            dataIndex: 'obra',
+            render: (text, record) => (
+                <div className='flex flex-row items-center'>
+                    <p className='ml-4'> { record.obra.nombre } </p>
+                </div>
+            ),
+            width: '10%',
+            responsive: ['lg'],
+            ellipsis: true,
         },
         {
             title: 'Lider',
