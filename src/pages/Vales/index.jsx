@@ -604,6 +604,17 @@ const ValesSalida = () => {
                 width: '39%'
             },
             {
+                title: 'CC',
+                dataIndex: 'centroCosto',
+                key: `cc-${nanoid()}`,
+                render: (text, record) => (
+                    <div className='flex items-center align-middle'>
+                        { record.insumo.centroCosto }
+                    </div>
+                ),
+                responsive: ['lg'],
+            },
+            {
                 title: 'U.Medida',
                 dataIndex: 'insumo',
                 key: `unidad-${nanoid()}`,
