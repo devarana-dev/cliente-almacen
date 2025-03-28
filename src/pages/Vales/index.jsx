@@ -230,12 +230,11 @@ const ValesSalida = () => {
             dataIndex: 'obra',
             render: (text, record) => (
                 <div className='flex flex-row items-center'>
-                    <p className='ml-4'> { record.obra.nombre } </p>
+                    <p className='ml-4'> { record.obra.nombre } - {record?.obra?.clave } </p>
                 </div>
             ),
-            width: '10%',
+            width: '15%',
             responsive: ['lg'],
-            ellipsis: true,
         },
         {
             title: 'Lider',
