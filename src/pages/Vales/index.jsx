@@ -42,8 +42,6 @@ const ValesSalida = () => {
     const [ response, setResponse ] = useState("")
     const [ amount, setAmount ] = useState(0)
 
-    console.log(vales);
-
 
     const [ filter, setFilter ]  = useState({
         search: '',
@@ -304,6 +302,7 @@ const ValesSalida = () => {
             status: [],
             dateInit: '',
             dateEnd: '',
+            proyectoId: 1,
             sort: 'DESC',
         })
     }
