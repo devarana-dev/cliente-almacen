@@ -112,25 +112,25 @@ export default function LayoutPrivate({children}) {
                     { import.meta.env.VITE_TEST && <div className="text-red-500 bg-red-100 text-center uppercase w-full content-center max-w-sm">Versión de Pruebas</div> }
 
                     <Detector
-                        onChange={
-                            (status) => {
-                                if(status){
-                                    notification['success']({
-                                        message: 'Conexión Restablecida',
-                                        description: 'La conexión a internet se ha restablecido',
-                                        key: 'connection-open',
-                                        duration: 3,
-                                    })
-                                }else{
-                                    notification['error']({
-                                        message: 'Conexión Perdida',
-                                        description: 'La conexión a internet se ha perdido, algunas funciones pueden no funcionar correctamente',
-                                        key: 'connection-close',
-                                        duration: 3
-                                    })
-                                }
-                            }
-                        }
+                        // onChange={
+                        //     (status) => {
+                        //         if(status){
+                        //             notification['success']({
+                        //                 message: 'Conexión Restablecida',
+                        //                 description: 'La conexión a internet se ha restablecido',
+                        //                 key: 'connection-open',
+                        //                 duration: 3,
+                        //             })
+                        //         }else{
+                        //             notification['error']({
+                        //                 message: 'Conexión Perdida',
+                        //                 description: 'La conexión a internet se ha perdido, algunas funciones pueden no funcionar correctamente',
+                        //                 key: 'connection-close',
+                        //                 duration: 3
+                        //             })
+                        //         }
+                        //     }
+                        // }
                         render={({ online }) => (
                             !!!online && <span className="text-red-500"> Sin Conexión </span>
                         )}

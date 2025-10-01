@@ -11,7 +11,7 @@ const initialData = {
     comentarios: false,
 }
 
-export const ModalBitacora = ({setIsModalOpen, isModalOpen, selectedPreview, selectedOption, isLoadingReport, generatedReport, proyectoId, usuarios}) => {
+export const ModalBitacora = ({setIsModalOpen, isModalOpen, selectedPreview, selectedOption, isLoadingReport, generatedReport, proyectoId, usuarios, setSelectedOption}) => {
 
     const [form] = Form.useForm();
     const dispatch = useDispatch();
@@ -40,6 +40,7 @@ export const ModalBitacora = ({setIsModalOpen, isModalOpen, selectedPreview, sel
         if(generatedReport){
             setIsModalOpen(false);
             form.resetFields();
+            setSelectedOption([]);
         }      
     }, [generatedReport])
 

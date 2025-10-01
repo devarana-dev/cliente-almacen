@@ -386,7 +386,7 @@ return (
                 // onChange={ (e) => { handleSearchByUsuario(e) }}
                 showSearch
                 optionFilterProp="children"
-                filterOption={ (input, option) => option.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0 }
+                filterOption={(input, option) => option?.label?.toLowerCase().includes(input.toLowerCase()) }
                 value={filtros.userId}
                 onChange={ (e) => { setFiltros({ ...filtros, userId: e }) }}
                 name="userId"
@@ -513,7 +513,7 @@ return (
         <ModalBitacora 
             setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen} selectedPreview={selectedPreview} 
             selectedOption={selectedOption} isLoadingReport={isLoadingReport} generatedReport={generatedReport} proyectoId = { filtros.proyectoId }
-            usuarios={usuarios}
+            usuarios={usuarios} setSelectedOption={setSelectedOption}
         />
 
         <Modal
