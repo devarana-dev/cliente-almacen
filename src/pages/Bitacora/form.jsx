@@ -448,8 +448,8 @@ const FormBitacora = () => {
                         <p className="text-center">Arrastra y suelta los archivos aquí, o haz clic para seleccionar archivos. </p>
                     }
                 </div>
-                <p className={`text-right text-xs py-1 ${ totalSize > 25000000 ? 'text-red-500' : 'text-gray-500' }`}> 
-                    { (totalSize / 1024 / 1024).toFixed(2) } MB / 25 MB 
+                <p className={`text-right text-xs py-1 ${ totalSize > 300000000 ? 'text-red-500' : 'text-gray-500' }`}> 
+                    { (totalSize / 1024 / 1024).toFixed(2) } MB / 300 MB 
                 </p>
                 <span>
                     {
@@ -473,14 +473,14 @@ const FormBitacora = () => {
                 </div>               
                 <span className="text-red-500 text-center py-2 block">
                     {
-                        totalSize > 25000000 && <span>El tamaño total de los archivos no debe ser mayor a 25MB.</span>
+                        totalSize > 300000000 && <span>El tamaño total de los archivos no debe ser mayor a 300MB.</span>
                     }
                 </span>
                 <div className="flex py-10 justify-between">
                     <Button type="default" htmlType="button" onClick={ () => navigate(-1)}> Cancelar </Button>
                     <Button type="ghost" htmlType="submit" disabled={
-                        // totalSize es mayor a 25MB true
-                        totalSize > 25000000
+                        // totalSize es mayor a 100MB true
+                        totalSize > 300000000
                     }>
                         Registrar
                     </Button>
@@ -488,7 +488,7 @@ const FormBitacora = () => {
             </Form> 
 
             { uploading ? 
-                <Mask text={"Creando registro en Bitácora..."} />
+                <Mask text={`Creando registro en Bitácora... ${ totalSize > 100000000 ? 'Puede que tome algo de tiempo en cargar el archivo' : '' }`} />
                 : null
             }
         </>

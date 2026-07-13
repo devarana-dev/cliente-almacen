@@ -31,10 +31,10 @@ export const useUploadFile = (files, setFiles, options = {}) => {
         const errors = [];
 
         // max size
-        if (file.size > 25 * 1024 * 1024) {
+        if (file.size > 300 * 1024 * 1024) {
             errors.push({
                 code: 'file-too-large',
-                message: 'El archivo es demasiado grande - 25MB max.'
+                message: 'El archivo es demasiado grande - 300MB max.'
             })
         }
 
