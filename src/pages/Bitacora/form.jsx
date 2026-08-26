@@ -78,6 +78,7 @@ const FormBitacora = () => {
         form.setFieldsValue({
             fecha: moment(),
             hora: moment(),
+            tipoBitacoraId: 1,
         })
         // eslint-disable-next-line
     }, [])
@@ -96,9 +97,13 @@ const FormBitacora = () => {
         // eslint-disable-next-line
     }, [created, errors])  
 
-    
 
     const handleSubmit = () => {
+
+        console.log(form);
+        
+
+        if(!tipoBitacoraId) return;
 
         // si tipoUsuario es === 2 entonces validar participantesId es required sino no
 
