@@ -3,7 +3,6 @@ import { Button, DatePicker, Divider, Form, Image, Input, Select, TimePicker } f
 import moment from "moment";
 import { getAllPersonalAction } from "../../actions/personalActions";
 import { useDispatch, useSelector } from "react-redux";
-import { nanoid } from "nanoid";
 import { getAllUsuariosAction } from "../../actions/usuarioActions";
 import { createBitacoraAction } from "../../actions/bitacoraActions";
 import openNotificationWithIcon from "../../hooks/useNotification";
@@ -74,14 +73,14 @@ const FormBitacora = () => {
         // eslint-disable-next-line
     }, [])
 
-    useEffect(() => {
-        form.setFieldsValue({
-            fecha: moment(),
-            hora: moment(),
-            tipoBitacoraId: 1,
-        })
-        // eslint-disable-next-line
-    }, [])
+    // useEffect(() => {
+    //     form.setFieldsValue({
+    //         fecha: moment(),
+    //         hora: moment(),
+    //         tipoBitacoraId: 1,
+    //     })
+    //     // eslint-disable-next-line
+    // }, [])
 
 
     useEffect(() => {
@@ -98,22 +97,29 @@ const FormBitacora = () => {
     }, [created, errors])  
 
 
-    const handleSubmit = () => {
-
-        console.log(form);
-        
-
-        if(!tipoBitacoraId) return;
-
-        // si tipoUsuario es === 2 entonces validar participantesId es required sino no
-
-        if(tipoUsuario){
-            form.validateFields(['participantesId'])
+    const handleSubmit = ( values ) => {
+        if( values.proyectoId === undefined){
+            openNotificationWithIcon('error', 'Seleccione un proyecto');
+            return;
         }
-        const query = {...form.getFieldsValue(), files};
-
+        if( values.etapaId === undefined){
+            openNotificationWithIcon('error', 'Seleccione una etapa');
+            return;
+        }
+        if( values.actividadId === undefined){
+            openNotificationWithIcon('error', 'Seleccione una actividad');
+            return;
+        }
+        if( !values.titulo ){
+            openNotificationWithIcon('error', 'Ingrese un título');
+            return;
+        }
+        if( !values.descripcion ){
+            openNotificationWithIcon('error', 'Ingrese una descripción');
+            return;
+        }
+        const query = {...values, files};
         dispatch(createBitacoraAction(query))
-
     }
 
 
@@ -163,6 +169,10 @@ const FormBitacora = () => {
                 layout="vertical"
                 scrollToFirstError
                 size="middle"
+                initialValues={{
+                    fecha: moment(),
+                    hora: moment(),
+                }}
             >
                 <div className="flex justify-between">
                     <Form.Item
@@ -195,11 +205,11 @@ const FormBitacora = () => {
                         placeholder="Seleccione de la lista"
                         
                         >
-                            <Option key={nanoid()} value={1}>Incidencia</Option>
-                            <Option key={nanoid()} value={2}>Acuerdo</Option>
-                            <Option key={nanoid()} value={3}>Inicio de trabajos</Option>
-                            <Option key={nanoid()} value={4}>Cierre de trabajos</Option>          
-                            <Option key={nanoid()} value={5}>Eventos</Option>          
+                            <Option value={1}>Incidencia</Option>
+                            <Option value={2}>Acuerdo</Option>
+                            <Option value={3}>Inicio de trabajos</Option>
+                            <Option value={4}>Cierre de trabajos</Option>          
+                            <Option value={5}>Eventos</Option>          
                     </Select>
                 </Form.Item>
 
@@ -225,7 +235,7 @@ const FormBitacora = () => {
                     >
                         {
                             proyectos.map( item => (
-                                <Option key={nanoid()} value={item.id}>{item.nombre}</Option>
+                                <Option key={`proyecto-${item.id}`} value={item.id}>{item.nombre}</Option>
                             ))
                         }
                     </Select>
@@ -251,7 +261,7 @@ const FormBitacora = () => {
                     >
                         {
                             etapas.map( item => (
-                                <Option key={nanoid()} value={item.id}>{item.nombre}</Option>
+                                <Option key={`etapa-${item.id}`} value={item.id}>{item.nombre}</Option>
                             ))
                         }
 
@@ -279,7 +289,7 @@ const FormBitacora = () => {
                         >
                         {
                             actividades.map(item => (
-                                <Option key={item.id} value={item.nombre}>{item.nombre}</Option>
+                                <Option key={`actividad-${item.id}`} value={item.nombre}>{item.nombre}</Option>
                             ))
                         }
                         
@@ -305,7 +315,7 @@ const FormBitacora = () => {
                                 >
                                 {
                                     personal.map(item => (
-                                        <Option key={item.id} value={item.id}> { `${item.nombre}  ${item.apellidoMaterno ? `( ${item.apellidoMaterno} )` : '' } ${ item.apellidoPaterno }` }  </Option>
+                                        <Option key={`personal-${item.id}`} value={item.id}> { `${item.nombre}  ${item.apellidoMaterno ? `( ${item.apellidoMaterno} )` : '' } ${ item.apellidoPaterno }` }  </Option>
                                     ))
                                 }
                                 
@@ -328,7 +338,7 @@ const FormBitacora = () => {
                             >
                             {
                                 empresas.map(item => (
-                                    <Option key={item.id} value={item.id}> { `${item.nombreCompleto}` }  </Option>
+                                    <Option key={`empresa-${item.id}`} value={item.id}> { `${item.nombreCompleto}` }  </Option>
                                 ))
                             }
                         </Select>
@@ -350,7 +360,7 @@ const FormBitacora = () => {
                         
                             {
                                 contratistas.map(item => (
-                                    <Option key={item.id} value={item.id}> { `${item.nombre}  ${item.apellidoMaterno ? `( ${item.apellidoMaterno} )` : '' } ${ item.apellidoPaterno }` }  </Option>
+                                    <Option key={`contratista-${item.id}`} value={item.id}> { `${item.nombre}  ${item.apellidoMaterno ? `( ${item.apellidoMaterno} )` : '' } ${ item.apellidoPaterno }` }  </Option>
                                 ))
                             }
 
@@ -379,7 +389,7 @@ const FormBitacora = () => {
                                 {
                                     label: 'Internos',
                                     options: usuarios.filter(item => item.esInterno === true).map(item => (
-                                        { key: nanoid(), label: `${item.nombre} ${ item.apellidoPaterno }`, value: item.id }
+                                        { key: `usuario-${item.id}`, label: `${item.nombre} ${ item.apellidoPaterno }`, value: item.id }
                                     ))
                                 },
                                 // {
