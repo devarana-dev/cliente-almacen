@@ -36,15 +36,39 @@ const getBitacorasError = error => ({
 export function createBitacoraAction(bitacora){
     return async (dispatch) => {
         dispatch( createBitacoraRequest())
-        await clientAxios.post('/bitacora', bitacora, { headers: { 'Content-Type': 'multipart/form-data' }
-        }).then(res => {
-            console.log('res', res.data.bitacora);
-            dispatch(createBitacoraSuccess(res.data.bitacora))
+
+        try {
+            const formData = new FormData();
+            Object.entries(bitacora).forEach(([key, value]) => {
+                if (value === undefined || value === null) {
+                    return;
+                }
+
+                if(key === 'files') {
+                    value.forEach(file => {
+                        formData.append('files', file);
+                    });
+                    return;
+                }
+
+                if (Array.isArray(value)) {
+                    value.forEach((item, index) => {
+                        formData.append(`${key}-${index}`, item);
+                    });
+                    return;
+                }
+
+                formData.append(key, value);
+            });
+
+            const response = await clientAxios.post('/bitacora', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+
+            dispatch(createBitacoraSuccess(response.data.bitacora));
+
+        } catch (error) {
+            console.log('Error createBitacoraAction', error.response);
+            dispatch(createBitacoraError(error.response.data.message))
         }
-        ).catch(err => {
-            console.log('Error createBitacoraAction', err.response);
-            dispatch(createBitacoraError(err.response.data.message))
-        })
     }
 }
 

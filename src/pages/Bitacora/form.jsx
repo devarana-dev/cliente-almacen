@@ -106,7 +106,7 @@ const FormBitacora = () => {
             openNotificationWithIcon('error', 'Seleccione una etapa');
             return;
         }
-        if( values.actividadId === undefined){
+        if( values.actividad === undefined){
             openNotificationWithIcon('error', 'Seleccione una actividad');
             return;
         }
