@@ -11,19 +11,19 @@ const bgSyncPlugin = new BackgroundSyncPlugin('bitacoraQueue', {
 
 
 // app works on refresh
-self.addEventListener('fetch', (event) => {
-    if (event.request.method === 'POST') {
-        event.respondWith(
-            fetch(event.request).catch((err) => {
-                return new Response(
-                    JSON.stringify({
-                        error: 'No internet connection found. App is running in offline mode.'
-                    })
-                )
-            })
-        )
-    }
-})
+// self.addEventListener('fetch', (event) => {
+//     if (event.request.method === 'POST') {
+//         event.respondWith(
+//             fetch(event.request).catch((err) => {
+//                 return new Response(
+//                     JSON.stringify({
+//                         error: 'No internet connection found. App is running in offline mode.'
+//                     })
+//                 )
+//             })
+//         )
+//     }
+// })
 
 
 const CacheNetworkFirstRoutes = [
@@ -42,33 +42,74 @@ const CacheFirstRoutes = [
     'https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap'
 ]
 
-registerRoute(
-    ({request, url}) => { 
-        if( CacheNetworkFirstRoutes.includes(url.pathname) ) return true
-        return false
-    }
-    , new NetworkFirst()
-)
+// registerRoute(
+//     ({request, url}) => { 
+//         if( CacheNetworkFirstRoutes.includes(url.pathname) ) return true
+//         return false
+//     }
+//     , new NetworkFirst()
+// )
+
+// registerRoute(
+//     ({request, url}) => {
+//         if( CacheFirstRoutes.includes(url.href) ) return true
+//         return false
+//     }
+//     , new CacheFirst()
+// )
+
+// registerRoute(
+//     new RegExp('http://localhost:5000/api/bitacora'),
+//     new NetworkOnly({
+//         plugins: [bgSyncPlugin],
+//     }),
+//     'POST'
+// )
+// registerRoute(
+//     new RegExp('http://localhost:5000/api/actividades'),
+//     new NetworkOnly({
+//         plugins: [bgSyncPlugin],
+//     }),
+//     'POST'
+// )
+
 
 registerRoute(
-    ({request, url}) => {
-        if( CacheFirstRoutes.includes(url.href) ) return true
-        return false
-    }
-    , new CacheFirst()
-)
+    ({ request, url }) => {
+        return (
+            request.method === 'GET' &&
+            CacheNetworkFirstRoutes.includes(url.pathname)
+        );
+    },
+    new NetworkFirst(),
+    'GET'
+);
+
 
 registerRoute(
-    new RegExp('http://localhost:5000/api/bitacora'),
+    ({ request, url }) => {
+        return (
+            request.method === 'GET' &&
+            CacheFirstRoutes.includes(url.href)
+        );
+    },
+    new CacheFirst(),
+    'GET'
+);
+
+
+// Puedes conservar Background Sync para endpoints JSON
+registerRoute(
+    ({ request, url }) => {
+        return (
+            url.pathname === '/api/actividades' &&
+            request.headers
+                .get('content-type')
+                ?.includes('application/json')
+        );
+    },
     new NetworkOnly({
         plugins: [bgSyncPlugin],
     }),
     'POST'
-)
-registerRoute(
-    new RegExp('http://localhost:5000/api/actividades'),
-    new NetworkOnly({
-        plugins: [bgSyncPlugin],
-    }),
-    'POST'
-)
+);
