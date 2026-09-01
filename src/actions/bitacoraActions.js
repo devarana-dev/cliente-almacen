@@ -61,7 +61,7 @@ export function createBitacoraAction(bitacora){
                 formData.append(key, value);
             });
 
-            const response = await clientAxios.post('/bitacora', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+            const response = await clientAxios.post('/bitacora', formData);
 
             dispatch(createBitacoraSuccess(response.data.bitacora));
 
