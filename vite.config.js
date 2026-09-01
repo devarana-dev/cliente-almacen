@@ -10,7 +10,8 @@ export default () => {
         plugins: [react(), viteCompression(), 
             VitePWA({
                 registerType: 'autoUpdate',                
-                injectRegister: false,
+                injectRegister: 'auto',
+                strategies: 'injectManifest',
                 workbox:{
 
                     // deny exact routes "api/google-login" and "/login"
@@ -60,19 +61,19 @@ export default () => {
                         },
 
                         // NetworkOnly
-                        {
-                            handler: 'NetworkOnly',
-                            urlPattern: new RegExp(`/bitacora`),
-                            method: 'POST',
-                            options: {
-                                backgroundSync: {
-                                    name: 'bitacoraQueue',
-                                    options: {
-                                        maxRetentionTime: 24 * 60,
-                                    },
-                                },
-                            },
-                        },
+                        // {
+                        //     handler: 'NetworkOnly',
+                        //     urlPattern: new RegExp(`/bitacora`),
+                        //     method: 'POST',
+                        //     options: {
+                        //         backgroundSync: {
+                        //             name: 'bitacoraQueue',
+                        //             options: {
+                        //                 maxRetentionTime: 24 * 60,
+                        //             },
+                        //         },
+                        //     },
+                        // },
                         {
                             handler: 'NetworkOnly',
                             urlPattern: new RegExp(`/vales`),
