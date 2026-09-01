@@ -10,7 +10,7 @@ export default () => {
         plugins: [react(), viteCompression(), 
             VitePWA({
                 registerType: 'autoUpdate',                
-                injectRegister: 'auto',
+                injectRegister: false,
                 workbox:{
 
                     // deny exact routes "api/google-login" and "/login"

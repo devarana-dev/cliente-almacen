@@ -118,6 +118,7 @@ const FormBitacora = () => {
             openNotificationWithIcon('error', 'Ingrese una descripción');
             return;
         }
+        
         const query = { ...values, files };
         console.log(query);
         
