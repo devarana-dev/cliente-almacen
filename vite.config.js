@@ -11,7 +11,7 @@ export default () => {
             VitePWA({
                 registerType: 'autoUpdate',                
                 injectRegister: 'auto',
-                strategies: 'injectManifest',
+                // strategies: 'injectManifest',
                 workbox:{
 
                     // deny exact routes "api/google-login" and "/login"
