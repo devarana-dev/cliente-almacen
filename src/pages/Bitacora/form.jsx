@@ -213,6 +213,7 @@ const FormBitacora = () => {
                             <Option value={3}>Inicio de trabajos</Option>
                             <Option value={4}>Cierre de trabajos</Option>          
                             <Option value={5}>Eventos</Option>          
+                            <Option value={6}>Pruebas de calidad</Option>          
                     </Select>
                 </Form.Item>
 
